@@ -1,0 +1,398 @@
+﻿/*	自行车
+*
+*/
+
+
+.cnWse_tPcdrLot_Boa
+{
+	/*开发*/
+	/*background-color: rgb(230, 230, 0);*/
+	min-height: 10px;
+	/*background-image: url("");*/
+}
+
+.cnWse_ctCol
+{
+	/*开发*/
+	min-height: 10px;
+	/*border: 1px solid white;*/
+	/*background-color: rgb(230, 0, 230);*/
+	/*visibility: visible;*/
+}
+
+/***************************/
+
+.ctBodyBkgd
+{
+	background-image: url(bg.jpg);
+}
+
+#k_PutTgt_Lot
+{
+	/*box-sizing: content-box;	*//*把边框放到外面！*/
+
+	/* 【开发】 */
+	/*min-height: 200px;			*/
+	width: 256px;				/* 初始宽度 */
+	/*height: 200px;*/
+	height: auto;
+	margin: 0 auto;
+	/*background-color: rgb(230, 230, 230);*/
+	border: none;
+	/*border-top: 2px solid rgb(255, 128, 0);*/
+}
+
+.ct404
+{
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-weight: bold;
+	font-size: 500%;
+	text-align: center;
+	color: rgb(70%, 76%, 68%);
+}
+
+.ct404>p
+{
+	margin: 40px auto;
+	font-size: 40%;
+}
+
+.ctLogoBoa_0
+{
+	background-color: rgba(45, 46, 40, 0.7);
+	padding: 20px 10px;
+}
+
+.ctLogoBoa_1
+{
+	background-color: rgba(45, 46, 40, 0.7);
+	padding: 20px 10%;
+}
+
+.ctLogoBoa_2
+{
+	background-color: rgba(45, 46, 40, 0.7);
+	padding: 30px 10%;
+}
+
+.ctItroBoa_0, .ctItroBoa_1, .ctItroBoa_2
+{
+	/*background-image: url(Media/bg-triangle.png);*/
+	/*background-repeat: no-repeat;*/
+	/*background-position: 10% 0;*/
+	/*background-size: 100%;*/
+	/*min-height: 535px;*/
+
+	padding: 0 10% 20px;
+	border-bottom: 2px solid white;
+}
+
+.ctItroBoa_0
+{
+	padding: 0 10px 20px;
+}
+
+.ctArtcBoa_0
+{
+	padding: 20px 10px;
+}
+
+.ctArtcBoa_1
+{
+	padding: 20px 10%;
+}
+
+.ctArtcBoa_2
+{
+	padding: 20px 10%;
+}
+
+.ctFootBoa_0, .ctFootBoa_1, .ctFootBoa_2
+{
+	padding: 20px 10%;
+	background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ctFootBoa_0
+{
+	padding: 20px 10px;
+}
+
+.ctLogo
+{
+	z-index: 1000;
+}
+
+.ctMainNav_0
+{
+	text-align: center;
+	color: white;
+	font-size: 100%;
+	margin-top: 20px;
+}
+
+.ctMainNav_1
+{
+	text-align: center;
+	color: white;
+	font-size: 100%;
+	margin-top: 20px;
+}
+
+.ctMainNav_2
+{
+	text-align: right;
+	color: white;
+	font-size: 110%;
+}
+
+.ctMainHdn_0
+{
+	margin-top: 4%;
+	font-size: 150%;
+}
+
+.ctMainHdn_1
+{
+	margin-top: 4%;
+	font-size: 150%;
+}
+
+.ctMainHdn_2
+{
+	margin-top: 4%;
+	font-size: 200%;
+}
+
+.ctMainHdn_1>a, .ctMainHdn_2>a,
+.ctItroCol_0, .ctItroCol_0 h1, .ctItroCol_0 p,
+.ctItroCol_1, .ctItroCol_1 h1, .ctItroCol_1 p,
+.ctItroCol_2, .ctItroCol_2 h1, .ctItroCol_2 p
+{
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	color: rgb(70%, 76%, 68%);
+}
+
+.ctItroCol_0, .ctItroCol_1, .ctItroCol_2
+{
+	padding-left: 20px;
+}
+
+.ctItroCol_0>h3
+{
+	margin-top: 4%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 90%;
+}
+
+.ctItroCol_1>h3
+{
+	margin-top: 4%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 90%;
+}
+
+.ctItroCol_2>h3
+{
+	margin-top: 8%;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+}
+
+.ctItroCol_0 p
+{
+	margin-top: 2%;
+	color: white;
+	font-size: 80%;
+}
+
+.ctItroCol_1 p
+{
+	margin-top: 2%;
+	color: white;
+	font-size: 80%;
+}
+
+.ctItroCol_2 p
+{
+	margin-top: 4%;
+	color: white;
+	font-size: 90%;
+}
+
+.ctArtcHdn_0
+{
+	/*margin-top: 2%;*/
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-size: 120%;
+	margin: 10px 10px 20px 10px;
+}
+
+.ctArtcHdn_1
+{
+	/*margin-top: 2%;*/
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-size: 120%;
+	margin: 10px 10px 20px 10px;
+}
+
+.ctArtcHdn_2
+{
+	/*margin-top: 2%;*/
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	font-size: 150%;
+	margin: 10px 10px 20px 10px;
+}
+
+.ctArtcSmry
+{
+	margin: 0 10px 0 10px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 80%;
+}
+
+.ctArtcSmry img
+{
+	width: 100%;
+}
+
+.ctArtcSmry p
+{
+	padding: 15px 0;
+	border-bottom: 1px solid rgb(128, 124, 114);
+}
+
+.ctArtcSmry p:last-of-type
+{
+	border-bottom: none;
+}
+
+.ctMainNav_0>li, .ctMainNav_1>li, .ctMainNav_2>li
+{
+	list-style-type: none;
+	font-family: QuicksandBook, Helvetica, Arial, sans-serif;
+	font-size: 100%;
+	color: rgb(181, 193, 173);
+}
+
+.ctMainNav_0>li
+{
+	display: block;
+	text-align: left;
+	border-top: 1px solid rgb(128, 124, 114);
+	padding: 5px 0;
+}
+
+.ctMainNav_0>li:last-of-type
+{
+	border-bottom: 1px solid rgb(128, 124, 114);
+}
+
+.ctMainNav_1>li, .ctMainNav_2>li
+{
+	display: inline-block;
+	text-align: center;
+}
+
+.ctMainNav_0>li>a, .ctMainNav_1>li>a, .ctMainNav_2>li>a
+{
+	display: block;	/* 令整个<li>成为可点击的按钮 */
+}
+
+a.ctLink:link
+{
+	text-decoration: none;
+	color: rgb(70%, 76%, 68%);
+}
+
+a.ctLink:visited
+{
+	color: rgb(181, 193, 173);
+}
+
+a.ctLink:hover
+{
+	color: white;
+}
+
+a.ctLink:active
+{
+	color: rgb(49%, 53%, 48%);
+}
+
+.ctFootInfo
+{
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 80%;
+	text-align: center;
+	text-decoration: none;
+	padding: 5px 0;
+}
+
+.ctFootInfo a:link
+{
+	text-decoration: none;
+	color: rgb(128, 124, 114);
+}
+
+.ctFootInfo a:visited
+{
+	color: rgb(128, 124, 114);
+}
+
+.ctFootInfo a:hover
+{
+	color: white;
+}
+
+.ctFootInfo a:active
+{
+	color: rgb(90, 87, 80);
+}
+
+.ctLPC
+{
+	border: none;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	padding: 0;
+}
+
+.ctLPC:first-of-type
+{
+	border-left: none;
+}
+
+.ctLPC:last-of-type
+{
+	border-right: none;
+}
+
+/*	【测试】 */
+
+/*
+#k_ItroBoa_Col0
+{
+	padding: 30px 10px 40px 20px;
+}
+*/
+
+#k_MainHdn
+{
+	-webkit-transform-origin: left;
+	transform-origin: left;
+}
+
+#k_BkgdTrg
+{
+	/*transform: skew(45deg,0deg) scale(.5) translate(400px,500px) rotate(90deg); 必须连起来*/
+	-webkit-transform-origin: 44.3% 0;
+	transform-origin: 44.3% 0;
+	z-index: -1;
+}
+
+/*********************************************************************** Over ***********************************************************************/

@@ -1,0 +1,84 @@
+﻿/*	程序化布局
+*
+*/
+
+
+.cnWse_tPcdrLot_FlowZone, .cnWse_tPcdrLot_CstmZone, .cnWse_tPcdrLot_RmvdZone,
+.cnWse_tPcdrLot_Boa, .cnWse_tPcdrLot_Col
+{
+	box-sizing: border-box;
+	margin: 0;
+	border: none;
+	padding: 0;
+}
+
+.cnWse_tPcdrLot_FlowZone
+{
+	display: block;
+	position: static;
+	width: 100%;
+	height: auto;
+}
+
+.cnWse_tPcdrLot_CstmZone, .cnWse_tPcdrLot_RmvdZone
+{
+	display: block;
+	position: static;
+	width: 0;
+	height: 0;
+	visibility: hidden;
+}
+
+.cnWse_tPcdrLot_CstmZone>*, .cnWse_tPcdrLot_RmvdZone>*
+{
+	visibility: visible;
+}
+
+.cnWse_tPcdrLot_Boa
+{
+	display: block;
+	position: static;
+}
+
+.cnWse_tPcdrLot_Col
+{
+	display: block;
+	position: static;
+	height: 100%;
+	float: left;
+}
+
+.cnWse_tPcdrLot_Put
+{
+	display: block;
+	position: absolute;
+	z-index: 0;
+}
+
+/*********** 栅格 ***********/
+
+.cnWse_tPcdrLot_GridBar
+{
+	box-sizing: border-box;
+	margin: 0;
+	border: none;
+	padding: 0;
+	position: fixed;
+	background-clip: padding-box;
+}
+
+#ok_ShowGrid
+{
+	position: fixed;
+	left: 0;
+	bottom: 0;
+	z-index: 999999;
+}
+
+#ok_ShowGridChkBox
+{
+	width: 20px;
+	height: 20px;
+}
+
+/*********************************************************************** Over ***********************************************************************/
