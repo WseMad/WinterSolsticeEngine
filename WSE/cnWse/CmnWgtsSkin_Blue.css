@@ -1,0 +1,140 @@
+﻿/*	公共控件
+*
+*/
+
+
+/*********************************************** tWgt ***********************************************/
+
+/* 这两个选择器尽可能弱一点，为了服务于大众（避免覆盖CmnWgts.css里的样式）！ */
+.cnWse_Skin_Blue .cnWse_tWgt_Nml,
+.cnWse_Skin_Blue .cnWse_tWgt_Tch
+{
+	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
+/*********************************************** tBtn ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_tWgt_Tch.cnWse_tBtn
+{
+	background: -webkit-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+	background: -moz-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+	background: -ms-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+}
+
+/*********************************************** tMenu ***********************************************/
+
+/* 层叠式的背景渐变 */
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp,
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul
+{
+	background: -webkit-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
+/* 展开式次级<ul> */
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Next
+{
+	background-color: rgb(0, 163, 240);
+	border: 1px solid rgb(95%, 95%, 95%);
+}
+
+/* 展开式根<ul>的<li> */
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li:first-of-type
+{
+	border-left: 2px solid rgb(0, 128, 192);
+}
+
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li
+{
+	border-left: 1px solid rgb(0, 128, 192);
+	border-right: 1px solid rgb(0, 128, 192);
+}
+
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li:last-of-type
+{
+	border-right: 2px solid rgb(0, 128, 192);
+}
+
+/* 展开式次级<ul>的<li>分割线 */
+/*
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li
+{
+	border-bottom: 1px solid rgb(95%, 95%, 95%);
+}
+
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li:last-of-type
+{
+	border-bottom: none;
+}
+*/
+
+/* 展开式次级<ul>的<li>奇偶色 */
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li:nth-of-type(odd)
+{
+	background-color: transparent;
+}
+
+.cnWse_Skin_Blue .cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li:nth-of-type(even)
+{
+	background-color: rgb(0, 147, 210);
+}
+
+/* 层叠式<li>分割线 */
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul.cnWse_tMenu_Root>li,
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul.cnWse_tMenu_Next>li
+{
+	border-bottom: 1px solid rgb(0, 128, 192);
+}
+
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul.cnWse_tMenu_Root>li:last-of-type,
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul.cnWse_tMenu_Next>li:last-of-type
+{
+	border-bottom: none;
+}
+
+
+/* 四个箭头 */
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp li>.cnWse_RtArw,
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp li>.cnWse_UpArw,
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp li>.cnWse_DnArw
+{
+	color: white;
+}
+
+/* 层叠式返回按钮 */
+.cnWse_Skin_Blue .cnWse_tMenu_Ovlp li.cnWse_tMenu_BackLi
+{
+	text-align: center;
+	border-bottom: 1px solid rgb(0, 128, 192);
+}
+
+/*********************************************** tAcod ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_tAcod_Tit,
+.cnWse_Skin_Blue .cnWse_tAcod_Ctnt
+{
+	background: -webkit-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+/*********************************************** tNav ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_PutTgt.cnWse_tNav,
+.cnWse_Skin_Blue .cnWse_tNav_Leaf
+{
+	background: -webkit-radial-gradient(50% 30%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-radial-gradient(50% 30%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-radial-gradient(50% 30%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: radial-gradient(50% 30%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
+/*********************************************************************** Over ***********************************************************************/

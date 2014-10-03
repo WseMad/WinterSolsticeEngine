@@ -1,0 +1,252 @@
+﻿/*	公共控件
+*
+* 【注意】
+* 本文件主要包含用于指定“结构”的规则，而用于指定“表现”的规则放在各个皮肤里；
+* 本文件也含有少量用于表现的规则，颜色多用黑白，为的是应对没有皮肤时的默认情景。
+*/
+
+
+/*********************************************** tWgt ***********************************************/
+
+.cnWse_tWgt_Nml,
+.cnWse_tWgt_Tch
+{
+	color: rgb(0, 0, 0);
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+	cursor: pointer;
+}
+
+/*********************************************** tBtn ***********************************************/
+
+.cnWse_tBtn
+{
+	text-align: center;
+	border-radius: 0.5em;
+	padding: 8px;
+	/*-moz-user-select:none;*/
+}
+
+.cnWse_tWgt_Tch.cnWse_tBtn
+{
+	color: rgb(100%, 100%, 100%);
+	box-shadow: 0px 5px 10px rgb(51, 51, 51);
+}
+
+/*********************************************** tMenu ***********************************************/
+
+/* 通用 */
+.cnWse_PutTgt.cnWse_tMenu
+{
+	border-radius: 0px 0px 0.5em 0.5em;
+}
+
+.cnWse_tMenu ul
+{
+	list-style-type: none;
+	font-size: 1em;
+}
+
+.cnWse_tMenu li
+{
+	padding: 5px 1.5em 5px 5px;
+	position: relative;
+}
+
+/* 展开式 */
+.cnWse_tMenu_Expd
+{
+	overflow: visible;		/* 各级列表总是可见，即使放置目标尺寸不够 */
+}
+
+.cnWse_tMenu_Expd ul.cnWse_tMenu_Root
+{
+	/*position: static;		*//* 扩展式的根静态定位 */
+	text-align: center;
+	z-index: 0;
+}
+
+.cnWse_tMenu_Expd ul.cnWse_tMenu_Next
+{
+	position: absolute;
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+.cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li
+{
+	display: inline-block;
+	text-align: center;
+}
+
+.cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li
+{
+	display: block;
+	text-align: left;
+}
+
+/* 层叠式 */
+.cnWse_tMenu_Ovlp
+{
+	overflow: hidden;		/* 只显示顶级列表，放置目标尺寸与之匹配 */
+}
+
+.cnWse_tMenu_Ovlp ul
+{
+	padding: 0 5px;
+}
+
+.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Root
+{
+	/*position: static;		*//* 层叠式的根静态定位 */
+}
+
+.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Next
+{
+	position: absolute;
+}
+
+.cnWse_tMenu_Ovlp .cnWse_tMenu_Root>li
+{
+	display: block;
+	text-align: left;
+}
+
+/* 四个箭头 */
+.cnWse_tMenu .cnWse_LtArw
+{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	padding-top: inherit;
+	padding-bottom: inherit;
+}
+
+.cnWse_tMenu .cnWse_RtArw,
+.cnWse_tMenu .cnWse_UpArw,
+.cnWse_tMenu .cnWse_DnArw
+{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	padding-top: inherit;
+	padding-bottom: inherit;
+}
+
+/* 展开式根<ul>展开的<li> */
+.cnWse_tMenu_Expd li.cnWse_tMenu_ExpdLi
+{
+	background-color: rgba(255, 255, 255, 0.7);
+	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 1);
+}
+
+/* 层叠式返回<li> */
+.cnWse_tMenu_Ovlp li.cnWse_tMenu_BackLi
+{
+	text-align: center;
+}
+
+/* 占位<ul> */
+ul.cnWse_tMenu_Plchd
+{
+	height: 5em;
+}
+
+
+/*********************************************** tAcod ***********************************************/
+
+.cnWse_PutTgt.cnWse_tAcod
+{
+	overflow: visible;		/* 为了使最后一排的阴影显示出来 */
+	visibility: hidden;		/* 隐藏，用不到放置目标 */
+}
+
+.cnWse_PutTgt.cnWse_tAcod>*
+{
+	visibility: visible;	/* 放置目标里的东西应显示出来 */
+}
+
+.cnWse_tAcod_Tit,
+.cnWse_tAcod_Ctnt
+{
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+.cnWse_tAcod_Tit
+{
+	border: 1px solid black;
+	border-radius: 0.5em;
+	margin-top: 0.25em;
+	padding: 0.25em;
+	font-size: 1.2em;
+}
+
+.cnWse_tAcod_Tit:first-of-type
+{
+	margin-top: 0px;
+}
+
+.cnWse_tAcod_TitExpd
+{
+	border-radius: 0.5em 0.5em 0px 0px;
+}
+
+.cnWse_tAcod_Ctnt
+{
+	border: 1px solid black;
+	border-radius: 0px 0px 0.5em 0.5em;
+	padding: 0.5em;
+	font-size: 1em;
+	overflow: hidden;	/* 动画高度时裁剪掉内容 */
+	cursor: default;
+}
+
+/* 两个标题箭头 */
+.cnWse_tAcod .cnWse_RtArw,
+.cnWse_tAcod .cnWse_DnArw
+{
+	margin-right: 0.5em;
+}
+
+/*********************************************** tNav ***********************************************/
+
+.cnWse_PutTgt.cnWse_tNav
+{
+	position: fixed;
+	text-align: center;
+	overflow: visible;		/* 已经改成绝对定位，必须保证子元素可见 */
+	z-index: 10000;
+}
+
+.cnWse_tNav li
+{
+	list-style-type: none;
+	padding: 0px;
+	height: 100%;
+}
+
+.cnWse_tNav>*[data-Wse_Tit],
+.cnWse_tNav li>a
+{
+	display: block;					/* 令整个<li>成为可点击的按钮 */
+	padding: 20% 0px 0px 0px;		/* 和径向渐变垂直对齐 */
+	height: 100%;
+}
+
+/* 导航<a> */
+.cnWse_tNav li>a:link,
+.cnWse_tNav li>a:visited,
+.cnWse_tNav li>a:hover,
+.cnWse_tNav li>a:active
+{
+	text-decoration: none;
+	color: inherit;
+}
+
+/* 叶片 */
+.cnWse_tNav_Leaf
+{
+	display: none;
+	position: absolute;
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+/*********************************************************************** Over ***********************************************************************/

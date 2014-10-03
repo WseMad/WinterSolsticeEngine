@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8" />
+
+	<title>实时应用程序框架</title>
+
+	<script type="text/javascript">
+		window.WSE_DontInclude = true;	// 不要包含
+	</script>
+
+	<script type="text/javascript" src="../nWse/(0)ObjOrtd.js"></script>
+	<script type="text/javascript" src="../nWse/(1)LangUtil.js"></script>
+	<!--<script type="text/javascript" src="../nWse/(2)DataStru.js"></script>-->
+	<script type="text/javascript" src="../nWse/Clo.js"></script>
+	<script type="text/javascript" src="../nWse/Sara.js"></script>
+	<script type="text/javascript" src="../nWse/RltmAfx.js"></script>
+	<!--<script type="text/javascript" src="WSE_nWse.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/n2d/(0)MathElmts.js"></script>
+	<script type="text/javascript" src="../nWse/n2d/(1)Prim.js"></script>
+	<script type="text/javascript" src="../nWse/n2d/(2)OvfCam.js"></script>
+	<script type="text/javascript" src="../nWse/n2d/(3)GpuDvc.js"></script>
+	<script type="text/javascript" src="../nWse/n2d/(4)GpuPrt.js"></script>
+	<script type="text/javascript" src="../nWse/n2d/Path.js"></script>-->
+
+	<script type="text/javascript" src="../nWse/nGpu/(0)MathElmts.js"></script>
+	<script type="text/javascript" src="../nWse/nGpu/(1)Cam.js"></script>
+	<script type="text/javascript" src="../nWse/nGpu/(2)2dCtxt.js"></script>
+	<!--<script type="text/javascript" src="../nWse/nGpu/(3)3dCtxt.js"></script>-->
+
+	<!--<script type="text/javascript" src="../nWse/nIpt/Kbd.js"></script>
+	<script type="text/javascript" src="../nWse/nIpt/Mos.js"></script>-->
+</head>
+<body>
+	<div id="k_CvsDiv" style="margin:0px; border:none; padding:0px; position:relative; left:0px; top:0px; ">
+		<canvas id="k_2dCvs" width="800" height="600" style="margin: 0px; border: none; padding: 0px; position: static; left: 0px; top: 0px; z-index:1; ">
+			抱歉，您的浏览器不支持HTML5 Canvas！
+		</canvas>
+		<!--<canvas id="k_3dCvs" width="800" height="600" style="margin: 0px; border: none; padding: 0px; position: absolute; left: 0px; top: 0px; z-index: 0; ">
+			抱歉，您的浏览器不支持HTML5 Canvas！
+		</canvas>-->
+	</div>
+
+	<script type="text/javascript">
+		"use strict";
+
+		window.onload = function (a_Evt)
+		{
+			a_Evt.preventDefault;
+
+			var stLog = nWse.stLog;
+			//	var n2d = nWse.n2d;
+			var tClo = nWse.tClo;
+			//	var tCsm = n2d.tCsm;
+			//	var stGpuDvc = n2d.stGpuDvc;
+			//	var stGpuPrt = stGpuDvc.cAcsGpuPrt();
+			var stRltmAfx = nWse.stRltmAfx;
+			//var stKbd = nWse.nIpt.stKbd;
+			//var stMos = nWse.nIpt.stMos;
+
+			var nGpu = nWse.nGpu;
+			var st2dCtxt = nGpu.st2dCtxt;
+			var st3dCtxt = nGpu.st3dCtxt;
+
+			nWse.fClass(nApp,
+			/// 应用程序
+			function tApp()
+			{
+				this.odBase(tApp).odCall();
+
+				//---- 配置
+
+				this.d_Cfg.c_AdpMainCvs = 1;
+				this.d_Cfg.c_MainCvs = document.getElementById("k_2dCvs");
+			//	this.d_Cfg.c_WglCvs = document.getElementById("k_3dCvs");
+
+				//this.d_Cfg.c_EnabKbd = true;
+				//this.d_Cfg.c_EnabMos = true;
+
+				//---- 字段
+
+				this.e_Mtx = new nGpu.t4dMtx();
+				this.e_Path = new nGpu.st2dCtxt.tPath();
+
+				this.e_RingTot = 12;
+				this.e_Timer = 0;
+			}
+			,
+			stRltmAfx.atApp
+			,
+			{
+				/// 当初始化时
+				vdOnInit: function ()
+				{
+					// 阻止主画布上的系统上下文菜单
+					stRltmAfx.cAcsMainCvs().addEventListener("contextmenu",
+						function (a_Evt)
+						{
+							a_Evt.preventDefault();
+						}, false);
+				}
+				,
+				/// 当退出时
+				vdOnExit: function ()
+				{
+					//
+				}
+				,
+				/// 当重绑主画布时
+				vdOnRbndMainCvs: function ()
+				{
+					stLog.cPutLine("vdOnRbndMainCvs");
+				}
+				,
+				/// 当上下文重置时
+				vdOnCtxtRset: function ()
+				{
+					stLog.cPutLine("vdOnCtxtRset");
+				}
+				,
+				/// 当上下文丢失时
+				vdOnCtxtLost: function ()
+				{
+					//
+				}
+				,
+				/// 当更新时
+				vdOnUpd: function ()
+				{
+					//	var l_FrmIdx = stRltmAfx.cGetFrmIdx();
+					var l_FrmTime = stRltmAfx.cGetFrmTime();
+					var l_FrmItvl = stRltmAfx.cGetFrmItvl();
+
+					//=================================================
+
+					//// 切换全屏
+					//if (stKbd.cKeyStro(stKbd.tKey.i_.i_F4))
+					//{
+					//	if (-1 == stRltmAfx.cGetAdpMainCvs(true))
+					//	{
+					//		if (1 == stRltmAfx.cGetAdpMainCvs())
+					//			stRltmAfx.cChgAdpMainCvs(2);
+					//		else
+					//			stRltmAfx.cChgAdpMainCvs(1);
+					//	}
+					//}
+
+					//=================================================
+				}
+				,
+				/// 当渲染时
+				vdOnRnd: function ()
+				{
+					//	var l_FrmIdx = stRltmAfx.cGetFrmIdx();
+					var l_FrmTime = stRltmAfx.cGetFrmTime();
+					var l_FrmItvl = stRltmAfx.cGetFrmItvl();
+
+					var l_X = st2dCtxt.cGetCvsWid()/2, l_Y = st2dCtxt.cGetCvsHgt()/2;
+				//	this.e_Mtx.cAs3dFrm_SpinZA(l_FrmItvl);
+					this.e_Mtx.cAs3dFrm_Put(l_X, l_Y);
+
+					var l_Ctxt = st2dCtxt.cAcs();
+					l_Ctxt.fillStyle = "rgb(0, 0, 128)";
+					l_Ctxt.fillRect(0, 0, st2dCtxt.cGetCvsWid(), st2dCtxt.cGetCvsHgt())
+
+					l_Ctxt.fillStyle = "rgb(0, 255, 0)";
+
+					/*
+					this.e_Path.cRset()
+						.cMoveTo(0, 0)
+					//	.cArc(true, st2dCtxt.cGetCvsWid()/2, st2dCtxt.cGetCvsHgt()/2, 100, 0, Math.PI * 2)
+					//	.cElpsArc(true, st2dCtxt.cGetCvsWid()/2, st2dCtxt.cGetCvsHgt()/2, 200, 100, 0, Math.PI * 2)
+					//	.cElpsArc(true, 0, 0, 200, 100, 0, Math.PI * 0.5)
+					//	.cBzrTo(100, 300, 300, 100, 500, 500)
+					//	.cRcRect(true, 200, 100, 300, 200, 50)
+					//	.cArw(true, 100, 300, 500, 300, 100, 50, 20)
+						.cCir(false, 0, 0, 20)
+					//	.cStarPlgn(true, 300, 300, 100, 200, -Math.PI / 2, 5)
+
+					l_Ctxt.strokeStyle = l_Ctxt.fillStyle;
+					st2dCtxt.cSetDrawMthd(1);
+				//	st2dCtxt.cDrawPath(this.e_Path, this.e_Mtx);
+					st2dCtxt.cDrawPath(this.e_Path, this.e_Mtx);
+					//*/
+
+					this.eRing();
+				}
+				,
+				eRing : function ()
+				{
+					var l_FrmItvl = stRltmAfx.cGetFrmItvl();
+
+					this.e_Timer += l_FrmItvl;
+					var l_Spd = 3.0;
+					var l_Rds = 16;
+					var l_MinRdsScl = 0.5;
+					var l_OvalAr = 3 / 2;
+					var l_GapScl = 1.2;
+					var l_B = this.e_RingTot / (l_OvalAr + 1) * l_Rds * l_GapScl;
+					var l_A = l_B * l_OvalAr;
+					var l_X, l_Y, l_S;
+
+					st2dCtxt.cSetDrawMthd(1);
+
+					var l_Ctxt = st2dCtxt.cAcs();
+					l_Ctxt.shadowColor = "rgba(255, 255, 0, 1)";
+					l_Ctxt.shadowBlur = 20;
+
+					var l_RadPerCir = 2 * Math.PI / this.e_RingTot;
+					var i, l_Rad;
+					for (i=0; i<this.e_RingTot; ++i)
+					{
+						l_Rad = nWse.stNumUtil.cNmlzRad(i * l_RadPerCir + this.e_Timer * l_Spd);
+						l_X = l_A * Math.cos(l_Rad);
+						l_Y = l_B * Math.sin(l_Rad);
+						l_S = Math.max((l_Y + l_B) / (l_B + l_B), l_MinRdsScl);
+						l_Y *= (1 * Math.cos(this.e_Timer));
+
+						this.e_Path.cRset()
+							.cCir(false, l_X, l_Y, l_Rds * l_S)
+
+						st2dCtxt.cDrawPath(this.e_Path, this.e_Mtx);
+					}
+
+					st2dCtxt.cClrShdw();
+				}
+			});
+
+			// 运行
+			stRltmAfx.cRun(new nApp.tApp());
+
+			// 另一套方案
+			//if (1)
+			//{
+			//	stGpuDvc.cBindCvs(document.getElementById("k_Canvas"));
+			////	stGpuDvc.cBindCam(null);
+			//	stGpuDvc.cAcsCam().vcRdyToRnd();
+			//	fOnRnd();
+			//}
+		};
+
+	</script>
+
+</body>
+</html>

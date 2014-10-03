@@ -1,0 +1,217 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>UI</title>
+
+	<link rel="stylesheet" type="text/css" href="../cnWse/PcdrLot.css" />
+	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
+	<!--<script type="text/javascript" src="./WSE_nWse.js"></script>-->
+
+	<style type="text/css">
+		#k_TestBoa
+		{
+			min-height: 500px;
+			background-color: rgb(230, 230, 0);
+		}
+
+		#k_PutTgt_Btn1
+		{
+			border: 1px solid blue;
+		}
+	</style>
+</head>
+<body>
+<div id="k_PutTgt_Lot" class="cnWse_ctPutTgt">
+
+</div>
+
+<div id="k_PutSrc_Lot" class="cnWse_ctPutSrc">
+
+	<!---->
+	<!-- 按钮 -->
+	<!---->
+
+	<div id="k_PutTgt_Btn1" class="cnWse_ctPutTgt"><span>按 钮</span></div>
+	<div id="k_PutSrc_Btn1" class="cnWse_ctPutSrc">
+
+	</div>
+
+	<!---->
+	<!-- 徽标板 -->
+	<!---->
+
+	<img id="k_Logo" class="ctLogo" src="" />
+
+	<ul id="k_MainNav" class="">
+		<li id="k_Home"><a class="ctLink" href="#nav/home">Home</a></li>
+		<li id="k_News"><a class="ctLink" href="#nav/news">News</a></li>
+		<li id="k_Archives"><a class="ctLink" href="#nav/archives">Archives</a></li>
+		<li id="k_About"><a class="ctLink" href="#nav/about">About</a></li>
+		<li id="k_Contact"><a class="ctLink" href="#nav/contact">Contact</a></li>
+	</ul>
+</div>
+
+<script type="text/javascript" >
+
+	//@ 全局对象，同时支持页面主线程，WebWorker线程，和Node.js
+	var i_InNodeJs = ("undefined" == typeof self);
+	var l_Glb = i_InNodeJs ? global : self;
+
+	window.addEventListener("load", function ()
+	{
+		console.log("window.onload");
+
+		nWse.stAsynIcld.cFromApp("nWse",
+				[
+					"VtuCsl.js",
+					"PntIptTrkr.js",
+					"nUi/PcdrLot.js",
+					"nUi/EfcMgr.js"
+				]
+				,
+				fOnIcld);
+	});
+
+
+	function fOnIcld(a_Errs)
+	{
+		"use strict";
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// using
+
+		var nWse = l_Glb.nWse;
+		var stVtuCsl = nWse.stVtuCsl;
+		var tFsm = nWse.tFsm;
+		var nUi = nWse.nUi;
+		var tPcdrLot = nUi.tPcdrLot;
+		var tEfc = nUi.tEfc;
+		var stEfcMgr = nUi.stEfcMgr;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 静态变量
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 示例应用程序
+
+		var tExmApp = nWse.fClass(nApp,
+				function tExmApp()
+				{
+					var l_This = this;
+					l_This.e_WidPct = 100;				// 宽度百分比
+					l_This.e_PcdrLot = new tPcdrLot();	// 程序化布局
+				},
+				null,
+				{
+					eInit : function ()
+					{
+						var l_This = this;
+						l_This.e_PcdrLot.cPlan({
+							c_PutTgt: "k_PutTgt_Lot",
+							c_PutSrc: "k_PutSrc_Lot",
+							c_WidPct: l_This.e_WidPct,
+							c_MinWid: 256,
+							c_MaxWid: 2000,
+							c_MinHgt: null,	// 同window.innerHeight
+							c_BrkPnts: {
+								"0": nWse.stFctnUtil.cBindThis(l_This, l_This.cBPC_0),
+								"480": nWse.stFctnUtil.cBindThis(l_This, l_This.cBPC_1),
+								"960": nWse.stFctnUtil.cBindThis(l_This, l_This.cBPC_2)
+							}
+						});
+
+						//	l_This.e_PcdrLot.cUseBrkPntWid(true);
+
+//			var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
+//			l_DftEfc.cSetUniDur(0.6);
+//			l_DftEfc.cSetUniEsn(function (a_Scl)
+//			{
+//				//	return a_Scl;
+//				return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+//			});
+
+						//	l_This.e_PcdrLot.cSetImgLoadDly(2);	// 图像加载延迟2秒
+
+						l_This.e_PcdrLot.cShowHideGridUi(true);
+
+//			// 自定义默认进离动画
+//			stEfcMgr.cBind(l_This.e_PcdrLot, l_This.e_PcdrLot.cAcsDftEfc())
+//					.cCssEntBgn_FromRt()
+//					.cCssLeaEnd_ToRt()
+//					.cCssEntLea_Fade();
+
+						// 虚拟控制台
+						stVtuCsl.cHotKeyUi(true);	// F2快捷键
+
+						// 响应窗口尺寸变化
+						nWse.stDomUtil.cAddEvtHdlr_WndRsz(
+								function()
+								{
+									if (l_This.e_PcdrLot)
+									{ l_This.e_PcdrLot.cRun(); }
+								}, 0.1);	// 1秒更新10次足够了
+
+						//======================== 虚拟控制台
+					}
+					,
+					// 运行
+					cRun : function ()
+					{
+						var l_This = this;
+
+						// 初始化
+						l_This.eInit();
+
+						// 初始布局？
+						l_This.e_PcdrLot.cRun();
+					}
+					,
+					cBPC_0 : function (a_Lot)
+					{
+						var l_This = this;
+
+					}
+					,
+					cBPC_1 : function (a_Lot)
+					{
+						var l_This = this;
+
+					}
+					,
+					cBPC_2 : function (a_Lot)
+					{
+						var l_This = this;
+						var l_Lot = a_Lot;
+
+						l_Lot
+								.cBoa({
+									c_Id: "k_TestBoa"
+								})
+								.cCol({
+									c_GridTot: 20
+								})
+								.cPut({
+									c_Id : "k_PutTgt_Btn1",
+									c_GridCnt: 2
+								});
+					}
+				});
+
+		var zzz=0;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Over
+
+		// 示例应用程序
+		var e_App = new nApp.tExmApp();
+		e_App.cRun();
+	}
+
+</script>
+
+</body>
+</html>

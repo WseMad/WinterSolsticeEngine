@@ -1,0 +1,556 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>程序化布局</title>
+
+	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
+	<link rel="stylesheet" type="text/css" href="../cnWse/PcdrLot.css" />
+	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
+	<!--<script type="text/javascript" src="./WSE_nWse.js"></script>-->
+
+	<style type="text/css">
+
+		.cnWse_tPcdrLot_Boa
+		{
+			/*开发*/
+			background-color: rgb(230, 230, 0);
+			min-height: 10px;
+			/*background-image: url("");*/
+		}
+
+		.cnWse_tPcdrLot_Col
+		{
+			/*开发*/
+			min-height: 10px;
+			border: 1px solid rgb(0, 0, 0);
+			background-color: rgb(230, 0, 230);
+			visibility: visible;
+		}
+
+		.cnWse_tPcdrLot_Put
+		{
+			margin: 10px 5px 10px 5px;
+			background-color: rgb(230, 230, 230);
+			border: 1px solid rgb(50, 50, 50);
+		}
+		/***************************/
+
+		#k_CtrlPnl
+		{
+			min-height: 24px;
+			margin: 4px;
+		}
+
+		#k_CtrlPnl>*
+		{
+			padding: 4px;
+		}
+
+		#k_PutTgt_Lot
+		{
+			min-height: 100px;
+			width: 256px;				/* 初始宽度 */
+			/*height: 200px;	千万别设置，保持默认，即"auto"*/
+			margin: 0 auto;
+			background-color: rgb(230, 230, 230);
+			border: none;
+			border-top: 2px solid rgb(255, 128, 0);
+
+		}
+
+		#k_4
+		{
+			background-color: rgb(0, 230, 230);
+		}
+
+		#k_5
+		{
+			overflow: auto;
+			background-image: url(Media/Cloud.jpg);
+			background-size: 100%;
+			margin-top: 10px;
+		}
+
+		.ctBkgdClo0
+		{
+			color: white;
+			background-color: rgb(0, 160, 0);
+		}
+
+		.ctBkgdClo1
+		{
+			color: white;
+			background-color: rgb(0, 0, 200);
+		}
+
+		.ctVA
+		{
+			margin: 0 0 15px 0;
+		}
+
+		.ctWF
+		{
+			margin: 5px 5px 0 5px;
+		}
+	</style>
+</head>
+<body>
+	<div id="k_CtrlPnl" style="">
+		<span id="k_Info"></span><span> | </span><span id="k_Info2"></span><span> | </span>
+		<button id="k_RunLot">运行布局</button>
+		<button id="k_RmvAllPuts">移除全部放置元素</button>
+		<button id="k_ClnPutTgt">清理放置目标</button>
+	</div>
+
+	<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
+		<div style="display: none;">你好，世界！</div>
+	</div>
+
+	<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
+		<div id="k_1" class="">按A、B键切换尺寸！</div>
+		<div id="k_2" class="">背景色会改变！<br/>背景色会改变！<br/>背景色会改变！</div>
+		<p id="k_3" class="">
+			不同断点可以有不同元素！
+		</p>
+		<p id="k_4" class="">
+			固定的区域，脱离排版流
+		</p>
+		<p id="k_5" class=""
+		   style=""
+		   data-Wse_ImgSrc="Media/Cloud.jpg">
+			什么是Viewport<br/>
+			手机浏览器是把页面放在一个虚拟的“窗口”（viewport）中，通常这个虚拟的“窗口”（viewport）比屏幕宽，
+			这样就不用把每个网页挤 到很小的窗口中（这样会破坏没有针对手机浏览器优化的网页的布局），
+			用户可以通过平移和缩放来看网页的不同部分。
+			移动版的 Safari  浏览器最新引进了 viewport 这个 meta tag，让网页开发者来控制 viewport 的大小和缩放，
+			其他手机浏览器也基本支持。
+		</p>
+		<img id="k_FootballImg" class="" src="Media/Football.jpg" data-Wse_ImgSrc="Media/Football.jpg" />
+
+		<div id="k_VA0" class="ctVA" style="height:80px">顶</div>
+		<div id="k_VA1" class="ctVA" style="height:60px">对</div>
+		<div id="k_VA2" class="ctVA" style="height:40px">齐</div>
+		<div id="k_VA3" class="ctVA" style="height:80px">中</div>
+		<div id="k_VA4" class="ctVA" style="height:60px">对</div>
+		<div id="k_VA5" class="ctVA" style="height:40px">齐</div>
+		<div id="k_VA6" class="ctVA" style="height:80px">底</div>
+		<div id="k_VA7" class="ctVA" style="height:60px">对</div>
+		<div id="k_VA8" class="ctVA" style="height:40px">齐</div>
+
+		<div id="k_WF0" class="ctWF">垂</div>
+		<div id="k_WF1" class="ctWF">直</div>
+		<div id="k_WF2" class="ctWF">紧</div>
+		<div id="k_WF3" class="ctWF">凑</div>
+		<div id="k_WF4" class="ctWF">可</div>
+		<div id="k_WF5" class="ctWF">以</div>
+		<div id="k_WF6" class="ctWF">用</div>
+		<div id="k_WF7" class="ctWF">于</div>
+		<div id="k_WF8" class="ctWF">实</div>
+		<div id="k_WF9" class="ctWF">现</div>
+		<div id="k_WF10" class="ctWF">瀑</div>
+		<div id="k_WF11" class="ctWF">布</div>
+		<div id="k_WF12" class="ctWF">流</div>
+		<div id="k_WF13" class="ctWF">布</div>
+		<div id="k_WF14" class="ctWF">局</div>
+	</div>
+
+	<script type="text/javascript">
+		"use strict";
+
+		window.onload = function ()
+		{
+			console.log("window.onload");
+
+			nWse.stAsynIcld.cFromApp("nWse",
+			[
+				"nUi/EfcMgr.js",
+				"nUi/PcdrLot.js"
+			]
+			,
+			fOnIcld);
+		};
+
+		function fOnIcld(a_Errs)
+		{
+			// 示例应用程序
+			nWse.fClass(nApp,
+			function tExmApp()
+			{
+				this.e_WidPct = 99;							// 宽度百分比
+				this.e_PcdrLot = new nWse.nUi.tPcdrLot();	// 程序化布局
+
+				// 演示
+				this.e_DemoCfg_k_1 = {
+					c_Id: "k_1",
+					c_GridCnt: 2
+				}
+			},
+			null,
+			{
+			// 运行
+			cRun : function ()
+			{
+				var l_This = this;
+				l_This.e_PcdrLot.cPlan({
+					c_PutTgt: "k_PutTgt_Lot",
+					c_PutSrc: "k_PutSrc_Lot",
+					c_WidPct: l_This.e_WidPct,
+					c_MinWid: 256,
+					c_MaxWid: 2000,
+					c_MinHgt: null,
+					c_BrkPnts: [0, 480, 960],
+					c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
+				});
+
+			//	l_This.e_PcdrLot.cTheUseBrkPntWid(true);
+
+				var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
+				l_DftEfc.cSetUniDur(0.6);
+				l_DftEfc.cSetUniEsn(function (a_Scl)
+				{
+					//	return a_Scl;
+					return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+				});
+
+				nWse.g_AsynDly = 2;	// 异步延迟2秒（图像加载）
+
+				l_This.e_PcdrLot.cShowHideGridUi(true);
+
+				// 自定义默认进离动画
+				nWse.nUi.stEfcMgr.cBind(l_This.e_PcdrLot.cAcsDftEfc())
+						.cCssEntLea_FromTo("Rt", null, "Lt", null)
+						.cCssEntLea_Fade()
+
+				// 初始动画
+				var l_PutTgt_Lot = document.getElementById("k_PutTgt_Lot");
+
+				nWse.stCssUtil.cAnmt(l_PutTgt_Lot,
+				{
+					"width": l_This.e_WidPct.toString() + "%",					// 百分比
+					"height": (window.innerHeight - 100) + "px",		// 像素
+					"backgroundColor": "rgba(0, 230, 230, 1)"			// 颜色
+				},
+				{
+					c_Dly: 0,
+					c_Dur: 0.4,
+					c_fEsn : function (a_Scl)
+					{
+						return a_Scl;
+						//	return nWse.stNumUtil.c2dBzr([{x:0, y:0}, {x:0.33, y:0.2}, {x:0.66, y:0.8}, {x:1, y:1}], a_Scl).y;
+						return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, true);
+					},
+					c_fOnEnd : function (a_LotPutTgt)
+					{
+						l_PutTgt_Lot.style.backgroundColor = "";		// 清除上面动画的颜色
+						l_PutTgt_Lot.style.height = "";				// 自动确定
+
+						l_This.e_PcdrLot.cRun();	// 运行布局
+
+						//【调试】
+						document.getElementById("k_Info").textContent = l_This.e_PcdrLot.cAcsPutTgt().style.width;
+					//	document.getElementById("k_Info").textContent = document.getElementById("k_FootballImg").offsetWidth;
+					}
+				});
+
+				// 固定宽高比
+				//	l_This.cSetFxdArForElmts("k_页头板", [0, 1], 16 / 10);
+				//	l_This.cSetFxdArForElmts("k_内容板", null, 4 / 3);
+				//	l_This.cSetFxdArForElmts("k_页脚板", null, 16 / 9);
+
+				//	l_This.cSetFxdArForElmts("k_5", null, 4 / 3);
+
+				// 布局
+				nWse.stDomUtil.cAddEvtHdlr_WndRsz(
+				function()
+				{
+					l_This.e_PcdrLot.cRun();
+
+					//【调试】
+					document.getElementById("k_Info").textContent = l_This.e_PcdrLot.cAcsPutTgt().style.width;
+				//	document.getElementById("k_Info").textContent = document.getElementById("k_FootballImg").offsetWidth;
+				}, 0.1);	// 1秒更新10次足够了
+
+				// 初始布局？在初始动画完成后进行也行！
+				//	l_This.e_PcdrLot.cRun();
+
+
+				// 演示
+				document.onkeydown = function (a_Evt)
+				{
+					if (65 == a_Evt.keyCode) // A
+					{
+						document.getElementById("k_1").style.height = "100px";
+						l_This.e_DemoCfg_k_1.c_GridCnt = 3;
+					//	l_This.e_PcdrLot.cRun();
+						l_This.e_PcdrLot.cRfl();
+					}
+					else
+					if (66 == a_Evt.keyCode)
+					{
+						document.getElementById("k_1").style.height = "";
+						l_This.e_DemoCfg_k_1.c_GridCnt = 2;
+					//	l_This.e_PcdrLot.cRun();
+						l_This.e_PcdrLot.cRfl();
+					}
+				};
+
+				// 控制面板
+				(function ()
+				{
+					var l_Wgt;
+					l_Wgt = document.getElementById("k_RunLot");
+					l_Wgt.onclick = function ()
+					{
+						l_This.e_PcdrLot.cRun();
+					};
+
+					l_Wgt = document.getElementById("k_RmvAllPuts");
+					l_Wgt.onclick = function ()
+					{
+						l_This.e_PcdrLot.cRmvAllPuts(true, null);
+					};
+
+					l_Wgt = document.getElementById("k_ClnPutTgt");
+					l_Wgt.onclick = function ()
+					{
+						l_This.e_PcdrLot.cClnPutTgt();
+					};
+				})();
+			}
+			,
+			cBpc : function (a_Lot)
+			{
+				var l_BrkPntIdx = a_Lot.cGetBrkPntIdx();
+				if (0 == l_BrkPntIdx)
+				{ this.cBPC_0(a_Lot); }
+				else
+				if (1 == l_BrkPntIdx)
+				{ this.cBPC_1(a_Lot); }
+				else
+				if (2 == l_BrkPntIdx)
+				{ this.cBPC_2(a_Lot); }
+			}
+			,
+			// 断点回调
+			cBPC_0 : function (a_Lot)
+			{
+				var l_This = this;
+
+				a_Lot
+						.cBoa({
+							c_Id: "k_页脚板",
+							c_ColDvd: [50, null]
+						})
+						.cBoa({
+							c_Id: "k_内容板",
+							c_ColDvd: [20, null, 30]
+						})
+						.cBoa({
+							c_Id: "k_页头板",
+							c_ColDvd: [null]
+						})
+						.cCol({
+							c_GridTot: 10
+						})
+						.cPut(l_This.e_DemoCfg_k_1)
+//						.cPut({
+//							c_Id: "k_2",
+//							c_GridCnt: 3
+//						})
+						.cPut({
+							c_Id: "k_5",
+							c_GridCnt: 5,
+							c_FxdAr : 4 / 3
+						})
+						.cPut({
+							c_Id: "k_FootballImg"
+						})
+						.cOver();
+			}
+			,
+			// 断点回调
+			cBPC_1 : function (a_Lot)
+			{
+				var l_This = this;
+
+				a_Lot
+						.cBoa({
+							c_Id: "k_内容板",
+							c_ColDvd: [50, null]
+						})
+						.cBoa({
+							c_Id: "k_页头板",
+							c_ColDvd: [30, null]
+						})
+						.cCol({
+							c_GridTot: 3
+						})
+						.cPut(l_This.e_DemoCfg_k_1)
+						.cPut({
+							c_NewRow: true,
+							c_Id: "k_2",
+							c_GridCnt: 2,
+							c_Cssc: "ctBkgdClo1"
+						})
+						.cPut({
+							c_Id: "k_5",
+							c_GridIdx: 1,
+							c_GridCnt: 4,
+							c_FxdAr : 4 / 3
+						})
+
+						.cCol({
+							c_GridTot: 6
+						})
+						.cPut({
+							c_Id: "k_FootballImg"
+						})
+
+						.cBoa({
+							c_Id: "k_页脚板",
+							c_ColDvd: [null]
+						})
+						.cOver();
+			}
+			,
+			// 断点回调
+			cBPC_2 : function (a_Lot)
+			{
+				var l_This = this;
+
+				a_Lot
+					.cBoa({
+						c_Id: "k_页头板",
+					//	c_FxdAr: 16 / 10,
+						c_ColDvd: [25, null, 50]
+					})
+						.cCol({
+							c_GridTot: 4,
+							c_VticAln: 100
+						})
+							.cPut(l_This.e_DemoCfg_k_1)
+							.cPut({
+								c_Id: "k_2",
+								c_GridCnt: 2,
+								c_Cssc: "ctBkgdClo0"
+							})
+							.cPut({
+								c_Id: "k_3",
+								c_GridCnt: 2
+							})
+							.cPut({
+								c_Id: "k_4",
+								c_FxdArea: new nWse.tSara(0, 0, 100, 100)
+							})
+							.cPut({
+								c_Id: "k_5",
+								c_GridIdx: 0,
+								c_GridCnt: 4,
+								c_FxdAr : 4 / 3
+							})
+						.cCol({
+							c_GridTot: 10,
+							c_VticAln: 50
+						})
+							// VA
+							.cPut({
+								c_Id: "k_VA0",
+								c_GridIdx: 1,
+								c_GridCnt: 2,
+								c_VticAln: 0
+							})
+							.cPut({
+								c_Id: "k_VA1",
+								c_GridIdx: 4,
+								c_GridCnt: 2,
+								c_VticAln: 0
+							})
+							.cPut({
+								c_Id: "k_VA2",
+								c_GridIdx: 7,
+								c_GridCnt: 2,
+								c_VticAln: 0
+							})
+							.cPut({
+								c_Id: "k_VA3",
+								c_GridIdx: 1,
+								c_GridCnt: 2,
+								c_VticAln: 50
+							})
+							.cPut({
+								c_Id: "k_VA4",
+								c_GridIdx: 4,
+								c_GridCnt: 2,
+								c_VticAln: 50
+							})
+							.cPut({
+								c_Id: "k_VA5",
+								c_GridIdx: 7,
+								c_GridCnt: 2,
+								c_VticAln: 50
+							})
+							.cPut({
+								c_Id: "k_VA6",
+								c_GridIdx: 1,
+								c_GridCnt: 2,
+								c_VticAln: 100
+							})
+							.cPut({
+								c_Id: "k_VA7",
+								c_GridIdx: 4,
+								c_GridCnt: 2,
+								c_VticAln: 100
+							})
+							.cPut({
+								c_Id: "k_VA8",
+								c_GridIdx: 7,
+								c_GridCnt: 2,
+								c_VticAln: 100
+							});
+						// WF
+						var l_WFi = 0, l_WFId;
+						for (; l_WFi<15; ++l_WFi)
+						{
+							l_WFId = "k_WF" + l_WFi;
+							document.getElementById(l_WFId).style.height = nWse.stNumUtil.cRandInt(30, 70).toString() + "px";
+							a_Lot
+							.cPut({
+								c_Id: l_WFId,
+								c_GridCnt: 2,
+								c_VticAln: 0,
+								c_VticCmpc: true
+							});
+						}
+
+				a_Lot.cCol({
+							c_GridTot: 5
+						})
+						.cPut({
+							c_Id: "k_FootballImg"
+						})
+				.cBoa({
+					c_Id: "k_内容板",
+					c_ColDvd: [20, null, 30]
+				})
+				.cBoa({
+					c_Id: "k_页脚板",
+					c_ColDvd: [null]
+				})
+				.cOver();
+			}
+			});
+
+			// 示例应用程序
+			var e_App = new nApp.tExmApp();
+			e_App.cRun();
+
+			var zzz=0;
+		}
+	</script>
+
+</body>
+</html>

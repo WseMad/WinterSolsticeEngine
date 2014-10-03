@@ -1,0 +1,485 @@
+﻿	var t;
+	(function ()
+	{
+		t = nWse.fClass(nWse,
+		///
+		function t()
+		{
+			//
+		}
+		,
+		null
+		,
+		{
+			//
+		}
+		,
+		{
+			//
+		}
+		,
+		false);
+	})();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	var st;
+	(function ()
+	{
+		/// 
+		st = function () { };
+		n.st = st;
+		st.oc_nHost = n;
+		st.oc_FullName = n.ocBldFullName("st");
+
+		/// 构建全名
+		st.ocBldFullName = function (a_Name)
+		{
+			return st.oc_FullName + "." + a_Name;
+		};
+
+		//======== 私有字段
+
+		//======== 私有函数
+
+		//======== 公有函数
+
+	})();
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//	console.log("-webkit-transform" in a_Put.style);
+//	a_Put.style["webkitTransform"] = "rotate(30deg)";	// 顺时针正
+//	transform: skew(45deg,0deg) scale(.5) translate(400px,500px) rotate(90deg);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// 按键码枚举
+		nWse.fEnum(stKbd,
+			/// 按键
+			function tKey () { }, null,
+			{
+				/// Esc
+				i_Esc : 27
+				,
+				/// F1
+				i_F1 : 112
+				,
+				/// F2
+				i_F2 : 113
+				,
+				/// F3
+				i_F3 : 114
+				,
+				/// F4
+				i_F4 : 115
+				,
+				/// F5
+				i_F5 : 116
+				,
+				/// F6
+				i_F6 : 117
+				,
+				/// F7
+				i_F7 : 118
+				,
+				/// F8
+				i_F8 : 119
+				,
+				/// F9
+				i_F9 : 120
+				,
+				/// F10
+				i_F10 : 121
+				,
+				/// F11
+				i_F11 : 122
+				,
+				/// F12
+				i_F12 : 123
+				,
+				/// `
+				i_Tilde : 192
+				,
+				/// 1
+				i_1 : 49
+				,
+				/// 2
+				i_2 : 50
+				,
+				/// 3
+				i_3 : 51
+				,
+				/// 4
+				i_4 : 52
+				,
+				/// 5
+				i_5 : 53
+				,
+				/// 6
+				i_6 : 54
+				,
+				/// 7
+				i_7 : 55
+				,
+				/// 8
+				i_8 : 56
+				,
+				/// 9
+				i_9 : 57
+				,
+				/// 0
+				i_0 : 48
+				,
+				/// -
+				i_Minus : 189
+				,
+				/// =
+				i_Equals : 187
+				,
+				/// Backspace
+				i_Backspace : 8
+				,
+				/// Tab
+				i_Tab : 9
+				,
+				/// Q
+				i_Q : 81
+				,
+				/// W
+				i_W : 87
+				,
+				/// E
+				i_E : 69
+				,
+				/// R
+				i_R : 82
+				,
+				/// T
+				i_T : 84
+				,
+				/// Y
+				i_Y : 89
+				,
+				/// U
+				i_U : 85
+				,
+				/// I
+				i_I : 73
+				,
+				/// O
+				i_O : 79
+				,
+				/// P
+				i_P : 80
+				,
+				/// [
+				i_LBracket : 219
+				,
+				/// ]
+				i_RBracket : 221
+				,
+				/// \
+				i_BackSlash : 220
+				,
+				/// CapsLock
+				i_CapsLock : 20
+				,
+				/// A
+				i_A : 65
+				,
+				/// S
+				i_S : 83
+				,
+				/// D
+				i_D : 68
+				,
+				/// F
+				i_F : 70
+				,
+				/// G
+				i_G : 71
+				,
+				/// H
+				i_H : 72
+				,
+				/// J
+				i_J : 74
+				,
+				/// K
+				i_K : 75
+				,
+				/// L
+				i_L : 76
+				,
+				/// ;
+				i_Semicolon : 186
+				,
+				/// '
+				i_Apostrophe : 222
+				,
+				/// Enter
+				i_Enter : 13
+				,
+				/// Shift
+				i_Shift : 16
+				,
+				/// Z
+				i_Z : 90
+				,
+				/// X
+				i_X : 88
+				,
+				/// C
+				i_C : 67
+				,
+				/// V
+				i_V : 86
+				,
+				/// B
+				i_B : 66
+				,
+				/// N
+				i_N : 78
+				,
+				/// M
+				i_M : 77
+				,
+				/// ,
+				i_Comma : 188
+				,
+				/// .
+				i_Period : 190
+				,
+				/// /
+				i_Slash : 191
+				,
+				/// Ctrl
+				i_Ctrl : 17
+				,
+				/// 左Win
+				i_LWin : 91
+				,
+				/// 右Win
+				i_RWin : 92
+				,
+				/// Alt
+				i_Alt : 18
+				,
+				/// Space
+				i_Space : 32
+				,
+				/// Apps
+				i_Apps : 93
+				,
+				/// PrintScreen
+				i_PrintScreen : 44
+				,
+				/// ScrollLock
+				i_ScrollLock : 145
+				,
+				/// PauseBreak
+				i_PauseBreak : 19
+				,
+				/// Insert
+				i_Insert : 45
+				,
+				/// Home
+				i_Home : 36
+				,
+				/// PageUp
+				i_PageUp : 33
+				,
+				/// Delete
+				i_Delete : 46
+				,
+				/// End
+				i_End : 35
+				,
+				/// PageDown
+				i_PageDown : 34
+				,
+				/// ↑
+				i_UArrow : 38
+				,
+				/// ←
+				i_LArrow : 37
+				,
+				/// ↓
+				i_DArrow : 40
+				,
+				/// →
+				i_RArrow : 39
+				,
+				/// NumLock
+				i_NumLock : 144
+				,
+				/// 0
+				i_NP0 : 96
+				,
+				/// 1
+				i_NP1 : 97
+				,
+				/// 2
+				i_NP2 : 98
+				,
+				/// 3
+				i_NP3 : 99
+				,
+				/// 4
+				i_NP4 : 100
+				,
+				/// 5
+				i_NP5 : 101
+				,
+				/// 6
+				i_NP6 : 102
+				,
+				/// 7
+				i_NP7 : 103
+				,
+				/// 8
+				i_NP8 : 104
+				,
+				/// 9
+				i_NP9 : 105
+				,
+				/// Decimal
+				i_Decimal : 110
+				,
+				/// Add
+				i_Add : 107
+				,
+				/// Subtract
+				i_Subtract : 109
+				,
+				/// Multiply
+				i_Multiply : 106
+				,
+				/// Divide
+				i_Divide : 111
+				,
+				/// 数字键盘Enter
+				i_NPEnter : 256
+				,
+				/// 左Ctrl
+				i_LCtrl : 162
+				,
+				/// 右Ctrl
+				i_RCtrl : 163
+				,
+				/// 左Shift
+				i_LShift : 160
+				,
+				/// 右Shift
+				i_RShift : 161
+				,
+				/// 左Alt
+				i_LAlt : 164
+				,
+				/// 右Alt
+				i_RAlt : 165
+				,
+				/// 总数
+				oi_Tot : 257
+			});
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// stObjUtil
+\.st\w*Util
+
+
+/// 计算部件位置大小
+	/// s_CpntDim索引含义：
+	/// [0]=PPI，每一项占据的像素数；
+	/// [1]=条大小；
+	/// [2],[3]=Min,Max，最小最大范围；
+	/// [4],[5]=MinBtnPos,MinBtnDim，最小按钮位置和大小；
+	/// [6],[7]=DecArwPos,DecArwDim，递减箭头位置和大小；
+	/// [8],[9]=DecShfPos,DecShfDim，递减手柄位置和大小；
+	/// [10],[11]=ThumbPos,ThumbDim，滑块位置和大小；
+	/// [12],[13]=IncShfPos,IncShfDim，递增手柄位置和大小；
+	/// [14],[15]=IncArwPos,IncArwDim，递增箭头位置和大小；
+	/// [16],[17]=MaxBtnPos,MaxBtnDim，最大按钮位置和大小；
+	nGui.fScrlBar_CalcCpntPosDim = function (a_Rst, 
+		a_Hrzt, 
+		a_ScrlBarLmtBtnDim,
+		a_ScrlBarArwBtnDim,
+		a_Dspl, 
+		a_AreaDim,
+		a_VwptPos,
+		a_VwptDim)
+	{
+		var l_DsplPos = a_Hrzt ? a_Dspl.c_X : a_Dspl.c_Y;
+		var l_DsplDim = a_Hrzt ? a_Dspl.c_W : a_Dspl.c_H;
+		var l_LmtDim = a_ScrlBarLmtBtnDim;
+		var l_ArwDim = a_ScrlBarArwBtnDim;
+		var l_LmtArwDim = a_ScrlBarLmtBtnDim + a_ScrlBarArwBtnDim;
+		var l_BarDim = l_DsplDim - l_LmtArwDim * 2;
+
+		var us_ThumbMinDim = 4;
+
+		a_Rst[0] = l_BarDim / a_AreaDim;
+		a_Rst[1] = l_BarDim;
+
+		a_Rst[11] = Math.floor(a_VwptDim * a_Rst[0] + 0.5);	// 对齐像素
+		a_Rst[10] = Math.floor(a_Rst[0] * a_VwptPos + l_DsplPos + l_DsplDim - l_LmtDim - l_ArwDim - a_Rst[11] + 0.5);	// 对齐像素
+		
+		a_Rst[2] = l_DsplPos + l_DsplDim - l_LmtDim - l_ArwDim;
+		a_Rst[3] = l_DsplPos + l_LmtDim + l_ArwDim;
+
+		if (a_Rst[11] < us_ThumbMinDim) // 滑块尺寸低于最小值，重新计算比例和滑块位置尺寸
+		{
+			a_Rst[3] = a_Rst[2] + l_BarDim - us_ThumbMinDim;
+			a_Rst[0] = (a_Rst[3] - a_Rst[2]) / (a_AreaDim - a_VwptDim);
+			
+			a_Rst[10] = Math.Floor(a_Rst[0] * a_VwptPos + l_DsplPos + l_LmtDim + l_ArwDim + 0.5);	// 对齐像素
+			a_Rst[11] = us_ThumbMinDim;
+		}
+
+		a_Rst[4] = l_DsplPos + l_DsplDim - l_LmtDim;						a_Rst[5] = l_LmtDim;
+		a_Rst[6] = a_Rst[4] - l_ArwDim;				a_Rst[7] = l_ArwDim;
+		a_Rst[8] = a_Rst[2];						a_Rst[9] = a_Rst[10] - a_Rst[2];
+		a_Rst[12] = a_Rst[10] + a_Rst[11];			a_Rst[13] = l_BarDim - a_Rst[9] - a_Rst[11];
+		a_Rst[14] = a_Rst[2] + l_BarDim;			a_Rst[15] = l_ArwDim;
+		a_Rst[16] = a_Rst[14] + l_ArwDim;			a_Rst[17] = l_LmtDim;
+
+	//	if (l_BarDim < l_LmtDim + l_ArwDim)	// 这是为什么来着？
+		{
+		//	a_Rst[9] = a_Rst[11] = a_Rst[13] = 0;
+		}
+	};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// canvas
+/*
+			var tClo = nWse.tClo;
+			var nGpu = nWse.nGpu;
+			var t4dVct = nGpu.t4dVct;
+			var t4dMtx = nGpu.t4dMtx;
+			var t2dCtxt = nGpu.t2dCtxt;
+
+			var l_2dCtxt = new t2dCtxt();
+			l_2dCtxt.cBindCvs(document.getElementById("k_Cvs"));
+			l_2dCtxt.cSetCvsDim(400, 300);
+			l_2dCtxt.cSetDrawMthd(1);
+
+			var l_Mtx = new nGpu.t4dMtx();
+		//	l_Mtx.cAs3dFrm_RotZA(-Math.PI / 6);
+			l_Mtx.cAs3dFrm_Tslt(200, 200, 0);
+
+			var l_Path = new t2dCtxt.tPath();
+		//	l_Path.cMoveTo(0, 0);
+		//	l_Path.cElps(true, 0, 0, 80, 40);
+		//	l_Path.cElpsFan(true, 0, 0, 100, 50, 0, Math.PI / 2);
+		//	l_Path.cElpsRingArc(true, 0, 0, 100, 50, 0, Math.PI / 2, 30);
+		//	l_Path.cRing(true, 0, 0, 100, 30);
+			l_Path.cRingArc(true, 0, 0, 150, -2/3 * Math.PI, -1/3 * Math.PI, -120);
+			l_2dCtxt.cAcs().fillStyle = tClo.scToCssCloStr(new tClo(0, 1, 0, 1));
+			l_2dCtxt.cAcs().strokeStyle = l_2dCtxt.cAcs().fillStyle;
+			l_2dCtxt.cDrawPath(l_Path, l_Mtx);
+//*/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
