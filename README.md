@@ -7,4 +7,6 @@ The Procedural Layout!
 
 Please change your browser window size to see the effect!
 
+http://wsemad.github.io/WinterSolsticeEngine
+
 Nice!
