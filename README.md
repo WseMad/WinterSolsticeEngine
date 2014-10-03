@@ -9,3 +9,5 @@ Please change your browser window size to see the effect!
 http://wsemad.github.io/WinterSolsticeEngine
 
 Nice!
+
+Next, I will develop MVC architecture!
