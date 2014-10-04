@@ -32,6 +32,7 @@ function fOnIcld(a_Errs)
 // using
 
 	var nWse = l_Glb.nWse;
+	var stObjUtil = nWse.stObjUtil;
 	var stAryUtil = nWse.stAryUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -108,18 +109,7 @@ function fOnIcld(a_Errs)
 				l_This.e_Url = l_Url;
 				l_This.e_Sync = l_Sync;
 				if (("GET" == l_Mthd) && a_Cfg.c_Qry)
-				{
-					stAryUtil.cFor(a_Cfg.c_Qry,
-					function (a_Ary, a_Idx, a_KV)
-					{
-						if (0 == a_Idx % 2) // 键
-						{ l_Url += (l_Url.indexOf("?") < 0) ? "?" : "&"; }
-						else // 值
-						{ l_Url += "="; }
-
-						l_Url += encodeURIComponent(a_KV.toString());
-					});
-				}
+				{ l_Url = tAjax.scUrlEcdQry(l_Url, a_Cfg.c_Qry); }
 				l_This.e_UrlWithQry = l_Url;
 			//	console.log(l_Url);
 
@@ -219,7 +209,45 @@ function fOnIcld(a_Errs)
 		}
 		,
 		{
-			//
+			/// URL编码查询
+			/// a_Url：String，URL，若非空串则按需添加“?”，空串不添加
+			/// a_Qry：Object$String[]，查询，若为String[]则偶数索引（从0起）是键，奇数索引是值
+			scUrlEcdQry : function (a_Url, a_Qry)
+			{
+				var l_Rst = "";
+				if (a_Url)
+				{ l_Rst = (a_Url.indexOf("?") < 0) ? (a_Url + "?") : (a_Url + "&"); }
+
+				var l_KVPs = [];
+				if (nWse.fIsAry(a_Qry))
+				{
+					stAryUtil.cFor(a_Qry,
+						function (a_Ary, a_Idx, a_KV)
+						{
+							if (0 == a_Idx % 2) // 键
+							{
+								//
+							}
+							else // 值
+							{
+								l_KVPs.push(encodeURIComponent(a_Ary[a_Idx - 1].toString()) + "="
+									+ encodeURIComponent(a_KV.toString()));
+							}
+						});
+				}
+				else
+				{
+					stObjUtil.cFor(a_Qry,
+						function (a_Obj, a_PN, a_PV)
+						{
+							l_KVPs.push(encodeURIComponent(a_PN) + "="
+								+ encodeURIComponent(a_PV.toString()));
+						});
+				}
+
+				l_Rst += l_KVPs.join("&");
+				return l_Rst;
+			}
 		}
 		,
 		false);
