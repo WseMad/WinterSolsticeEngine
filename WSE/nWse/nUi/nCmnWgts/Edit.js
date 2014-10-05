@@ -65,7 +65,9 @@ function fOnIcld(a_Errs)
 	function fRset(a_This)
 	{
 		a_This.d_DomText = null;
-		a_This.d_DomSbmt = null;
+		a_This.d_DomOk = null;
+		a_This.d_ClkOk = false;		// 这次触发事件是因为单击OK按钮引起的？
+		a_This.d_TypedText = false;	// 键入过文本？
 	}
 
 	function fAddRmvPlchd(a_This, a_Add)
@@ -83,7 +85,8 @@ function fOnIcld(a_Errs)
 		}
 		else
 		{
-			if ((a_This.d_Cfg.c_Plchd || "") == a_This.d_DomText.value)	// 相等时才移除
+			// 没键入过文本时才移除
+			if ((! a_This.d_TypedText))
 			{
 				a_This.d_DomText.value = "";
 				stCssUtil.cRmvCssc(a_This.d_DomText, "cnWse_tEdit_Plchd");
@@ -116,6 +119,7 @@ function fOnIcld(a_Errs)
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
 			/// c_MltLine：Boolean，多行？默认false
 			/// c_Plchd：String，占位符
+			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -126,31 +130,44 @@ function fOnIcld(a_Errs)
 
 				if (a_Cfg.c_MltLine)
 				{
-
+					l_This.d_DomText = document.createElement("textarea");
 				}
 				else
 				{
 					l_This.d_DomText = document.createElement("input");
 					l_This.d_DomText.type = "text";
-
 				}
 
 				fAddRmvPlchd(l_This, true); // 占位符
-				l_This.d_DomText.onfocus = function ()
+				l_This.d_DomText.addEventListener("focus", function ()
 				{
 					fAddRmvPlchd(l_This, false);
-				};
-				l_This.d_DomText.onblur = function ()
+				});
+				l_This.d_DomText.addEventListener("blur", function ()
 				{
 					fAddRmvPlchd(l_This, true);
-				};
+				});
+				l_This.d_DomText.addEventListener("change", function ()
+				{
+					l_This.d_TypedText = !! l_This.d_DomText.value;	// 键入过文本？
+					l_This.dTrgrOkEvt();		// 触发事件
+				});
 				l_This.d_PutSrc.appendChild(l_This.d_DomText);	// 添加到放置来源
 				l_This.dPutToTgt(l_This.d_DomText);	// 摆放到到放置目标
 
-				l_This.d_DomSbmt = l_This.dAcsDomNodeByAttr("Wse_Sbmt");	// 取得提交按钮
-				if (l_This.d_DomSbmt) // 摆放到到放置目标
+				l_This.d_DomOk = l_This.dAcsDomNodeByAttr("Wse_Ok");	// 取得确定按钮
+				if (l_This.d_DomOk) // 摆放到到放置目标
 				{
-					l_This.dPutToTgt(l_This.d_DomSbmt);
+					if (a_Cfg.c_MltLine)
+					{
+					//	l_This.d_DomOk.style.position = "";	// 多行时由CSS控制
+					}
+					else
+					{
+						l_This.d_DomOk.style.position = "absolute";	// 单行时绝对定位，为了在动画过程中总是停靠在右侧
+					}
+
+					l_This.dPutToTgt(l_This.d_DomOk);
 				}
 
 				return this;
@@ -215,6 +232,15 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
+						// 如果点中确定按钮
+						if (l_This.d_DomOk === a_DmntTch.cAcsEvtTgt())
+						{
+							// 很难知道现在文本框是否是焦点，为了避免连续两次触发OK事件，设置一个标志
+							l_This.d_ClkOk = true;
+							l_This.d_DomText.blur();	// 清除焦点
+							l_This.d_ClkOk = false;
+							l_This.dTrgrOkEvt();		// 触发事件
+						}
 
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
@@ -247,13 +273,33 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 获取文本
+			cGetText: function ()
+			{
+				var l_This = this;
+				if (! l_This.d_DomText)
+				{ return ""; }
+
+				if (stCssUtil.cHasCssc(l_This.d_DomText, "cnWse_tEdit_Plchd")) // 占位符？
+				{ return ""; }
+
+				return l_This.d_DomText.value;
+			}
+			,
+			/// 设置文本
+			cSetText: function (a_Text)
+			{
+				this.d_DomText.value = a_Text;
+				return this;
+			}
+			,
 			/// 校准位置尺寸
 			dRgltPosDim : function ()
 			{
 				var l_This = this;
 
 				var l_CtntW = 0;
-				var l_SbmtX = 0, l_SbmtY = 0, l_SbmtW = 0, l_SbmtH = 0;
+				var l_OkX = 0, l_OkY = 0, l_OkW = 0, l_OkH = 0;
 				var l_TextW = 0;
 
 				if (l_This.d_Cfg.c_MltLine)
@@ -262,24 +308,35 @@ function fOnIcld(a_Errs)
 				}
 				else
 				{
-					// 文本框的宽度恰好让出提交按钮
-					if (l_This.d_DomSbmt)
+					// 文本框的宽度恰好让出确定按钮
+					if (l_This.d_DomOk)
 					{
-						l_SbmtW = l_This.d_DomSbmt.offsetWidth;
+						l_OkW = l_This.d_DomOk.offsetWidth;
 					}
 
 					l_CtntW = l_This.dGetPutTgtCtntWid();
-					l_TextW = l_CtntW - l_SbmtW;
+					l_TextW = l_CtntW - l_OkW;
 					stCssUtil.cSetDimWid(l_This.d_DomText, l_TextW);	// 利用放置目标内容宽度
 
-					// 提交按钮垂直居中，高度同文本框
-					l_SbmtX = l_This.dGetPutTgtWid() - tWgt.sd_PutTgtBdrThk.c_BdrThkRt - tWgt.sd_PutTgtPad.c_PadRt - l_SbmtW;
-					l_SbmtH = l_This.d_DomText.offsetHeight;
-					l_SbmtY = (l_This.d_PutTgt.offsetHeight - l_SbmtH) / 2;
-					stCssUtil.cSetPos(l_This.d_DomSbmt, l_SbmtX, l_SbmtY);
-					stCssUtil.cSetDimHgt(l_This.d_DomSbmt, l_SbmtH);
+					// 确定按钮垂直居中，高度同文本框
+					l_OkX = l_This.dGetPutTgtWid() - tWgt.sd_PutTgtBdrThk.c_BdrThkRt - tWgt.sd_PutTgtPad.c_PadRt - l_OkW;
+					l_OkH = l_This.d_DomText.offsetHeight;
+					l_OkY = (l_This.d_PutTgt.offsetHeight - l_OkH) / 2;
+					stCssUtil.cSetPos(l_This.d_DomOk, l_OkX, l_OkY);
+					stCssUtil.cSetDimHgt(l_This.d_DomOk, l_OkH);
 				}
 
+				return this;
+			}
+			,
+			/// 触发确定事件
+			dTrgrOkEvt : function ()
+			{
+				var l_This = this;
+				if (l_This.d_ClkOk || (! l_This.d_Cfg.c_fOnOk) || (! l_This.cGetText()))
+				{ return this; }
+
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.d_DomText.value);
 				return this;
 			}
 		}

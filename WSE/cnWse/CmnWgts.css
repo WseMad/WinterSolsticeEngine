@@ -36,7 +36,7 @@
 
 .cnWse_PutTgt.cnWse_tEdit
 {
-	/*border: 1px solid greenyellow;*/
+	border-radius: 0.25em;
 	padding: 0.25em;
 	cursor: default;
 }
@@ -48,7 +48,6 @@
 	margin: 0;
 	/*border: 1px solid rgba(0, 0, 0, 1);*/
 	border: none;
-	border-right: 1px solid rgba(0, 0, 0, 1);
 	padding: 0.5em;
 
 	background-color: rgba(255, 255, 255, 0.7);
@@ -61,10 +60,15 @@
 	-ms-transition: box-shadow;
 	transition: box-shadow;
 
-	-webkit-transition-duration: 0.5s;
-	-moz-transition-duration: 0.5s;
-	-ms-transition-duration: 0.5s;
-	transition-duration: 0.5s;
+	-webkit-transition-duration: 0.6s;
+	-moz-transition-duration: 0.6s;
+	-ms-transition-duration: 0.6s;
+	transition-duration: 0.6s;
+}
+
+.cnWse_PutTgt.cnWse_tEdit>textarea
+{
+	width: 100%;
 }
 
 /* 文本框的辉光效果 */
@@ -79,18 +83,20 @@
 	-ms-transition: box-shadow;
 	transition: box-shadow;
 
-	-webkit-transition-duration: 0.5s;
-	-moz-transition-duration: 0.5s;
-	-ms-transition-duration: 0.5s;
-	transition-duration: 0.5s;
+	-webkit-transition-duration: 0.6s;
+	-moz-transition-duration: 0.6s;
+	-ms-transition-duration: 0.6s;
+	transition-duration: 0.6s;
 }
 
-.cnWse_tEdit *[data-Wse_Sbmt]
+/* OK按钮 */
+.cnWse_tEdit *[data-Wse_Ok]
 {
-	position: absolute;		/* 绝对定位，为了在动画过程中总是停靠在右侧 */
+	text-align: center;
 	cursor: pointer;
 }
 
+/* 占位符 */
 .cnWse_tEdit .cnWse_tEdit_Plchd
 {
 	color: rgba(0, 0, 0, 0.5);

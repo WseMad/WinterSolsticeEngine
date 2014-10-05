@@ -10,7 +10,7 @@
 	var l_Glb = i_InNodeJs ? global : self;
 	
 	//@ 如果本文件已经包含过
-	if (l_Glb.nWse && l_Glb.nWse.nUi && l_Glb.nWse.nUi.nGpuWgts && l_Glb.nWse.nUi.nGpuWgts.tElpsNav)
+	if (l_Glb.nWse && l_Glb.nWse.nUi && l_Glb.nWse.nUi.nGpuWgts && l_Glb.nWse.nUi.nGpuWgts.t$$$)
 	{
 		//@ 避免重复执行相同的初始化代码
 		return;
@@ -26,7 +26,7 @@
 
 function fOnIcld(a_Errs)
 {
-	console.log("ElpsNav.fOnIcld：" + a_Errs);
+	console.log(".fOnIcld：" + a_Errs);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -51,13 +51,13 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 名字空间
 
-	if (! nUi.nGpuWgts)
+	if (! nUi.nCmnWgts)
 	{
 		nWse.fNmspc(nUi,
-			/// 图形控件
-			function nGpuWgts() {});
+			/// 公共控件
+			function nCmnWgts() {});
 	}
-	var nGpuWgts = nUi.nGpuWgts;
+	var nCmnWgts = nUi.nCmnWgts;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -69,14 +69,14 @@ function fOnIcld(a_Errs)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-	var tElpsNav;
+	var t$$$;
 	(function ()
 	{
-		tElpsNav = nWse.fClass(nGpuWgts,
-		/// 椭圆导航
-		function tElpsNav()
+		t$$$ = nWse.fClass(nCmnWgts,
+		/// ？
+		function t$$$()
 		{
-			this.odBase(tElpsNav).odCall();	// 基类版本
+			this.odBase(t$$$).odCall();	// 基类版本
 
 			var l_This = this;
 			fRset(this);

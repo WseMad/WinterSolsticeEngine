@@ -19,7 +19,7 @@
 		#k_TestBoa
 		{
 			min-height: 500px;
-			background-color: rgb(200, 200, 0);
+			background-color: rgb(239, 228, 176);
 			padding: 20px;
 		}
 
@@ -42,10 +42,16 @@
 			margin-top: 100px;
 		}
 
-		#k_PutTgt_BtnFirst
+		#k_PutTgt_Edit2
 		{
 			margin-bottom: 50px;
 		}
+
+		#k_PutTgt_Edit2>textarea
+		{
+			min-height: 100px;
+		}
+
 	</style>
 </head>
 <body class="cnWse_Skin_Blue">
@@ -83,7 +89,11 @@
 		<!---->
 
 		<div id="k_Edit1" class="cnWse_PutSrc">
-			<div data-Wse_Sbmt style="padding: 0.25em;">Go</div>
+			<div data-Wse_Ok style="padding: 0.25em;">Go</div>
+		</div>
+
+		<div id="k_Edit2" class="cnWse_PutSrc">
+			<div data-Wse_Ok style="padding: 0.25em;">Go</div>
 		</div>
 
 
@@ -350,7 +360,24 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Edit1",
 						c_PutSrc: "k_Edit1",
-						c_Plchd: "搜索什么？"
+						c_Plchd: "搜索什么？",
+						c_fOnOk: function (a_Wgt, a_Text)
+						{
+							console.log("文本框的内容是：" + a_Text);
+						}
+					});
+					l_This.e_WgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tEdit();	// Edit
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Edit2",
+						c_PutSrc: "k_Edit2",
+						c_MltLine: true,
+						c_Plchd: "搜索什么？",
+						c_fOnOk: function (a_Wgt, a_Text)
+						{
+							console.log("文本框的内容是：" + a_Text);
+						}
 					});
 					l_This.e_WgtSet.cAdd(l_Wgt);
 
@@ -488,10 +515,15 @@
 							.cPut({
 								c_NewRow : true,
 								c_Id: "k_PutTgt_BtnFirst",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 2
 							})
 							.cPut({
 								c_Id: "k_PutTgt_Edit1",
+								c_HrztAln: 0,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Edit2",
 								c_HrztAln: +1,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
