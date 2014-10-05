@@ -1180,30 +1180,6 @@ function fOnIcld(a_Errs)
 						c_Dur: tMenu.sc_AnmtDur,
 						c_fOnEnd : l_fOnEnd
 					});
-
-//				if (l_This.d_Efc) // 如果有特效
-//				{
-//					l_This.d_Efc.cSetUniDur(tMenu.sc_AnmtDur);
-//					l_This.d_Efc.cClrItems();
-//					stEfcMgr.cBind(l_This.d_Efc)
-//						.cCssEntBgn_FromRt();
-//
-//					stEfcMgr.cIsuCssAnmt(true,
-//						l_This.d_PutTgt, l_TopUl,
-//						1, l_This.d_Efc, null,
-//						{ // 注意这里最后面的“=”，至关重要！
-//							"left": "0px",
-//							"top": "0px",
-//							"width": l_This.d_PutTgt.offsetWidth.toString() + "px=100%",
-//							"height": l_TopUl.offsetHeight.toString() + "px="
-//						}, null);
-//				}
-//				else
-//				{
-//				//	l_TopUl.style.position = "absolute";		// 立即改成绝对定位（已移至样式表）
-//					stCssUtil.cSetPos(l_TopUl, 0, 0);			// 位于原点
-//					stCssUtil.cSetDimWid(l_TopUl, "100%");		// 宽度填充放置目标
-//				}
 				return this;
 			}
 			,

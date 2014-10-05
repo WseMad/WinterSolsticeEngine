@@ -388,6 +388,16 @@ function fOnIcld(a_Errs)
 			return stFrmwk;
 		};
 
+		/// 存取放置元素的目标区域，必须在cRfshAftLot里调用，不要修改！
+		stFrmwk.cAcsPutTgtArea = function (a_Put)
+		{
+			if (! e_Lot)
+			{ return null; }
+
+			var l_scAcsPutTgtArea = e_Lot.constructor.scAcsPutTgtArea || null;
+			return l_scAcsPutTgtArea && l_scAcsPutTgtArea(a_Put);
+		};
+
 		/// 注册事件处理器
 		/// a_EvtName：String，∈{ "" }
 		stFrmwk.cRegEvtHdlr = function (a_EvtName, a_fHdlr)

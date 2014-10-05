@@ -19,7 +19,7 @@
 		#k_TestBoa
 		{
 			min-height: 500px;
-			background-color: rgb(230, 230, 0);
+			background-color: rgb(200, 200, 0);
 			padding: 20px;
 		}
 
@@ -76,6 +76,14 @@
 		</div>
 		<div id="k_BtnSkin" class="cnWse_PutSrc">
 			<span data-Wse_Tit>紫色皮肤</span>
+		</div>
+
+		<!---->
+		<!-- 编辑 -->
+		<!---->
+
+		<div id="k_Edit1" class="cnWse_PutSrc">
+			<div data-Wse_Sbmt style="padding: 0.25em;">Go</div>
 		</div>
 
 
@@ -202,6 +210,7 @@
 						"nUi/Frmwk.js",
 						
 						"nUi/nCmnWgts/Btn.js",
+						"nUi/nCmnWgts/Edit.js",
 						"nUi/nCmnWgts/Menu.js",
 						"nUi/nCmnWgts/Acod.js",
 						"nUi/nCmnWgts/Nav.js"
@@ -330,6 +339,21 @@
 					stFrmwk.cSetWgtSet(l_This.e_WgtSet);	// 框架
 					stFrmwk.cSetLot(l_This.e_PcdrLot);		// 框架
 
+					l_Wgt = new nCmnWgts.tBtn();	// BtnFirst
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_BtnFirst",
+						c_PutSrc: "k_BtnFirst"
+					});
+					l_This.e_WgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tEdit();	// Edit
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Edit1",
+						c_PutSrc: "k_Edit1",
+						c_Plchd: "搜索什么？"
+					});
+					l_This.e_WgtSet.cAdd(l_Wgt);
+
 					l_Wgt = new nCmnWgts.tBtn();	// Btn1
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Btn1",
@@ -416,14 +440,6 @@
 					});
 					l_This.e_WgtSet.cAdd(l_Wgt);
 
-					l_Wgt = new nCmnWgts.tBtn();	// BtnFirst
-					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_BtnFirst",
-						c_PutSrc: "k_BtnFirst"
-					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
-
-
 					l_Wgt = new nCmnWgts.tNav();	// 导航
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Nav",
@@ -472,6 +488,11 @@
 							.cPut({
 								c_NewRow : true,
 								c_Id: "k_PutTgt_BtnFirst",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Edit1",
+								c_HrztAln: +1,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 							.cPut({

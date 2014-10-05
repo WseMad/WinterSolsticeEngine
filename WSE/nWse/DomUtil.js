@@ -511,7 +511,7 @@ function fOnIcld(a_Errs)
 							if (l_Anmt.c_Pau)
 							{ continue; }
 
-							l_Anmt.c_FrmItvl = Math.max(l_AppNow - l_Anmt.c_LastTime, 0.016666667);	// 限制每秒60帧
+							l_Anmt.c_FrmItvl = Math.min(l_AppNow - l_Anmt.c_LastTime, 1);	// 限制每秒1帧
 							l_Anmt.c_LastTime = l_AppNow;
 							l_Anmt.c_FrmTime += l_Anmt.c_FrmItvl;
 							++ l_Anmt.c_FrmNum;

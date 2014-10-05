@@ -441,11 +441,33 @@ function fOnIcld(a_Errs)
 				return stDomUtil.cIsAcst(this.d_PutTgt, a_DomElmt);
 			}
 			,
-			/// 计算放置目标包围区
+			/// 计算放置目标包围区，忽略外边距
 			/// a_Rst：tSara
 			dCalcPutTgtBbox : function (a_Rst)
 			{
 				return a_Rst.cCrt(0, 0, this.d_PutTgt.offsetWidth, this.d_PutTgt.offsetHeight);
+			}
+			,
+			/// 获取放置目标宽度，必须在vcRfshAftLot里调用
+			dGetPutTgtWid : function ()
+			{
+				var l_TgtArea = nUi.stFrmwk.cAcsPutTgtArea(this.d_PutTgt);
+				return l_TgtArea ? l_TgtArea.c_W : 0;
+			}
+			,
+			/// 获取放置目标内容宽度，必须在vcRfshAftLot里调用，同时更新sd_PutTgtBdrThk和sd_PutTgtPad
+			dGetPutTgtCtntWid : function ()
+			{
+				var l_TgtArea = nUi.stFrmwk.cAcsPutTgtArea(this.d_PutTgt);
+				if (! l_TgtArea)
+				{ return 0; }
+
+				// 计算边框和内边距
+				var l_BdrThk = tWgt.sd_PutTgtBdrThk, l_Pad = tWgt.sd_PutTgtPad;
+				stCssUtil.cGetBdrThk(l_BdrThk, this.d_PutTgt);
+				stCssUtil.cGetPad(l_Pad, this.d_PutTgt);
+				var l_Rst = l_TgtArea.c_W - l_BdrThk.c_BdrThkLt - l_BdrThk.c_BdrThkRt - l_Pad.c_PadLt - l_Pad.c_PadRt;
+				return Math.max(l_Rst, 0);
 			}
 			,
 			/// 清除放置目标CSS高度
@@ -458,7 +480,11 @@ function fOnIcld(a_Errs)
 		}
 		,
 		{
-			//
+			/// 放置目标边框厚度
+			sd_PutTgtBdrThk : {}
+			,
+			/// 放置目标内边距
+			sd_PutTgtPad : {}
 		}
 		,
 		false);
