@@ -149,7 +149,7 @@ function fOnIcld(a_Errs)
 				});
 				l_This.d_DomText.addEventListener("change", function ()
 				{
-					l_This.d_TypedText = !! l_This.d_DomText.value;	// 键入过文本？
+					l_This.dUpdTypedText();		// 更新键入过文本
 					l_This.dTrgrOkEvt();		// 触发事件
 				});
 				l_This.d_PutSrc.appendChild(l_This.d_DomText);	// 添加到放置来源
@@ -184,6 +184,24 @@ function fOnIcld(a_Errs)
 				// 基类版本，最后才调用！
 				this.odBase(f).odCall();
 				return this;
+			}
+			,
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+				if ((! l_This.d_DomText) || (! l_This.cGetText()))
+				{ return a_Kvo; }
+
+				var l_Key = l_This.d_PutSrc.id;
+				l_This.dChkKeyOnSrlz(a_Kvo, l_Key);
+				a_Kvo[l_Key] = l_This.d_DomText.value;
+				return a_Kvo;
 			}
 			,
 			/// 刷新在布局之前
@@ -270,17 +288,24 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				if (l_This.d_DomText)		// 清除焦点
+				{ l_This.d_DomText.blur(); }
 				return this;
+			}
+			,
+			/// 为空？
+			cIsEmt : function ()
+			{
+				return ! this.cGetText();
 			}
 			,
 			/// 获取文本
 			cGetText: function ()
 			{
 				var l_This = this;
-				if (! l_This.d_DomText)
-				{ return ""; }
-
-				if (stCssUtil.cHasCssc(l_This.d_DomText, "cnWse_tEdit_Plchd")) // 占位符？
+				if ((! l_This.d_DomText) ||
+					stCssUtil.cHasCssc(l_This.d_DomText, "cnWse_tEdit_Plchd"))	// 占位符？
 				{ return ""; }
 
 				return l_This.d_DomText.value;
@@ -290,6 +315,14 @@ function fOnIcld(a_Errs)
 			cSetText: function (a_Text)
 			{
 				this.d_DomText.value = a_Text;
+				this.dUpdTypedText();
+				return this;
+			}
+			,
+			/// 更新键入过文本
+			dUpdTypedText : function ()
+			{
+				this.d_TypedText = !! this.d_DomText.value;	// 键入过文本？
 				return this;
 			}
 			,
@@ -319,11 +352,14 @@ function fOnIcld(a_Errs)
 					stCssUtil.cSetDimWid(l_This.d_DomText, l_TextW);	// 利用放置目标内容宽度
 
 					// 确定按钮垂直居中，高度同文本框
-					l_OkX = l_This.dGetPutTgtWid() - tWgt.sd_PutTgtBdrThk.c_BdrThkRt - tWgt.sd_PutTgtPad.c_PadRt - l_OkW;
-					l_OkH = l_This.d_DomText.offsetHeight;
-					l_OkY = (l_This.d_PutTgt.offsetHeight - l_OkH) / 2;
-					stCssUtil.cSetPos(l_This.d_DomOk, l_OkX, l_OkY);
-					stCssUtil.cSetDimHgt(l_This.d_DomOk, l_OkH);
+					if (l_This.d_DomOk)
+					{
+						l_OkX = l_This.dGetPutTgtWid() - tWgt.sd_PutTgtBdrThk.c_BdrThkRt - tWgt.sd_PutTgtPad.c_PadRt - l_OkW;
+						l_OkH = l_This.d_DomText.offsetHeight;
+						l_OkY = (l_This.d_PutTgt.offsetHeight - l_OkH) / 2;
+						stCssUtil.cSetPos(l_This.d_DomOk, l_OkX, l_OkY);
+						stCssUtil.cSetDimHgt(l_This.d_DomOk, l_OkH);
+					}
 				}
 
 				return this;

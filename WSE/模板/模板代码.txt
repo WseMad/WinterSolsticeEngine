@@ -482,4 +482,43 @@
 			l_2dCtxt.cAcs().strokeStyle = l_2dCtxt.cAcs().fillStyle;
 			l_2dCtxt.cDrawPath(l_Path, l_Mtx);
 //*/
+
+Request URL:http://www.youjiyouli.com/login
+Request Method:POST
+Status Code:200 OK
+
+【Request Headers】     view source
+Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding:gzip,deflate,sdch
+Accept-Language:zh-CN,zh;q=0.8
+Connection:keep-alive
+Content-Length:64
+Content-Type:application/x-www-form-urlencoded
+Cookie:PHPSESSID=glgqk95l8mkn38elkcecbvvhl4
+Host:www.youjiyouli.com
+Origin:http://www.youjiyouli.com
+Referer:http://www.youjiyouli.com/login
+User-Agent:Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.101 Safari/537.36
+【Form Data】          view source view URL encoded
+email:abc@163.com
+password:123456789
+submit:登录
+
+//编码后与我的对比
+email=abc%40163.com&password=123456789&submit=%E7%99%BB%E5%BD%95
+k_Edit1=abc%40163.com&k_Edit2=123456789
+
+
+【Response Headers】  view source
+Cache-Control:no-store, no-cache, must-revalidate, post-check=0, pre-check=0
+Connection:keep-alive
+Content-Encoding:gzip
+Content-Type:text/html; charset=utf-8
+Date:Mon, 06 Oct 2014 03:48:38 GMT
+Expires:Thu, 19 Nov 1981 08:52:00 GMT
+Pragma:no-cache
+Server:Tengine/1.5.1
+Transfer-Encoding:chunked
+Vary:Accept-Encoding
+X-Powered-By:PHP/5.5.15
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

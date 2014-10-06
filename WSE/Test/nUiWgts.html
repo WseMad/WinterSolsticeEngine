@@ -29,7 +29,7 @@
 			z-index: 100;	/* 【重要】否则掉落的菜单会被后面的按钮覆盖 */
 		}
 
-		#k_PutTgt_Btn1
+		#k_PutTgt_SetMode
 		{
 			/*border: 1px solid blue;*/
 			font-size: 150%;
@@ -44,12 +44,23 @@
 
 		#k_PutTgt_Edit2
 		{
-			margin-bottom: 50px;
+			margin-bottom: 10px;
+			text-align: center;
 		}
 
 		#k_PutTgt_Edit2>textarea
 		{
 			min-height: 100px;
+		}
+
+		#k_PutTgt_Srlz
+		{
+			margin-bottom: 50px;
+		}
+
+		.ctAcodTit
+		{
+			/*font-size: 2em;*/
 		}
 
 	</style>
@@ -77,7 +88,12 @@
 		<div id="k_BtnFirst" class="cnWse_PutSrc">
 			<span data-Wse_Tit>按 钮</span>
 		</div>
-		<div id="k_Btn1" class="cnWse_PutSrc">
+
+		<div id="k_Srlz" class="cnWse_PutSrc">
+			<span data-Wse_Tit>表单序列化</span>
+		</div>
+
+		<div id="k_SetMode" class="cnWse_PutSrc">
 			<span data-Wse_Tit>层叠式</span>
 		</div>
 		<div id="k_BtnSkin" class="cnWse_PutSrc">
@@ -89,11 +105,11 @@
 		<!---->
 
 		<div id="k_Edit1" class="cnWse_PutSrc">
-			<div data-Wse_Ok style="padding: 0.25em;">Go</div>
+			<div data-Wse_Ok style="padding: 0.25em;">OK</div>
 		</div>
 
 		<div id="k_Edit2" class="cnWse_PutSrc">
-			<div data-Wse_Ok style="padding: 0.25em;">Go</div>
+			<div data-Wse_Ok style="padding: 0.25em;">OK</div>
 		</div>
 
 
@@ -159,7 +175,7 @@
 		<!---->
 
 		<div id="k_Acod1" class="cnWse_PutSrc">
-			<h3 data-Wse_Tit>First</h3>
+			<h3 data-Wse_Tit class="ctAcodTit">First</h3>
 			<p data-Wse_Ctnt >Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.<br />Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
 			<h3 data-Wse_Tit>Second</h3>
 			<p data-Wse_Ctnt >Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.</p>
@@ -345,16 +361,20 @@
 
 					//【控件】
 					var l_Wgt = null;
-					l_This.e_WgtSet = new nUi.tWgtSet();
-					stFrmwk.cSetWgtSet(l_This.e_WgtSet);	// 框架
-					stFrmwk.cSetLot(l_This.e_PcdrLot);		// 框架
+					l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
+					stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
+					stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
+
+					var l_Form = new nUi.tForm();			// 表单
+					l_This.e_Form = l_Form;
+					l_This.e_StaWgtSet.cAdd(l_Form);
 
 					l_Wgt = new nCmnWgts.tBtn();	// BtnFirst
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_BtnFirst",
 						c_PutSrc: "k_BtnFirst"
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tEdit();	// Edit
 					l_Wgt.vcBind({
@@ -363,10 +383,11 @@
 						c_Plchd: "搜索什么？",
 						c_fOnOk: function (a_Wgt, a_Text)
 						{
-							console.log("文本框的内容是：" + a_Text);
+						//	console.log("文本框的内容是：" + a_Text);
 						}
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tEdit();	// Edit
 					l_Wgt.vcBind({
@@ -376,18 +397,35 @@
 						c_Plchd: "搜索什么？",
 						c_fOnOk: function (a_Wgt, a_Text)
 						{
-							console.log("文本框的内容是：" + a_Text);
+						//	console.log("文本框的内容是：" + a_Text);
 						}
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
-					l_Wgt = new nCmnWgts.tBtn();	// Btn1
+					l_Wgt = new nCmnWgts.tBtn();	// Srlz
 					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_Btn1",
-						c_PutSrc: "k_Btn1",
+						c_PutTgt: "k_PutTgt_Srlz",
+						c_PutSrc: "k_Srlz",
 						c_fOnClk: function (a_Wgt)
 						{
-							var l_Menu = stFrmwk.cAcsWgtSet().cAcsByPutSrcId("k_Menu1");
+							var l_Kvo = l_This.e_Form.cSrlz(null);
+							var l_Ueq = nWse.tAjax.scUrlEcdQry(null, l_Kvo);
+							console.log("表单序列化：");
+							console.log("<UEQ> = " + l_Ueq);
+							console.log("<JSON> = " + JSON.stringify(l_Kvo));
+							console.log();
+						}
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// SetMode
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_SetMode",
+						c_PutSrc: "k_SetMode",
+						c_fOnClk: function (a_Wgt)
+						{
+							var l_Menu = stFrmwk.cAcsStaWgtSet().cAcsByPutSrcId("k_Menu1");
 
 							if ("层叠式" == a_Wgt.cAcsDomTit().textContent)
 							{
@@ -405,7 +443,7 @@
 							stFrmwk.cRflLot();
 						}
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tBtn();	// BtnSkin
 					l_Wgt.vcBind({
@@ -427,7 +465,7 @@
 							}
 						}
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tMenu();	// Menu1
 					l_Wgt.vcBind({
@@ -455,7 +493,7 @@
 						}
 					});
 				//	l_Wgt.cSetMode("Ovlp");
-					l_This.e_WgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tAcod();	// Acod1
 					l_Wgt.vcBind({
@@ -465,7 +503,7 @@
 						c_InitExpdAll: true
 					//	,c_ExpdOnlyOne: true
 					});
-					l_This.e_WgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tNav();	// 导航
 					l_Wgt.vcBind({
@@ -483,7 +521,8 @@
 						}
 					});
 				//	l_Wgt.cSetActvEfcIdx(2);
-					l_This.e_WgtSet.cAdd(l_Wgt);
+				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
 				}
 				,
 				// 运行
@@ -528,13 +567,18 @@
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 							.cPut({
+								c_NewRow: true,
+								c_Id: "k_PutTgt_Srlz",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
 								c_NewRow : true,
 								c_Id: "k_PutTgt_Menu1",
 								c_GridCnt: (2 == l_BrkPntIdx) ? 10 : 10
 							})
 							.cPut({
 								c_NewRow : true,
-								c_Id: "k_PutTgt_Btn1",
+								c_Id: "k_PutTgt_SetMode",
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 

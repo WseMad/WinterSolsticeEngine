@@ -212,8 +212,12 @@ function fOnIcld(a_Errs)
 			/// URL编码查询
 			/// a_Url：String，URL，若非空串则按需添加“?”，空串不添加
 			/// a_Qry：Object$String[]，查询，若为String[]则偶数索引（从0起）是键，奇数索引是值
+			/// 返回：String
 			scUrlEcdQry : function (a_Url, a_Qry)
 			{
+				if (! a_Qry)
+				{ return a_Url || ""; }
+
 				var l_Rst = "";
 				if (a_Url)
 				{ l_Rst = (a_Url.indexOf("?") < 0) ? (a_Url + "?") : (a_Url + "&"); }

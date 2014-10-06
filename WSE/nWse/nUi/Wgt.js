@@ -90,7 +90,7 @@ function fOnIcld(a_Errs)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-	var tWgt, tWgtSet;
+	var tWgt, tWgtSet, tForm;
 	(function ()
 	{
 		tWgt = nWse.fClass(nUi,
@@ -166,6 +166,14 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				return a_Kvo;
+			}
+			,
 			/// 结束动画
 			vcFnshAnmt : function f()
 			{
@@ -188,13 +196,6 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 
 				return this;
-			}
-			,
-			/// 刷新
-			cRfsh : function ()
-			{
-				// 若在布局期间则忽略这次调用
-				return nUi.stFrmwk.cIsDurLot() ? this : this.vcRfshBefLot().vcRfshAftLot();
 			}
 			,
 			/// 输入复位
@@ -312,6 +313,13 @@ function fOnIcld(a_Errs)
 			vcLoseFoc : function f()
 			{
 				return this;
+			}
+			,
+			/// 刷新
+			cRfsh : function ()
+			{
+				// 若在布局期间则忽略这次调用
+				return nUi.stFrmwk.cIsDurLot() ? this : this.vcRfshBefLot().vcRfshAftLot();
 			}
 			,
 			/// 触摸开始？
@@ -477,6 +485,19 @@ function fOnIcld(a_Errs)
 				{ this.d_PutTgt.style.height = ""; }
 				return this;
 			}
+			,
+			/// 序列化时检查键
+			/// a_Key：String，键名，默认d_PutSrc.id
+			dChkKeyOnSrlz : function (a_Kvo, a_Key)
+			{
+				if (! a_Key)
+				{ a_Key = this.d_PutSrc.id; }
+
+				if (a_Key in a_Kvo)
+				{ throw new Error("tWgt序列化时遇到键冲突：“" + a_Key + "”！"); }
+
+				return true;
+			}
 		}
 		,
 		{
@@ -493,7 +514,7 @@ function fOnIcld(a_Errs)
 	(function ()
 	{
 		tWgtSet = nWse.fClass(nUi,
-		/// 控件集合
+		/// 控件集
 		function tWgtSet()
 		{
 			this.cRset();
@@ -507,6 +528,12 @@ function fOnIcld(a_Errs)
 			{
 				this.e_Wgts = [];
 				return this;
+			}
+			,
+			/// 存取控件数组，【注意】不要修改！
+			cAcsWgts : function ()
+			{
+				return this.e_Wgts;
 			}
 			,
 			/// 获取数量
@@ -578,8 +605,18 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 				stAryUtil.cFor(l_This.e_Wgts,
-				function (a_Ary, a_Idx, a_Wgt)
-				{ a_Wgt.cClnPutTgt(); });
+					function (a_Ary, a_Idx, a_Wgt)
+					{ a_Wgt.cClnPutTgt(); });
+				return this;
+			}
+			,
+			/// 解绑全部
+			cUbndAll : function ()
+			{
+				var l_This = this;
+				stAryUtil.cFor(l_This.e_Wgts,
+					function (a_Ary, a_Idx, a_Wgt)
+					{ a_Wgt.vcUbnd(); });
 				return this;
 			}
 			,
@@ -612,6 +649,123 @@ function fOnIcld(a_Errs)
 					function (a_Ary, a_Idx, a_Wgt)
 					{ a_Wgt.cRfsh(); });
 				return this;
+			}
+		}
+		,
+		{
+			//
+		}
+		,
+		false);
+	})();
+
+	(function ()
+	{
+		tForm = nWse.fClass(nUi,
+		/// 表单
+		function tForm()
+		{
+			this.odBase(tForm).odCall();	// 基类版本
+
+			this.d_WgtSet = new nUi.tWgtSet();	// 控件集
+		}
+		,
+		tWgt
+		,
+		{
+			/// 绑定，无需调用
+			vcBind : function f(a_Cfg)
+			{
+				var l_This = this;
+				return this;
+			}
+			,
+			/// 解绑，无需调用
+			vcUbnd : function f()
+			{
+				var l_This = this;
+				return this;
+			}
+			,
+			/// 结束动画
+			vcFnshAnmt : function f()
+			{
+				var l_This = this;
+
+				// 对每个控件
+				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcFnshAnmt();
+					});
+				return this;
+			}
+			,
+			/// 刷新在布局之前
+			vcRfshBefLot : function f()
+			{
+				var l_This = this;
+
+				// 对每个控件
+				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcRfshBefLot();
+					});
+				return this;
+			}
+			,
+			/// 刷新在布局之后
+			vcRfshAftLot : function f()
+			{
+				var l_This = this;
+
+				// 对每个控件
+				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcRfshAftLot();
+					});
+				return this;
+			}
+			,
+			/// 输入复位
+			vcIptRset : function f()
+			{
+				var l_This = this;
+
+				// 对每个控件
+				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcIptRset();
+					});
+				return this;
+			}
+			,
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			cSrlz : function (a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+
+				// 对每个控件
+				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcSrlz(a_Kvo);
+					});
+				return a_Kvo;
+			}
+			,
+			/// 存取控件集
+			cAcsWgtSet : function ()
+			{
+				return this.d_WgtSet;
 			}
 		}
 		,

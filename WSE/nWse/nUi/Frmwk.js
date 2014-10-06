@@ -69,7 +69,8 @@ function fOnIcld(a_Errs)
 		var e_PntIptTrkr = null;	// 点输入追踪器
 		var e_Lot = null;			// 布局
 		var e_DurLot = false;		// 在布局期间？
-		var e_WgtSet = null;		// 控件集合
+		var e_GlbWgtSet = null;		// 全局控件集
+		var e_StaWgtSet = null;		// 状态控价集
 		var e_Focs = [];			// 焦点数组
 		var e_EvtSys = {};			// 事件系统
 
@@ -287,16 +288,22 @@ function fOnIcld(a_Errs)
 			e_DurLot = true;
 
 			// 刷新在布局之前
-			if (e_WgtSet)
-			{ e_WgtSet.cRfshBefLot(); }
+			if (e_GlbWgtSet)
+			{ e_GlbWgtSet.cRfshBefLot(); }
+
+			if (e_StaWgtSet)
+			{ e_StaWgtSet.cRfshBefLot(); }
 
 			// 布局运行或重排
 			if (e_Lot)
 			{ a_Rfl ? e_Lot.cRfl() : e_Lot.cRun(); }
 
 			// 刷新在布局之后
-			if (e_WgtSet)
-			{ e_WgtSet.cRfshAftLot(); }
+			if (e_StaWgtSet)
+			{ e_StaWgtSet.cRfshAftLot(); }
+
+			if (e_GlbWgtSet)
+			{ e_GlbWgtSet.cRfshAftLot(); }
 
 			// 清除标志
 			e_DurLot = false;
@@ -346,18 +353,27 @@ function fOnIcld(a_Errs)
 			return stFrmwk;
 		};
 
-		/// 存取控件集合
-		stFrmwk.cAcsWgtSet = function ()
+		/// 存取全局控件集
+		stFrmwk.cAcsGlbWgtSet = function ()
 		{
-			return e_WgtSet;
+			if (! e_GlbWgtSet)
+			{ e_GlbWgtSet = new nUi.tWgtSet(); }
+
+			return e_GlbWgtSet;
 		};
 
-		/// 设置控件集合
-		stFrmwk.cSetWgtSet = function (a_WgtSet)
+		/// 存取状态控件集
+		stFrmwk.cAcsStaWgtSet = function ()
+		{
+			return e_StaWgtSet;
+		};
+
+		/// 设置状态控件集
+		stFrmwk.cSetStaWgtSet = function (a_WgtSet)
 		{
 			fClrFocs();		// 清空焦点
 
-			e_WgtSet = a_WgtSet || null;
+			e_StaWgtSet = a_WgtSet || null;
 			return stFrmwk;
 		};
 
