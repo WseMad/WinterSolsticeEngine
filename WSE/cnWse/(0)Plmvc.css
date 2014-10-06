@@ -62,8 +62,7 @@ ul
 
 textarea
 {
-	resize: none;		/* 禁止调整大小 */
-	overflow: auto;		/* IE里默认会出现滚动条 */
+	resize: none;	/* 禁止调整大小 */
 }
 
 /*
