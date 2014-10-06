@@ -198,8 +198,7 @@ function fOnIcld(a_Errs)
 				if ((! l_This.d_DomText) || (! l_This.cGetText()))
 				{ return a_Kvo; }
 
-				var l_Key = l_This.d_PutSrc.id;
-				l_This.dChkKeyOnSrlz(a_Kvo, l_Key);
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
 				a_Kvo[l_Key] = l_This.d_DomText.value;
 				return a_Kvo;
 			}

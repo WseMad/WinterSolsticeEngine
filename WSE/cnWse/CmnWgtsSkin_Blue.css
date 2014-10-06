@@ -5,7 +5,6 @@
 
 /*********************************************** tWgt ***********************************************/
 
-/* 这两个选择器尽可能弱一点，为了服务于大众（避免覆盖CmnWgts.css里的样式）！ */
 .cnWse_Skin_Blue .cnWse_tWgt_Nml,
 .cnWse_Skin_Blue .cnWse_tWgt_Tch
 {
@@ -23,6 +22,23 @@
 	background: -moz-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
 	background: -ms-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
 	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+}
+
+/*********************************************** tList ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_PutTgt.cnWse_tList
+{
+	background: -webkit-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
+/* 辉光效果 */
+.cnWse_Skin_Blue li.cnWse_tList_Slcd .cnWse_tList_Btn
+{
+	background-color: rgb(0, 169, 255);
+	/*box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 1), 0px 0px 10px rgb(0, 169, 255);*/
 }
 
 /*********************************************** tMenu ***********************************************/

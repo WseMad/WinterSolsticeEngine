@@ -24,6 +24,22 @@
 	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
 }
 
+/*********************************************** tList ***********************************************/
+
+.cnWse_Skin_Purple .cnWse_PutTgt.cnWse_tList
+{
+	background: -webkit-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -moz-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -ms-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+}
+
+/* 辉光效果 */
+.cnWse_Skin_Purple li.cnWse_tList_Slcd .cnWse_tList_Btn
+{
+	background-color: rgb(232, 46, 255);
+}
+
 /*********************************************** tMenu ***********************************************/
 
 /* 层叠式的背景渐变 */

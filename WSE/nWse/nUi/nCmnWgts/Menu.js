@@ -573,9 +573,9 @@ function fOnIcld(a_Errs)
 				if (l_This.dHasUlInAnmt(l_Nexts))
 				{ return l_This; }
 
-				// 如果未拾取到，或不是放置目标后代，收起来或不作处理
+				// 如果未拾取到，或不是放置目标或其后代，收起来或不作处理
 				var l_EvtTgt = a_DmntTch.cAcsEvtTgt();
-				if ((! l_EvtTgt) || (! l_This.dIsDsdtOfPutTgt(l_EvtTgt)))
+				if ((! l_EvtTgt) || (! l_This.dIsSelfOrDsdtOfPutTgt(l_EvtTgt)))
 				{
 				//	return a_ExpdMode ? l_This.dHideNexts() : l_This;
 					return l_This;	// 不收了，直接返回即可
@@ -591,6 +591,9 @@ function fOnIcld(a_Errs)
 
 				// 首先找到点中的<li>，继而取得所在<ul>，检查是否重复点击已展开的<li>
 				var l_PkdLi = stDomUtil.cSrchSelfAndAcstForTag(l_EvtTgt, "LI");
+				if (! l_PkdLi)	// 以防万一
+				{ return this; }
+
 				var l_PkdUl = l_PkdLi && l_PkdLi.parentNode;
 				if ((l_This.dAcsExpdLiOfUl(l_PkdUl, l_Nexts) === l_PkdLi))	// 重复点击，收起来，注意层叠式不可能重复点击
 				{

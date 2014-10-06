@@ -66,7 +66,8 @@ function fOnIcld(a_Errs)
 
 	function fObtnPutTgt(a_This, a_Cfg, a_PutSrc)
 	{
-		var l_Rst = unKnl.fObtnPutTgt(a_Cfg.c_PutTgt, a_PutSrc);
+		var l_Rst = unKnl.fObtnPutTgt(a_Cfg.c_PutTgt, a_PutSrc, tWgt.sd_PutTgtSlc);
+		tWgt.sd_PutTgtSlc = "";	// 复位
 
 		// 簿记
 		if (! l_Rst.Wse_Wgt)
@@ -443,10 +444,10 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 是放置目标的后代？
-			dIsDsdtOfPutTgt : function (a_DomElmt)
+			/// 是放置目标或其后代？
+			dIsSelfOrDsdtOfPutTgt : function (a_DomElmt)
 			{
-				return stDomUtil.cIsAcst(this.d_PutTgt, a_DomElmt);
+				return stDomUtil.cIsSelfOrAcst(this.d_PutTgt, a_DomElmt);
 			}
 			,
 			/// 计算放置目标包围区，忽略外边距
@@ -486,21 +487,31 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 序列化时检查键
-			/// a_Key：String，键名，默认d_PutSrc.id
+			/// 获取序列化的键，优先选放置来源的name，没有选其id
+			dGetKeyOfSrlz : function ()
+			{
+				return this.d_PutSrc ? (this.d_PutSrc.name || this.d_PutSrc.id) : "";
+			}
+			,
+			/// 当序列化时检查键
+			/// a_Key：String，键名，默认dGetKeyOfSrlz()
+			/// 返回：a_Key，若发生冲突则抛出异常
 			dChkKeyOnSrlz : function (a_Kvo, a_Key)
 			{
 				if (! a_Key)
-				{ a_Key = this.d_PutSrc.id; }
+				{ a_Key = this.dGetKeyOfSrlz(); }
 
 				if (a_Key in a_Kvo)
 				{ throw new Error("tWgt序列化时遇到键冲突：“" + a_Key + "”！"); }
 
-				return true;
+				return a_Key;
 			}
 		}
 		,
 		{
+			/// 放置目标选择器
+			sd_PutTgtSlc : ""
+			,
 			/// 放置目标边框厚度
 			sd_PutTgtBdrThk : {}
 			,

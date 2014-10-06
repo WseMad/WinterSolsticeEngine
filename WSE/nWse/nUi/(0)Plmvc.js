@@ -82,14 +82,25 @@ function fOnIcld(a_Errs)
 		a_PutSrc.Wse_PutSrc = null;								// 簿记
 	};
 
-	unKnl.fObtnPutTgt = function (a_PutTgtId, a_PutSrc)
+	unKnl.fObtnPutTgt = function (a_PutTgtId, a_PutSrc, a_PutTgtSlc)
 	{
 		// 获取，若不存在则新建
-		var l_Rst = a_PutTgtId ? document.getElementById(a_PutTgtId) : null;
-		if (! l_Rst)
+		var l_Rst = null;
+		if (a_PutTgtId)
+		{
+			l_Rst = document.getElementById(a_PutTgtId);
+		}
+
+		if ((! l_Rst) && a_PutTgtSlc)
+		{
+			l_Rst = stDomUtil.cQryOne("#" + a_PutSrc.id + a_PutTgtSlc);
+			l_Rst.id = a_PutTgtId;	// 记录ID
+		}
+
+		if ((! l_Rst))
 		{
 			l_Rst = document.createElement("div");
-			l_Rst.id = a_PutTgtId;
+			l_Rst.id = a_PutTgtId;	// 记录ID
 			a_PutSrc.parentNode.insertBefore(l_Rst, a_PutSrc);	// 作为前一个兄弟节点
 		}
 

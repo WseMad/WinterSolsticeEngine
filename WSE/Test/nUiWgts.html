@@ -44,13 +44,19 @@
 
 		#k_PutTgt_Edit2
 		{
-			margin-bottom: 10px;
+			margin-bottom: 20px;
 			text-align: center;
 		}
 
 		#k_PutTgt_Edit2>textarea
 		{
 			min-height: 100px;
+		}
+
+		#k_PutTgt_List1, #k_PutTgt_List2
+		{
+			margin-bottom: 50px;
+			/*height: 100px;*/
 		}
 
 		#k_PutTgt_Srlz
@@ -112,6 +118,33 @@
 			<div data-Wse_Ok style="padding: 0.25em;">OK</div>
 		</div>
 
+		<!---->
+		<!-- 列表 -->
+		<!---->
+
+		<div id="k_List1">
+
+			<!--<select>-->
+				<!--<option name="aa" value="AA">AAaa</option>-->
+			<!--</select>-->
+
+			<ul>
+				<li value="V_Aa"><span>Aa</span></li>
+				<li>Bb</li>
+				<li>Cc</li>
+				<!--<li><span>CcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCcCc</span></li>-->
+				<li>Dd</li>
+			</ul>
+		</div>
+
+		<div id="k_List2">
+			<ul>
+				<li value="V_Aa"><span>Aa</span></li>
+				<li>Bb</li>
+				<li>Cc</li>
+				<li>Dd</li>
+			</ul>
+		</div>
 
 		<!---->
 		<!-- 菜单 -->
@@ -237,6 +270,7 @@
 						
 						"nUi/nCmnWgts/Btn.js",
 						"nUi/nCmnWgts/Edit.js",
+						"nUi/nCmnWgts/List.js",
 						"nUi/nCmnWgts/Menu.js",
 						"nUi/nCmnWgts/Acod.js",
 						"nUi/nCmnWgts/Nav.js"
@@ -403,6 +437,34 @@
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
+					l_Wgt = new nCmnWgts.tList();	// List1
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_List1",
+						c_PutSrc: "k_List1",
+						c_MltSlc: false,
+						c_AlwNone: false,
+						c_fOnOk: function (a_Wgt, a_Text)
+						{
+							//	console.log("文本框的内容是：" + a_Text);
+						}
+					});
+				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tList();	// List2
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_List2",
+						c_PutSrc: "k_List2",
+						c_MltSlc: true,
+						c_fOnOk: function (a_Wgt, a_Text)
+						{
+							//	console.log("文本框的内容是：" + a_Text);
+						}
+					});
+					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
+
+
 					l_Wgt = new nCmnWgts.tBtn();	// Srlz
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Srlz",
@@ -556,6 +618,8 @@
 								c_Id: "k_PutTgt_BtnFirst",
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 2
 							})
+
+							// 表单
 							.cPut({
 								c_Id: "k_PutTgt_Edit1",
 								c_HrztAln: 0,
@@ -568,9 +632,22 @@
 							})
 							.cPut({
 								c_NewRow: true,
+								c_Id : "k_PutTgt_List1",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id : "k_PutTgt_List2",
+								c_HrztAln: +1,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_NewRow: true,
 								c_Id: "k_PutTgt_Srlz",
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
+
+
+							// 其他
 							.cPut({
 								c_NewRow : true,
 								c_Id: "k_PutTgt_Menu1",
