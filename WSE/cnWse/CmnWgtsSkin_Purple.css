@@ -84,13 +84,6 @@
 	color: rgb(255, 255, 255);
 }
 
-/* 辉光效果 */
-.cnWse_Skin_Purple li.cnWse_tList_Slcd .cnWse_tList_Btn
-{
-	background-color: rgb(232, 46, 255);
-	box-shadow: inset 0px 0px 5px rgb(0, 0, 0), 0px 0px 10px rgb(232, 46, 255);
-}
-
 /*********************************************** tSwch ***********************************************/
 
 .cnWse_Skin_Purple .cnWse_PutTgt.cnWse_tSwch
