@@ -46,14 +46,14 @@
 {
 	box-sizing: border-box;
 	margin: 0;
-	/*border: 1px solid rgba(0, 0, 0, 1);*/
+	/*border: 1px solid rgb(0, 0, 0);*/
 	border: none;
 	padding: 0.5em;
 
 	background-color: rgba(255, 255, 255, 0.7);
 
 	/* 辉光效果 */
-	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 1);
+	box-shadow: inset 0px 0px 10px rgb(0, 0, 0);
 
 	-webkit-transition: box-shadow;
 	-moz-transition: box-shadow;
@@ -105,13 +105,13 @@
 
 /*********************************************** tList ***********************************************/
 
-.cnWse_PutTgt.cnWse_tList
+.cnWse_PutTgt.cnWse_tList>ul
 {
 	/*padding: 0.25em;*/
 	overflow: auto;			/* 允许水平垂直滚动条出现 */
 }
 
-ul.cnWse_tList>li
+.cnWse_PutTgt.cnWse_tList>ul>li
 {
 	padding: 0.25em;
 }
@@ -120,20 +120,17 @@ ul.cnWse_tList>li
 {
 	display: inline-block;
 	margin: 0px 0.5em 0px 0px;
-	border: 1px solid black;
 
 	width: 1.2em;		/* 正方形 */
 	height: 1.2em;
 
-	box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 1);
+	background-color: rgba(255, 255, 255, 0.7);
 
 	/* 辉光效果 */
-	background-color: rgb(240, 240, 240);
-
-	-webkit-transition: background-color;
-	-moz-transition: background-color;
-	-ms-transition: background-color;
-	transition: background-color;
+	-webkit-transition: background-color, box-shadow;
+	-moz-transition: background-color, box-shadow;
+	-ms-transition: background-color, box-shadow;
+	transition: background-color, box-shadow;
 
 	-webkit-transition-duration: 0.6s;
 	-moz-transition-duration: 0.6s;
@@ -144,13 +141,10 @@ ul.cnWse_tList>li
 /* 辉光效果 */
 li.cnWse_tList_Slcd .cnWse_tList_Btn
 {
-	background-color: rgb(0, 255, 0);
-	/*box-shadow: inset 0px 0px 6px rgba(0, 255, 0, 1), 0px 0px 10px rgb(0, 255, 0);*/
-
-	-webkit-transition: background-color;
-	-moz-transition: background-color;
-	-ms-transition: background-color;
-	transition: background-color;
+	-webkit-transition: background-color, box-shadow;
+	-moz-transition: background-color, box-shadow;
+	-ms-transition: background-color, box-shadow;
+	transition: background-color, box-shadow;
 
 	-webkit-transition-duration: 0.6s;
 	-moz-transition-duration: 0.6s;
@@ -167,6 +161,29 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 .cnWse_tList.cnWse_MltSlc .cnWse_tList_Btn
 {
 	border-radius: 0px;
+}
+
+/* 多选框的辅助按钮 */
+.cnWse_tList .cnWse_tList_SlcAll,
+.cnWse_tList .cnWse_tList_SlcRvs
+{
+	display: inline-block;
+
+	margin: 0.25em;
+	border: 2px solid rgb(128, 128, 128);
+	border-radius: 0.5em;
+	padding: 2px 4px;
+
+	text-align: center;
+	background-color: rgba(255, 255, 255, 0.7);
+	color: rgb(0, 255, 0);
+}
+
+.cnWse_tList .cnWse_tList_SlcAll:active,
+.cnWse_tList .cnWse_tList_SlcRvs:active
+{
+	background-color: rgb(128, 128, 128);
+	color: rgb(255, 255, 255);
 }
 
 /*********************************************** tMenu ***********************************************/
@@ -272,7 +289,7 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 .cnWse_tMenu_Expd li.cnWse_tMenu_ExpdLi
 {
 	background-color: rgba(255, 255, 255, 0.7);
-	box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 1);
+	box-shadow: inset 0px 0px 10px rgb(0, 0, 0);
 }
 
 /* 层叠式返回<li> */

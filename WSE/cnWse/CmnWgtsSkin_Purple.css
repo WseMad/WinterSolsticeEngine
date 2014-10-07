@@ -34,10 +34,46 @@
 	background: linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 }
 
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_Btn
+{
+	border: 2px solid rgb(142, 34, 160);
+}
+
+/* 辉光效果 */
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_Btn
+{
+	background-color: rgba(255, 255, 255, 0.7);
+	box-shadow: inset 0px 0px 5px rgb(142, 34, 160);
+}
+
+.cnWse_Skin_Purple li.cnWse_tList_Slcd .cnWse_tList_Btn
+{
+	background-color: rgba(232, 46, 255, 0.7);
+	box-shadow: inset 0px 0px 5px rgb(142, 34, 160), 0px 0px 10px rgb(232, 46, 255);
+}
+
+/* 多选框的辅助按钮 */
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_SlcAll,
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_SlcRvs
+{
+	background-color: rgba(255, 255, 255, 0.7);
+	border-color: rgb(142, 34, 160);
+	color: rgb(142, 34, 160);
+}
+
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_SlcAll:active,
+.cnWse_Skin_Purple .cnWse_tList .cnWse_tList_SlcRvs:active
+{
+	background-color: rgb(142, 34, 160);
+	border-color: rgb(142, 34, 160);
+	color: rgb(255, 255, 255);
+}
+
 /* 辉光效果 */
 .cnWse_Skin_Purple li.cnWse_tList_Slcd .cnWse_tList_Btn
 {
 	background-color: rgb(232, 46, 255);
+	box-shadow: inset 0px 0px 5px rgb(0, 0, 0), 0px 0px 10px rgb(232, 46, 255);
 }
 
 /*********************************************** tMenu ***********************************************/
@@ -125,7 +161,7 @@
 .cnWse_Skin_Purple .cnWse_tMenu_Ovlp li.cnWse_tMenu_BackLi
 {
 	text-align: center;
-	border-bottom: 1px solid rgb(0, 128, 192);
+	border-bottom: 1px solid rgb(142, 34, 160);
 }
 
 /*********************************************** tAcod ***********************************************/

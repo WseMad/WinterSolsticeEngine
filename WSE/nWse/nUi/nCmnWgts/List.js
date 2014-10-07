@@ -64,7 +64,10 @@ function fOnIcld(a_Errs)
 
 	function fRset(a_This)
 	{
+		a_This.d_Ul = null;
 		a_This.d_LiAry = null;
+		a_This.d_SlcAll = null;
+		a_This.d_SlcRvs = null;
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,16 +99,22 @@ function fOnIcld(a_Errs)
 			/// }
 			vcBind : function f(a_Cfg)
 			{
-				tWgt.sd_PutTgtSlc = ">ul";		// 放置目标选择器
+			//	tWgt.sd_PutTgtSlc = ">ul";		// 放置目标选择器
 				this.odBase(f).odCall(a_Cfg);	// 基类版本
 
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tList");	// CSS类
 				stCssUtil.cAddCssc(l_This.d_PutTgt, (a_Cfg.c_MltSlc ? "cnWse_MltSlc" : "cnWse_SglSlc"));
 
-				l_This.d_LiAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutTgt() + ">li"); // 取得所有<li>
+				l_This.d_Ul = stDomUtil.cQryOne(l_This.dGnrtQrySlc_PutSrc() + ">ul");		// 取得<ul>
+				l_This.d_LiAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li"); // 取得所有<li>
+				l_This.dIstBtns();		// 为他们插入按钮
 
-				l_This.dIstBtns();
+				// 如果是多选，添加两个辅助按钮
+				if (l_This.d_Cfg.c_MltSlc)
+				{
+					l_This.dAddAsisBtns();
+				}
 
 				// 如果是单选，且不允许不选，默认选中首个
 				if ((! l_This.d_Cfg.c_MltSlc) && (! l_This.d_Cfg.c_AlwNone))
@@ -172,6 +181,16 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 
 			//	l_This.dUpdUlHgt();	//【见这个函数的解释】
+
+				// <ul>摆放到目标
+				l_This.dPutToTgt(l_This.d_Ul);
+
+				// 辅助按钮摆放到目标
+				if (l_This.d_SlcAll)
+				{
+					l_This.dPutToTgt(l_This.d_SlcAll);
+					l_This.dPutToTgt(l_This.d_SlcRvs);
+				}
 				return this;
 			}
 			,
@@ -280,7 +299,7 @@ function fOnIcld(a_Errs)
 			cSlcAllItems : function ()
 			{
 				var l_This = this;
-				if (! l_This.d_Cfc.c_MltSlc)
+				if (! l_This.d_Cfg.c_MltSlc)
 				{ return this.cSlcItem(0); }
 
 				stAryUtil.cFor(l_This.d_LiAry,
@@ -288,6 +307,24 @@ function fOnIcld(a_Errs)
 					{
 						// 添加
 						stCssUtil.cAddCssc(a_Li, "cnWse_tList_Slcd");
+					});
+				return this;
+			}
+			,
+			/// 反选全部选项，单选时忽略
+			cRvsSlcAllItems : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_Cfg.c_MltSlc)
+				{
+					return this;
+				}
+
+				stAryUtil.cFor(l_This.d_LiAry,
+					function (a_Ary, a_Idx, a_Li)
+					{
+						// 切换
+						stCssUtil.cTglCssc(a_Li, "cnWse_tList_Slcd");
 					});
 				return this;
 			}
@@ -313,8 +350,17 @@ function fOnIcld(a_Errs)
 			/// 有选中的项？
 			cHasSlcdItem : function ()
 			{
-				var l_Slc = l_This.dGnrtQrySlc_PutTgt() + ">li.cnWse_tList_Slcd";
-				return !! stDomUtil.cQryOne(l_Slc);
+				return (stAryUtil.cFind(this.d_LiAry,
+						function (a_Ary, a_Idx, a_Li)
+						{ return stCssUtil.cHasCssc(a_Li, "cnWse_tList_Slcd"); }) >= 0);
+			}
+			,
+			/// 有没选中的项？
+			cHasUslcItem : function ()
+			{
+				return (stAryUtil.cFind(this.d_LiAry,
+					function (a_Ary, a_Idx, a_Li)
+					{ return ! stCssUtil.cHasCssc(a_Li, "cnWse_tList_Slcd"); }) >= 0);
 			}
 			,
 			/// 项是否被选中
@@ -360,6 +406,42 @@ function fOnIcld(a_Errs)
 
 					a_Li.Wse_List.c_DomBtn = l_Dom;
 				});
+				return this;
+			}
+			,
+			/// 添加辅助按钮
+			dAddAsisBtns : function ()
+			{
+				var l_This = this;
+				var l_SlcAll = document.createElement("div");
+				stCssUtil.cSetCssc(l_SlcAll, "cnWse_tList_SlcAll");
+				l_SlcAll.textContent = "全选";
+				l_SlcAll.addEventListener("click",
+					function ()
+					{
+						if (l_This.cHasUslcItem())	// 有未选中的时，全选
+						{
+							l_This.cSlcAllItems();
+						}
+						else // 否则，取消全选
+						{
+							l_This.cCclSlcAllItems();
+						}
+					});
+				l_This.d_SlcAll = l_SlcAll;
+				l_This.d_PutSrc.appendChild(l_SlcAll);	// 放到来源
+
+				var l_SlcRvs = document.createElement("div");
+				stCssUtil.cSetCssc(l_SlcRvs, "cnWse_tList_SlcRvs");
+				l_SlcRvs.textContent = "反选";
+				l_SlcRvs.addEventListener("click",
+					function ()
+					{
+						l_This.cRvsSlcAllItems();	// 反选
+					});
+				l_This.d_SlcRvs = l_SlcRvs;
+				l_This.d_PutSrc.appendChild(l_SlcRvs);	// 放到来源
+
 				return this;
 			}
 			,

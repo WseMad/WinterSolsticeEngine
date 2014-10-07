@@ -34,11 +34,39 @@
 	background: linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 }
 
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_Btn
+{
+	border: 2px solid rgb(0, 128, 192);
+}
+
 /* 辉光效果 */
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_Btn
+{
+	background-color: rgba(255, 255, 255, 0.7);
+	box-shadow: inset 0px 0px 5px rgb(0, 128, 192);
+}
+
 .cnWse_Skin_Blue li.cnWse_tList_Slcd .cnWse_tList_Btn
 {
-	background-color: rgb(0, 169, 255);
-	/*box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 1), 0px 0px 10px rgb(0, 169, 255);*/
+	background-color: rgba(0, 169, 255, 0.7);
+	box-shadow: inset 0px 0px 5px rgb(0, 128, 192), 0px 0px 10px rgb(0, 169, 255);
+}
+
+/* 多选框的辅助按钮 */
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_SlcAll,
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_SlcRvs
+{
+	background-color: rgba(255, 255, 255, 0.7);
+	border-color: rgb(0, 128, 192);
+	color: rgb(0, 128, 192);
+}
+
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_SlcAll:active,
+.cnWse_Skin_Blue .cnWse_tList .cnWse_tList_SlcRvs:active
+{
+	background-color: rgb(0, 128, 192);
+	border-color: rgb(0, 128, 192);
+	color: rgb(255, 255, 255);
 }
 
 /*********************************************** tMenu ***********************************************/
