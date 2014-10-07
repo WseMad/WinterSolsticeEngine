@@ -8,13 +8,18 @@
 .cnWse_Skin_Blue .cnWse_tWgt_Nml,
 .cnWse_Skin_Blue .cnWse_tWgt_Tch
 {
+
+}
+
+/*********************************************** tBtn ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_tWgt_Nml.cnWse_tBtn
+{
 	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 }
-
-/*********************************************** tBtn ***********************************************/
 
 .cnWse_Skin_Blue .cnWse_tWgt_Tch.cnWse_tBtn
 {
@@ -22,6 +27,16 @@
 	background: -moz-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
 	background: -ms-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
 	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(0, 90, 133) 90%, rgb(0, 90, 133));
+}
+
+/*********************************************** tEdit ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_tEdit
+{
+	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 }
 
 /*********************************************** tList ***********************************************/
@@ -69,9 +84,31 @@
 	color: rgb(255, 255, 255);
 }
 
+/*********************************************** tSwch ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_PutTgt.cnWse_tSwch
+{
+	/*background-color: rgb(95%, 95%, 95%);*/
+	border: 2px solid rgb(0, 128, 192);
+}
+
+.cnWse_Skin_Blue .cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Blk
+{
+	box-shadow: 0px 0px 10px rgb(0, 169, 255);
+	background-color: rgb(0, 169, 255);
+}
+
 /*********************************************** tMenu ***********************************************/
 
-/* 层叠式的背景渐变 */
+/* 背景渐变 */
+.cnWse_Skin_Blue .cnWse_tMenu_Expd
+{
+	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
 .cnWse_Skin_Blue .cnWse_tMenu_Ovlp,
 .cnWse_Skin_Blue .cnWse_tMenu_Ovlp ul
 {

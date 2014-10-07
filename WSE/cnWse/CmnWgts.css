@@ -186,6 +186,35 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	color: rgb(255, 255, 255);
 }
 
+/*********************************************** tSwch ***********************************************/
+
+.cnWse_PutTgt.cnWse_tSwch
+{
+	min-height: 2em;
+	border: 2px solid rgb(0, 0, 0);
+	border-radius: 1em;
+
+	/*background-color: rgba(255, 255, 255, 0.7);*/
+	background-color: rgb(164, 164, 164);
+	box-shadow: inset 0px 0px 20px rgb(0, 0, 0), 0px 10px 20px rgb(51, 51, 51);
+}
+
+.cnWse_tSwch .cnWse_tSwch_Blk
+{
+	position: absolute;
+	min-width: 2em;
+	width: 40%;
+	height: 100%;
+	border: 0.5em solid rgb(223, 229, 215);
+	border-radius: 1em;
+	background-color: rgb(80, 80, 80);
+}
+
+.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Blk
+{
+
+}
+
 /*********************************************** tMenu ***********************************************/
 
 /* 通用 */

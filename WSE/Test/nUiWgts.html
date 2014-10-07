@@ -63,6 +63,11 @@
 			/*height: 100px;*/
 		}
 
+		#k_PutTgt_Swch
+		{
+			margin-bottom: 50px;
+		}
+
 		#k_PutTgt_Srlz
 		{
 			margin-bottom: 50px;
@@ -148,6 +153,14 @@
 				<li>Cc</li>
 				<li>Dd</li>
 			</ul>
+		</div>
+
+		<!---->
+		<!-- 开关 -->
+		<!---->
+
+		<div id="k_Swch">
+
 		</div>
 
 		<!---->
@@ -275,6 +288,7 @@
 						"nUi/nCmnWgts/Btn.js",
 						"nUi/nCmnWgts/Edit.js",
 						"nUi/nCmnWgts/List.js",
+						"nUi/nCmnWgts/Swch.js",
 						"nUi/nCmnWgts/Menu.js",
 						"nUi/nCmnWgts/Acod.js",
 						"nUi/nCmnWgts/Nav.js"
@@ -446,11 +460,11 @@
 						c_PutTgt: "k_PutTgt_List1",
 						c_PutSrc: "k_List1",
 						c_MltSlc: false,
-						c_AlwNone: false,
-						c_fOnOk: function (a_Wgt, a_Text)
-						{
-							//	console.log("文本框的内容是：" + a_Text);
-						}
+						c_AlwNone: false
+//						c_fOnOk: function (a_Wgt, a_Text)
+//						{
+//							//	console.log("文本框的内容是：" + a_Text);
+//						}
 					});
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
@@ -459,15 +473,26 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_List2",
 						c_PutSrc: "k_List2",
-						c_MltSlc: true,
-						c_fOnOk: function (a_Wgt, a_Text)
-						{
-							//	console.log("文本框的内容是：" + a_Text);
-						}
+						c_MltSlc: true
+//						c_fOnOk: function (a_Wgt, a_Text)
+//						{
+//							//	console.log("文本框的内容是：" + a_Text);
+//						}
 					});
 					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
+					l_Wgt = new nCmnWgts.tSwch();	// Swch
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Swch",
+						c_PutSrc: "k_Swch"
+//						c_fOnOk: function (a_Wgt, a_Text)
+//						{
+//							//	console.log("文本框的内容是：" + a_Text);
+//						}
+					});
+					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tBtn();	// Srlz
 					l_Wgt.vcBind({
@@ -643,6 +668,11 @@
 								c_Id : "k_PutTgt_List2",
 								c_HrztAln: +1,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_NewRow: true,
+								c_Id : "k_PutTgt_Swch",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
 							})
 							.cPut({
 								c_NewRow: true,

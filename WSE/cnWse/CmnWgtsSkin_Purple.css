@@ -8,13 +8,18 @@
 .cnWse_Skin_Purple .cnWse_tWgt_Nml,
 .cnWse_Skin_Purple .cnWse_tWgt_Tch
 {
+
+}
+
+/*********************************************** tBtn ***********************************************/
+
+.cnWse_Skin_Purple .cnWse_tWgt_Nml.cnWse_tBtn
+{
 	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 }
-
-/*********************************************** tBtn ***********************************************/
 
 .cnWse_Skin_Purple .cnWse_tWgt_Tch.cnWse_tBtn
 {
@@ -22,6 +27,16 @@
 	background: -moz-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
 	background: -ms-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
 	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
+}
+
+/*********************************************** tEdit ***********************************************/
+
+.cnWse_Skin_Purple .cnWse_tEdit
+{
+	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 }
 
 /*********************************************** tList ***********************************************/
@@ -78,7 +93,15 @@
 
 /*********************************************** tMenu ***********************************************/
 
-/* 层叠式的背景渐变 */
+/* 背景渐变 */
+.cnWse_Skin_Purple .cnWse_tMenu_Expd
+{
+	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
+}
+
 .cnWse_Skin_Purple .cnWse_tMenu_Ovlp,
 .cnWse_Skin_Purple .cnWse_tMenu_Ovlp ul
 {
