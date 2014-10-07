@@ -10,14 +10,14 @@
 	var l_Glb = i_InNodeJs ? global : self;
 	
 	//@ 如果本文件已经包含过
-	if (l_Glb.nWse && l_Glb.nWse.nUi && l_Glb.nWse.nUi.nGpuWgts && l_Glb.nWse.nUi.nGpuWgts.tEdit)
+	if (l_Glb.nWse && l_Glb.nWse.nUi && l_Glb.nWse.nUi.nCmnWgts && l_Glb.nWse.nUi.nCmnWgts.tEdit)
 	{
 		//@ 避免重复执行相同的初始化代码
 		return;
 	}
 
 	//@ 包含
-	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nUi/nGpuWgts",
+	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nUi/nCmnWgts",
 		[
 			"nWse:nUi/Wgt.js"
 		]
