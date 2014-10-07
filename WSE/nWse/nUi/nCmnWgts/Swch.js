@@ -90,6 +90,7 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_fOnTgl：void f(a_This)，当切换时
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -98,12 +99,34 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tSwch");	// CSS类
 
-				// 创建滑块
+				// 创建滑块，灯，杆
 				var l_Blk = document.createElement("div");
 				stCssUtil.cSetCssc(l_Blk, "cnWse_tSwch_Blk");
 				l_This.d_Blk = l_Blk;
 				l_This.d_PutSrc.appendChild(l_Blk);		// 放入来源
 
+				var l_Lgt = document.createElement("div");
+				stCssUtil.cSetCssc(l_Lgt, "cnWse_tSwch_Lgt");
+				l_This.d_Lgt = l_Lgt;
+				l_This.d_Blk.appendChild(l_Lgt);		// 放入滑块
+
+				var l_Bar = document.createElement("div");
+				stCssUtil.cSetCssc(l_Bar, "cnWse_tSwch_Bar");
+				l_This.d_Bar = l_Bar;
+				l_This.d_PutSrc.appendChild(l_Bar);		// 放入来源
+
+				// 注册放置目标事件处理器 - 当动画更新结束时
+				if (! l_This.d_fOnAnmtUpdEnd)
+				{
+					// 展开式时必须校准位置
+					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+					{
+						// 校准滑块位置
+						l_This.dRgltBlkX();
+					};
+
+					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+				}
 				return this;
 			}
 			,
@@ -111,6 +134,13 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+
+				// 注销放置目标事件处理器 - 当动画更新结束时
+				if (l_This.d_fOnAnmtUpdEnd)
+				{
+					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.d_fOnAnmtUpdEnd = null;
+				}
 
 				// 重置
 				fRset(this);
@@ -125,7 +155,29 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 
+				// 结束动画
+				stCssUtil.cFnshAnmt(l_This.d_Blk, false, false);	// 不要跳，不回调
+
+				// 校准滑块位置
+				l_This.dRgltBlkX();
 				return this;
+			}
+			,
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+
+				// 0=关，1=开
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
+				var l_Val = l_This.cIsOn() ? "1" : "0";
+				a_Kvo[l_Key] = l_Val;
+				return a_Kvo;
 			}
 			,
 			/// 刷新在布局之前
@@ -137,7 +189,7 @@ function fOnIcld(a_Errs)
 
 				// 把滑块放入目标
 				l_This.dPutToTgt(l_This.d_Blk);
-
+				l_This.dPutToTgt(l_This.d_Bar);
 				return this;
 			}
 			,
@@ -148,7 +200,6 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 
-				// 需要在这里校准滑块的位置
 				return this;
 			}
 			,
@@ -175,7 +226,11 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-						l_This.dTgt();					// 切换
+						l_This.dAnmtTgl();				// 动画切换
+
+						if (l_This.d_Cfg.c_fOnTgl)		// 触发事件
+						{ l_This.d_Cfg.c_fOnTgl(l_This); }
+
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
@@ -206,29 +261,47 @@ function fOnIcld(a_Errs)
 				return stCssUtil.cHasCssc(this.d_PutTgt, "cnWse_tSwch_On");
 			}
 			,
+			/// 打开关闭
+			cOnOff : function (a_On)
+			{
+				var l_This = this;
+				a_On
+				? stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tSwch_On")
+				: stCssUtil.cRmvCssc(l_This.d_PutTgt, "cnWse_tSwch_On");
+				l_This.dRgltBlkX();	// 校准滑块位置
+				return this;
+			}
+			,
 			/// 切换
-			dTgt : function ()
+			cTgl : function ()
+			{
+				return this.cOnOff(! this.cIsOn());
+			}
+			,
+			/// 动画切换
+			dAnmtTgl : function ()
 			{
 				var l_This = this;
 
 				var l_BlkX;
+				var l_LeftEnd;
 				if (l_This.cIsOn())
 				{
 					stCssUtil.cRmvCssc(l_This.d_PutTgt, "cnWse_tSwch_On");
-				//	stCssUtil.cSetPosLt(l_This.d_Blk, 0);
 					l_BlkX = 0;
+					l_LeftEnd = "0px";
 				}
 				else
 				{
 					stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tSwch_On");
-				//	stCssUtil.cSetPosLt(l_This.d_Blk, l_This.d_PutTgt.clientWidth - l_This.d_Blk.offsetWidth);
-					l_BlkX = l_This.d_PutTgt.clientWidth - l_This.d_Blk.offsetWidth;	// 注意去掉边框
+					l_BlkX = l_This.dCalcBlkX();
+					l_LeftEnd = l_BlkX.toString() + "px";
 				}
 
 				// 动画位置
 				stCssUtil.cAnmt(l_This.d_Blk,
 					{
-						"left": l_BlkX.toString() + "px"
+						"left": l_LeftEnd
 					},
 					{
 						c_Dur: 0.2,
@@ -237,6 +310,29 @@ function fOnIcld(a_Errs)
 							return a_Scl;
 						}
 					});
+				return this;
+			}
+			,
+			/// 计算滑块位置
+			dCalcBlkX : function ()
+			{
+				var l_This = this;
+				if (l_This.cIsOn())
+				{
+					// 注意去掉边框
+					return l_This.d_PutTgt.clientWidth - l_This.d_Blk.offsetWidth;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+			,
+			/// 校准滑块位置
+			dRgltBlkX : function ()
+			{
+				var l_This = this;
+				stCssUtil.cSetPosLt(l_This.d_Blk, l_This.dCalcBlkX());
 				return this;
 			}
 		}

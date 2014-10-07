@@ -96,6 +96,7 @@ function fOnIcld(a_Errs)
 			/// c_MltSlc：Boolean，多选？默认false
 			/// c_AlwNone：Boolean，允许不选？默认false
 			/// c_Sprt：String，分隔符，序列化时使用，默认逗号","
+			/// c_fOnSlc：void f(a_This)，当选取时
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -227,7 +228,7 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-						l_This.dSlc(a_DmntTch);	// 选取
+						l_This.dHdlSlc(a_DmntTch);		// 处理选取
 
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
@@ -427,6 +428,9 @@ function fOnIcld(a_Errs)
 						{
 							l_This.cCclSlcAllItems();
 						}
+
+						// 触发事件
+						l_This.dTrgrEvt();
 					});
 				l_This.d_SlcAll = l_SlcAll;
 				l_This.d_PutSrc.appendChild(l_SlcAll);	// 放到来源
@@ -438,6 +442,9 @@ function fOnIcld(a_Errs)
 					function ()
 					{
 						l_This.cRvsSlcAllItems();	// 反选
+
+						// 触发事件
+						l_This.dTrgrEvt();
 					});
 				l_This.d_SlcRvs = l_SlcRvs;
 				l_This.d_PutSrc.appendChild(l_SlcRvs);	// 放到来源
@@ -480,8 +487,8 @@ function fOnIcld(a_Errs)
 				return l_This.d_LiAry[0].offsetHeight;
 			}
 			,
-			/// 选取
-			dSlc : function (a_DmntTch)
+			/// 处理选取
+			dHdlSlc : function (a_DmntTch)
 			{
 				var l_This = this;
 
@@ -519,6 +526,9 @@ function fOnIcld(a_Errs)
 
 				// 切换
 				stCssUtil.cTglCssc(l_PkdLi, "cnWse_tList_Slcd");
+
+				// 触发事件
+				l_This.dTrgrEvt();
 				return this;
 			}
 			,
@@ -533,6 +543,16 @@ function fOnIcld(a_Errs)
 						if (a_Li !== a_EcldLi)
 						{ stCssUtil.cRmvCssc(a_Li, "cnWse_tList_Slcd"); }
 					});
+				return this;
+			}
+			,
+			/// 触发事件
+			dTrgrEvt : function ()
+			{
+				// 触发事件
+				var l_This = this;
+				if (l_This.d_Cfg.c_fOnSlc)
+				{ l_This.d_Cfg.c_fOnSlc(l_This); }
 				return this;
 			}
 		}

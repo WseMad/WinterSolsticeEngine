@@ -74,7 +74,7 @@ function fOnIcld(a_Errs)
 		a_This.d_SlcLi = null;			// 选中的<li>
 		a_This.d_ExpdDir = +1;			// 展开方向，默认向右，-1向左
 		a_This.d_StkDist = 4;			// 堆叠距离
-		a_This.d_fOnAnmtUpd = null;		// 当动画更新时
+		a_This.d_fOnAnmtUpdEnd = null;		// 当动画更新时
 	}
 
 	function fNullWse_Menu(a_Ary, a_Idx, a_Ul)
@@ -128,18 +128,18 @@ function fOnIcld(a_Errs)
 				// 得到各个DOM节点
 				l_This.dObtnDomNodes();
 
-				// 注册放置目标事件处理器 - 当动画更新时
-				if (! l_This.d_fOnAnmtUpd)
+				// 注册放置目标事件处理器 - 当动画更新结束时
+				if (! l_This.d_fOnAnmtUpdEnd)
 				{
 					// 展开式时必须校准位置
-					l_This.d_fOnAnmtUpd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 					{
 						// 校准各级列表位置
 						if (l_This.cIsExpdMode())	// Expd在布局后校准次级列表，注意现在只更新即可！
 						{ l_This.dRgltListsPos_ExpdMode(l_This.d_RootUl, null, true); }
 					};
 
-					nUi.fRegPutEvtHdlr(l_This.d_PutTgt, "AnmtUpd", l_This.d_fOnAnmtUpd);
+					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 				}
 
 			//	l_This.d_PutTgt
@@ -161,11 +161,11 @@ function fOnIcld(a_Errs)
 				l_This.dAddRmvCsscOfRoot(false);
 				l_This.dAddRmvCsscOfNexts(false);
 
-				// 注销放置目标事件处理器 - 当动画更新时
-				if (l_This.d_fOnAnmtUpd)
+				// 注销放置目标事件处理器 - 当动画更新结束时
+				if (l_This.d_fOnAnmtUpdEnd)
 				{
-					nUi.fUrgPutEvtHdlr(l_This.d_PutTgt, "AnmtUpd", l_This.d_fOnAnmtUpd);
-					l_This.d_fOnAnmtUpd = null;
+					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.d_fOnAnmtUpdEnd = null;
 				}
 
 				// 重置

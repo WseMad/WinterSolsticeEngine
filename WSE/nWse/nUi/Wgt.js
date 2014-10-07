@@ -487,6 +487,22 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 注册放置目标事件处理器 - 当动画更新结束时
+			dRegPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOnAnmtUpdEnd)
+			{
+				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOnAnmtUpdEnd);
+				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOnAnmtUpdEnd);
+				return this;
+			}
+			,
+			/// 注销放置目标事件处理器 - 当动画更新结束时
+			dUrgPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOnAnmtUpdEnd)
+			{
+				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOnAnmtUpdEnd);
+				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOnAnmtUpdEnd);
+				return this;
+			}
+			,
 			/// 获取序列化的键，优先选放置来源的name，没有选其id
 			dGetKeyOfSrlz : function ()
 			{

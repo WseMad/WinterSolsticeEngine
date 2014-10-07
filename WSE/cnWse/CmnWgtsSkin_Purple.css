@@ -91,6 +91,25 @@
 	box-shadow: inset 0px 0px 5px rgb(0, 0, 0), 0px 0px 10px rgb(232, 46, 255);
 }
 
+/*********************************************** tSwch ***********************************************/
+
+.cnWse_Skin_Purple .cnWse_PutTgt.cnWse_tSwch
+{
+	border: 2px solid rgb(142, 34, 160);
+}
+
+.cnWse_Skin_Purple .cnWse_tSwch .cnWse_tSwch_Lgt
+{
+	background-color: rgba(75, 23, 92, 0.7);
+	box-shadow: none;
+}
+
+.cnWse_Skin_Purple .cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Lgt
+{
+	background-color: rgb(232, 46, 255);
+	box-shadow: 0px 0px 20px rgb(232, 46, 255);
+}
+
 /*********************************************** tMenu ***********************************************/
 
 /* 背景渐变 */

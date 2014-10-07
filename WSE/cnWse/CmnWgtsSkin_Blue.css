@@ -88,14 +88,19 @@
 
 .cnWse_Skin_Blue .cnWse_PutTgt.cnWse_tSwch
 {
-	/*background-color: rgb(95%, 95%, 95%);*/
 	border: 2px solid rgb(0, 128, 192);
 }
 
-.cnWse_Skin_Blue .cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Blk
+.cnWse_Skin_Blue .cnWse_tSwch .cnWse_tSwch_Lgt
 {
-	box-shadow: 0px 0px 10px rgb(0, 169, 255);
+	background-color: rgba(0, 56, 92, 0.7);
+	box-shadow: none;
+}
+
+.cnWse_Skin_Blue .cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Lgt
+{
 	background-color: rgb(0, 169, 255);
+	box-shadow: 0px 0px 20px rgb(0, 169, 255);
 }
 
 /*********************************************** tMenu ***********************************************/
