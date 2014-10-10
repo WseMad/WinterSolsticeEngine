@@ -4,29 +4,33 @@
     <bookmark url="file://$PROJECT_DIR$/nWse/VtuCsl.js" line="677" />
     <bookmark url="file://$PROJECT_DIR$/nWse/PntIptTrkr.js" line="308" />
     <bookmark url="file://$PROJECT_DIR$/nWse/PntIptTrkr.js" line="404" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="238" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="253" />
     <bookmark url="file://$PROJECT_DIR$/nWse/VtuCsl.js" line="620" />
     <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="911" />
     <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="99" />
     <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="700" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="982" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="751" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1020" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="789" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Menu.js" line="651" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Menu.js" line="566" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Menu.js" line="1071" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="573" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="292" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="504" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1186" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1224" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="1097" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="601" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="705" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" line="770" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/Wgt.js" line="540" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/Wgt.js" line="94" />
-    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="97" />
-    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="265" />
-    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="496" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/Wgt.js" line="591" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/Wgt.js" line="96" />
+    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="114" />
+    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="286" />
+    <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="559" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js" line="945" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js" line="1372" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/Frmwk.js" line="403" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js" line="260" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4380cf6c-33ed-435a-ba83-807757ca52e3" name="Default" comment="" />
@@ -54,8 +58,8 @@
       <file leaf-file-name="nUiWgts.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Test/nUiWgts.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.5220587" vertical-offset="206" max-vertical-offset="13851">
-              <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.40500736" vertical-offset="13158" max-vertical-offset="15846">
+              <caret line="707" column="32" selection-start-line="707" selection-start-column="32" selection-end-line="707" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -71,8 +75,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/Test/Media/Bicycle.css" />
-        <option value="$PROJECT_DIR$/cnWse/(0)Glb.css" />
         <option value="$PROJECT_DIR$/nWse/(0)Seed.js" />
         <option value="$PROJECT_DIR$/nWse/VtuCsl.js" />
         <option value="$PROJECT_DIR$/Test/Lang.html" />
@@ -83,8 +85,6 @@
         <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Gold.css" />
         <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Black.css" />
         <option value="$USER_HOME$/Desktop/公司文件/我的作品/控件/nUiWgts.html" />
-        <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js" />
-        <option value="$PROJECT_DIR$/nWse/nUi/PcdrLot.js" />
         <option value="$PROJECT_DIR$/../WSE3/nWse/nGpu/(0)MathElmts.js" />
         <option value="$PROJECT_DIR$/../WSE3/nWse/nGpu/(2)2dCtxt.js" />
         <option value="$PROJECT_DIR$/nWse/nGpu/(0)MathElmts.js" />
@@ -96,32 +96,36 @@
         <option value="$PROJECT_DIR$/../abc.json" />
         <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
         <option value="$PROJECT_DIR$/Test/Media/Bicycle.js" />
-        <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
-        <option value="$PROJECT_DIR$/nWse/(2)LangUtil.js" />
-        <option value="$PROJECT_DIR$/nWse/nUi/EfcMgr.js" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" />
         <option value="$PROJECT_DIR$/nWse/(3)CoreDast.js" />
-        <option value="$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js" />
-        <option value="$PROJECT_DIR$/nWse/nGpu/2dCtxt.js" />
         <option value="$PROJECT_DIR$/nWse/DomUtil.js" />
         <option value="$PROJECT_DIR$/cnWse/(0)Plmvc.css" />
-        <option value="$PROJECT_DIR$/nWse/nUi/Frmwk.js" />
         <option value="$PROJECT_DIR$/nWse/Ajax.js" />
-        <option value="$PROJECT_DIR$/模板/模板代码.txt" />
         <option value="$PROJECT_DIR$/nWse/nUi/(0)Plmvc.js" />
-        <option value="$PROJECT_DIR$/nWse/nUi/Wgt.js" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Menu.js" />
-        <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Blue.css" />
-        <option value="$PROJECT_DIR$/cnWse/CmnWgts.css" />
         <option value="$PROJECT_DIR$/../../MyHome/Bicycle.html" />
         <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Purple.css" />
-        <option value="$PROJECT_DIR$/../../MyHome/index.html" />
-        <option value="$PROJECT_DIR$/Test/nUiWgts.html" />
         <option value="$PROJECT_DIR$/../../MyHome/nUiWgts.html" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Edit.js" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/List.js" />
-        <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Swch.js" />
         <option value="$PROJECT_DIR$/模板/Wgts.js" />
+        <option value="$PROJECT_DIR$/../../MyHome/index.html" />
+        <option value="$PROJECT_DIR$/模板/模板代码.txt" />
+        <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Blue.css" />
+        <option value="$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js" />
+        <option value="$PROJECT_DIR$/nWse/PntIptTrkr.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/PcdrLot.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/EfcMgr.js" />
+        <option value="$PROJECT_DIR$/nWse/(2)LangUtil.js" />
+        <option value="$PROJECT_DIR$/nWse/nGpu/2dPath.js" />
+        <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
+        <option value="$PROJECT_DIR$/cnWse/CmnWgts.css" />
+        <option value="$PROJECT_DIR$/nWse/nGpu/2dCtxt.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Swch.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/Wgt.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js" />
+        <option value="$PROJECT_DIR$/nWse/nUi/Frmwk.js" />
+        <option value="$PROJECT_DIR$/Test/nUiWgts.html" />
       </list>
     </option>
   </component>
@@ -294,6 +298,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="nWse" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="nGpu" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WSE" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="WSE" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="cnWse" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -324,14 +346,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
-      <option name="VMOptions" />
-      <option name="arguments" />
-      <option name="filePath" />
-      <option name="scope" value="ALL" />
-      <option name="testName" />
-      <method />
-    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -342,14 +356,12 @@
       <option name="showConsoleOnStdOut" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="CucumberJavaScriptRunConfigurationType" factoryName="Cucumber.js">
-      <option name="cucumberJsArguments" />
-      <option name="executablePath" />
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
       <option name="filePath" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -357,6 +369,16 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaScriptRunConfigurationType" factoryName="Cucumber.js">
+      <option name="cucumberJsArguments" />
+      <option name="executablePath" />
+      <option name="filePath" />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -401,12 +423,12 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931727" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32931727" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931727" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16560958" sideWeight="0.49933246" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -418,8 +440,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -444,40 +466,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Media/Loading.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://F:/CSharp/WebCprs/JsCprs/输出/WSE/Rls/(1)WSE_nWse.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="682">
-          <caret line="0" column="3509" selection-start-line="0" selection-start-column="3509" selection-end-line="0" selection-end-column="3509" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://F:/CSharp/WebCprs/JsCprs/RunCfg.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4722222" vertical-offset="40" max-vertical-offset="874">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/VtuCsl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33239037" vertical-offset="11507" max-vertical-offset="21603">
-          <caret line="620" column="17" selection-start-line="620" selection-start-column="17" selection-end-line="620" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test/PcdrLot.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.54913294" vertical-offset="0" max-vertical-offset="10678">
-          <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/公司文件/我的作品/自行车/(1)WSE_nWse.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="660">
@@ -489,14 +477,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5351682" vertical-offset="49" max-vertical-offset="7733">
           <caret line="21" column="47" selection-start-line="21" selection-start-column="47" selection-end-line="21" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/PntIptTrkr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.92" vertical-offset="2547" max-vertical-offset="12293">
-          <caret line="157" column="44" selection-start-line="157" selection-start-column="44" selection-end-line="157" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -578,38 +558,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nGpu/2dCtxt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.58504397" vertical-offset="0" max-vertical-offset="20311">
-          <caret line="21" column="19" selection-start-line="21" selection-start-column="19" selection-end-line="21" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.35643566" vertical-offset="603" max-vertical-offset="14972">
-          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/(3)CoreDast.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="14.950147" vertical-offset="2439" max-vertical-offset="21888">
-          <caret line="667" column="20" selection-start-line="667" selection-start-column="16" selection-end-line="667" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Acod.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1995" max-vertical-offset="9557">
           <caret line="105" column="75" selection-start-line="105" selection-start-column="16" selection-end-line="105" selection-end-column="75" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3462" max-vertical-offset="5016">
-          <caret line="197" column="42" selection-start-line="197" selection-start-column="42" selection-end-line="197" selection-end-column="42" />
         </state>
       </provider>
     </entry>
@@ -620,24 +572,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="16568" max-vertical-offset="33668">
-          <caret line="872" column="18" selection-start-line="872" selection-start-column="18" selection-end-line="872" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cnWse/(0)Plmvc.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5912306" vertical-offset="798" max-vertical-offset="2470">
           <caret line="64" column="27" selection-start-line="64" selection-start-column="27" selection-end-line="64" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/模板/模板代码.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.43564355" vertical-offset="9306" max-vertical-offset="10051">
-          <caret line="506" column="10" selection-start-line="506" selection-start-column="10" selection-end-line="506" selection-end-column="10" />
         </state>
       </provider>
     </entry>
@@ -648,54 +586,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/Frmwk.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="6783" max-vertical-offset="8531">
-          <caret line="359" column="38" selection-start-line="359" selection-start-column="38" selection-end-line="359" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/(0)Plmvc.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1401" max-vertical-offset="4883">
-          <caret line="91" column="8" selection-start-line="91" selection-start-column="8" selection-end-line="91" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="14129" max-vertical-offset="30210">
-          <caret line="758" column="18" selection-start-line="758" selection-start-column="18" selection-end-line="758" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/(2)LangUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="26764" max-vertical-offset="32699">
-          <caret line="1423" column="58" selection-start-line="1423" selection-start-column="46" selection-end-line="1423" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33239037" vertical-offset="7308" max-vertical-offset="11799">
           <caret line="399" column="18" selection-start-line="399" selection-start-column="18" selection-end-line="399" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38613862" vertical-offset="14870" max-vertical-offset="21622">
-          <caret line="799" column="81" selection-start-line="799" selection-start-column="32" selection-end-line="799" selection-end-column="81" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/EfcMgr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.2" vertical-offset="4675" max-vertical-offset="11609">
-          <caret line="272" column="47" selection-start-line="272" selection-start-column="40" selection-end-line="272" selection-end-column="47" />
         </state>
       </provider>
     </entry>
@@ -706,22 +600,6 @@
           <folding>
             <element signature="n#!!doc" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/Wgt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.46676096" vertical-offset="8942" max-vertical-offset="15485">
-          <caret line="490" column="42" selection-start-line="490" selection-start-column="12" selection-end-line="490" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cnWse/CmnWgts.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.56" vertical-offset="3782" max-vertical-offset="9082">
-          <caret line="209" column="0" selection-start-line="209" selection-start-column="0" selection-end-line="209" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -739,26 +617,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cnWse/CmnWgtsSkin_Blue.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-18.2" vertical-offset="742" max-vertical-offset="4389">
-          <caret line="63" column="53" selection-start-line="63" selection-start-column="17" selection-end-line="63" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cnWse/CmnWgtsSkin_Purple.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-9.08" vertical-offset="1217" max-vertical-offset="4370">
           <caret line="76" column="1" selection-start-line="76" selection-start-column="1" selection-end-line="76" selection-end-column="1" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../MyHome/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-33.535713" vertical-offset="372" max-vertical-offset="1577">
-          <caret line="69" column="66" selection-start-line="69" selection-start-column="66" selection-end-line="69" selection-end-column="66" />
         </state>
       </provider>
     </entry>
@@ -773,7 +636,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="7505">
           <caret line="19" column="53" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -781,23 +643,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.8" vertical-offset="178" max-vertical-offset="10944">
           <caret line="19" column="53" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Swch.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="227" max-vertical-offset="6764">
-          <caret line="19" column="53" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/模板/Wgts.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="3819">
-          <caret line="19" column="53" selection-start-line="19" selection-start-column="53" selection-end-line="19" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -805,14 +650,209 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2214" max-vertical-offset="16473">
           <caret line="130" column="46" selection-start-line="130" selection-start-column="46" selection-end-line="130" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../MyHome/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7254335" vertical-offset="1189" max-vertical-offset="1957">
+          <caret line="89" column="52" selection-start-line="89" selection-start-column="52" selection-end-line="89" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/(0)Plmvc.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4176" max-vertical-offset="4883">
+          <caret line="238" column="53" selection-start-line="238" selection-start-column="53" selection-end-line="238" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/模板/模板代码.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="9154" max-vertical-offset="10051">
+          <caret line="510" column="0" selection-start-line="510" selection-start-column="0" selection-end-line="510" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnWse/PcdrLot.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1691">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/EcmaScript.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="2496" max-vertical-offset="17803">
+          <caret line="144" column="16" selection-start-line="144" selection-start-column="16" selection-end-line="144" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="14972">
+          <caret line="28" column="23" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnWse/CmnWgtsSkin_Blue.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.24186705" vertical-offset="114" max-vertical-offset="4389">
+          <caret line="15" column="43" selection-start-line="15" selection-start-column="43" selection-end-line="15" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31966054" vertical-offset="31770" max-vertical-offset="34124">
+          <caret line="1686" column="38" selection-start-line="1686" selection-start-column="38" selection-end-line="1686" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/PntIptTrkr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="10540" max-vertical-offset="12426">
+          <caret line="570" column="12" selection-start-line="570" selection-start-column="12" selection-end-line="570" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/DvlpSiteRoot/JavaScripts_SVN 不要删有nPick/WSE/nWSE/nPick/(0)Pkup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.572843" vertical-offset="10151" max-vertical-offset="14649">
+          <caret line="632" column="25" selection-start-line="632" selection-start-column="25" selection-end-line="632" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/EfcMgr.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.35643566" vertical-offset="10540" max-vertical-offset="11856">
+          <caret line="570" column="124" selection-start-line="570" selection-start-column="124" selection-end-line="570" selection-end-column="124" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/(2)LangUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.52" vertical-offset="11819" max-vertical-offset="32718">
+          <caret line="630" column="10" selection-start-line="630" selection-start-column="10" selection-end-line="630" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnWse/CmnWgts.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="8134" max-vertical-offset="9006">
+          <caret line="445" column="56" selection-start-line="445" selection-start-column="56" selection-end-line="445" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/(3)CoreDast.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.46676096" vertical-offset="8961" max-vertical-offset="21888">
+          <caret line="491" column="29" selection-start-line="491" selection-start-column="29" selection-end-line="491" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nGpu/2dPath.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.92" vertical-offset="10224" max-vertical-offset="12920">
+          <caret line="563" column="60" selection-start-line="563" selection-start-column="60" selection-end-line="563" selection-end-column="60" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.8" vertical-offset="11040" max-vertical-offset="30932">
+          <caret line="592" column="28" selection-start-line="592" selection-start-column="8" selection-end-line="592" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://F:/DvlpSiteRoot/JavaScripts_SVN 不要删有nPick/WSE/nWSE/n2d/(3)GpuDvc.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.44428152" vertical-offset="27038" max-vertical-offset="30438">
+          <caret line="1441" column="68" selection-start-line="1441" selection-start-column="55" selection-end-line="1441" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nGpu/2dCtxt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.16" vertical-offset="9083" max-vertical-offset="11495">
+          <caret line="498" column="29" selection-start-line="498" selection-start-column="12" selection-end-line="498" selection-end-column="29" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/模板/Wgts.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.2701557" vertical-offset="1241" max-vertical-offset="3819">
+          <caret line="189" column="9" selection-start-line="71" selection-start-column="4" selection-end-line="189" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Swch.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.52" vertical-offset="1597" max-vertical-offset="7505">
+          <caret line="92" column="23" selection-start-line="92" selection-start-column="16" selection-end-line="92" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7355021" vertical-offset="5845" max-vertical-offset="21622">
+          <caret line="337" column="51" selection-start-line="336" selection-start-column="46" selection-end-line="337" selection-end-column="51" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/Wgt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4582744" vertical-offset="3970" max-vertical-offset="16492">
+          <caret line="226" column="24" selection-start-line="226" selection-start-column="24" selection-end-line="226" selection-end-column="24" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5629742" vertical-offset="6203" max-vertical-offset="8037">
+          <caret line="346" column="62" selection-start-line="346" selection-start-column="62" selection-end-line="346" selection-end-column="62" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/Frmwk.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.602546" vertical-offset="7820" max-vertical-offset="13680">
+          <caret line="436" column="73" selection-start-line="436" selection-start-column="73" selection-end-line="436" selection-end-column="73" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Test/nUiWgts.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.5220587" vertical-offset="206" max-vertical-offset="13851">
-          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.40500736" vertical-offset="13158" max-vertical-offset="15846">
+          <caret line="707" column="32" selection-start-line="707" selection-start-column="32" selection-end-line="707" selection-end-column="32" />
           <folding />
         </state>
       </provider>

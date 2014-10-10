@@ -90,6 +90,7 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_FxdAr：Number，固定宽高比
 			/// c_fOnTgl：void f(a_This)，当切换时
 			/// }
 			vcBind : function f(a_Cfg)
@@ -115,7 +116,19 @@ function fOnIcld(a_Errs)
 				l_This.d_Bar = l_Bar;
 				l_This.d_PutSrc.appendChild(l_Bar);		// 放入来源
 
-				// 注册放置目标事件处理器 - 当动画更新结束时
+				// 注册放置目标事件处理器
+				if (! l_This.d_fOnWidDtmnd)
+				{
+					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					{
+						// 根据宽高比修正高度
+						if (l_This.d_Cfg.c_FxdAr)
+						{ l_This.dFixHgtByAr(a_OfstWid); }
+					};
+
+					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+				}
+
 				if (! l_This.d_fOnAnmtUpdEnd)
 				{
 					// 展开式时必须校准位置
@@ -135,7 +148,7 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 
-				// 注销放置目标事件处理器 - 当动画更新结束时
+				// 注销放置目标事件处理器
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
 					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
@@ -224,7 +237,7 @@ function fOnIcld(a_Errs)
 //						//
 //					}
 //					else
-					if (l_This.dIsTchEnd(a_DmntTch))
+					if ((a_DmntTch.c_PkdWgt === l_This) && l_This.dIsTchEnd(a_DmntTch))	// 点中自己时才处理
 					{
 						l_This.dAnmtTgl();				// 动画切换
 
@@ -334,6 +347,32 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cSetPosLt(l_This.d_Blk, l_This.dCalcBlkX());
 				return this;
+			}
+			,
+			/// 根据宽高比修正高度
+			dFixHgtByAr : function (a_OfstWid)
+			{
+				// 如果固定了宽高比，根据a_OfstWid计算高度
+				var l_This = this;
+				if (! l_This.d_Cfg.c_FxdAr)
+				{ return; }
+
+				var l_MinH = 32;	// 覆盖CSS里的min-height，选用2em
+				if (! l_This.d_PutTgt.style.minHeight)
+				{ l_This.d_PutTgt.style.minHeight = l_MinH.toString() + "px"; }
+
+				var l_H = Math.max(Math.round(a_OfstWid / l_This.d_Cfg.c_FxdAr), l_MinH);
+				stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_H);
+			//	stCssUtil.cSetDimHgt(l_This.d_Blk, l_This.d_PutTgt.clientHeight);	// 没有必要，样式表里设为100%
+				var l_BlkH = l_This.d_PutTgt.clientHeight;
+
+				// 同时修改放置目标、滑块、灯泡的边框及半径
+				l_This.d_PutTgt.style.borderRadius = (l_H / 2).toString() + "px";
+				l_This.d_Blk.style.borderWidth = Math.round(l_BlkH / 4).toString() + "px";
+				l_This.d_Blk.style.borderRadius = (l_BlkH / 2).toString() + "px";
+				// 没有必要处理灯泡，样式表里设为100%
+
+
 			}
 		}
 		,

@@ -62,11 +62,16 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
-	function fRset(a_This)
+	function fBtnRset(a_This)
 	{
 		a_This.d_DoVticOfst = false;	// 进行垂直偏移？
 		a_This.d_DtaY = 0;
 		a_This.d_DomTit = null;
+	}
+
+	function fImgBtnRset(a_This)
+	{
+		a_This.d_ImgAr = 1;				// 图像宽高比？
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,7 +86,7 @@ function fOnIcld(a_Errs)
 			this.odBase(tBtn).odCall();	// 基类版本
 
 			var l_This = this;
-			fRset(this);
+			fBtnRset(this);
 		}
 		,
 		tWgt
@@ -107,11 +112,10 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
-
 				stCssUtil.cRmvCssc(l_This.cAcsDomTit(), "cnWse_tBtn_Tit");	// CSS类
 
 				// 重置
-				fRset(this);
+				fBtnRset(this);
 
 				// 基类版本，最后才调用！
 				this.odBase(f).odCall();
@@ -241,6 +245,159 @@ function fOnIcld(a_Errs)
 					this.d_DtaY = 0;
 					this.cRfsh();		// 刷新
 				}
+				return this;
+			}
+		}
+		,
+		{
+			//
+		}
+		,
+		false);
+	})();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+	var tImgBtn;
+	(function ()
+	{
+		tImgBtn = nWse.fClass(nCmnWgts,
+		/// 图像按钮
+		function tImgBtn()
+		{
+			this.odBase(tImgBtn).odCall();	// 基类版本
+
+			var l_This = this;
+			fImgBtnRset(this);
+		}
+		,
+		tWgt
+		,
+		{
+			/// 绑定
+			/// a_Cfg：Object，配置
+			/// {
+			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
+			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_ImgSrc：String，图像来源地址
+			/// c_ImgAr：Number，图像宽高比，默认1
+			/// }
+			vcBind : function f(a_Cfg)
+			{
+				this.odBase(f).odCall(a_Cfg);	// 基类版本
+
+				var l_This = this;
+				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tImgBtn");	// CSS类
+
+				l_This.d_ImgAr = a_Cfg.c_ImgAr || 1;
+				l_This.d_Img = new Image();
+				l_This.d_Img.src = a_Cfg.c_ImgSrc;
+				l_This.d_PutTgt.style.backgroundImage = "url(" + a_Cfg.c_ImgSrc + ")";
+
+				return this;
+			}
+			,
+			/// 解绑
+			vcUbnd : function f()
+			{
+				var l_This = this;
+
+				// 重置
+				fImgBtnRset(this);
+
+				// 基类版本，最后才调用！
+				this.odBase(f).odCall();
+				return this;
+			}
+			,
+			/// 刷新在布局之前
+			vcRfshBefLot : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本
+
+				var l_This = this;
+
+				return this;
+			}
+			,
+			/// 刷新在布局之后
+			vcRfshAftLot : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本
+
+				var l_This = this;
+
+				return this;
+			}
+			,
+			/// 拾取
+			/// a_Picker：tPicker，拾取器
+			vcPick : function f(a_Picker)
+			{
+				var l_This = this;
+				if (! l_This.d_PutTgt)
+				{ return this; }
+
+				var l_Bbox = a_Picker.cAcsBbox();
+				var l_Ctxt = a_Picker.cAcs2dCtxt();
+				var l_Path = a_Picker.cAcs2dPath();
+				a_Picker.cPickBgn(this);
+
+				l_Ctxt.cSetCpstOp_AphMap();
+				l_Ctxt.cMap(l_Bbox, l_This.d_Img, null, null);
+
+				a_Picker.cPickEnd(this);
+				if (a_Picker.cIsOver())
+				{ return this; }
+
+				return this;
+			}
+			,
+			/// 处理来自支配触点的输入
+			/// a_DmntTchIdx：Number，支配触点索引
+			/// a_DmntTch：Object，支配触点
+			vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
+			{
+				this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);	// 基类版本
+
+				var l_This = this;
+
+				if (l_This.dIsTchBgn(a_DmntTch))
+				{
+					a_DmntTch.c_Hdld = true;		// 已处理
+				}
+				else
+				if (l_This.dIsTchLostOrEnd(a_DmntTch))
+				{
+//					if (l_This.dIsTchLost(a_DmntTch))
+//					{
+//						//
+//					}
+//					else
+					if (l_This.dIsTchEnd(a_DmntTch))
+					{
+
+						a_DmntTch.c_Hdld = true;		// 已处理
+					}
+				}
+				return this;
+			}
+			,
+			/// 获得焦点
+			vcGainFoc : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本
+
+				var l_This = this;
+				return this;
+			}
+			,
+			/// 失去焦点
+			vcLoseFoc : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本
+
+				var l_This = this;
 				return this;
 			}
 		}

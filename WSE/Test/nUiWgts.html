@@ -13,9 +13,26 @@
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Blue.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Purple.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
-	<!--<script type="text/javascript" src="./WSE_nWse.js"></script>-->
+	
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/(0)Plmvc.css" />
+	<link rel="stylesheet" type="text/css" href="./cnWse/PcdrLot.css" />
+	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgts.css" />
+	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Blue.css" />
+	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Purple.css" />
+	<script type="text/javascript" src="./(0)Seed.js"></script>
+	<script type="text/javascript" src="./(1)WSE_nWse.js"></script>
+	<script type="text/javascript" src="./(2)WSE_nUi.js"></script>
+	<script type="text/javascript" src="./(3)WSE_nUi_nCmnWgts.js"></script>
+	<script type="text/javascript" src="./(4)WSE_nGpu.js"></script>-->
+
 
 	<style type="text/css">
+
+		body
+		{
+			min-height: 1500px;		/* 为了收起折叠框时不缩短页面 */
+		}
+
 		#k_TestBoa
 		{
 			min-height: 500px;
@@ -78,6 +95,18 @@
 			/*font-size: 2em;*/
 		}
 
+		#k_PutTgt_ImgBtn
+		{
+			position: fixed;
+			left: 50%;
+			top: 50%;
+			width: 142px;
+			height: 142px;
+			box-shadow: none;
+			z-index: 2000;
+			border: 1px dotted black;
+		}
+
 	</style>
 </head>
 <body class="cnWse_Skin_Blue">
@@ -87,9 +116,8 @@
 		</div>
 	</div>-->
 
-	<!--<canvas id="k_Cvs">-->
-
-	<!--</canvas>-->
+	<!--<canvas id="k_Cvs" width="300" height="300"></canvas>-->
+	<!--<img src="Media/myship.png" style="cursor:pointer;border: 1px solid black;" />-->
 	
 	<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
 
@@ -113,6 +141,10 @@
 		</div>
 		<div id="k_BtnSkin" class="cnWse_PutSrc">
 			<span data-Wse_Tit>紫色皮肤</span>
+		</div>
+
+		<div id="k_ImgBtn" class="cnWse_PutSrc">
+			<img src="Media/myship.png" />
 		</div>
 
 		<!---->
@@ -292,8 +324,7 @@
 						"nUi/nCmnWgts/Acod.js",
 						"nUi/nCmnWgts/Nav.js"
 
-//						,"nGpu/(0)GpuMath.js"
-//						,"nGpu/2dCtxt.js"
+						,"nGpu/2dPath.js"
 					]
 					,
 					fOnIcld);
@@ -326,6 +357,25 @@
 
 			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			// 示例应用程序
+
+			/*
+			var l_Cvs = document.getElementById("k_Cvs");
+			var l_Ctxt = new nWse.nGpu.t2dCtxt();
+			l_Ctxt.cBindCvs(l_Cvs);
+
+//			var l_Path = new nWse.nGpu.t2dCtxt.tPath();
+//			l_Path.cRcRect(true, 50, 50, 100, 100, [10, 20, 30, 40]);
+//			l_Ctxt.cSetDrawMthd(0);
+//			l_Ctxt.cAcs().strokeStyle = "rgb(0, 0, 255)";
+//			l_Ctxt.cDrawPath(l_Path);
+
+			var l_Img = new Image();
+			l_Img.src = "Media/myship.png";
+
+			var l_DstSara = new nWse.tSara(50, 50, 142, 142);
+			var l_SrcSara = new nWse.tSara(0, 0, 40, 142);
+			l_Ctxt.cMap(l_DstSara, l_Img, l_SrcSara, null);
+			//*/
 
 //			// AJAX
 //			var l_Ajax = new nWse.tAjax();
@@ -423,7 +473,30 @@
 					l_Wgt = new nCmnWgts.tBtn();	// BtnFirst
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_BtnFirst",
-						c_PutSrc: "k_BtnFirst"
+						c_PutSrc: "k_BtnFirst",
+						c_fOnClk: function (a_Wgt)
+						{
+//							var l_DomBody = nWse.stDomUtil.cAcsBody();
+//							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Blue"))
+//							{
+//								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Blue", "cnWse_Skin_Purple");
+//							//	a_Wgt.cAcsDomTit().textContent = "蓝色皮肤";
+//							}
+//							else
+//							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Purple"))
+//							{
+//								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Purple", "cnWse_Skin_Blue");
+//							//	a_Wgt.cAcsDomTit().textContent = "紫色皮肤";
+//							}
+
+//							console.log();
+//							var l_AllPuts = l_This.e_PcdrLot.cGetAllPuts(null, true);
+//							nWse.stAryUtil.cFor(l_AllPuts,
+//							function (a_Ary, a_Idx, a_Put)
+//							{
+//								console.log(a_Put.id);
+//							});
+						}
 					});
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
@@ -484,7 +557,8 @@
 					l_Wgt = new nCmnWgts.tSwch();	// Swch
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Swch",
-						c_PutSrc: "k_Swch"
+						c_PutSrc: "k_Swch",
+						c_FxdAr: 4 / 1
 //						c_fOnOk: function (a_Wgt, a_Text)
 //						{
 //							//	console.log("文本框的内容是：" + a_Text);
@@ -596,6 +670,7 @@
 					});
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
+					//==================================================== 全局控件集
 					l_Wgt = new nCmnWgts.tNav();	// 导航
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Nav",
@@ -614,6 +689,47 @@
 				//	l_Wgt.cSetActvEfcIdx(2);
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
 					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
+
+
+					l_Wgt = new nCmnWgts.tImgBtn();	// ImgBtn
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_ImgBtn",
+						c_PutSrc: "k_ImgBtn",
+						c_ImgSrc: "Media/myship.png",
+						c_ImgAr: 1,
+						c_fOnClk: function (a_Wgt)
+						{
+
+						}
+					});
+					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
+					nWse.stDomUtil.cAcsBody().appendChild(l_Wgt.cAcsPutTgt());		// 加入到文档
+
+					document.getElementById("k_PutTgt_ImgBtn").style.visibility = "hidden";	// 一开始隐藏
+					window.addEventListener("keydown", function (a_Evt)
+					{
+						var l_WgtPutTgt;
+						if ("P".charCodeAt(0) == a_Evt.keyCode) // 拾取
+						{
+							if (stFrmwk.cIsPickEnab())
+							{
+								console.log("关闭拾取");
+								stFrmwk.cDsabPick();
+							}
+							else
+							{
+								console.log("开启拾取");
+								stFrmwk.cEnabPick();
+							}
+						}
+						else
+						if ("S".charCodeAt(0) == a_Evt.keyCode) // 飞船
+						{
+							l_WgtPutTgt = document.getElementById("k_PutTgt_ImgBtn");
+							if (l_WgtPutTgt)
+							{ l_WgtPutTgt.style.visibility = l_WgtPutTgt.style.visibility ? "" : "hidden"; }
+						}
+					});
 				}
 				,
 				// 运行
@@ -640,7 +756,7 @@
 						c_Id: "k_TestBoa"
 					})
 						.cCol({
-							c_GridTot: (2 == l_BrkPntIdx) ? 20 : 10
+							c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
 						})
 							.cPut({
 								c_NewRow : true,
@@ -672,7 +788,7 @@
 							.cPut({
 								c_NewRow: true,
 								c_Id : "k_PutTgt_Swch",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
 							})
 							.cPut({
 								c_NewRow: true,

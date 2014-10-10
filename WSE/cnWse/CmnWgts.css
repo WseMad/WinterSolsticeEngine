@@ -8,8 +8,8 @@
 
 /*********************************************** tWgt ***********************************************/
 
-.cnWse_tWgt_Nml,
-.cnWse_tWgt_Tch
+.cnWse_PutTgt.cnWse_tWgt_Nml,
+.cnWse_PutTgt.cnWse_tWgt_Tch
 {
 	color: rgb(0, 0, 0);
 	box-shadow: 0px 10px 20px rgb(51, 51, 51);
@@ -26,7 +26,7 @@
 	/*-moz-user-select:none;*/
 }
 
-.cnWse_tWgt_Tch.cnWse_tBtn
+.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn
 {
 	color: rgb(100%, 100%, 100%);
 	box-shadow: 0px 5px 10px rgb(51, 51, 51);
@@ -78,16 +78,6 @@
 	/*border: 1px solid rgb(0, 255, 0);*/		/* 会改变高度 */
 	box-shadow: inset 0px 0px 10px rgb(0, 255, 0),
 				0px 0px 10px rgb(0, 255, 0);
-
-	-webkit-transition: box-shadow;
-	-moz-transition: box-shadow;
-	-ms-transition: box-shadow;
-	transition: box-shadow;
-
-	-webkit-transition-duration: 0.6s;
-	-moz-transition-duration: 0.6s;
-	-ms-transition-duration: 0.6s;
-	transition-duration: 0.6s;
 }
 
 /* OK按钮 */
@@ -223,6 +213,11 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	border-top: 1px solid rgb(0, 0, 0);
 	border-bottom: 1px solid rgb(220, 220, 220);
 	z-index: 1;
+}
+
+.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Bar
+{
+	border-top-color: rgb(96, 96, 96);
 }
 
 .cnWse_tSwch .cnWse_tSwch_Blk
@@ -448,6 +443,7 @@ ul.cnWse_tMenu_Plchd
 .cnWse_tNav li>a
 {
 	display: block;					/* 令整个<li>成为可点击的按钮 */
+	border-radius: inherit;			/* 继承父节点的边框半径（可能是圆形） */
 	padding: 20% 0px 0px 0px;		/* 和径向渐变垂直对齐 */
 	height: 100%;
 }

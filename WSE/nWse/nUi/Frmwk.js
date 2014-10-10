@@ -35,6 +35,7 @@ function fOnIcld(a_Errs)
 	var stAryUtil = nWse.stAryUtil;
 	var stDomUtil = nWse.stDomUtil;
 	var stCssUtil = nWse.stCssUtil;
+	var tSara = nWse.tSara;
 
 	var tPntIptTrkr = nWse.tPntIptTrkr;
 	var tPntIpt = tPntIptTrkr.tPntIpt;
@@ -42,6 +43,8 @@ function fOnIcld(a_Errs)
 	var tPntIptTch = tPntIpt.tTch;
 
 	var nUi = nWse.nUi;
+
+	var nGpu, t2dCtxt, tPath;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -74,6 +77,20 @@ function fOnIcld(a_Errs)
 		var e_Focs = [];			// 焦点数组
 		var e_EvtSys = {};			// 事件系统
 
+		var e_EnabPick = false;		// 启用拾取？
+		var e_PickFrqc = 0.2;		// 拾取频率：默认每秒5次
+		var e_PickTmrId = null;		// 计时器ID
+		var e_CltSara = null;		// 客户区
+		var e_PickCvs = null;		// 拾取画布
+		var e_PickCtxt = null;		// 拾取上下文
+		var e_PickAllPuts = null;	// 全部放置元素
+		var e_Picker = null;		// 拾取器
+
+		function ePickTmrRset()		// 拾取计时复位
+		{
+			e_PickTmrId = null;		// 复位
+		}
+
 		//======== 私有函数
 
 		// 初始化
@@ -103,9 +120,9 @@ function fOnIcld(a_Errs)
 		}
 		eInit();
 
-		function eObtnWgtByEvtTgt(a_EvtTgt)
+		function eObtnWgtByDomElmt(a_DomElmt)
 		{
-			var l_DomSA = stDomUtil.cSrchSelfAndAcst(a_EvtTgt,
+			var l_DomSA = stDomUtil.cSrchSelfAndAcst(a_DomElmt,
 				function (a_DomSA) { return a_DomSA.Wse_Wgt && a_DomSA.Wse_Wgt.c_Wgt; });
 			return (l_DomSA && l_DomSA.Wse_Wgt) ? l_DomSA.Wse_Wgt.c_Wgt : null;
 		}
@@ -186,6 +203,204 @@ function fOnIcld(a_Errs)
 			});
 		};
 
+		// 初始化拾取系统
+		function eInitPickSys()
+		{
+			// 客户区
+			if (! e_CltSara)
+			{
+				e_CltSara = new tSara();
+			}
+
+			// 创建拾取画布，对齐页面客户区
+			if (! e_PickCvs)
+			{
+				e_PickCvs = document.createElement("canvas");
+				eUpdPickCvsDim();
+
+				// 上下文
+				if (! e_PickCtxt)
+				{ e_PickCtxt = new t2dCtxt(); }
+
+				e_PickCtxt.cBindCvs(e_PickCvs);
+				e_PickCtxt.cSetDrawMthd(1);
+			}
+
+			// 拾取全部放置元素数组
+			if (! e_PickAllPuts)
+			{
+				e_PickAllPuts = [];
+			}
+
+			// 拾取器
+			if (! e_Picker)
+			{
+				e_Picker = {
+					e_Ipt : null
+					,
+					e_PendTchs : []
+					,
+					e_Bbox : new tSara()
+					,
+					e_Path : new tPath()
+					,
+					/// 存取包围盒
+					cAcsBbox : function () { return this.e_Bbox; }
+					,
+					/// 存取上下文
+					cAcs2dCtxt : function () { return e_PickCtxt; }
+					,
+					/// 存取路径
+					cAcs2dPath : function () { return this.e_Path; }
+					,
+					/// 拾取开始
+					cPickBgn: function (a_Wgt)
+					{
+						// 清空画布上的显示包围盒区域
+						e_PickCtxt.cClr();
+						return this;
+					}
+					,
+					/// 拾取结束
+					cPickEnd: function (a_Wgt)
+					{
+						var l_This = this;
+
+						// 对每个待定触点
+						var l_Idx = stAryUtil.cFind(l_This.e_PendTchs,
+							function (a_Tchs, a_TchIdx, a_Tch)
+							{
+								// 回读颜色，如果像素的a分量≥128，就认为被拾取到！
+								var l_ImgData = e_PickCtxt.cAcs().getImageData(a_Tch.c_X, a_Tch.c_Y, 1, 1);
+								if (l_ImgData.data[3] >= 128)
+								{
+									// 记录触点，并从待定触点数组中移除（cFind()里不宜，离开后再移除）
+									a_Tch.c_PkdWgt = a_Wgt;
+									return true;
+								}
+								return false;
+							});
+
+						if (l_Idx >= 0)
+						{
+							l_This.e_PendTchs.splice(l_Idx, 1);
+						}
+
+						return this;
+					}
+					,
+					/// 完毕？
+					cIsOver : function ()
+					{
+						return (0 == this.e_PendTchs.length);
+					}
+				};
+			}
+		}
+
+		// 拾取
+		function ePick(a_Ipt)
+		{
+			// 如果含有i_TchBgn或i_TchEnd，必须进行拾取，清除计时器
+			if (a_Ipt.cHasTchBgnOrEnd())
+			{
+				if (e_PickTmrId)
+				{
+					clearTimeout(e_PickTmrId);
+					e_PickTmrId = null;
+				}
+			}
+			else // 只有i_TchMove，时间到了时才拾取
+			if (e_PickTmrId)
+			{
+				return;
+			}
+
+			// 如果需要，初始化拾取系统
+			if (! e_PickCvs)
+			{ eInitPickSys(); }
+			else // 更新拾取画布尺寸
+			{ eUpdPickCvsDim(); }
+
+			// 计算客户区
+			e_CltSara.cCrt$Wh(e_PickCvs.width, e_PickCvs.height);
+
+			// 记录输入和待定触点
+			e_Picker.e_Ipt = a_Ipt;
+			stAryUtil.cShlwAsn(e_Picker.e_PendTchs, a_Ipt.c_Tchs);
+
+			// 首先取得所有放置元素，然后装入全局控件的放置目标，最后按渲染先后顺序排序
+			e_PickAllPuts.length = 0;	// 清空
+			e_Lot.cGetAllPuts(e_PickAllPuts);
+			stAryUtil.cFor(e_GlbWgtSet.cAcsWgts(), function (a_Wgts, a_Idx, a_Wgt) { e_PickAllPuts.push(a_Wgt.cAcsPutTgt()); });
+			e_Lot.cSortAllPutsByRndOrd(e_PickAllPuts);
+
+			try
+			{
+				// 设置裁剪区为所有触点
+				e_PickCtxt.cAcs().save();			// 保存
+				e_PickCtxt.cAcs().beginPath();
+				stAryUtil.cFor(a_Ipt.c_Tchs,
+					function (a_Tchs, a_TchIdx, a_Tch)
+					{ e_PickCtxt.cAcs().rect(a_Tch.c_X, a_Tch.c_Y, 1, 1); });
+				e_PickCtxt.cAcs().clip();
+
+				// 拾取控件
+				ePickWgts(a_Ipt);
+			}
+			finally
+			{
+				e_PickCtxt.cAcs().restore();		// 还原
+			}
+
+			// 设置计时
+			e_PickTmrId = setTimeout(ePickTmrRset, e_PickFrqc * 1000);
+		}
+
+		function ePickWgts(a_Ipt)
+		{
+			// 反序遍历，即最后渲染的最先拾取
+			var i, l_Len = e_PickAllPuts.length, l_Put, l_Wgt;
+			for (i = l_Len - 1; i>=0; --i)
+			{
+				l_Put = e_PickAllPuts[i];
+
+				// 计算包围盒
+				tSara.scCrt$DomBcr(e_Picker.e_Bbox, l_Put);
+
+				// 若不包含任何一个触点，跳过
+				if (stAryUtil.cFind(a_Ipt.c_Tchs,
+					function (a_Tchs, a_TchIdx, a_Tch)
+					{ return tSara.scCtan$Xy(e_Picker.e_Bbox, a_Tch.c_X, a_Tch.c_Y); }) < 0)
+				{ continue; }
+
+				// 拾取所属控件
+				l_Wgt = eObtnWgtByDomElmt(l_Put);
+				if (! l_Wgt)
+				{ continue; }
+
+				l_Wgt.vcPick(e_Picker);
+
+				// 如果已经全部拾取完，立即跳出
+				if (0 == e_Picker.e_PendTchs.length)
+				{ break; }
+			}
+		}
+
+		// 更新拾取画布尺寸
+		function eUpdPickCvsDim()
+		{
+			if (! e_PickCvs)
+			{ return; }
+
+			if (e_PickCvs.width != window.innerWidth)
+			{ e_PickCvs.width = window.innerWidth; }
+
+			if (e_PickCvs.height != window.innerHeight)
+			{ e_PickCvs.height = window.innerHeight; }
+		}
+
+		// 输入处理器
 		function fIptHdlr(a_Ipt)
 		{
 //			nWse.stAryUtil.cFor(a_Ipt.c_Tchs,
@@ -200,21 +415,26 @@ function fOnIcld(a_Errs)
 			// 记录拾取到的控件
 			a_Ipt.cForTchs(function (a_Tchs, a_Idx, a_Tch)
 			{
+				// 如果浏览器报告没有点中任何HTML元素
 				var l_EvtTgt = a_Tch.cAcsEvtTgt();
 				if (! l_EvtTgt)
 				{
-					a_Tch.c_PkdWgt = null;
+					a_Tch.c_PkdWgt = null; // 清null，返回
 					return;
 				}
 
-				var l_Wgt = eObtnWgtByEvtTgt(l_EvtTgt);
-//				if ("CANVAS" == l_EvtTgt.tagName)
-//				{
-//				//	console.log("picked <canvas>!!!");
-//					l_Wgt = null;
-//				}
-
+				// 点中了某个HTML元素，记录之
+				var l_Wgt = eObtnWgtByDomElmt(l_EvtTgt);
 				a_Tch.c_PkdWgt = l_Wgt;
+
+				// 如果拾取到某个控件且开启拾取，则进行像素拾取
+				if (l_Wgt && e_EnabPick)
+				{
+					ePick(a_Ipt);
+				}
+
+				if (a_Tch.c_PkdWgt)
+				{ console.log("拾取到：" + a_Tch.c_PkdWgt.cAcsPutSrc().id); }
 			});
 
 			//【注意】下面的算法即使在没有焦点的情况下也能正确处理！
@@ -404,14 +624,24 @@ function fOnIcld(a_Errs)
 			return stFrmwk;
 		};
 
-		/// 存取放置元素的目标区域，必须在cRfshAftLot里调用，不要修改！
-		stFrmwk.cAcsPutTgtArea = function (a_Put)
+		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或cRfshAftLot里调用，不要修改！
+		stFrmwk.cAcsTgtAreaOfPut = function (a_Put)
 		{
 			if (! e_Lot)
 			{ return null; }
 
-			var l_scAcsPutTgtArea = e_Lot.constructor.scAcsPutTgtArea || null;
-			return l_scAcsPutTgtArea && l_scAcsPutTgtArea(a_Put);
+			var l_scAcs = e_Lot.constructor.scAcsTgtAreaOfPut || null;
+			return l_scAcs && l_scAcs(a_Put);
+		};
+
+		/// 存取放置元素的CSS外边距，必须在"WidDtmnd"事件里或cRfshAftLot里调用，不要修改！
+		stFrmwk.cAcsCssMgnOfPut = function (a_Put)
+		{
+			if (! e_Lot)
+			{ return null; }
+
+			var l_scAcs = e_Lot.constructor.scAcsCssMgnOfPut || null;
+			return l_scAcs && l_scAcs(a_Put);
 		};
 
 		/// 注册事件处理器
@@ -433,6 +663,47 @@ function fOnIcld(a_Errs)
 			{ return stFrmwk; }
 
 			e_EvtSys[a_EvtName].cUrg(a_fHdlr);
+			return stFrmwk;
+		};
+
+
+		/// 拾取开启？
+		stFrmwk.cIsPickEnab = function ()
+		{
+			return e_EnabPick;
+		};
+
+		/// 开启拾取，【注意】由调用者负责载入nGpu库的“2dPath.js”文件
+		stFrmwk.cEnabPick = function ()
+		{
+			if ((! nWse.nGpu))
+			{ throw new Error("nGpu库尚未载入，不能启用拾取！"); }
+
+			if (! nGpu)	// 如果需要，初始化
+			{
+				nGpu = nWse.nGpu;
+				t2dCtxt = nGpu && nGpu.t2dCtxt;
+				tPath = t2dCtxt && t2dCtxt.tPath;
+			}
+
+			e_EnabPick = true;
+			return stFrmwk;
+		};
+
+		/// 关闭拾取
+		stFrmwk.cDsabPick = function ()
+		{
+			e_EnabPick = false;
+			return stFrmwk;
+		};
+
+		/// 拾取频率，即两次拾取之间至少间隔多少秒，默认0.2（每秒5次）
+		stFrmwk.cThePickFrqc = function (a_Frqc)
+		{
+			if (0 == arguments.length)
+			{ return e_PickFrqc; }
+
+			e_PickFrqc = a_Frqc;
 			return stFrmwk;
 		};
 	})();

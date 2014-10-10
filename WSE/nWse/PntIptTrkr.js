@@ -510,6 +510,13 @@ function fOnIcld(a_Errs)
 				return (stAryUtil.cFind(this.c_Tchs, function (a_Ary, a_Idx, a_Tch) { return (a_Tch.c_Kind == a_Kind); }) >= 0);
 			}
 			,
+			/// 有i_TchBgn或i_TchEnd两种触点？
+			cHasTchBgnOrEnd : function ()
+			{
+				return (stAryUtil.cFind(this.c_Tchs, function (a_Ary, a_Idx, a_Tch)
+					{ return (a_Tch.c_Kind == tPntIptKind.i_TchBgn) || (a_Tch.c_Kind == tPntIptKind.i_TchEnd); }) >= 0);
+			}
+			,
 			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
 			{
 				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt));

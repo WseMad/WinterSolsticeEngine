@@ -52,6 +52,8 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_RcRectRds = null;		// 圆角矩形半径
+
 	function fObtnPutSrc(a_This, a_Cfg)
 	{
 		var l_Rst = unKnl.fObtnPutSrc(a_Cfg.c_PutSrc);
@@ -195,6 +197,38 @@ function fOnIcld(a_Errs)
 			vcRfshAftLot : function f()
 			{
 				var l_This = this;
+
+				return this;
+			}
+			,
+			/// 拾取
+			/// a_Picker：tPicker，拾取器
+			vcPick : function f(a_Picker)
+			{
+				var l_This = this;
+				if (! l_This.d_PutTgt)
+				{ return this; }
+
+				var l_Bbox = a_Picker.cAcsBbox();
+				var l_Ctxt = a_Picker.cAcs2dCtxt();
+				var l_Path = a_Picker.cAcs2dPath();
+				a_Picker.cPickBgn(this);
+
+				var l_BdrRds = tWgt.sd_PutTgtBdrRds;
+				stCssUtil.cGetBdrRds(tWgt.sd_PutTgtBdrRds, l_This.d_PutTgt);
+				if (! s_RcRectRds)
+				{ s_RcRectRds = new Array(4); }
+				s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
+				s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
+				s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
+				s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
+				l_Path.cRset().cRcRect(false, l_Bbox.c_X, l_Bbox.c_Y, l_Bbox.c_W, l_Bbox.c_H, s_RcRectRds);
+				l_Ctxt.cAcs().fillStyle = "rgba(255, 255, 255, 1)";
+				l_Ctxt.cDrawPath(l_Path);
+
+				a_Picker.cPickEnd(this);
+				if (a_Picker.cIsOver())
+				{ return this; }
 
 				return this;
 			}
@@ -460,14 +494,14 @@ function fOnIcld(a_Errs)
 			/// 获取放置目标宽度，必须在vcRfshAftLot里调用
 			dGetPutTgtWid : function ()
 			{
-				var l_TgtArea = nUi.stFrmwk.cAcsPutTgtArea(this.d_PutTgt);
+				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt);
 				return l_TgtArea ? l_TgtArea.c_W : 0;
 			}
 			,
 			/// 获取放置目标内容宽度，必须在vcRfshAftLot里调用，同时更新sd_PutTgtBdrThk和sd_PutTgtPad
 			dGetPutTgtCtntWid : function ()
 			{
-				var l_TgtArea = nUi.stFrmwk.cAcsPutTgtArea(this.d_PutTgt);
+				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt);
 				if (! l_TgtArea)
 				{ return 0; }
 
@@ -487,19 +521,33 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 注册放置目标事件处理器 - 当动画更新结束时
-			dRegPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOnAnmtUpdEnd)
+			/// 注册放置目标事件处理器 - 当宽度已决定时
+			dRegPutTgtEvtHdlr_OnWidDtmnd : function (a_fOn)
 			{
-				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOnAnmtUpdEnd);
-				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOnAnmtUpdEnd);
+				nUi.fRegPutEvtHdlr(this.d_PutTgt, "WidDtmnd", a_fOn);
+				return this;
+			}
+			,
+			/// 注销放置目标事件处理器 - 当宽度已决定时
+			dUrgPutTgtEvtHdlr_OnWidDtmnd : function (a_fOn)
+			{
+				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "WidDtmnd", a_fOn);
+				return this;
+			}
+			,
+			/// 注册放置目标事件处理器 - 当动画更新结束时
+			dRegPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOn)
+			{
+				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOn);
+				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOn);
 				return this;
 			}
 			,
 			/// 注销放置目标事件处理器 - 当动画更新结束时
-			dUrgPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOnAnmtUpdEnd)
+			dUrgPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOn)
 			{
-				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOnAnmtUpdEnd);
-				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOnAnmtUpdEnd);
+				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOn);
+				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOn);
 				return this;
 			}
 			,
@@ -530,6 +578,9 @@ function fOnIcld(a_Errs)
 			,
 			/// 放置目标边框厚度
 			sd_PutTgtBdrThk : {}
+			,
+			/// 放置目标边框半径
+			sd_PutTgtBdrRds : {}
 			,
 			/// 放置目标内边距
 			sd_PutTgtPad : {}

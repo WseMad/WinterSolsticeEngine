@@ -47,6 +47,8 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_EvtAgms_WidDtmnd = [0, 1, 2];			// 事件参数
+
 	function fFindBrkPnt(a_This, a_W)
 	{
 		var l_Rst = stAryUtil.cRvsFind(a_This.e_Cfg.c_BrkPnts, function (a_Tgt, a_Idx, a_Elmt) { return (a_W >= a_Elmt); });
@@ -582,6 +584,7 @@ function fOnIcld(a_Errs)
 		a_This.e_BoaAry = [];				// 板数组
 		a_This.e_PutIdRgtr = null;			// 已放元素ID注册表
 		a_This.e_RmvdPutAry = [];			// 移除的放数组
+		a_This.e_AllPuts = [];				// 全部放置元素
 		a_This.e_ImgSrcRgtr = [];			// 图像源注册表
 		a_This.e_TmrIdAry = [];				// 计时器ID数组
 	}
@@ -741,7 +744,8 @@ function fOnIcld(a_Errs)
 			else
 			{ a_This.e_Rsn = a_This.e_BrkPntIdx; }
 
-			a_This.e_BrkPntIdx = l_BrkPntIdx;	// 更新索引
+			a_This.e_BrkPntIdx = l_BrkPntIdx;	// 更新断点索引
+			a_This.e_AllPuts.length = 0;		// 清空全部放置元素数组
 		}
 
 		// 进行回调
@@ -951,6 +955,12 @@ function fOnIcld(a_Errs)
 			l_TgtArea.c_X = l_GridIdx * l_GridUnit + fCalcColCtntX(a_This, a_Boa, a_Col);
 			l_TgtArea.c_Y = a_This.e_FlowRelY + fCalcColCtntY(a_This, a_Boa, a_Col);
 			l_TgtArea.c_W = l_GridCnt * l_GridUnit;
+
+			// 立即触发摆放事件之宽度已决定，因为事件处理器可能会趁机修改高度
+			s_EvtAgms_WidDtmnd[0] = a_Put;
+			s_EvtAgms_WidDtmnd[1] = l_TgtArea.c_W;
+			s_EvtAgms_WidDtmnd[2] = (l_TgtArea.c_W - l_CssMgn.c_MgnLt - l_CssMgn.c_MgnRt);
+			nUi.fTrgrPutEvt(a_Put, "WidDtmnd", s_EvtAgms_WidDtmnd);
 
 			if (l_FxdAr) // 如果提供了宽高比，使用它来计算
 			{
@@ -1385,7 +1395,6 @@ function fOnIcld(a_Errs)
 					this.e_MinWid = 128;				// 最小宽度
 					this.e_MaxWid = Number.MAX_VALUE;	// 最大宽度
 					this.e_MinHgt = null;				// 最小高度
-
 					this.e_BrkPntIdx = -1;				// 断点索引
 					this.e_UseBrkPntWid = false;		// 使用断点宽
 
@@ -1394,7 +1403,6 @@ function fOnIcld(a_Errs)
 					this.e_PrnWidWhenRunBgn = 0;		// 运行开始时的父节点宽度
 					this.e_RunCnt = 0;					// 运行计数
 					this.e_RunAgn = false;				// 需要再次运行？
-
 					this.e_DftEfc = null;				// 默认特效
 
 					// 以下是和开发调试相关的字段
@@ -1430,7 +1438,6 @@ function fOnIcld(a_Errs)
 					this.e_MinWid = a_Cfg.c_MinWid || 128;
 					this.e_MaxWid = a_Cfg.c_MaxWid || Number.MAX_VALUE;
 					this.e_MinHgt = a_Cfg.c_MinHgt || null;
-
 					stCssUtil.cAddCssc(this.e_PutTgt, "cnWse_PutTgt");	// 默认的CSS类
 					stCssUtil.cAddCssc(this.e_PutSrc, "cnWse_PutSrc");
 					return this;
@@ -1611,11 +1618,12 @@ function fOnIcld(a_Errs)
 
 					l_Put.style.display = "block";				// 块级
 					l_Put.style.position = "absolute";			// 绝对定位
-					stCssUtil.cAddCssc(l_Put, "cnWse_tPcdrLot_Put");		// 默认的CSS类
-					if (a_Cfg.c_Cssc)							// 添加定制的CSS类
+					stCssUtil.cAddCssc(l_Put, "cnWse_tPcdrLot_Put");	// 默认的CSS类
+					if (a_Cfg.c_Cssc)									// 添加定制的CSS类
 					{ stCssUtil.cAddCssc(l_Put, a_Cfg.c_Cssc); }
 
-					l_Col.Wse_PcdrLot.c_PutAry.push(l_Put);		// 保存起来
+					l_Col.Wse_PcdrLot.c_PutAry.push(l_Put);			// 保存起来
+					this.e_AllPuts.push(l_Put);
 					return this;
 				}
 				,
@@ -1652,21 +1660,40 @@ function fOnIcld(a_Errs)
 				cCtanPut : function (a_Elmt$Id)
 				{
 					a_Elmt$Id = nWse.fIsStr(a_Elmt$Id) ? document.getElementById(a_Elmt$Id) : a_Elmt$Id;
-					if (! a_Elmt$Id)
-					{ return false; }
+					return a_Elmt$Id ? (this.e_AllPuts.indexOf(a_Elmt$Id) >= 0) : false;
+				}
+				,
+				/// 存取全部放置元素
+				cAcsAllPuts : function () { return this.e_AllPuts; }
+				,
+				/// 获取所有放置元素，【警告】本函数使用“push”方法装入新元素，若不想累计则由调用者负责清零
+				/// a_Rst：Object[]，若无效则新建，默认null
+				/// 返回：a_Rst
+				cGetAllPuts : function (a_Rst)
+				{
+					if (! a_Rst)
+					{ a_Rst = []; }
 
-					var l_Ba = this.e_BoaAry, l_Bi = 0, l_Bl = l_Ba.length;
-					var l_Ca, l_Ci, l_Cl;
-					for (; l_Bi<l_Bl; ++l_Bi)
+					fForEachBoaColPut(this, null, null,
+						function (a_This, a_Boa, a_Col, a_Put)
+						{ if (a_Rst.indexOf(a_Put) < 0) { a_Rst.push(a_Put); } });	// 防止重复！
+					return a_Rst;
+				}
+				,
+				/// 按照渲染顺序排序全部放置元素，即先按z-index，后按位置
+				/// 返回：a_AllPuts
+				cSortAllPutsByRndOrd : function (a_AllPuts)
+				{
+					var l_This = this;
+					a_AllPuts.sort(function (a_1, a_2)
 					{
-						l_Ca = l_Ba[l_Bi].Wse_PcdrLot.c_ColAry;	l_Ci = 0; l_Cl = l_Ca.length;
-						for (; l_Ci<l_Cl; ++l_Ci)
-						{
-							if (l_Ca[l_Ci].Wse_PcdrLot.c_PutAry.indexOf(a_Elmt$Id) >= 0)
-							{ return true; }
-						}
-					}
-					return false;
+						var l_Z1 = stCssUtil.cGetZidx(a_1), l_Z2 = stCssUtil.cGetZidx(a_2);
+						if (l_Z1 != l_Z2)
+						{ return (l_Z1 - l_Z2); }
+						var l_I1 = l_This.e_AllPuts.indexOf(a_1), l_I2 = l_This.e_AllPuts.indexOf(a_2);
+						return (l_I1 - l_I2);
+					});
+					return a_AllPuts;
 				}
 				,
 				/// 显示隐藏栅格用户界面
@@ -1695,14 +1722,10 @@ function fOnIcld(a_Errs)
 						l_Dom_Input.id = "ok_ShowGridChkBox";
 						l_Dom_Input.type = "checkbox";
 						l_Dom_Input.title = "控制栅格的显示";
+						l_Dom_Input.onchange = function (a_Evt) { a_This.cShowHideGrid(a_Evt.target.checked); };
 						l_Dom_Div.appendChild(l_Dom_Input);
 
-						var l_Dom_Text = document.createTextNode("显示栅格");
-						l_Dom_Div.appendChild(l_Dom_Text);
-
-						l_Dom_Input.onchange = function (a_Evt)
-						{ a_This.cShowHideGrid(a_Evt.target.checked); };
-
+						l_Dom_Div.appendChild(document.createTextNode("显示栅格"));
 						stDomUtil.cAcsBody().appendChild(l_Dom_Div);
 					}
 
@@ -1748,11 +1771,14 @@ function fOnIcld(a_Errs)
 			}
 			,
 			{
-				/// 存取放置元素的目标区域，必须在cRun之后调用，不要修改！
-				scAcsPutTgtArea : function (a_Put) { return (a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_TgtArea) || null; }
+				/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或cRun/cRfl之后调用，不要修改！
+				scAcsTgtAreaOfPut : function (a_Put) { return a_Put.Wse_PcdrLot.c_TgtArea; }
+				,
+				/// 存取放置元素的CSS外边距，必须在"WidDtmnd"事件里或cRun/cRfl之后调用，不要修改！
+				scAcsCssMgnOfPut : function (a_Put) { return a_Put.Wse_PcdrLot.c_CssMgn; }
 				,
 				/// 获取放置元素的行索引
-				scGetPutRowIdx : function (a_Put) { return (a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_RowIdx); }
+				scGetPutRowIdx : function (a_Put) { return a_Put.Wse_PcdrLot.c_RowIdx; }
 			}
 			,
 			false);

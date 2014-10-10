@@ -630,25 +630,6 @@ function fOnIcld(a_Errs)
 			return a_Rst;
 		};
 
-		/// 相交 - 射线＆线段
-		/// a_ROx, a_ROy：Number，射线起点坐标
-		/// a_RDx, a_RDy：Number，射线方向，不必是单位向量，但不能同时为0
-		/// a_LSx, a_LSy：Number，线段起点坐标，必须与终点不同
-		/// a_LTx, a_LTy：Number，线段终点坐标，必须与起点不同
-		/// 返回：null表示不相交，Number表示射线方向系数，≥0交于正向，＜0交于反向
-		stNumUtil.cItsc_Ray_Lnsg = function (a_ROx, a_ROy, a_RDx, a_RDy,
-											a_LSx, a_LSy, a_LTx, a_LTy)
-		{
-			var l_STx = a_LSx - a_LTx, l_STy = a_LSy - a_LTy;
-			var l_SOx = a_LSx - a_ROx, l_SOy = a_LSy - a_ROy;
-			var l_A = stNumUtil.cDet_2o(a_RDx, l_STx, a_RDy, l_STy);
-			if (0 == l_A)
-			{ return null; }
-
-			var l_B = stNumUtil.cDet_2o(l_SOx, l_STx, l_SOy, l_STy);
-			return l_B / l_A;
-		};
-
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1237,30 +1218,50 @@ function fOnIcld(a_Errs)
 			return a_Tgt[nWse.stNumUtil.cClmAry(a_Tgt, a_Idx)];
 		};
 
+		/// 浅拷贝
+		/// a_Orig：Array，原本
+		/// 返回：Array，副本
+		stAryUtil.cCopy = function (a_Orig)
+		{
+			return a_Orig && a_Orig.slice(0, a_Orig.length);
+		};
+
 		/// （深）拷贝
 		/// a_Orig：Array，原本
 		/// 返回：Array，副本
 		stAryUtil.cCopy = function (a_Orig)
 		{
-			//【警告】这是浅拷贝
-		//	return a_Orig.slice(0, a_Orig.length);
-
 			// 直接转交stObjUtil
 			return nWse.stObjUtil.cCopy(a_Orig);
 		};
 
-		/// 赋值
+		/// 浅赋值
+		/// a_Dst：Array，目的
+		/// a_Src：Array，来源
+		/// 返回：a_Dst
+		stAryUtil.cShlwAsn = function (a_Dst, a_Src)
+		{
+			if ((! a_Src) || (0 == a_Src.length))
+			{ return a_Dst; }
+
+			if (! a_Dst)
+			{ a_Dst = new Array(a_Src.length); }
+			else
+			if (a_Dst.length != a_Src.length)
+			{ a_Dst.length = a_Src.length; }
+
+			var i = 0, l_Len = a_Src.length;
+			for (; i<l_Len; ++i)
+			{ a_Dst[i] = a_Src[i]; }
+			return a_Dst;
+		};
+
+		/// （深）赋值
 		/// a_Dst：Array，目的
 		/// a_Src：Array，来源
 		/// 返回：a_Dst
 		stAryUtil.cAsn = function (a_Dst, a_Src)
 		{
-			//【警告】这是浅赋值
-			//var i, l_Len = a_Src.length;	// 取来源的长度
-			//for (i=0; i<l_Len; ++i)
-			//{ a_Dst[i] = a_Src[i]; }
-			//return a_Dst;
-
 			// 直接转交stObjUtil
 			return nWse.stObjUtil.cAsn(a_Dst, a_Src);
 		};

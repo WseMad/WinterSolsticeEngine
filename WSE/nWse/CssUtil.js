@@ -184,6 +184,21 @@ function fOnIcld(a_Errs)
 			}
 		}
 
+		function eGetBdrRds(a_Rst, a_CmptStl, a_AlnPxl)
+		{
+			a_Rst.c_BdrRdsLtUp = parseFloat(a_CmptStl.borderTopLeftRadius);
+			a_Rst.c_BdrRdsRtUp = parseFloat(a_CmptStl.borderTopRightRadius);
+			a_Rst.c_BdrRdsLtDn = parseFloat(a_CmptStl.borderBottomLeftRadius);
+			a_Rst.c_BdrRdsRtDn = parseFloat(a_CmptStl.borderBottomRightRadius);
+			if (a_AlnPxl)
+			{
+				a_Rst.c_BdrRdsLtUp = Math.round(a_Rst.c_BdrRdsLtUp);
+				a_Rst.c_BdrRdsRtUp = Math.round(a_Rst.c_BdrRdsRtUp);
+				a_Rst.c_BdrRdsLtDn = Math.round(a_Rst.c_BdrRdsLtDn);
+				a_Rst.c_BdrRdsRtDn = Math.round(a_Rst.c_BdrRdsRtDn);
+			}
+		}
+
 		function eGetPad(a_Rst, a_CmptStl, a_AlnPxl)
 		{
 			a_Rst.c_PadLt = parseFloat(a_CmptStl.paddingLeft);
@@ -529,6 +544,14 @@ function fOnIcld(a_Errs)
 			return l_Rst;
 		};
 
+		/// 获取z-index
+		/// 返回：Number
+		stCssUtil.cGetZidx = function (a_DomElmt, a_CmptStl)
+		{
+			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			return parseInt(l_CmptStl.zIndex);
+		};
+
 		/// 获取外边距
 		/// a_Rst：Object
 		/// {
@@ -536,12 +559,12 @@ function fOnIcld(a_Errs)
 		/// }
 		/// a_DomElmt：HTMLElement
 		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：计算的样式
+		/// 返回：a_Rst
 		stCssUtil.cGetMgn = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			eGetMgn(a_Rst, l_CmptStl, a_AlnPxl);
-			return l_CmptStl;
+			return a_Rst;
 		};
 
 		/// 获取边框厚度
@@ -551,12 +574,27 @@ function fOnIcld(a_Errs)
 		/// }
 		/// a_DomElmt：HTMLElement
 		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：计算的样式
+		/// 返回：a_Rst
 		stCssUtil.cGetBdrThk = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			eGetBdrThk(a_Rst, l_CmptStl, a_AlnPxl);
-			return l_CmptStl;
+			return a_Rst;
+		};
+
+		/// 获取边框半径
+		/// a_Rst：Object
+		/// {
+		///	c_BdrRdsLtUp，c_BdrRdsRtUp，c_BdrRdsLtDn，c_BdrRdsRtDn：Number，像素
+		/// }
+		/// a_DomElmt：HTMLElement
+		/// a_CmptStl：计算样式，如不提供则现计算
+		/// 返回：a_Rst
+		stCssUtil.cGetBdrRds = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			eGetBdrRds(a_Rst, l_CmptStl, a_AlnPxl);
+			return a_Rst;
 		};
 
 		/// 获取内边距
@@ -566,12 +604,12 @@ function fOnIcld(a_Errs)
 		/// }
 		/// a_DomElmt：HTMLElement
 		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：计算的样式
+		/// 返回：a_Rst
 		stCssUtil.cGetPad = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			eGetPad(a_Rst, l_CmptStl, a_AlnPxl);
-			return l_CmptStl;
+			return a_Rst;
 		};
 
 		/// 获取总尺寸

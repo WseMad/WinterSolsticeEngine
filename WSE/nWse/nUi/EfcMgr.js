@@ -43,6 +43,19 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	function fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy,
+			  				a_LSx, a_LSy, a_LTx, a_LTy)
+	{
+		var l_STx = a_LSx - a_LTx, l_STy = a_LSy - a_LTy;
+		var l_SOx = a_LSx - a_ROx, l_SOy = a_LSy - a_ROy;
+		var l_A = stNumUtil.cDet_2o(a_RDx, l_STx, a_RDy, l_STy);
+		if (0 == l_A)
+		{ return null; }
+
+		var l_B = stNumUtil.cDet_2o(l_SOx, l_STx, l_SOy, l_STy);
+		return l_B / l_A;
+	}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 特效
 
@@ -552,10 +565,10 @@ function fOnIcld(a_Errs)
 		stEfcMgr.cPushToScrnEdge = function (a_Sara, a_ROx, a_ROy, a_RDx, a_RDy, a_Isd)
 		{
 			var l_t, l_t1, l_t2, l_t3, l_t4, l_X, l_Y;
-			l_t1 = stNumUtil.cItsc_Ray_Lnsg(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, 0, window.innerHeight);	// ←
-			l_t2 = stNumUtil.cItsc_Ray_Lnsg(a_ROx, a_ROy, a_RDx, a_RDy, window.innerWidth, 0, window.innerWidth, window.innerHeight);	// →
-			l_t3 = stNumUtil.cItsc_Ray_Lnsg(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, window.innerWidth, 0);	// ↑
-			l_t4 = stNumUtil.cItsc_Ray_Lnsg(a_ROx, a_ROy, a_RDx, a_RDy, 0, window.innerHeight, window.innerWidth, window.innerHeight);	// ↓
+			l_t1 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, 0, window.innerHeight);	// ←
+			l_t2 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, window.innerWidth, 0, window.innerWidth, window.innerHeight);	// →
+			l_t3 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, window.innerWidth, 0);	// ↑
+			l_t4 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, window.innerHeight, window.innerWidth, window.innerHeight);// ↓
 			if (l_t1 || l_t2 || l_t3 || l_t4)
 			{
 				l_t = (l_t1 > 0) ? l_t1 : Math.max(l_t1, l_t2, l_t3, l_t4);
