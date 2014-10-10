@@ -217,7 +217,7 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 
 .cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Bar
 {
-	border-top-color: rgb(96, 96, 96);
+	border-top-color: rgb(96, 96, 96);		/* 颜色稍微亮一点 */
 }
 
 .cnWse_tSwch .cnWse_tSwch_Blk
