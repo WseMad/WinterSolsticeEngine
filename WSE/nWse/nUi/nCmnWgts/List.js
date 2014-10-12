@@ -205,6 +205,31 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 拾取
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
+			{
+				var l_This = this;
+
+				// 计算包围盒？
+				if (a_Bbox)
+				{
+					return this; // 用基类的，在四个边角可能有一点误差
+				}
+
+				// 拾取……
+
+				// 对每个<li>
+				stAryUtil.cFind(l_This.d_LiAry,
+					function (a_Lis, a_LiIdx, a_Li)
+					{
+						l_This.dPickDomElmtByPathPnt(a_Li, a_Picker);
+						return a_Picker.cIsOver();
+					});
+				return this;
+			}
+			,
 			/// 处理来自支配触点的输入
 			/// a_DmntTchIdx：Number，支配触点索引
 			/// a_DmntTch：Object，支配触点
