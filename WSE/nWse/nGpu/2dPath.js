@@ -111,6 +111,18 @@ function fOnIcld(a_Errs)
 				(0 == this.e_DrawMthd) ? l_Ctxt.stroke() : l_Ctxt.fill();
 				return this;
 			}
+			,
+			/// 点在路径里吗？【注意】不受当前变换影响！
+			/// a_Path：tPath，路径，若为null则假定已经建立，只绘制
+			/// a_X, a_Y：Number，点坐标
+			cIsPntInPath : function (a_Path, a_X, a_Y)
+			{
+				var l_Ctxt = this.cAcs();
+				if (a_Path)
+				{ fBldPath(this, a_Path, null); }
+
+				return l_Ctxt.isPointInPath(a_X, a_Y);
+			}
 		});
 	})();
 

@@ -341,12 +341,12 @@ function fOnIcld(a_Errs)
 				var l_Bbox = a_Picker.cAcsBbox();
 				var l_Ctxt = a_Picker.cAcs2dCtxt();
 				var l_Path = a_Picker.cAcs2dPath();
-				a_Picker.cPickBgn(this);
+				a_Picker.cPickBgn(l_This, a_Picker.i_MapClo);
 
 				l_Ctxt.cSetCpstOp_AphMap();
 				l_Ctxt.cMap(l_Bbox, l_This.d_Img, null, null);
 
-				a_Picker.cPickEnd(this);
+				a_Picker.cPickEnd(l_This, l_This.d_PutTgt);
 				if (a_Picker.cIsOver())
 				{ return this; }
 

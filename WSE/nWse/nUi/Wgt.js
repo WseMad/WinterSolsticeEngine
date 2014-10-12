@@ -205,31 +205,7 @@ function fOnIcld(a_Errs)
 			/// a_Picker：tPicker，拾取器
 			vcPick : function f(a_Picker)
 			{
-				var l_This = this;
-				if (! l_This.d_PutTgt)
-				{ return this; }
-
-				var l_Bbox = a_Picker.cAcsBbox();
-				var l_Ctxt = a_Picker.cAcs2dCtxt();
-				var l_Path = a_Picker.cAcs2dPath();
-				a_Picker.cPickBgn(this);
-
-				var l_BdrRds = tWgt.sd_PutTgtBdrRds;
-				stCssUtil.cGetBdrRds(tWgt.sd_PutTgtBdrRds, l_This.d_PutTgt);
-				if (! s_RcRectRds)
-				{ s_RcRectRds = new Array(4); }
-				s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
-				s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
-				s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
-				s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
-				l_Path.cRset().cRcRect(false, l_Bbox.c_X, l_Bbox.c_Y, l_Bbox.c_W, l_Bbox.c_H, s_RcRectRds);
-				l_Ctxt.cAcs().fillStyle = "rgba(255, 255, 255, 1)";
-				l_Ctxt.cDrawPath(l_Path);
-
-				a_Picker.cPickEnd(this);
-				if (a_Picker.cIsOver())
-				{ return this; }
-
+				this.dPickPutTgtByPathPnt(a_Picker, this.d_PutTgt);
 				return this;
 			}
 			,
@@ -569,6 +545,36 @@ function fOnIcld(a_Errs)
 				{ throw new Error("tWgt序列化时遇到键冲突：“" + a_Key + "”！"); }
 
 				return a_Key;
+			}
+			,
+			/// 根据路径点拾取放置目标
+			dPickPutTgtByPathPnt : function (a_Picker, a_EvtTgt)
+			{
+				var l_This = this;
+				if (! l_This.d_PutTgt)
+				{ return this; }
+
+				var l_Bbox = a_Picker.cAcsBbox();
+				var l_Ctxt = a_Picker.cAcs2dCtxt();
+				var l_Path = a_Picker.cAcs2dPath();
+				a_Picker.cPickBgn(l_This, a_Picker.i_PathPnt);
+
+				var l_BdrRds = tWgt.sd_PutTgtBdrRds;
+				stCssUtil.cGetBdrRds(tWgt.sd_PutTgtBdrRds, l_This.d_PutTgt);
+				if (! s_RcRectRds)
+				{ s_RcRectRds = new Array(4); }
+				s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
+				s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
+				s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
+				s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
+				l_Path.cRset().cRcRect(false, l_Bbox.c_X, l_Bbox.c_Y, l_Bbox.c_W, l_Bbox.c_H, s_RcRectRds);
+			//	l_Ctxt.cDrawPath(l_Path);	// i_PathPnt不用绘制
+
+				a_Picker.cPickEnd(l_This, a_EvtTgt);
+//				if (a_Picker.cIsOver())
+//				{ return this; }
+
+				return this;
 			}
 		}
 		,

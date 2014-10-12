@@ -244,6 +244,17 @@ function fOnIcld(a_Errs)
 					,
 					e_Path : new tPath()
 					,
+					/// 路径点
+					i_PathPnt : 0
+					,
+					/// 路径色
+					i_PathClo : 1
+					,
+					/// 贴图色
+					i_MapClo : 2
+					,
+					e_Mthd : 0
+					,
 					/// 存取包围盒
 					cAcsBbox : function () { return this.e_Bbox; }
 					,
@@ -254,38 +265,55 @@ function fOnIcld(a_Errs)
 					cAcs2dPath : function () { return this.e_Path; }
 					,
 					/// 拾取开始
-					cPickBgn: function (a_Wgt)
+					/// a_Wgt：tWgt，要拾取的控件
+					/// a_Mthd：方法∈a_Picker.{ i_PathPnt（默认）, i_PathClo, i_MapClo }
+					cPickBgn: function (a_Wgt, a_Mthd)
 					{
-						// 清空画布上的显示包围盒区域
-						e_PickCtxt.cClr();
+						// 记录方法
+						this.e_Mthd = a_Mthd || this.i_PathPnt;
+
+						// 对于颜色拾取，清空画布
+						if (this.i_PathPnt != this.e_Mthd)
+						{ e_PickCtxt.cClr(); }
+
 						return this;
 					}
 					,
 					/// 拾取结束
-					cPickEnd: function (a_Wgt)
+					/// a_Wgt：tWgt，要拾取的控件
+					/// a_EvtTgt：Node，事件目标，默认a_Wgt.cAcsPutTgt()
+					cPickEnd: function (a_Wgt, a_EvtTgt)
 					{
 						var l_This = this;
+						var l_Mthd = l_This.e_Mthd;
 
 						// 对每个待定触点
-						var l_Idx = stAryUtil.cFind(l_This.e_PendTchs,
-							function (a_Tchs, a_TchIdx, a_Tch)
+						var l_ImgData;
+						var l_PendTchs = l_This.e_PendTchs, i, l_Tch, l_Pkd;
+						for (i = 0; i<l_PendTchs.length; ++i)
+						{
+							l_Tch = l_PendTchs[i];
+							if (l_This.i_PathPnt == l_Mthd) // 包含拾取
+							{
+								l_Pkd = (e_PickCtxt.cIsPntInPath(l_This.e_Path, l_Tch.c_X, l_Tch.c_Y));
+							}
+							else // 颜色拾取
 							{
 								// 回读颜色，如果像素的a分量≥128，就认为被拾取到！
-								var l_ImgData = e_PickCtxt.cAcs().getImageData(a_Tch.c_X, a_Tch.c_Y, 1, 1);
-								if (l_ImgData.data[3] >= 128)
-								{
-									// 记录触点，并从待定触点数组中移除（cFind()里不宜，离开后再移除）
-									a_Tch.c_PkdWgt = a_Wgt;
-									return true;
-								}
-								return false;
-							});
+								l_ImgData = e_PickCtxt.cAcs().getImageData(l_Tch.c_X, l_Tch.c_Y, 1, 1);
+								l_Pkd = (l_ImgData.data[3] >= 128);
+							}
 
-						if (l_Idx >= 0)
-						{
-							l_This.e_PendTchs.splice(l_Idx, 1);
+							// 如果拾取到则记录触点和事件目标，并从待定触点数组中移除
+							if (l_Pkd)
+							{
+								l_Tch.c_PkdWgt = a_Wgt;
+								l_Tch.c_Evt.target = a_EvtTgt || a_Wgt.cAcsPutTgt();
+
+								l_PendTchs.splice(i, 1);
+								-- i;
+							}
 						}
-
 						return this;
 					}
 					,
@@ -345,8 +373,12 @@ function fOnIcld(a_Errs)
 					{ e_PickCtxt.cAcs().rect(a_Tch.c_X, a_Tch.c_Y, 1, 1); });
 				e_PickCtxt.cAcs().clip();
 
+				// 设置拾取色，由于是一个一个拾取，所以只要不透明就可以
+				e_PickCtxt.cAcs().fillStyle = "rgba(255, 255, 255, 1)";
+				e_PickCtxt.cAcs().strokeStyle = e_PickCtxt.cAcs().fillStyle;
+
 				// 拾取控件
-				ePickWgts(a_Ipt);
+				ePickWgts();
 			}
 			finally
 			{
@@ -357,33 +389,45 @@ function fOnIcld(a_Errs)
 			e_PickTmrId = setTimeout(ePickTmrRset, e_PickFrqc * 1000);
 		}
 
-		function ePickWgts(a_Ipt)
+		function ePickWgts()
 		{
 			// 反序遍历，即最后渲染的最先拾取
 			var i, l_Len = e_PickAllPuts.length, l_Put, l_Wgt;
 			for (i = l_Len - 1; i>=0; --i)
 			{
+				// 根据放置目标取得所属控件
 				l_Put = e_PickAllPuts[i];
-
-				// 计算包围盒
-				tSara.scCrt$DomBcr(e_Picker.e_Bbox, l_Put);
-
-				// 若不包含任何一个触点，跳过
-				if (stAryUtil.cFind(a_Ipt.c_Tchs,
-					function (a_Tchs, a_TchIdx, a_Tch)
-					{ return tSara.scCtan$Xy(e_Picker.e_Bbox, a_Tch.c_X, a_Tch.c_Y); }) < 0)
-				{ continue; }
-
-				// 拾取所属控件
 				l_Wgt = eObtnWgtByDomElmt(l_Put);
 				if (! l_Wgt)
 				{ continue; }
 
+				// 计算包围盒，但要注意包围盒并不总是放置目标的包围盒（如tMenu）
+				tSara.scCrt$DomBcr(e_Picker.e_Bbox, l_Put);
+
+				// 若不包含任何一个待定触点，跳过
+				if (stAryUtil.cFind(e_Picker.e_PendTchs,
+					function (a_Tchs, a_TchIdx, a_Tch)
+					{ return tSara.scCtan$Xy(e_Picker.e_Bbox, a_Tch.c_X, a_Tch.c_Y); }) < 0)
+				{ continue; }
+
+				// 拾取控件
 				l_Wgt.vcPick(e_Picker);
 
 				// 如果已经全部拾取完，立即跳出
-				if (0 == e_Picker.e_PendTchs.length)
+				if (e_Picker.cIsOver())
 				{ break; }
+			}
+
+			// 如果还有待定触点，说明他们什么都没拾取到
+			if (! e_Picker.cIsOver())
+			{
+				stAryUtil.cFor(e_Picker.e_PendTchs,
+					function (a_Tchs, a_TchIdx, a_Tch)
+					{
+						a_Tch.c_PkdWgt = null;						// 未拾取到控件
+						a_Tch.c_Evt.target = stDomUtil.cAcsBody();	// 由<body>触发
+					});
+				e_Picker.e_PendTchs.length = 0;	// 清空
 			}
 		}
 
