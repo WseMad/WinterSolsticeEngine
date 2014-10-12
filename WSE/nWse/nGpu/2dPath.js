@@ -157,11 +157,15 @@ function fOnIcld(a_Errs)
 			/// 是否为空
 			/// 返回：Boolean
 			cIsEmt: function ()
-			{ return (this.e_StepAry.length <= 1); }	// cRset时会压入一步
+			{ return (! this.e_StepAry) || (1 == this.e_StepAry.length); }	// cRset时会压入一步
 			,
 			/// 重置
 			cRset: function ()
 			{
+				// 重复调用？
+				if (this.e_StepAry && (1 == this.e_StepAry.length))
+				{ return this; }
+
 				// 步骤数组
 				this.e_StepAry = [];
 

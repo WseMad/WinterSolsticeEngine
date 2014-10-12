@@ -236,9 +236,8 @@ function fOnIcld(a_Errs)
 					if ((! a_Ctnt.Wse_Acod) || (+1 != a_Ctnt.Wse_Acod.c_Sta))
 					{ return; }
 
-					if (! a_Ctnt.Wse_Acod.c_Hgt)	// 如果是0，更新记录
-					{ a_Ctnt.Wse_Acod.c_Hgt = a_Ctnt.offsetHeight; }
-
+					a_Ctnt.style.height = "";						// 探测最大高度
+					a_Ctnt.Wse_Acod.c_Hgt = a_Ctnt.offsetHeight;	// 记录最大高度
 					stCssUtil.cGetPad(l_This.d_CtntPad, a_Ctnt);	// 计算内边距
 
 					// 设置动画起始值
@@ -263,6 +262,36 @@ function fOnIcld(a_Errs)
 				});
 
 				return this;
+			}
+			,
+			/// 拾取
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
+			{
+				var l_This = this;
+
+				// 计算包围盒？
+				if (a_Bbox)
+				{
+					return this; // 用基类的，在四个边角可能有一点误差
+				}
+
+				// 拾取……
+
+				// 对每个标题
+				stAryUtil.cFind(l_This.d_Tits,
+				function (a_Tits, a_TitIdx, a_Tit)
+				{
+					l_This.dPickDomElmtByPathPnt(a_Tit, a_Picker);
+					return a_Picker.cIsOver();
+				});
+
+				if (a_Picker.cIsOver()) // 已结束？
+				{ return this; }
+
+				// 基类版本，即点中内容同点中放置目标
+				return this.odBase(f).odCall(a_Bbox, a_Picker);
 			}
 			,
 			/// 处理来自支配触点的输入
@@ -410,7 +439,6 @@ function fOnIcld(a_Errs)
 				if (! l_Ctnt.Wse_Acod)
 				{ l_Ctnt.Wse_Acod = {}; }
 
-				//	l_Ctnt.Wse_Acod.c_Hgt = l_Ctnt.offsetHeight;	// 记录内容高度，【注意】可能是0（从vcRfshBefLot调用本函数时）
 				l_Ctnt.Wse_Acod.c_Sta = +1;		// 进入
 
 				// 重排

@@ -444,7 +444,10 @@
 							})
 							.cPut({
 								c_Id: "k_4",
-								c_FxdArea: new nWse.tSara(0, 0, 100, 100)
+								c_fTgtArea: function (a_Rst, a_Boa, a_Col)
+								{
+									a_Rst.cCrt(0, 0, 100, 100);
+								}
 							})
 							.cPut({
 								c_Id: "k_5",

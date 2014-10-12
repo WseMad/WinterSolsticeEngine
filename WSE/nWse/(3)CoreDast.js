@@ -548,6 +548,26 @@ function fOnIcld(a_Errs)
 					return a_Tgt;
 				}
 				,
+				/// 扩容到包含
+				scExpdToCtan$Xy : function (a_Tgt, a_X, a_Y)
+				{
+					if (a_Tgt.c_X > a_X) { a_Tgt.c_X = a_X; }
+					if (a_Tgt.c_Y > a_Y) { a_Tgt.c_Y = a_Y; }
+					if (a_Tgt.c_X + a_Tgt.c_W < a_X) { a_Tgt.c_W = a_X - a_Tgt.c_X; }
+					if (a_Tgt.c_Y + a_Tgt.c_H < a_Y) { a_Tgt.c_H = a_Y - a_Tgt.c_Y; }
+					return a_Tgt;
+				}
+				,
+				/// 扩容到包含
+				scExpdToCtan$Sara : function (a_Tgt, a_S)
+				{
+					if (a_Tgt.c_X > a_S.c_X) { a_Tgt.c_X = a_S.c_X; }
+					if (a_Tgt.c_Y > a_S.c_Y) { a_Tgt.c_Y = a_S.c_Y; }
+					if (a_Tgt.c_X + a_Tgt.c_W < a_S.c_X + a_S.c_W) { a_Tgt.c_W = a_S.c_X + a_S.c_W - a_Tgt.c_X; }
+					if (a_Tgt.c_Y + a_Tgt.c_H < a_S.c_Y + a_S.c_H) { a_Tgt.c_H = a_S.c_Y + a_S.c_H - a_Tgt.c_Y; }
+					return a_Tgt;
+				}
+				,
 				/// 计算中心
 				/// a_Rst：tPnt
 				scCalcCen : function (a_Rst, a_Tgt)

@@ -85,6 +85,8 @@ function fOnIcld(a_Errs)
 		var e_PickCtxt = null;		// 拾取上下文
 		var e_PickAllPuts = null;	// 全部放置元素
 		var e_Picker = null;		// 拾取器
+		var e_RcRectRds = null;		// 圆角矩形半径
+		var e_ElmtBbox = null;		// 元素包围盒
 
 		function ePickTmrRset()		// 拾取计时复位
 		{
@@ -236,8 +238,6 @@ function fOnIcld(a_Errs)
 			if (! e_Picker)
 			{
 				e_Picker = {
-					e_Ipt : null
-					,
 					e_PendTchs : []
 					,
 					e_Bbox : new tSara()
@@ -255,6 +255,21 @@ function fOnIcld(a_Errs)
 					,
 					e_Mthd : 0
 					,
+					eSkipWgt : function (a_Put, a_Wgt)
+					{
+						var l_This = this;
+						l_This.e_Path.cRset();						// 重置路径
+
+						// 计算包围盒
+						tSara.scCrt$DomBcr(l_This.e_Bbox, a_Put);	// 默认是放置目标的包围盒
+						a_Wgt.vcPick(l_This.e_Bbox, null);			// 回调以允许覆盖
+
+						// 若不包含任何一个待定触点，跳过
+						return (stAryUtil.cFind(l_This.e_PendTchs,
+							function (a_Tchs, a_TchIdx, a_Tch)
+							{ return tSara.scCtan$Xy(l_This.e_Bbox, a_Tch.c_X, a_Tch.c_Y); }) < 0);
+					}
+					,
 					/// 存取包围盒
 					cAcsBbox : function () { return this.e_Bbox; }
 					,
@@ -269,6 +284,9 @@ function fOnIcld(a_Errs)
 					/// a_Mthd：方法∈a_Picker.{ i_PathPnt（默认）, i_PathClo, i_MapClo }
 					cPickBgn: function (a_Wgt, a_Mthd)
 					{
+						if (this.cIsOver()) // 已结束？
+						{ return this; }
+
 						// 记录方法
 						this.e_Mthd = a_Mthd || this.i_PathPnt;
 
@@ -284,6 +302,9 @@ function fOnIcld(a_Errs)
 					/// a_EvtTgt：Node，事件目标，默认a_Wgt.cAcsPutTgt()
 					cPickEnd: function (a_Wgt, a_EvtTgt)
 					{
+						if (this.cIsOver()) // 已结束？
+						{ return this; }
+
 						var l_This = this;
 						var l_Mthd = l_This.e_Mthd;
 
@@ -304,12 +325,19 @@ function fOnIcld(a_Errs)
 								l_Pkd = (l_ImgData.data[3] >= 128);
 							}
 
-							// 如果拾取到则记录触点和事件目标，并从待定触点数组中移除
+							// 如果拾取到
 							if (l_Pkd)
 							{
+								// 记录触点和事件目标，但是注意：
+								// 若c_EvtTgt是c_Evt.target的祖先节点，则仍保持后者，为了更细粒度地拾取！
 								l_Tch.c_PkdWgt = a_Wgt;
-								l_Tch.c_Evt.target = a_EvtTgt || a_Wgt.cAcsPutTgt();
+								l_Tch.c_EvtTgt = a_EvtTgt || a_Wgt.cAcsPutTgt();
+								if (stDomUtil.cIsAcst(l_Tch.c_EvtTgt, l_Tch.c_Evt.target))
+								{
+									l_Tch.c_EvtTgt = l_Tch.c_Evt.target;
+								}
 
+								// 从待定触点数组中移除
 								l_PendTchs.splice(i, 1);
 								-- i;
 							}
@@ -353,8 +381,7 @@ function fOnIcld(a_Errs)
 			// 计算客户区
 			e_CltSara.cCrt$Wh(e_PickCvs.width, e_PickCvs.height);
 
-			// 记录输入和待定触点
-			e_Picker.e_Ipt = a_Ipt;
+			// 记录待定触点
 			stAryUtil.cShlwAsn(e_Picker.e_PendTchs, a_Ipt.c_Tchs);
 
 			// 首先取得所有放置元素，然后装入全局控件的放置目标，最后按渲染先后顺序排序
@@ -398,20 +425,11 @@ function fOnIcld(a_Errs)
 				// 根据放置目标取得所属控件
 				l_Put = e_PickAllPuts[i];
 				l_Wgt = eObtnWgtByDomElmt(l_Put);
-				if (! l_Wgt)
-				{ continue; }
-
-				// 计算包围盒，但要注意包围盒并不总是放置目标的包围盒（如tMenu）
-				tSara.scCrt$DomBcr(e_Picker.e_Bbox, l_Put);
-
-				// 若不包含任何一个待定触点，跳过
-				if (stAryUtil.cFind(e_Picker.e_PendTchs,
-					function (a_Tchs, a_TchIdx, a_Tch)
-					{ return tSara.scCtan$Xy(e_Picker.e_Bbox, a_Tch.c_X, a_Tch.c_Y); }) < 0)
+				if ((! l_Wgt) || e_Picker.eSkipWgt(l_Put, l_Wgt))	// 跳过？
 				{ continue; }
 
 				// 拾取控件
-				l_Wgt.vcPick(e_Picker);
+				l_Wgt.vcPick(null, e_Picker);
 
 				// 如果已经全部拾取完，立即跳出
 				if (e_Picker.cIsOver())
@@ -425,7 +443,7 @@ function fOnIcld(a_Errs)
 					function (a_Tchs, a_TchIdx, a_Tch)
 					{
 						a_Tch.c_PkdWgt = null;						// 未拾取到控件
-						a_Tch.c_Evt.target = stDomUtil.cAcsBody();	// 由<body>触发
+						a_Tch.c_EvtTgt = stDomUtil.cAcsBody();		// 由<body>触发
 					});
 				e_Picker.e_PendTchs.length = 0;	// 清空
 			}

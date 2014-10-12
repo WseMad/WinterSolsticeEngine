@@ -705,7 +705,7 @@
 					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
 					nWse.stDomUtil.cAcsBody().appendChild(l_Wgt.cAcsPutTgt());		// 加入到文档
 
-					document.getElementById("k_PutTgt_ImgBtn").style.visibility = "hidden";	// 一开始隐藏
+					document.getElementById("k_PutTgt_ImgBtn").style.display = "none";	// 一开始隐藏
 					window.addEventListener("keydown", function (a_Evt)
 					{
 						var l_WgtPutTgt;
@@ -727,7 +727,7 @@
 						{
 							l_WgtPutTgt = document.getElementById("k_PutTgt_ImgBtn");
 							if (l_WgtPutTgt)
-							{ l_WgtPutTgt.style.visibility = l_WgtPutTgt.style.visibility ? "" : "hidden"; }
+							{ l_WgtPutTgt.style.display = l_WgtPutTgt.style.display ? "" : "none"; }
 						}
 					});
 				}

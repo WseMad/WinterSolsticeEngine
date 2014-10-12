@@ -53,6 +53,7 @@ function fOnIcld(a_Errs)
 // 静态变量
 
 	var s_RcRectRds = null;		// 圆角矩形半径
+	var s_DomElmtBbox = null;	// Dom元素包围盒
 
 	function fObtnPutSrc(a_This, a_Cfg)
 	{
@@ -89,6 +90,29 @@ function fOnIcld(a_Errs)
 	function fSetDmntTchId(a_This, a_TchId)
 	{
 		a_This.d_DmntTchId = a_TchId || null;
+	}
+
+	function fBld2dPathByCssBdr(a_Path, a_DomElmt, a_Bbox)
+	{
+		if (! a_Bbox)
+		{
+			if (! s_DomElmtBbox)
+			{ s_DomElmtBbox = new tSara(); }
+
+			a_Bbox = tSara.scCrt$DomBcr(s_DomElmtBbox, a_DomElmt);
+		}
+
+		var l_BdrRds = tWgt.sd_PutTgtBdrRds;
+		stCssUtil.cGetBdrRds(l_BdrRds, a_DomElmt);
+
+		if (! s_RcRectRds)
+		{ s_RcRectRds = new Array(4); }
+		s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
+		s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
+		s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
+		s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
+
+		a_Path.cRset().cRcRect(false, a_Bbox.c_X, a_Bbox.c_Y, a_Bbox.c_W, a_Bbox.c_H, s_RcRectRds);
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,9 +226,16 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 拾取
-			/// a_Picker：tPicker，拾取器
-			vcPick : function f(a_Picker)
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
 			{
+				if (a_Bbox)
+				{
+					return this; // 直接使用初始值（放置目标的）就可以了
+				}
+
+				// 拾取放置目标
 				this.dPickPutTgtByPathPnt(a_Picker, this.d_PutTgt);
 				return this;
 			}
@@ -548,32 +579,28 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 根据路径点拾取放置目标
+			/// a_EvtTgt：HTMLElement，事件目标，默认a_DomElmt
 			dPickPutTgtByPathPnt : function (a_Picker, a_EvtTgt)
 			{
+				return this.ePickDomElmtByPathPnt(this.d_PutTgt, a_Picker, a_EvtTgt, a_Picker.cAcsBbox());
+			}
+			,
+			/// 根据路径点拾取DOM元素
+			/// a_EvtTgt：HTMLElement，事件目标，默认a_DomElmt
+			dPickDomElmtByPathPnt : function (a_DomElmt, a_Picker, a_EvtTgt)
+			{
+				return this.ePickDomElmtByPathPnt(a_DomElmt, a_Picker, a_EvtTgt, null);
+			}
+			,
+			ePickDomElmtByPathPnt : function (a_DomElmt, a_Picker, a_EvtTgt, a_Bbox)
+			{
 				var l_This = this;
-				if (! l_This.d_PutTgt)
+				if ((! a_DomElmt) || a_Picker.cIsOver())
 				{ return this; }
 
-				var l_Bbox = a_Picker.cAcsBbox();
-				var l_Ctxt = a_Picker.cAcs2dCtxt();
-				var l_Path = a_Picker.cAcs2dPath();
 				a_Picker.cPickBgn(l_This, a_Picker.i_PathPnt);
-
-				var l_BdrRds = tWgt.sd_PutTgtBdrRds;
-				stCssUtil.cGetBdrRds(tWgt.sd_PutTgtBdrRds, l_This.d_PutTgt);
-				if (! s_RcRectRds)
-				{ s_RcRectRds = new Array(4); }
-				s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
-				s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
-				s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
-				s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
-				l_Path.cRset().cRcRect(false, l_Bbox.c_X, l_Bbox.c_Y, l_Bbox.c_W, l_Bbox.c_H, s_RcRectRds);
-			//	l_Ctxt.cDrawPath(l_Path);	// i_PathPnt不用绘制
-
-				a_Picker.cPickEnd(l_This, a_EvtTgt);
-//				if (a_Picker.cIsOver())
-//				{ return this; }
-
+				fBld2dPathByCssBdr(a_Picker.cAcs2dPath(), a_DomElmt, a_Bbox);
+				a_Picker.cPickEnd(l_This, a_EvtTgt || a_DomElmt);
 				return this;
 			}
 		}

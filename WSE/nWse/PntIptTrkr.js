@@ -598,7 +598,7 @@ function fOnIcld(a_Errs)
 		,
 		{
 			/// 创建
-			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
+			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTgt)
 			{
 				this.c_TchId = a_TchId;
 				this.c_Kind = a_Kind;
@@ -608,6 +608,7 @@ function fOnIcld(a_Errs)
 				this.c_OfstY = 0;
 				this.c_Hdld = false;
 				this.c_Evt = a_Evt || null;
+				this.c_EvtTgt = a_EvtTgt || (this.c_Evt && this.c_Evt.target);
 				this.c_PvtDft = false;
 				this.c_StopPpgt = false;
 				this.c_StopImdtPpgt = false;
@@ -626,7 +627,7 @@ function fOnIcld(a_Errs)
 			/// 存取事件目标
 			cAcsEvtTgt : function ()
 			{
-				return this.c_Evt && this.c_Evt.target;
+				return this.c_EvtTgt || (this.c_Evt && this.c_Evt.target);
 			}
 			,
 			eRspsByDomEvtFlag : function ()

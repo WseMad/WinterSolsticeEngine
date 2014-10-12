@@ -240,6 +240,59 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 拾取
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
+			{
+				var l_This = this;
+
+				// 如果是层叠式，交由基类处理
+				if (l_This.cIsOvlpMode())
+				{
+					return this.odBase(f).odCall(a_Bbox, a_Picker);
+				}
+
+				// 展开式，取得所有次级<ul>
+				var l_Nexts = l_This.dGetListsInPutTgt();
+
+				// 计算包围盒？
+				if (a_Bbox)
+				{
+					// 把全部次级<ul>的包围盒合起来，此时忽略根<ul>，因为和传入的a_Bbox重合
+					tSara.scEnsrTemps(1);
+					stAryUtil.cFor(l_Nexts,
+						function (a_Nexts, a_NextIdx, a_Next)
+						{
+							tSara.scExpdToCtan$Sara(a_Bbox, tSara.scCrt$DomBcr(tSara.sc_Temps[0], a_Next));
+						});
+					return this;
+				}
+
+				// 拾取……
+
+				// 应从顶级<ul>向根<ul>开始拾取，点中放置目标无效
+				var l_Ul = l_This.dAcsTopUl(l_Nexts);
+				var l_Lis;
+				do
+				{
+					// 对每个<li>
+					var l_Lis = stDomUtil.cGetChdsOfTag(l_Ul, "LI");
+					stAryUtil.cFind(l_Lis,
+						function (a_Lis, a_LiIdx, a_Li)
+						{
+							l_This.dPickDomElmtByPathPnt(a_Li, a_Picker);
+							return a_Picker.cIsOver();
+						});
+
+					if (a_Picker.cIsOver())
+					{ break; }
+
+					l_Ul = l_Ul.Wse_Menu && l_Ul.Wse_Menu.c_PrnLi && l_Ul.Wse_Menu.c_PrnLi.parentNode;	// 向上
+				} while (l_Ul);
+				return this;
+			}
+			,
 			/// 处理来自支配触点的输入
 			/// a_DmntTchIdx：Number，支配触点索引
 			/// a_DmntTch：Object，支配触点
@@ -502,7 +555,7 @@ function fOnIcld(a_Errs)
 				return l_Rst;
 			}
 			,
-			/// 存取<ul>里展开的<li>，跳过正在退出的
+			/// 存取<ul>里展开的<li>
 			dAcsExpdLiOfUl : function (a_Ul, a_Nexts)
 			{
 				var l_This = this;
@@ -511,7 +564,8 @@ function fOnIcld(a_Errs)
 
 				var l_Idx = stAryUtil.cFind(a_Nexts,
 				function (a_Ary, a_Idx, a_Next)
-				{ return (a_Next.Wse_Menu && (-1 != a_Next.Wse_Menu.c_Sta) && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });
+			//	{ return (a_Next.Wse_Menu && (-1 != a_Next.Wse_Menu.c_Sta) && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });
+				{ return (a_Next.Wse_Menu && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });	//【先不跳】
 				return (l_Idx < 0) ? null : a_Nexts[l_Idx].Wse_Menu.c_PrnLi;
 			}
 			,
@@ -529,9 +583,17 @@ function fOnIcld(a_Errs)
 				if (! a_Nexts)
 				{ a_Nexts = l_This.dGetListsInPutTgt(); }
 
-				var l_Rst = (a_Nexts.length > 0) ? a_Nexts[a_Nexts.length - 1] : l_This.d_RootUl;
-				var l_Zidx = l_Rst.style.zIndex ? parseInt(l_Rst.style.zIndex) : 0;
-				nWse.fAst((a_Nexts.length - 1 == l_Zidx), "顶端<ul>不是最后一个次级<ul>！");
+				//【这个算法似乎不太可靠，还是一级一级找吧】
+//				var l_Rst = (a_Nexts.length > 0) ? a_Nexts[a_Nexts.length - 1] : l_This.d_RootUl;
+//				var l_Zidx = l_Rst.style.zIndex ? parseInt(l_Rst.style.zIndex) : 0;
+//				nWse.fAst((a_Nexts.length - 1 == l_Zidx), "顶端<ul>不是最后一个次级<ul>！");
+
+				var l_Rst = l_This.d_RootUl;
+				var l_ExpdLi;
+				while ((l_ExpdLi = l_This.dAcsExpdLiOfUl(l_Rst, a_Nexts)))
+				{
+					l_Rst = l_This.dAcsNextUlOfLi(l_ExpdLi);
+				}
 				return l_Rst;
 			}
 			,

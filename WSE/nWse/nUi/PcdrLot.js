@@ -582,7 +582,6 @@ function fOnIcld(a_Errs)
 		a_This.e_DomCstm = null;			// <div class="cnWse_tPcdrLot_CstmZone">
 		a_This.e_DomRmvd = null;			// <div class="cnWse_tPcdrLot_RmvdZone">
 		a_This.e_BoaAry = [];				// 板数组
-		a_This.e_PutIdRgtr = null;			// 已放元素ID注册表
 		a_This.e_RmvdPutAry = [];			// 移除的放数组
 		a_This.e_AllPuts = [];				// 全部放置元素
 		a_This.e_ImgSrcRgtr = [];			// 图像源注册表
@@ -657,39 +656,6 @@ function fOnIcld(a_Errs)
 		a_This.e_PutTgt.style.minHeight = (a_This.e_MinHgt || window.innerHeight).toString() + "px";
 	}
 
-	// 准备运行
-	function fRdyToRun(a_This, a_Rfl)
-	{
-		// 对于运行把放置目标里的所有放录入，对于重排设置c_From为1
-		var l_PutTgt = a_This.cAcsPutTgt();
-		a_This.e_RmvdPutAry.length = 0;		// 首先清零
-		stAryUtil.cFor(a_This.e_BoaAry,
-			function (a_BoaAry, a_BoaIdx, a_Boa)
-			{
-				stAryUtil.cFor(a_Boa.Wse_PcdrLot.c_ColAry,
-					function (a_ColAry, a_ColIdx, a_Col)
-					{
-						if (a_Rfl)
-						{
-							stAryUtil.cFor(a_Col.Wse_PcdrLot.c_PutAry,
-								function (a_PutAry, a_PutIdx, a_Put)
-								{ a_Put.Wse_PcdrLot.c_From = 1; });
-						}
-						else
-						{
-							Array.prototype.push.apply(a_This.e_RmvdPutAry, a_Col.Wse_PcdrLot.c_PutAry);
-						}
-					});
-			});
-
-		// 对于运行清空板数组和已放元素ID注册表
-		if (! a_Rfl)
-		{
-			a_This.e_BoaAry.length = 0;
-			a_This.e_PutIdRgtr = {};
-		}
-	}
-
 	// 运行或重排
 	function fRunOrRfl(a_This, a_Rfl)
 	{
@@ -719,6 +685,39 @@ function fOnIcld(a_Errs)
 		}
 	}
 
+	// 准备运行
+	function fRdyToRun(a_This, a_Rfl)
+	{
+		// 对于运行把放置目标里的所有放录入，对于重排设置c_From为1
+		var l_PutTgt = a_This.cAcsPutTgt();
+		a_This.e_RmvdPutAry.length = 0;		// 首先清零
+		stAryUtil.cFor(a_This.e_BoaAry,
+			function (a_BoaAry, a_BoaIdx, a_Boa)
+			{
+				stAryUtil.cFor(a_Boa.Wse_PcdrLot.c_ColAry,
+					function (a_ColAry, a_ColIdx, a_Col)
+					{
+						if (a_Rfl)
+						{
+							stAryUtil.cFor(a_Col.Wse_PcdrLot.c_PutAry,
+								function (a_PutAry, a_PutIdx, a_Put)
+								{ a_Put.Wse_PcdrLot.c_From = 1; });
+						}
+						else
+						{
+							Array.prototype.push.apply(a_This.e_RmvdPutAry, a_Col.Wse_PcdrLot.c_PutAry);
+						}
+					});
+			});
+
+		// 对于运行
+		if (! a_Rfl)
+		{
+			a_This.e_BoaAry.length = 0;			// 清空板数组
+			a_This.e_AllPuts.length = 0;		// 清空全部放置元素数组
+		}
+	}
+
 	// 运行
 	function fRun(a_This, a_Rfl)
 	{
@@ -745,7 +744,6 @@ function fOnIcld(a_Errs)
 			{ a_This.e_Rsn = a_This.e_BrkPntIdx; }
 
 			a_This.e_BrkPntIdx = l_BrkPntIdx;	// 更新断点索引
-			a_This.e_AllPuts.length = 0;		// 清空全部放置元素数组
 		}
 
 		// 进行回调
@@ -790,10 +788,10 @@ function fOnIcld(a_Errs)
 				fCalcBoaTotDim(a_This, a_Boa);
 				fCalcBoaY(l_This, a_Boa);
 				a_Boa.Wse_PcdrLot.c_AlctdW = 0;
-				var l_BoaW = fCalcBoaW(a_This, a_Boa, a_This.e_UseBrkPntWid);
-				var l_BoaCtntW = fCalcBoaCtntW(a_This, a_Boa, a_This.e_UseBrkPntWid);
+				a_Boa.Wse_PcdrLot.c_W = fCalcBoaW(a_This, a_Boa, a_This.e_UseBrkPntWid);
+				a_Boa.Wse_PcdrLot.c_CtntW = fCalcBoaCtntW(a_This, a_Boa, a_This.e_UseBrkPntWid);
 				var l_ColDvd = a_Boa.Wse_PcdrLot.c_ColDvd;
-				stCssUtil.cSetDimWid(a_Boa, l_BoaW);	// 把板宽设为像素
+				stCssUtil.cSetDimWid(a_Boa, a_Boa.Wse_PcdrLot.c_W);	// 把板宽设为像素
 
 				// 对每个列
 				stAryUtil.cFor(a_Boa.Wse_PcdrLot.c_ColAry,
@@ -805,7 +803,7 @@ function fOnIcld(a_Errs)
 						// 校准列宽，对齐像素
 						var l_ColW = (a_ColIdx < a_ColAry.length - 1)
 							? Math.round(fCalcColW(a_This, a_Boa, a_Col, l_ColDvd[a_ColIdx], a_This.e_UseBrkPntWid))
-							: Math.floor(l_BoaCtntW - a_Boa.Wse_PcdrLot.c_AlctdW);
+							: Math.floor(a_Boa.Wse_PcdrLot.c_CtntW - a_Boa.Wse_PcdrLot.c_AlctdW);
 						a_Boa.Wse_PcdrLot.c_AlctdW += l_ColW;
 						a_Col.style.width = l_ColW.toString() + "px";
 						a_Col.Wse_PcdrLot.c_W = l_ColW;
@@ -814,11 +812,10 @@ function fOnIcld(a_Errs)
 						// 排版准备新列
 						fFlow_RdyForNewCol(l_This, a_Boa, a_Col, a_ColIdx);
 
-						// 对每个放
+						// 对每个放排版
 						stAryUtil.cFor(a_Col.Wse_PcdrLot.c_PutAry,
 							function (a_PutAry, a_PutIdx, a_Put)
 							{
-								// 排版
 								fFlow(l_This, a_Boa, a_Col, a_Put, a_Rfl);
 							});
 					});
@@ -868,7 +865,7 @@ function fOnIcld(a_Errs)
 
 		// 准备
 		var l_Cfg = a_Put.Wse_PcdrLot.c_Cfg;
-		var l_FxdArea = l_Cfg.c_FxdArea;
+		var l_fTgtArea = l_Cfg.c_fTgtArea;
 		var l_TgtArea = a_Put.Wse_PcdrLot.c_TgtArea;
 		var l_GridTot = a_Col.Wse_PcdrLot.c_GridTot;
 		var l_OrigGridIdx = l_Cfg.c_GridIdx, l_GridIdx = l_OrigGridIdx;
@@ -877,7 +874,7 @@ function fOnIcld(a_Errs)
 		var l_HrztAln = l_Cfg.c_HrztAln;
 		var l_AutoGridIdx;
 
-		if (l_FxdArea) // 固定区域
+		if (l_fTgtArea) // 计算目标区域
 		{
 			a_Put.Wse_PcdrLot.c_ActGridIdx = -1;			// 记录修正后的实际索引和个数
 			a_Put.Wse_PcdrLot.c_ActGridCnt = 0;
@@ -932,23 +929,19 @@ function fOnIcld(a_Errs)
 		// 计算宽度时，不用加外边距，因为它们已被算在包围盒里
 		// 计算高度时，需另加外边距，因为排版时要以此确定行高
 		var l_FxdAr = a_Put.Wse_PcdrLot.c_Cfg.c_FxdAr;
-		var l_FxdAny = (!! l_FxdArea) || (!! l_FxdAr);
+	//	var l_FxdAny = !! (l_fTgtArea || l_FxdAr);
 		var l_CssMgn = a_Put.Wse_PcdrLot.c_CssMgn;
 		var l_BaseGridUnit = a_Col.Wse_PcdrLot.c_BaseGridUnit;
 		var l_CrntGridUnit = a_Col.Wse_PcdrLot.c_CrntGridUnit;
 		var l_GridUnit = (a_This.e_UseBrkPntWid ? l_BaseGridUnit : l_CrntGridUnit);
 		var l_OldWid;
 
-//		if ((! l_FxdAny) &&	// 如果未固定，自动计算高度
-//			a_Put.style.height && ("auto" != a_Put.style.height))
-//		{ a_Put.style.height = ""; }
-
 		var l_CmptStl = stCssUtil.cGetCmptStl(a_Put);
 		stCssUtil.cGetMgn(l_CssMgn, a_Put, l_CmptStl, true);	// 计算外边距，对齐像素
 
-		if (l_FxdArea)	// 计算目标区，优先顺序为：c_FxdArea，c_FxdAr，style.height，auto
+		if (l_fTgtArea)	// 计算目标区，优先顺序为：c_fTgtArea，c_FxdAr，style.height，auto
 		{
-			tSara.scAsn(l_TgtArea, l_FxdArea);
+			l_fTgtArea(l_TgtArea, a_Boa, a_Col);
 		}
 		else
 		{
@@ -1074,9 +1067,9 @@ function fOnIcld(a_Errs)
 	// 动画放置
 	function fAnmtPut(a_This, a_Rfl, a_Boa, a_Col, a_Put, a_PutIdx, a_Anmt)
 	{
-		var l_FxdArea = a_Put.Wse_PcdrLot.c_Cfg.c_FxdArea;
+		var l_fTgtArea = a_Put.Wse_PcdrLot.c_Cfg.c_fTgtArea;
 		var l_FxdAr = a_Put.Wse_PcdrLot.c_Cfg.c_FxdAr;
-		var l_FxdAny = (!! l_FxdArea) || (!! l_FxdAr);
+		var l_FxdAny = !! (l_fTgtArea || l_FxdAr);
 		var l_CssMgn = a_Put.Wse_PcdrLot.c_CssMgn;
 		var l_TgtArea = a_Put.Wse_PcdrLot.c_TgtArea;
 		var l_Cfg = a_Put.Wse_PcdrLot.c_Cfg;
@@ -1574,7 +1567,7 @@ function fOnIcld(a_Errs)
 				/// c_GridCnt：Number，栅格条数，默认所属列的c_GridTot
 				/// c_HrztAln：Number，水平对齐∈{ -1=左, 0=中, +1=右 }
 				/// c_Cssc：String，CSS类，切换断点时将被移除
-				/// c_FxdArea：tSara，固定区域，默认undefined，覆盖c_FxdAr
+				/// c_fTgtArea：var f(tSara a_Rst, a_Bol, a_Col)，计算目标区，默认undefined，覆盖c_FxdAr
 				/// c_FxdAr：Number，固定宽高比，默认undefined
 				/// c_NewRow：Boolean，新起一行，默认undefined（false）
 				/// c_VticCmpc：Boolean，垂直紧凑，默认undefined（false），覆盖c_VticAln和c_VticOfst
@@ -1593,15 +1586,14 @@ function fOnIcld(a_Errs)
 					if (! a_Cfg.c_Id)
 					{ throw new Error("c_Id必需有效！"); }
 
-					// 获取元素
-					if (this.e_PutIdRgtr[a_Cfg.c_Id])	// 已有，忽略这次调用
+					// 获取元素，若已有则忽略这次调用
+					if (stAryUtil.cFind(this.e_AllPuts,
+						function (a_All, a_PutIdx, a_Put) { return (a_Put.id == a_Cfg.c_Id); }) >= 0)
 					{ return this; }
 
 					var l_Put = fObtnPut(this, a_Cfg.c_Id);
 					if (! l_Put)
 					{ throw new Error("未能获取“id=" + a_Cfg.c_Id + "”的元素！"); }
-
-					this.e_PutIdRgtr[a_Cfg.c_Id] = true;	// 注册ID
 
 					// 移除旧的CSS类
 					//【注意】有必要这么做，因为元素未必会回到来源（如果回到，则在fRtnToSrc()里进行移除）
@@ -1779,6 +1771,12 @@ function fOnIcld(a_Errs)
 				,
 				/// 获取放置元素的行索引
 				scGetPutRowIdx : function (a_Put) { return a_Put.Wse_PcdrLot.c_RowIdx; }
+				,
+				/// 获取板内容宽度
+				scGetBoaCtntWid : function (a_Boa) { return a_Boa.Wse_PcdrLot.c_CtntW; }
+				,
+				/// 获取列内容宽度
+				scGetColCtntWid : function (a_Col) { return a_Col.Wse_PcdrLot.c_CtntW; }
 			}
 			,
 			false);

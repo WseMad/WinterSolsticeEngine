@@ -331,16 +331,21 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 拾取
-			/// a_Picker：tPicker，拾取器
-			vcPick : function f(a_Picker)
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
 			{
+				if (a_Bbox)
+				{
+					return this;
+				}
+
 				var l_This = this;
 				if (! l_This.d_PutTgt)
 				{ return this; }
 
 				var l_Bbox = a_Picker.cAcsBbox();
 				var l_Ctxt = a_Picker.cAcs2dCtxt();
-				var l_Path = a_Picker.cAcs2dPath();
 				a_Picker.cPickBgn(l_This, a_Picker.i_MapClo);
 
 				l_Ctxt.cSetCpstOp_AphMap();
