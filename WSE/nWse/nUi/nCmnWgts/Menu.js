@@ -247,18 +247,18 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 
-				// 如果是层叠式，交由基类处理
-				if (l_This.cIsOvlpMode())
-				{
-					return this.odBase(f).odCall(a_Bbox, a_Picker);
-				}
-
 				// 展开式，取得所有次级<ul>
 				var l_Nexts = l_This.dGetListsInPutTgt();
 
 				// 计算包围盒？
 				if (a_Bbox)
 				{
+					// 如果是层叠式，交由基类处理
+					if (l_This.cIsOvlpMode())
+					{
+						return this.odBase(f).odCall(a_Bbox, a_Picker);
+					}
+
 					// 把全部次级<ul>的包围盒合起来，此时忽略根<ul>，因为和传入的a_Bbox重合
 					tSara.scEnsrTemps(1);
 					stAryUtil.cFor(l_Nexts,
@@ -286,6 +286,10 @@ function fOnIcld(a_Errs)
 						});
 
 					if (a_Picker.cIsOver())
+					{ break; }
+
+					// 如果是层叠式，只处理顶级<ul>即可，跳出
+					if (l_This.cIsOvlpMode())
 					{ break; }
 
 					l_Ul = l_Ul.Wse_Menu && l_Ul.Wse_Menu.c_PrnLi && l_Ul.Wse_Menu.c_PrnLi.parentNode;	// 向上
@@ -555,7 +559,7 @@ function fOnIcld(a_Errs)
 				return l_Rst;
 			}
 			,
-			/// 存取<ul>里展开的<li>
+			/// 存取<ul>里展开的<li>，跳过正在退出的
 			dAcsExpdLiOfUl : function (a_Ul, a_Nexts)
 			{
 				var l_This = this;
@@ -564,8 +568,8 @@ function fOnIcld(a_Errs)
 
 				var l_Idx = stAryUtil.cFind(a_Nexts,
 				function (a_Ary, a_Idx, a_Next)
-			//	{ return (a_Next.Wse_Menu && (-1 != a_Next.Wse_Menu.c_Sta) && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });
-				{ return (a_Next.Wse_Menu && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });	//【先不跳】
+				{ return (a_Next.Wse_Menu && (-1 != a_Next.Wse_Menu.c_Sta) && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });
+			//	{ return (a_Next.Wse_Menu && (a_Next.Wse_Menu.c_PrnLi.parentNode === a_Ul)); });	//【先不跳】
 				return (l_Idx < 0) ? null : a_Nexts[l_Idx].Wse_Menu.c_PrnLi;
 			}
 			,
@@ -588,13 +592,25 @@ function fOnIcld(a_Errs)
 //				var l_Zidx = l_Rst.style.zIndex ? parseInt(l_Rst.style.zIndex) : 0;
 //				nWse.fAst((a_Nexts.length - 1 == l_Zidx), "顶端<ul>不是最后一个次级<ul>！");
 
-				var l_Rst = l_This.d_RootUl;
-				var l_ExpdLi;
-				while ((l_ExpdLi = l_This.dAcsExpdLiOfUl(l_Rst, a_Nexts)))
-				{
-					l_Rst = l_This.dAcsNextUlOfLi(l_ExpdLi);
-				}
-				return l_Rst;
+				//【这个算法也不行，当同时进行退出、进入动画时会产生混乱】
+//				var l_Rst = l_This.d_RootUl;
+//				var l_ExpdLi;
+//				while ((l_ExpdLi = l_This.dAcsExpdLiOfUl(l_Rst, a_Nexts))) // 【不要用这个函数，会跳过正在退出的】
+//				{
+//					l_Rst = l_This.dAcsNextUlOfLi(l_ExpdLi);
+//				}
+
+				//【下面的算法找出显示的<ul>里深度最大的】
+				var l_Idx = stAryUtil.cFindMax(a_Nexts,
+					function (a_Ary, a_Idx, a_Next)
+					{
+//						// 不要跳过正在退出的！
+//						if (a_Next.Wse_Menu && (-1 == a_Next.Wse_Menu.c_Sta))
+//						{ return -1; }
+
+						return l_This.dCalcDepOfUl(a_Next);
+					});
+				return a_Nexts[l_Idx] || l_This.d_RootUl;
 			}
 			,
 			/// 是否为先辈<ul>
@@ -611,6 +627,28 @@ function fOnIcld(a_Errs)
 					l_PrnUl = l_PrnLi && l_PrnLi.parentNode;
 				}
 				return false;
+			}
+			,
+			/// 计算<ul>深度，根是0
+			dCalcDepOfUl : function (a_Ul)
+			{
+				var l_This = this;
+				var l_PrnLi = a_Ul.Wse_Menu && a_Ul.Wse_Menu.c_PrnLi;
+				if (! l_PrnLi)
+				{ return 0; }
+
+				var l_Rst = 1;
+				var l_PrnUl = l_PrnLi && l_PrnLi.parentNode;
+				while (l_PrnUl)
+				{
+					if (l_PrnUl === l_This.d_RootUl)
+					{ break; }
+
+					l_PrnLi = l_PrnUl.Wse_Menu && l_PrnUl.Wse_Menu.c_PrnLi;
+					l_PrnUl = l_PrnLi && l_PrnLi.parentNode;
+					++ l_Rst;
+				}
+				return l_Rst;
 			}
 			,
 			/// 有<ul>正在动画？
