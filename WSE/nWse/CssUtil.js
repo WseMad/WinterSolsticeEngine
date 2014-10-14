@@ -548,8 +548,8 @@ function fOnIcld(a_Errs)
 		/// 返回：Number
 		stCssUtil.cGetZidx = function (a_DomElmt, a_CmptStl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			return parseInt(l_CmptStl.zIndex);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			return parseInt(a_CmptStl.zIndex);
 		};
 
 		/// 获取外边距
@@ -559,11 +559,12 @@ function fOnIcld(a_Errs)
 		/// }
 		/// a_DomElmt：HTMLElement
 		/// a_CmptStl：计算样式，如不提供则现计算
+		/// a_AlnPxl：Boolean，对齐像素？
 		/// 返回：a_Rst
 		stCssUtil.cGetMgn = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			eGetMgn(a_Rst, l_CmptStl, a_AlnPxl);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			eGetMgn(a_Rst, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
@@ -572,13 +573,10 @@ function fOnIcld(a_Errs)
 		/// {
 		///	c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
 		/// }
-		/// a_DomElmt：HTMLElement
-		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：a_Rst
 		stCssUtil.cGetBdrThk = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			eGetBdrThk(a_Rst, l_CmptStl, a_AlnPxl);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			eGetBdrThk(a_Rst, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
@@ -587,13 +585,10 @@ function fOnIcld(a_Errs)
 		/// {
 		///	c_BdrRdsLtUp，c_BdrRdsRtUp，c_BdrRdsLtDn，c_BdrRdsRtDn：Number，像素
 		/// }
-		/// a_DomElmt：HTMLElement
-		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：a_Rst
 		stCssUtil.cGetBdrRds = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			eGetBdrRds(a_Rst, l_CmptStl, a_AlnPxl);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			eGetBdrRds(a_Rst, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
@@ -602,45 +597,75 @@ function fOnIcld(a_Errs)
 		/// {
 		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
 		/// }
-		/// a_DomElmt：HTMLElement
-		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：a_Rst
 		stCssUtil.cGetPad = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			eGetPad(a_Rst, l_CmptStl, a_AlnPxl);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			eGetPad(a_Rst, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
-		/// 获取总尺寸
+		/// 获取内容宽度（减去边框和内边距），【注意】a_DomElmt.offsetWidth必须有效！
 		/// a_Rst：Object
 		/// {
-		///	c_MgnLt，c_MgnRt，c_MgnUp，c_MgnDn，c_TotWid，c_TotHgt：Number，像素
+		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
+		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
+		/// c_CtntWid：Number，像素
 		/// }
-		/// a_DomElmt：HTMLElement
-		/// a_CmptStl：计算样式，如不提供则现计算
-		/// 返回：a_Rst
-		stCssUtil.cGetTotDim = function (a_Rst, a_DomElmt, a_CmptStl)
+		stCssUtil.cGetCtntWid = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
-			var l_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			eGetMgn(a_Rst, l_CmptStl);
-			eGetMinMaxWidHgt(a_Rst, l_CmptStl);
-			a_Rst.c_TotWid = stNumUtil.cClmOnNum(a_Rst.c_MgnLt + a_DomElmt.offsetWidth  + a_Rst.c_MgnRt, a_Rst.c_MinWid, a_Rst.c_MaxWid);
-			a_Rst.c_TotHgt = stNumUtil.cClmOnNum(a_Rst.c_MgnUp + a_DomElmt.offsetHeight + a_Rst.c_MgnDn, a_Rst.c_MinHgt, a_Rst.c_MaxHgt);
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			stCssUtil.cGetBdrThk(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			a_Rst.c_CtntWid = a_DomElmt.offsetWidth - a_Rst.c_BdrThkLt - a_Rst.c_PadLt - a_Rst.c_PadRt - a_Rst.c_BdrThkRt;
+			return a_Rst;
+		};
+
+		/// 获取内容高度（减去边框和内边距），【注意】a_DomElmt.offsetHeight必须有效！
+		/// a_Rst：Object
+		/// {
+		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
+		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
+		/// c_CtntHgt：Number，像素
+		/// }
+		stCssUtil.cGetCtntHgt = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			stCssUtil.cGetBdrThk(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			a_Rst.c_CtntHgt = a_DomElmt.offsetHeight - a_Rst.c_BdrThkUp - a_Rst.c_PadUp - a_Rst.c_PadDn - a_Rst.c_BdrThkDn;
+			return a_Rst;
+		};
+
+		/// 获取位置
+		/// a_Rst：Object
+		/// {
+		/// c_Lt，c_Up：Number，像素
+		/// }
+		stCssUtil.cGetPos = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			a_Rst.c_Lt = stCssUtil.cGetPosLt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			a_Rst.c_Up = stCssUtil.cGetPosUp(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
 		/// 获取位置左
-		stCssUtil.cGetPosLt = function (a_DomElmt) { return parseFloat(a_DomElmt.style.left); };
+		/// a_Rst：忽略（为了与相关API保持签名一致）
+		stCssUtil.cGetPosLt = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			var l_Rst = parseFloat(a_CmptStl.left);
+			return a_AlnPxl ? Math.round(l_Rst) : l_Rst;
+		};
 
 		/// 获取位置上
-		stCssUtil.cGetPosUp = function (a_DomElmt) { return parseFloat(a_DomElmt.style.top); };
+		stCssUtil.cGetPosUp = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			var l_Rst = parseFloat(a_CmptStl.top);
+			return a_AlnPxl ? Math.round(l_Rst) : l_Rst;
+		};
 
-		/// 获取尺寸宽
-		stCssUtil.cGetDimWid = function (a_DomElmt) { return parseFloat(a_DomElmt.style.width); };
-
-		/// 获取尺寸高
-		stCssUtil.cGetDimHgt = function (a_DomElmt) { return parseFloat(a_DomElmt.style.height); };
 
 		/// 清零外边距、边框、内边距
 		/// a_DomElmt：HTMLElement

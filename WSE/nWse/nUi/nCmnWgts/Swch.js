@@ -176,23 +176,6 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
-			vcSrlz : function f(a_Kvo)
-			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
-				var l_This = this;
-
-				// 0=关，1=开
-				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
-				var l_Val = l_This.cIsOn() ? "1" : "0";
-				a_Kvo[l_Key] = l_Val;
-				return a_Kvo;
-			}
-			,
 			/// 刷新在布局之前
 			vcRfshBefLot : function f()
 			{
@@ -364,7 +347,10 @@ function fOnIcld(a_Errs)
 				var l_H = Math.max(Math.round(a_OfstWid / l_This.d_Cfg.c_FxdAr), l_MinH);
 				stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_H);
 			//	stCssUtil.cSetDimHgt(l_This.d_Blk, l_This.d_PutTgt.clientHeight);	// 没有必要，样式表里设为100%
+
 				var l_BlkH = l_This.d_PutTgt.clientHeight;
+				if (! l_BlkH)	//【IE有个BUG，第一次执行到这里时，clientHeight为0】
+				{ l_BlkH = stCssUtil.cGetCtntHgt({}, l_This.d_PutTgt).c_CtntHgt; }
 
 				// 同时修改放置目标、滑块、灯泡的边框及半径
 				l_This.d_PutTgt.style.borderRadius = (l_H / 2).toString() + "px";
@@ -381,6 +367,33 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fClassItfcImp(tSwch,
+		nUi.itForm,
+		{
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+
+				// 0=关，1=开
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
+				var l_Val = l_This.cIsOn() ? "1" : "0";
+				a_Kvo[l_Key] = l_Val;
+				return a_Kvo;
+			}
+			,
+			/// 输入焦点
+			vcIptFoc : function f(a_YesNo)
+			{
+				return this;
+			}
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

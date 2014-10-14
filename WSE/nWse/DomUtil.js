@@ -156,6 +156,30 @@ function fOnIcld(a_Errs)
 //			return null;
 //		};
 
+		/// 得到一个，首先获取，若没有则新建，本函数的Boolean c_New字段表明是否为新建
+		/// a_Slc：String，选择器，默认为："#" + a_Id，不能与a_Id同时为空
+		/// a_Tag：String，标记，新建时使用，必须有效
+		/// a_Id：String，元素ID，可以为空，但当a_Slc为空时必须有效
+		/// a_Cssc：String，CSS类，新建时使用，可以为空
+		/// a_Prn：Node，父节点，新建时使用，可以为空
+		stDomUtil.cObtnOne = function (a_Slc, a_Tag, a_Id, a_Cssc, a_Prn)
+		{
+			if ((! a_Slc) && (! a_Id))
+			{ throw new Error("cObtnOne：选择器和ID不能同时为空！"); }
+
+			a_Tag = a_Tag.toLowerCase();
+			var l_Rst = stDomUtil.cQryOne(a_Slc || ("#" + a_Id));
+			stDomUtil.cObtnOne.c_New = ! l_Rst;		// 新建？
+			if (! l_Rst)
+			{
+				l_Rst = document.createElement(a_Tag);
+				if (a_Id)	{ l_Rst.id = a_Id; }
+				if (a_Cssc)	{ l_Rst.className = a_Cssc; }
+				if (a_Prn)	{ a_Prn.appendChild(l_Rst); }
+			}
+			return l_Rst;
+		};
+
 		/// 查询一个
 		/// a_Slc：String，选择器
 		/// a_Root：Node，查询的根节点，返回的元素为其后代，默认undefined

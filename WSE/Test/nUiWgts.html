@@ -85,9 +85,9 @@
 			margin-bottom: 50px;
 		}
 
-		#k_PutTgt_Srlz
+		#k_PutTgt_Srlz, #k_PutTgt_LogIn, #k_PutTgt_SignIn
 		{
-			margin-bottom: 50px;
+			margin: 0px 10px 50px 10px;
 		}
 
 		.ctAcodTit
@@ -134,6 +134,12 @@
 
 		<div id="k_Srlz" class="cnWse_PutSrc">
 			<span data-Wse_Tit>表单序列化</span>
+		</div>
+		<div id="k_LogIn" class="cnWse_PutSrc">
+			<span data-Wse_Tit>登录</span>
+		</div>
+		<div id="k_SignIn" class="cnWse_PutSrc">
+			<span data-Wse_Tit>注册</span>
 		</div>
 
 		<div id="k_SetMode" class="cnWse_PutSrc">
@@ -288,6 +294,17 @@
 			</ul>
 		</div>
 
+		<!---->
+		<!-- 注册登录 -->
+		<!---->
+
+		<div id="k_SignLog">
+
+			<!--<div id="" class="cnWse_PutSrc"  >-->
+				<!--<div data-Wse_Ok style="padding: 0.25em;">OK</div>-->
+			<!--</div>-->
+		</div>
+
 
 		<!---->
 		<!--  -->
@@ -322,7 +339,8 @@
 						"nUi/nCmnWgts/Swch.js",
 						"nUi/nCmnWgts/Menu.js",
 						"nUi/nCmnWgts/Acod.js",
-						"nUi/nCmnWgts/Nav.js"
+						"nUi/nCmnWgts/Nav.js",
+						"nUi/nCmnWgts/SignLog.js"
 
 						,"nGpu/2dPath.js"
 					]
@@ -517,7 +535,7 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Edit2",
 						c_PutSrc: "k_Edit2",
-						c_MltLine: true,
+						c_Kind: 2,
 						c_Plchd: "搜索什么？",
 						c_fOnOk: function (a_Wgt, a_Text)
 						{
@@ -580,6 +598,28 @@
 							console.log("<UEQ> = " + l_Ueq);
 							console.log("<JSON> = " + JSON.stringify(l_Kvo));
 							console.log();
+						}
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// LogIn
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_LogIn",
+						c_PutSrc: "k_LogIn",
+						c_fOnClk: function (a_Wgt)
+						{
+							stFrmwk.cAcsGlbWgtSet().cAcsByPutSrcId("k_SignLog").cShowDlgBox_LogIn();
+						}
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// SignIn
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_SignIn",
+						c_PutSrc: "k_SignIn",
+						c_fOnClk: function (a_Wgt)
+						{
+							stFrmwk.cAcsGlbWgtSet().cAcsByPutSrcId("k_SignLog").cShowDlgBox_SignIn();
 						}
 					});
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
@@ -691,6 +731,14 @@
 					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
 
 
+					l_Wgt = new nCmnWgts.tSignLog();	// 注册登录
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_SignLog",
+						c_PutSrc: "k_SignLog"
+					});
+					stFrmwk.cAcsGlbWgtSet().cAdd(l_Wgt);
+
+
 					l_Wgt = new nCmnWgts.tImgBtn();	// ImgBtn
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_ImgBtn",
@@ -793,6 +841,14 @@
 							.cPut({
 								c_NewRow: true,
 								c_Id: "k_PutTgt_Srlz",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id: "k_PutTgt_LogIn",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id: "k_PutTgt_SignIn",
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 

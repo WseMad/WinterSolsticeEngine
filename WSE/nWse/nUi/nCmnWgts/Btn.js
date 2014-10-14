@@ -149,7 +149,7 @@ function fOnIcld(a_Errs)
 				if (l_This.d_DoVticOfst)
 				{
 					l_This.d_DoVticOfst = false;
-					l_Y = stCssUtil.cGetPosUp(l_This.d_PutTgt);
+					l_Y = stCssUtil.cGetPosUp(null, l_This.d_PutTgt);
 					stCssUtil.cSetPosUp(l_This.d_PutTgt, l_Y + l_This.d_DtaY);
 				}
 				return this;
@@ -171,7 +171,7 @@ function fOnIcld(a_Errs)
 					l_This.d_DtaY = Math.max(8, l_This.d_PutTgt.offsetHeight * 0.3);
 					l_This.d_DoVticOfst = true;
 					l_This.cRfsh();
-				//	stCssUtil.cSetPosUp(l_This.d_PutTgt, stCssUtil.cGetPosUp(l_This.d_PutTgt) + l_This.d_DtaY);
+				//	stCssUtil.cSetPosUp(l_This.d_PutTgt, stCssUtil.cGetPosUp(null, l_This.d_PutTgt) + l_This.d_DtaY);
 
 					a_DmntTch.c_Hdld = true;		// 已处理
 				}
@@ -238,7 +238,7 @@ function fOnIcld(a_Errs)
 			/// 恢复原位
 			dRstoPos : function ()
 			{
-				var l_Y = (this.d_PutTgt && this.d_DtaY) ? stCssUtil.cGetPosUp(this.d_PutTgt) : null;
+				var l_Y = (this.d_PutTgt && this.d_DtaY) ? stCssUtil.cGetPosUp(null, this.d_PutTgt) : null;
 				if ((! isNaN(l_Y)) && (this.d_DtaY > 0))
 				{
 					stCssUtil.cSetPosUp(this.d_PutTgt, l_Y - this.d_DtaY);

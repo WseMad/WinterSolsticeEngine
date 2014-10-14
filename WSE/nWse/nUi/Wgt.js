@@ -193,14 +193,6 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
-			vcSrlz : function f(a_Kvo)
-			{
-				return a_Kvo;
-			}
-			,
 			/// 结束动画
 			vcFnshAnmt : function f()
 			{
@@ -558,10 +550,10 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 获取序列化的键，优先选放置来源的name，没有选其id
+			/// 获取序列化的键，依次选：Wse_Name，name，id
 			dGetKeyOfSrlz : function ()
 			{
-				return this.d_PutSrc ? (this.d_PutSrc.name || this.d_PutSrc.id) : "";
+				return this.d_PutSrc ? (this.d_PutSrc.Wse_Name || this.d_PutSrc.name || this.d_PutSrc.id) : "";
 			}
 			,
 			/// 当序列化时检查键
@@ -582,7 +574,8 @@ function fOnIcld(a_Errs)
 			/// a_EvtTgt：HTMLElement，事件目标，默认a_DomElmt
 			dPickPutTgtByPathPnt : function (a_Picker, a_EvtTgt)
 			{
-				return this.ePickDomElmtByPathPnt(this.d_PutTgt, a_Picker, a_EvtTgt, a_Picker.cAcsBbox());
+				// 注意最后一个参数不要传a_Picker.cAcsBbox()，因为不一定是this.d_PutTgt的包围盒
+				return this.ePickDomElmtByPathPnt(this.d_PutTgt, a_Picker, a_EvtTgt, null);//a_Picker.cAcsBbox());
 			}
 			,
 			/// 根据路径点拾取DOM元素
@@ -840,6 +833,36 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 拾取
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
+			{
+				if (a_Bbox)
+				{
+					return this; // 直接使用初始值（放置目标的）就可以了
+				}
+
+				// 拾取表单里的各个控件
+				var l_This = this;
+				stAryUtil.cFind(l_This.d_WgtSet.cAcsWgts(),
+					function (a_Wgts, a_Idx, a_Wgt)
+					{
+						a_Wgt.vcPick(null, a_Picker);
+						return a_Picker.cIsOver();
+					});
+
+				if (a_Picker.cIsOver())
+				{ return this; }
+
+				// 最后拾取放置目标（如果有）
+				if (l_This.d_PutTgt)
+				{
+					l_This.dPickPutTgtByPathPnt(a_Picker, l_This.d_PutTgt);
+				}
+				return this;
+			}
+			,
 			/// 输入复位
 			vcIptRset : function f()
 			{
@@ -854,6 +877,25 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 存取控件集
+			cAcsWgtSet : function ()
+			{
+				return this.d_WgtSet;
+			}
+			,
+			/// 存取控件数组
+			cAcsWgts : function ()
+			{
+				return this.d_WgtSet.cAcsWgts();
+			}
+			,
+			/// 清空
+			cClr : function ()
+			{
+				this.d_WgtSet.cClr();
+				return this;
+			}
+			,
 			/// 序列化
 			/// a_Kvo：Object，若为null则新建一个对象
 			/// 返回：a_Kvo
@@ -862,21 +904,26 @@ function fOnIcld(a_Errs)
 				if (! a_Kvo)
 				{ a_Kvo = {}; }
 
-				var l_This = this;
-
 				// 对每个控件
+				var l_This = this;
 				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
 					function (a_Ary, a_Idx, a_Wgt)
 					{
-						a_Wgt.vcSrlz(a_Kvo);
+						nUi.itForm.ocBindUbnd(a_Wgt, function (a_Istn) { a_Istn.vcSrlz(a_Kvo); });
 					});
 				return a_Kvo;
 			}
 			,
-			/// 存取控件集
-			cAcsWgtSet : function ()
+			/// 输入焦点
+			cIptFoc : function (a_PutSrcId, a_YesNo)
 			{
-				return this.d_WgtSet;
+				var l_This = this;
+				var l_Wgt = l_This.d_WgtSet && l_This.d_WgtSet.cAcsByPutSrcId(a_PutSrcId);
+				if (! l_Wgt)
+				{ return this; }
+
+				nUi.itForm.ocBindUbnd(l_Wgt, function (a_Istn) { a_Istn.vcIptFoc(a_YesNo); });
+				return this;
 			}
 		}
 		,
@@ -885,6 +932,29 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fItfc(nUi,
+		/// 表单接口
+		function itForm()
+		{ }
+		,
+		null
+		,
+		{
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				return a_Kvo;
+			}
+			,
+			/// 输入焦点
+			vcIptFoc : function f(a_YesNo)
+			{
+				return this;
+			}
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

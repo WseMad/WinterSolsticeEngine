@@ -771,7 +771,7 @@ function fOnIcld(a_Errs)
 				var l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
 				var l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;	// 找到本接口索引
 				if (l_Idx < 0)
-				{ return a_fCtor; }
+				{ return false; }
 
 				// 将纯虚函数实现添加至原型，若不存在则补充抛出异常
 				var l_itItfc = l_ItfcAry[l_Idx];
@@ -787,14 +787,28 @@ function fOnIcld(a_Errs)
 					// 绑定时，若不是undefined，警告并跳过（类本身的方法理应覆盖接口同名方法实现！）
 					if (a_Bind && (! nWse.fIsUdfn(l_Pttp[l_PN])))
 					{
-						nWse.stLog.cPutLine("◆【警告】类“" + l_tClass.oc_FullName + "”的方法“" + l_PN + "”遮蔽了接口实现！");
+						if (l_Pttp[l_PN]) // 若有效，标记不要解绑
+						{ l_Pttp[l_PN].Wse_DontUbnd = true; }
+
+						nWse.stLog.cPutLine("◆【警告】类“" + l_tClass.oc_FullName + "”的虚函数“" + l_PN + "”遮蔽了接口实现！");
 						continue;
 					}
 
-					l_Pttp[l_PN] = a_Bind
-						? (l_ItfcImp[l_PN] || function () { nWse.fThrowNotImpPureVtu(a_fCtor.oc_FullName + "." + l_PN); })
-						: undefined;	// 设为undefined
+					if (a_Bind) // 绑定
+					{
+						l_Pttp[l_PN] = (l_ItfcImp[l_PN] || function () { nWse.fThrowNotImpPureVtu(a_fCtor.oc_FullName + "." + l_PN); });
+					}
+					else
+					if (l_Pttp[l_PN]) // 解绑，若有效
+					{
+						if (l_Pttp[l_PN].Wse_DontUbnd) // 若标记不要解绑，跳过
+						{ continue; }
+
+						l_Pttp[l_PN] = undefined;	// 设为undefined
+					}
+					// 解绑，无效，不作处理
 				}
+				return true;
 			}
 
 			fDfnDataPpty(a_fCtor, "ocBindUbnd", false, false, false,
@@ -803,7 +817,9 @@ function fOnIcld(a_Errs)
 				/// a_fCabk：void f(a_Istn)，回调函数
 				function (a_Istn, a_fCabk)
 				{
-					fBindUbnd(true, a_Istn);
+					if (! fBindUbnd(true, a_Istn))	// 没有实现本接口时立即返回
+					{ return a_fCtor; }
+
 					try
 					{
 						a_fCabk(a_Istn);

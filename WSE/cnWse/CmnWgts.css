@@ -42,6 +42,7 @@
 }
 
 .cnWse_PutTgt.cnWse_tEdit>input[type=text],
+.cnWse_PutTgt.cnWse_tEdit>input[type=password],
 .cnWse_PutTgt.cnWse_tEdit>textarea
 {
 	box-sizing: border-box;
@@ -73,6 +74,7 @@
 
 /* 辉光效果 */
 .cnWse_PutTgt.cnWse_tEdit>input[type=text]:focus,
+.cnWse_PutTgt.cnWse_tEdit>input[type=password]:focus,
 .cnWse_PutTgt.cnWse_tEdit>textarea:focus
 {
 	/*border: 1px solid rgb(0, 255, 0);*/		/* 会改变高度 */
@@ -464,6 +466,47 @@ ul.cnWse_tMenu_Plchd
 	display: none;
 	position: absolute;
 	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+/*********************************************** tSignLog ***********************************************/
+
+.cnWse_PutTgt.cnWse_tSignLog
+{
+	display: none;			/* 初始不可见 */
+	position: fixed;
+	left: 20%;
+	top: 20%;
+	width: 60%;
+	min-width: 200px;
+	max-width: 600px;
+	min-height: 200px;
+	margin: 0px;
+	border-radius: 0px 0px 1em 1em;
+	padding: 2em 5%;
+	text-align: left;
+	overflow: auto;
+	z-index: 10001;			/* 比导航要高 */
+}
+
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tEdit
+{
+	margin-bottom: 20px;
+}
+
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn
+{
+	width: 4em;
+	height: 2em;
+}
+
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tSignLog_Cls
+{
+	float: left;
+}
+
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tSignLog_Sbmt
+{
+	float: right;
 }
 
 /*********************************************************************** Over ***********************************************************************/

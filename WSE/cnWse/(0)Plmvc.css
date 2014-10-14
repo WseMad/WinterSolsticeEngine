@@ -62,7 +62,8 @@ ul
 
 textarea
 {
-	resize: none;	/* 禁止调整大小 */
+	resize: none;		/* Chrome <- 禁止调整大小 */
+	overflow: auto;		/* IE <- 隐藏垂直滚动条 */
 }
 
 /*
@@ -103,7 +104,9 @@ table
 .cnWse_PutTgt
 {
 	display: block;
-	position: relative;		/* cPut()会修改成“absolute” */
+	position: relative;		/* 相对定位（为绝对定位建立新的参照点），可能会被覆盖成绝对定位 */
+	left: 0px;
+	top: 0px;
 	height: auto;
 	overflow: hidden;		/*【重点】正在动画的元素溢出时导致滚动条出现，隐藏就能避免*/
 }

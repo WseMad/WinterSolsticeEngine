@@ -70,29 +70,30 @@ function fOnIcld(a_Errs)
 		a_This.d_TypedText = false;	// 键入过文本？
 	}
 
-	function fAddRmvPlchd(a_This, a_Add)
-	{
-		if (! a_This.d_DomText)
-		{ return; }
-
-		if (a_Add)
-		{
-			if (! a_This.d_DomText.value) // 为空时才添加
-			{
-				a_This.d_DomText.value = a_This.d_Cfg.c_Plchd || "";
-				stCssUtil.cAddCssc(a_This.d_DomText, "cnWse_tEdit_Plchd");
-			}
-		}
-		else
-		{
-			// 没键入过文本时才移除
-			if ((! a_This.d_TypedText))
-			{
-				a_This.d_DomText.value = "";
-				stCssUtil.cRmvCssc(a_This.d_DomText, "cnWse_tEdit_Plchd");
-			}
-		}
-	}
+	//【直接用浏览器的行了】
+//	function fAddRmvPlchd(a_This, a_Add)
+//	{
+//		if (! a_This.d_DomText)
+//		{ return; }
+//
+//		if (a_Add)
+//		{
+//			if (! a_This.d_DomText.value) // 为空时才添加
+//			{
+//				a_This.d_DomText.value = a_This.d_Cfg.c_Plchd || "";
+//				stCssUtil.cAddCssc(a_This.d_DomText, "cnWse_tEdit_Plchd");
+//			}
+//		}
+//		else
+//		{
+//			// 没键入过文本时才移除
+//			if ((! a_This.d_TypedText))
+//			{
+//				a_This.d_DomText.value = "";
+//				stCssUtil.cRmvCssc(a_This.d_DomText, "cnWse_tEdit_Plchd");
+//			}
+//		}
+//	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -117,7 +118,7 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
-			/// c_MltLine：Boolean，多行？默认false
+			/// c_Kind：Number，种类，0=密码，1=单行（默认），2=多行
 			/// c_Plchd：String，占位符
 			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
 			/// }
@@ -128,25 +129,36 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tEdit");	// CSS类
 
-				if (a_Cfg.c_MltLine)
+				var l_Kind = l_This.cGetKind();
+				if (2 == l_Kind)
 				{
-					l_This.d_DomText = document.createElement("textarea");
+				//	l_This.d_DomText = document.createElement("textarea");
+					l_This.d_DomText = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">textarea",
+						"textarea", null, null, null);
 				}
 				else
 				{
-					l_This.d_DomText = document.createElement("input");
-					l_This.d_DomText.type = "text";
+//					l_This.d_DomText = document.createElement("input");
+					l_This.d_DomText = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">input[type=text]",
+						"input", null, null, null);
+					l_This.d_DomText.type = (0 == l_Kind) ? "password" : "text";
 				}
 
-				fAddRmvPlchd(l_This, true); // 占位符
-				l_This.d_DomText.addEventListener("focus", function ()
-				{
-					fAddRmvPlchd(l_This, false);
-				});
-				l_This.d_DomText.addEventListener("blur", function ()
-				{
-					fAddRmvPlchd(l_This, true);
-				});
+				l_This.d_DomText.value = "";	// 清空文本
+
+				if (a_Cfg.c_Plchd)	// 占位符
+				{ l_This.d_DomText.setAttribute("placeholder", a_Cfg.c_Plchd); }
+
+//				fAddRmvPlchd(l_This, true); // 占位符
+//				l_This.d_DomText.addEventListener("focus", function ()
+//				{
+//					fAddRmvPlchd(l_This, false);
+//				});
+//				l_This.d_DomText.addEventListener("blur", function ()
+//				{
+//					fAddRmvPlchd(l_This, true);
+//				});
+
 				l_This.d_DomText.addEventListener("change", function ()
 				{
 					l_This.dUpdTypedText();		// 更新键入过文本
@@ -158,7 +170,7 @@ function fOnIcld(a_Errs)
 				l_This.d_DomOk = l_This.dAcsDomNodeByAttr("Wse_Ok");	// 取得确定按钮
 				if (l_This.d_DomOk) // 摆放到到放置目标
 				{
-					if (a_Cfg.c_MltLine)
+					if (2 == l_Kind)
 					{
 					//	l_This.d_DomOk.style.position = "";	// 多行时由CSS控制
 					}
@@ -184,23 +196,6 @@ function fOnIcld(a_Errs)
 				// 基类版本，最后才调用！
 				this.odBase(f).odCall();
 				return this;
-			}
-			,
-			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
-			vcSrlz : function f(a_Kvo)
-			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
-				var l_This = this;
-				if ((! l_This.d_DomText) || (! l_This.cGetText()))
-				{ return a_Kvo; }
-
-				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
-				a_Kvo[l_Key] = l_This.d_DomText.value;
-				return a_Kvo;
 			}
 			,
 			/// 刷新在布局之前
@@ -293,6 +288,13 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 获取种类
+			cGetKind : function ()
+			{
+				var l_Cfg = this.d_Cfg;
+				return ("c_Kind" in l_Cfg) ? l_Cfg.c_Kind : 1;
+			}
+			,
 			/// 为空？
 			cIsEmt : function ()
 			{
@@ -334,7 +336,7 @@ function fOnIcld(a_Errs)
 				var l_OkX = 0, l_OkY = 0, l_OkW = 0, l_OkH = 0;
 				var l_TextW = 0;
 
-				if (l_This.d_Cfg.c_MltLine)
+				if (2 == l_This.cGetKind())
 				{
 
 				}
@@ -381,6 +383,38 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fClassItfcImp(tEdit,
+		nUi.itForm,
+		{
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+				if ((! l_This.d_DomText) || (! l_This.cGetText()))
+				{ return a_Kvo; }
+
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
+				a_Kvo[l_Key] = l_This.d_DomText.value;
+				return a_Kvo;
+			}
+			,
+			/// 输入焦点
+			vcIptFoc : function f(a_YesNo)
+			{
+				var l_This = this;
+				if (l_This.d_DomText)
+				{
+					a_YesNo ? l_This.d_DomText.focus() : l_This.d_DomText.blur();
+				}
+				return this;
+			}
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

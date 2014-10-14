@@ -1764,19 +1764,19 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或cRun/cRfl之后调用，不要修改！
-				scAcsTgtAreaOfPut : function (a_Put) { return a_Put.Wse_PcdrLot.c_TgtArea; }
+				scAcsTgtAreaOfPut : function (a_Put) { return a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_TgtArea; }
 				,
 				/// 存取放置元素的CSS外边距，必须在"WidDtmnd"事件里或cRun/cRfl之后调用，不要修改！
-				scAcsCssMgnOfPut : function (a_Put) { return a_Put.Wse_PcdrLot.c_CssMgn; }
+				scAcsCssMgnOfPut : function (a_Put) { return a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_CssMgn; }
 				,
 				/// 获取放置元素的行索引
-				scGetPutRowIdx : function (a_Put) { return a_Put.Wse_PcdrLot.c_RowIdx; }
+				scGetPutRowIdx : function (a_Put) { return a_Put.Wse_PcdrLot ? a_Put.Wse_PcdrLot.c_RowIdx : -1; }
 				,
 				/// 获取板内容宽度
-				scGetBoaCtntWid : function (a_Boa) { return a_Boa.Wse_PcdrLot.c_CtntW; }
+				scGetBoaCtntWid : function (a_Boa) { return a_Boa.Wse_PcdrLot ? a_Boa.Wse_PcdrLot.c_CtntW : 0; }
 				,
 				/// 获取列内容宽度
-				scGetColCtntWid : function (a_Col) { return a_Col.Wse_PcdrLot.c_CtntW; }
+				scGetColCtntWid : function (a_Col) { return a_Col.Wse_PcdrLot ? a_Col.Wse_PcdrLot.c_CtntW : 0; }
 			}
 			,
 			false);

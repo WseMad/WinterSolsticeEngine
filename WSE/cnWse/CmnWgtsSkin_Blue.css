@@ -223,4 +223,14 @@
 	background: radial-gradient(50% 30%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 }
 
+/*********************************************** tSignLog ***********************************************/
+
+.cnWse_Skin_Blue .cnWse_tSignLog
+{
+	background: -webkit-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -moz-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: -ms-linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+	background: linear-gradient(top left, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
+}
+
 /*********************************************************************** Over ***********************************************************************/

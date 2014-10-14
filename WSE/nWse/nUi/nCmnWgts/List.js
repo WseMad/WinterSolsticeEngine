@@ -138,42 +138,6 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
-			vcSrlz : function f(a_Kvo)
-			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
-				var l_This = this;
-
-				// 收集每个选中项的值
-				var l_Val = "", l_Sprt = l_This.d_Cfg.c_Sprt || ",";
-				stAryUtil.cFor(l_This.d_LiAry,
-					function (a_Ary, a_Idx, a_Li)
-					{
-						if (! l_This.cIsItemSlcd$Li(a_Li))
-						{ return; }
-
-						// 优先使用value特性（注意不要以属性方式访问），没有时选用textContent，最后选用text
-						var l_Str = (a_Li.getAttribute("value") || a_Li.textContent || a_Li.text);
-						if (! l_Str)
-						{ return; }
-
-						if (l_Val)
-						{ l_Val += l_Sprt; }
-						l_Val += l_Str.toString();
-					});
-
-				if (! l_Val)
-				{ return a_Kvo; }
-
-				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
-				a_Kvo[l_Key] = l_Val;
-				return a_Kvo;
-			}
-			,
 			/// 刷新在布局之前
 			vcRfshBefLot : function f()
 			{
@@ -227,6 +191,12 @@ function fOnIcld(a_Errs)
 						l_This.dPickDomElmtByPathPnt(a_Li, a_Picker);
 						return a_Picker.cIsOver();
 					});
+
+				if (a_Picker.cIsOver())
+				{ return this; }
+
+				// 拾取放置目标
+				l_This.dPickPutTgtByPathPnt(a_Picker, l_This.d_PutTgt);
 				return this;
 			}
 			,
@@ -587,6 +557,52 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fClassItfcImp(tList,
+		nUi.itForm,
+		{
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+
+				// 收集每个选中项的值
+				var l_Val = "", l_Sprt = l_This.d_Cfg.c_Sprt || ",";
+				stAryUtil.cFor(l_This.d_LiAry,
+					function (a_Ary, a_Idx, a_Li)
+					{
+						if (! l_This.cIsItemSlcd$Li(a_Li))
+						{ return; }
+
+						// 优先使用value特性（注意不要以属性方式访问），没有时选用textContent，最后选用text
+						var l_Str = (a_Li.getAttribute("value") || a_Li.textContent || a_Li.text);
+						if (! l_Str)
+						{ return; }
+
+						if (l_Val)
+						{ l_Val += l_Sprt; }
+						l_Val += l_Str.toString();
+					});
+
+				if (! l_Val)
+				{ return a_Kvo; }
+
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
+				a_Kvo[l_Key] = l_Val;
+				return a_Kvo;
+			}
+			,
+			/// 输入焦点
+			vcIptFoc : function f(a_YesNo)
+			{
+				return this;
+			}
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

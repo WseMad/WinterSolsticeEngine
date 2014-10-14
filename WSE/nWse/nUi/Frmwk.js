@@ -87,11 +87,14 @@ function fOnIcld(a_Errs)
 		var e_Picker = null;		// 拾取器
 		var e_RcRectRds = null;		// 圆角矩形半径
 		var e_ElmtBbox = null;		// 元素包围盒
-
 		function ePickTmrRset()		// 拾取计时复位
 		{
 			e_PickTmrId = null;		// 复位
 		}
+
+		// 临时变量
+		var e_Temp_CssUtilRst = null;
+		var e_Temp_TgtArea = null;
 
 		//======== 私有函数
 
@@ -495,8 +498,7 @@ function fOnIcld(a_Errs)
 					ePick(a_Ipt);
 				}
 
-				if (a_Tch.c_PkdWgt)
-				{ console.log("拾取到：" + a_Tch.c_PkdWgt.cAcsPutSrc().id); }
+			//	if (a_Tch.c_PkdWgt) { console.log("拾取到：" + a_Tch.c_PkdWgt.cAcsPutSrc().id); }
 			});
 
 			//【注意】下面的算法即使在没有焦点的情况下也能正确处理！
@@ -693,7 +695,18 @@ function fOnIcld(a_Errs)
 			{ return null; }
 
 			var l_scAcs = e_Lot.constructor.scAcsTgtAreaOfPut || null;
-			return l_scAcs && l_scAcs(a_Put);
+			var l_Rst = l_scAcs && l_scAcs(a_Put);
+			if (! l_Rst) // 若没有，使用父元素的全宽，而高度保持a_Put的
+			{
+				if (! e_Temp_CssUtilRst)
+				{
+					e_Temp_CssUtilRst = {};
+					e_Temp_TgtArea = new tSara();
+				}
+
+				l_Rst = e_Temp_TgtArea.cCrt$Wh(stCssUtil.cGetCtntWid(e_Temp_CssUtilRst, a_Put.parentNode).c_CtntWid, a_Put.offsetHeight);
+			}
+			return l_Rst;
 		};
 
 		/// 存取放置元素的CSS外边距，必须在"WidDtmnd"事件里或cRfshAftLot里调用，不要修改！
