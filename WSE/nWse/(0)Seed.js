@@ -785,7 +785,8 @@
 		function eSttAnmt()
 		{
 			if (! e_Dom_body)
-			{ e_Dom_body = document.getElementsByTagName("body")[0]; }
+		//	{ e_Dom_body = document.getElementsByTagName("body")[0]; }
+			{ e_Dom_body = document.getElementById("ok_3dBody"); }	// 用3D页体
 
 			if (! e_DomAll)
 			{

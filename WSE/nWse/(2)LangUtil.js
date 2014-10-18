@@ -630,6 +630,132 @@ function fOnIcld(a_Errs)
 			return a_Rst;
 		};
 
+		/// 单位化四元数
+		/// a_Tgt：Object { x, y, z, w }
+		/// 返回：a_Tgt
+		stNumUtil.cUnitQtn = function (a_Tgt)
+		{
+			a_Tgt.x = a_Tgt.y = a_Tgt.z = 0;	a_Tgt.w = 1;
+			return a_Tgt;
+		};
+
+		/// 共轭化四元数
+		/// a_Tgt：Object { x, y, z, w }
+		/// 返回：a_Tgt
+		stNumUtil.cConjQtn = function (a_Tgt)
+		{
+			a_Tgt.x = -a_Tgt.x;		a_Tgt.y = -a_Tgt.y;		a_Tgt.z = -a_Tgt.z;
+			return a_Tgt;
+		};
+
+		/// 四元数模
+		stNumUtil.cQtnMag = function (a_Tgt)
+		{
+			return Math.sqrt(a_Tgt.x * a_Tgt.x + a_Tgt.y * a_Tgt.y + a_Tgt.z * a_Tgt.z + a_Tgt.w * a_Tgt.w);
+		};
+
+		/// 标准化四元数
+		stNumUtil.cNmlzQtn = function (a_Tgt)
+		{
+			var l_Mag = stNumUtil.cQtnMag(a_Tgt);
+			if (0 != l_Mag)
+			{ a_Tgt.x /= l_Mag;	a_Tgt.y /= l_Mag;	a_Tgt.z /= l_Mag;	a_Tgt.w /= l_Mag; }
+			return a_Tgt;
+		};
+
+		/// 创建四元数 - 三维向量
+		/// a_Vx, a_Vy, a_Vz：Number，三维向量的三个分量，不能同时为0
+		/// 返回：a_Rst，Object { x, y, z, w }
+		stNumUtil.cCrtQtn$3dVct = function (a_Rst, a_Vx, a_Vy, a_Vz)
+		{
+			a_Rst.x = a_Vx;		a_Rst.y = a_Vy;		a_Rst.z = a_Vz;		a_Rst.w = 0;
+			return a_Rst;
+		};
+
+		/// 创建四元数 - 任意轴弧度
+		/// a_Ax, a_Ay, a_Az, a_Rad：Number，轴的三个分量，绕该轴旋转的弧度
+		/// 返回：a_Rst，Object { x, y, z, w }
+		stNumUtil.cCrtQtn$AaRad = function (a_Rst, a_Ax, a_Ay, a_Az, a_Rad)
+		{
+			var l_Sin = Math.sin(a_Rad / 2), l_Cos = Math.cos(a_Rad / 2);
+			a_Rst.x = l_Sin * a_Ax;		a_Rst.y = l_Sin * a_Ay;		a_Rst.z = l_Sin * a_Az;		a_Rst.w = l_Cos;
+			return a_Rst;
+		};
+
+		/// 创建四元数 - 主轴弧度
+		/// a_Rx, a_Ry, a_Rz：Number，依次绕三主轴（X、Y、Z）旋转的弧度
+		/// 返回：a_Rst，Object { x, y, z, w }
+		stNumUtil.cCrtQtn$PaRad = function (a_Rst, a_Rx, a_Ry, a_Rz)
+		{
+			var l_Sin0 = Math.sin(a_Rx / 2), l_Cos0 = Math.cos(a_Rx / 2);
+			var l_Sin1 = Math.sin(a_Ry / 2), l_Cos1 = Math.cos(a_Ry / 2);
+			var l_Sin2 = Math.sin(a_Rz / 2), l_Cos2 = Math.cos(a_Rz / 2);
+			a_Rst.x =  l_Sin0 * l_Cos1 * l_Cos2 + l_Cos0 * l_Sin1 * l_Sin2;
+			a_Rst.y = -l_Sin0 * l_Cos1 * l_Sin2 + l_Cos0 * l_Sin1 * l_Cos2;
+			a_Rst.z =  l_Cos0 * l_Cos1 * l_Sin2 + l_Sin0 * l_Sin1 * l_Cos2;
+			a_Rst.w =  l_Cos0 * l_Cos1 * l_Cos2 - l_Sin0 * l_Sin1 * l_Sin2;
+			return a_Rst;
+		};
+
+		/// 从四元数取得轴弧度，若是单位四元数则a_Rst各分量全为0
+		/// 返回：a_Rst，Object { x, y, z, w }，xyz=轴向量，w=弧度
+		stNumUtil.cAxisRadFromQtn = function (a_Rst, a_Qtn)
+		{
+			var l_RadBy2 = Math.acos(stNumUtil.cClmOnNum(a_Qtn.w, -1, +1)), l_Sin = Math.sin(l_RadBy2);
+			if (Math.abs(l_Sin) < 0.00001)
+			{ a_Rst.x = a_Rst.y = a_Rst.z = a_Rst.w = 0; }
+			else
+			{ a_Rst.x = a_Qtn.x / l_Sin;	a_Rst.y = a_Qtn.y / l_Sin;	a_Rst.z = a_Qtn.z / l_Sin;	a_Rst.w = l_RadBy2 * 2; }
+			return a_Rst;
+		};
+
+		/// 四元数乘法，当使用单位q变换p时：p' = q^ * p * q，q^ = q的共轭
+		/// a_Tgt, a_Opd：Object { x, y, z, w }
+		/// 返回：a_Tgt
+		stNumUtil.cQtnMul = function (a_Tgt, a_Opd)
+		{
+			var l_Tw = a_Tgt.w * a_Opd.w - a_Tgt.x * a_Opd.x - a_Tgt.y * a_Opd.y - a_Tgt.z * a_Opd.z;
+			var l_Tx = a_Tgt.w * a_Opd.x + a_Tgt.x * a_Opd.w + a_Tgt.y * a_Opd.z - a_Tgt.z * a_Opd.y;
+			var l_Ty = a_Tgt.w * a_Opd.y - a_Tgt.x * a_Opd.z + a_Tgt.y * a_Opd.w + a_Tgt.z * a_Opd.x;
+			var l_Tz = a_Tgt.w * a_Opd.z + a_Tgt.x * a_Opd.y - a_Tgt.y * a_Opd.x + a_Tgt.z * a_Opd.w;
+			a_Tgt.x = l_Tx;		a_Tgt.y = l_Ty;		a_Tgt.z = l_Tz;		a_Tgt.w = l_Tw;
+			return a_Tgt;
+		};
+
+		/// 四元数球面线性插值
+		/// 返回：a_Rst
+		stNumUtil.cQtnSlerp = function (a_Rst, a_Bgn, a_End, a_Scl)
+		{
+			// 以下算法详见《3D数学基础——图形与游戏开发》P166
+			var l_x0 = a_Bgn.x, l_y0 = a_Bgn.y, l_z0 = a_Bgn.z, l_w0 = a_Bgn.w;
+			var l_x1 = a_End.x, l_y1 = a_End.y, l_z1 = a_End.z, l_w1 = a_End.w;
+			var l_Cos = l_x0 * l_x1 + l_y0 * l_y1 + l_z0 * l_z1 + l_w0 * l_w1;
+			if (l_Cos < 0)
+			{
+				l_x1 = -l_x1;	l_y1 = -l_y1;	l_z1 = -l_z1;	l_w1 = -l_w1;
+				l_Cos = -l_Cos;
+			}
+
+			var l_k0, l_k1, l_Sin, l_Omg;
+			if (l_Cos > 0.999999)
+			{
+				l_k0 = 1 - a_Scl;
+				l_k1 = a_Scl;
+			}
+			else
+			{
+				l_Sin = Math.sqrt(1 - l_Cos * l_Cos);
+				l_Omg = Math.atan2(l_Sin, l_Cos);
+				l_k0 = Math.sin((1 - a_Scl) * l_Omg) / l_Sin;
+				l_k1 = Math.sin(a_Scl * l_Omg) / l_Sin;
+			}
+
+			a_Rst.x = l_k0 * l_x0 + l_k1 * l_x1;
+			a_Rst.y = l_k0 * l_y0 + l_k1 * l_y1;
+			a_Rst.z = l_k0 * l_z0 + l_k1 * l_z1;
+			a_Rst.w = l_k0 * l_w0 + l_k1 * l_w1;
+			return a_Rst;
+		};
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

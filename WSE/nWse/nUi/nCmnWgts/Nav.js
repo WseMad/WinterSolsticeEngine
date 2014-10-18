@@ -809,10 +809,10 @@ function fOnIcld(a_Errs)
 							{
 								return nWse.stNumUtil.cPrbItp(0, 1, a_Scl, true);
 							},
-							c_fMove : function (a_Rst, a_DomElmt, a_Bgn, a_End,
+							c_fDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
 												a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 							{
-								l_This.dAnmtMove.apply(l_This, arguments);
+								l_This.dAnmtDplc.apply(l_This, arguments);
 							},
 							c_fOnEnd: function ()
 							{
@@ -844,10 +844,10 @@ function fOnIcld(a_Errs)
 							{
 								return nWse.stNumUtil.cPrbItp(0, 1, a_Scl, false);
 							},
-							c_fMove : function (a_Rst, a_DomElmt, a_Bgn, a_End,
+							c_fDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
 												a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 							{
-								l_This.dAnmtMove.apply(l_This, arguments);
+								l_This.dAnmtDplc.apply(l_This, arguments);
 							},
 							c_fOnEnd: function ()
 							{
@@ -886,7 +886,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 动画移动函数
-				dAnmtMove : function (a_Rst, a_DomElmt, a_Bgn, a_End,
+				dAnmtDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
 									  a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 				{
 					var l_This = this;
@@ -1016,7 +1016,7 @@ function fOnIcld(a_Errs)
 					},
 					{
 						c_Dur: 0.2,
-						c_fMove: function (a_Rst, a_DomElmt, a_Bgn, a_End,
+						c_fDplc: function (a_Rst, a_DomElmt, a_Bgn, a_End,
 										   a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 						{
 							tSara.scEnsrTemps(1);
@@ -1104,7 +1104,7 @@ function fOnIcld(a_Errs)
 	//				{
 	//					return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
 	//				},
-						c_fMove: function (a_Rst, a_DomElmt, a_Bgn, a_End,
+						c_fDplc: function (a_Rst, a_DomElmt, a_Bgn, a_End,
 										   a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 						{
 							tSara.scEnsrTemps(1);

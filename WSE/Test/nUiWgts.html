@@ -431,6 +431,7 @@
 				var l_This = this;
 				l_This.e_WidPct = 100;				// 宽度百分比
 				l_This.e_PcdrLot = new tPcdrLot();	// 程序化布局
+				stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
 			},
 			null,
 			{
@@ -488,7 +489,7 @@
 					var l_Wgt = null;
 					l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
 					stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
-					stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
+
 
 					var l_Form = new nUi.tForm();			// 表单
 					l_This.e_Form = l_Form;

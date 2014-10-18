@@ -27,34 +27,65 @@
 
 	<style type="text/css">
 
-		body
+		/*body*/
+		/*{*/
+			/*background-color: white;*/
+
+			/*-webkit-perspective:1000px;	*//* Safari 和 Chrome */
+			/*-webkit-perspective-origin: center center;	*//* Safari 和 Chrome */
+			/*perspective:1000px;*/
+			/*perspective-origin: center center;*/
+		/*}*/
+
+		#ok_3dBody
 		{
-			background-color: white;
+			background-color: transparent;
+
+			-webkit-perspective:1000px;
+			-webkit-perspective-origin: center center;
+			perspective:1000px;
+			perspective-origin: center center;
+		}
+
+		#k_PutTgt_Lot
+		{
+			border: 2px solid orange;
+		}
+
+		#k_TestBoa
+		{
+			padding: 20px;
 		}
 
 	</style>
 </head>
 <body class="cnWse_Skin_Blue">
-<!--<div class="cnWse_Skin_Blue">
+
+<div id="ok_3dBody">
+	<!--<div class="cnWse_Skin_Blue">
 	<div id="k_Btn3" class="cnWse_PutTgt">
 		<span data-Wse_Tit>Btn3</span>
 	</div>
 </div>-->
 
-<!--<canvas id="k_Cvs" width="300" height="300"></canvas>-->
-<!--<img src="Media/myship.png" style="cursor:pointer;border: 1px solid black;" />-->
+	<!--<canvas id="k_Cvs" width="300" height="300"></canvas>-->
+	<!--<img src="Media/myship.png" style="cursor:pointer;border: 1px solid black;" />-->
 
-<div id="k_PutTgt_Lot">
+	<div id="k_PutTgt_Lot">
 
+	</div>
+
+	<div id="k_PutSrc_Lot">
+
+		<div id="k_Put0" style="width:200px;height: 200px;background-color: blue"></div>
+
+		<!---->
+		<!--  -->
+		<!---->
+
+	</div>
 </div>
 
-<div id="k_PutSrc_Lot">
-
-	<!---->
-	<!--  -->
-	<!---->
-
-</div>
 
 <script type="text/javascript">
 
@@ -170,6 +201,7 @@ function fOnIcld(a_Errs)
 		var l_This = this;
 		l_This.e_WidPct = 100;				// 宽度百分比
 		l_This.e_PcdrLot = new tPcdrLot();	// 程序化布局
+		stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
 	},
 	null,
 	{
@@ -191,7 +223,7 @@ function fOnIcld(a_Errs)
 
 			// 自定义默认进离动画
 			var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
-			l_DftEfc.cSetUniDur(0.6);
+			l_DftEfc.cSetUniDur(0);//.6);
 			l_DftEfc.cSetUniEsn(function (a_Scl)
 			{
 				//	return a_Scl;
@@ -208,24 +240,23 @@ function fOnIcld(a_Errs)
 
 			//======================== 其他
 
+			var l_RotRad = Math.PI / 2;	// 从轴端向原点看，顺时针为正，逆时针为负
 			var l_DsplDom = nWse.stNowLoad.cAcsDsplDom();
+		//	var l_DsplDom = document.getElementById("ok_3dBody");
 			nWse.stCssUtil.cAnmt(l_DsplDom,
 					{
 						"Wse_3dTsfm" : [
-							{
-								c_Name : "scale3d",
-								c_End : { x:0.5, y:0.5, z:1 }
-							},
+//							{
+//								c_Name : "scale3d",
+//								c_End : { x:0.5, y:0.5, z:1 }
+//							},
+//							{
+//								c_Name : "translate3d",
+//								c_End : { x:300, y:0, z:1 }
+//							},
 							{
 								c_Name : "rotate3d",
-								c_End : { x:0, y:1, z:0, w: Math.PI * 0.5 }
-//								c_fDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
-//													a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
-//								{
-//									a_Rst.c_FrmTime += a_FrmItvl;
-//									var l_a = Math.PI / 12, l_w = Math.PI;
-//									a_Rst.z = l_a * Math.sin(l_w * a_Rst.c_FrmTime);
-//								}
+								c_End : nWse.stNumUtil.cCrtQtn$PaRad({}, 0, -l_RotRad, 0)
 							}
 						]
 					},
@@ -234,16 +265,27 @@ function fOnIcld(a_Errs)
 						c_Tot: 1,
 						c_fOnEnd: function ()
 						{
+							nWse.stNowLoad.cEnd();
+
+							// 初始布局？
+							stFrmwk.cRunLot();			// 运行布局
+
+							// 翻转
+							l_DsplDom = document.getElementById("k_PutTgt_Lot");
+							var l_3dTsfm = nWse.stCssUtil.cAcsExtdAnmt_3dTsfm(l_DsplDom);
+							l_3dTsfm.c_Rot = nWse.stNumUtil.cCrtQtn$PaRad({}, 0, +l_RotRad, 0);
+							nWse.stCssUtil.cUpdExtdAnmt_3dTsfm(l_DsplDom);
+
 							nWse.stCssUtil.cAnmt(l_DsplDom,
 									{
 										"Wse_3dTsfm" : [
-											{
-												c_Name : "scale3d",
-												c_End : { x:1, y:1, z:1 }
-											},
+//											{
+//												c_Name : "scale3d",
+//												c_End : { x:1, y:1, z:1 }
+//											},
 											{
 												c_Name : "rotate3d",
-												c_End : { x:0, y:1, z:0, w: 0 }
+												c_End : nWse.stNumUtil.cUnitQtn({})
 											}
 										]
 									},
@@ -252,7 +294,8 @@ function fOnIcld(a_Errs)
 										c_Tot: 1,
 										c_fOnEnd: function ()
 										{
-
+//											// 初始布局？
+//											stFrmwk.cRunLot();			// 运行布局
 										}
 									});
 						}
@@ -269,7 +312,7 @@ function fOnIcld(a_Errs)
 
 			// 初始布局？
 			//	l_This.e_PcdrLot.cRun();
-			stFrmwk.cRunLot();			// 运行布局
+		//	stFrmwk.cRunLot();			// 运行布局
 		}
 		,
 		cBpc : function (a_Lot)
@@ -284,6 +327,10 @@ function fOnIcld(a_Errs)
 					})
 					.cCol({
 						c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+					})
+					.cPut({
+						c_Id: "k_Put0",
+						c_GridCnt: 4
 					})
 			;
 		}

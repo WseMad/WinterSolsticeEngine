@@ -104,7 +104,7 @@ function fOnIcld(a_Errs)
 			/// 设置统一时长
 			cSetUniDur : function (a_Dur)
 			{
-				a_Dur = a_Dur || 1;
+				a_Dur = a_Dur || 0;		// 0表示不动画
 				this.c_EntDur = a_Dur;
 				this.c_RflDur = a_Dur;
 				this.c_LeaDur = a_Dur;
@@ -125,9 +125,9 @@ function fOnIcld(a_Errs)
 			cSetUniMove : function (a_fMove)
 			{
 				a_fMove = a_fMove || null;
-				this.c_fEntMove = a_fMove;
-				this.c_fRflMove = a_fMove;
-				this.c_fLeaMove = a_fMove;
+				this.c_fEntDplc = a_fMove;
+				this.c_fRflDplc = a_fMove;
+				this.c_fLeaDplc = a_fMove;
 				return this;
 			}
 			,
@@ -295,23 +295,24 @@ function fOnIcld(a_Errs)
 			}
 
 			// 动画
-			if (1 == a_Which)	// 如果是进入开始，需要设置起始值
+			var l_PN_Dur = (1 == a_Which) ? "c_EntDur" : ((2 == a_Which) ? "c_RflDur" : "c_LeaDur");
+			var l_PN_Esn = (1 == a_Which) ? "c_fEntEsn" : ((2 == a_Which) ? "c_fRflEsn" : "c_fLeaEsn");
+			var l_PN_Dplc = (1 == a_Which) ? "c_fEntDplc" : ((2 == a_Which) ? "c_fRflDplc" : "c_fLeaDplc");
+			var l_Dur = tEfc.seUseFld(l_PN_Dur, a_PutEfc, a_DftEfc);	// 注意时长若为0则不动画
+			if ((0 != l_Dur) && (1 == a_Which))	// 如果是进入开始，需要设置起始值
 			{
 				stCssUtil.cSetStl(a_Put,
 					tEfc.seAccStl("c_CssEntBgn", a_PutEfc, a_DftEfc, a_PutTgt, a_Put));
 			}
 
-			var l_PN_Dur = (1 == a_Which) ? "c_EntDur" : ((2 == a_Which) ? "c_RflDur" : "c_LeaDur");
-			var l_PN_Esn = (1 == a_Which) ? "c_fEntEsn" : ((2 == a_Which) ? "c_fRflEsn" : "c_fLeaEsn");
-			var l_PN_Move = (1 == a_Which) ? "c_fEntMove" : ((2 == a_Which) ? "c_fRflMove" : "c_fLeaMove");
 		//	var l_UpdAgms = [a_PutTgt, a_Put, 0, 0];
 			stCssUtil.cAnmt(a_Put,
 				l_AnmtEnd,
 				{
 				//	c_Dly: 0,
-					c_Dur: tEfc.seUseFld(l_PN_Dur, a_PutEfc, a_DftEfc),
+					c_Dur: l_Dur,
 					c_fEsn : tEfc.seUseFld(l_PN_Esn, a_PutEfc, a_DftEfc),
-					c_fMove : tEfc.seUseFld(l_PN_Move, a_PutEfc, a_DftEfc),
+					c_fDplc : tEfc.seUseFld(l_PN_Dplc, a_PutEfc, a_DftEfc),
 //				c_fOnUpd : function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 //				{
 //					// 在这回调更新……

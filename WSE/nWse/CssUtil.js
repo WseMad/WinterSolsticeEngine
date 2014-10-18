@@ -63,8 +63,9 @@ function fOnIcld(a_Errs)
 		var e_DomPrn = null;		// 父节点
 		var e_BgnStl = null, e_PrnStl = null;	// 样式
 		var e_Rst_CalcBgnPV = null;		// eCalcBgnPV的返回值
-		var e_Wse_CssExtd = null;	// 扩展CSS
+		var e_Wse_CssExtd = null;		// 扩展CSS
 		var e_BrsPfx_Tsfm = null;		// 浏览器前缀 - transform
+		var e_AxisRad = null;			// 轴弧度
 
 		//======== 私有函数
 
@@ -98,6 +99,8 @@ function fOnIcld(a_Errs)
 		{
 			if (e_BrsPfx_Tsfm)
 			{ return; }
+
+			e_AxisRad = { x:0, y:0, z:0, w:0 };	// 新建
 
 			var l_Stl = a_DomElmt.style;
 
@@ -333,13 +336,13 @@ function fOnIcld(a_Errs)
 					}
 
 					// 专门处理left和top
-					if (l_fAnmt.Wse_HasMove)
+					if (l_fAnmt.Wse_HasDplc)
 					{
 						l_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
 						l_fAnmt.Wse_Pos.y = l_Y;
-						if (l_Cfg.c_fMove)			// 可以被c_fMove改写
+						if (l_Cfg.c_fDplc)			// 可以被c_fDplc改写
 						{
-							l_Cfg.c_fMove(l_fAnmt.Wse_Pos, a_DomElmt,
+							l_Cfg.c_fDplc(l_fAnmt.Wse_Pos, a_DomElmt,
 								(l_Rvs ? l_fAnmt.Wse_Tp : l_fAnmt.Wse_Sp),
 								(l_Rvs ? l_fAnmt.Wse_Sp : l_fAnmt.Wse_Tp),
 								l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
@@ -556,17 +559,17 @@ function fOnIcld(a_Errs)
 						}
 						else
 						{
-							l_CUT.c_Rot.x = stNumUtil.cLnrItp(l_Bgn.x, l_End.x, l_EsnScl);
-							l_CUT.c_Rot.y = stNumUtil.cLnrItp(l_Bgn.y, l_End.y, l_EsnScl);
-							l_CUT.c_Rot.z = stNumUtil.cLnrItp(l_Bgn.z, l_End.z, l_EsnScl);
-							l_CUT.c_Rot.w = stNumUtil.cLnrItp(l_Bgn.w, l_End.w, l_EsnScl);
+							// 球面线性插值
+							stNumUtil.cQtnSlerp(l_CUT.c_Rot, l_Bgn, l_End, l_EsnScl);
 						}
 
-						l_CUT.c_Rot.w = stNumUtil.cNmlzRad(l_CUT.c_Rot.w, false);	// 标准化
-
-						if (l_CssStr)
-						{ l_CssStr += " "; }
-						l_CssStr += "rotate3d(" + l_CUT.c_Rot.x + "," + l_CUT.c_Rot.y + "," + l_CUT.c_Rot.z + "," + l_CUT.c_Rot.w + "rad)";
+						stNumUtil.cAxisRadFromQtn(e_AxisRad, l_CUT.c_Rot);	// 取得轴弧度
+						if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
+						{
+							if (l_CssStr)
+							{ l_CssStr += " "; }
+							l_CssStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
+						}
 					}
 					else
 				//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
@@ -615,7 +618,7 @@ function fOnIcld(a_Errs)
 			{
 				a_DomElmt.Wse_CssUtil.c_3dTsfm = {
 					c_Scl : { x:1, y:1, z:1, c_FrmTime:0 },
-					c_Rot : { x:0, y:1, z:0, w:0, c_FrmTime:0 },	// 初始绕Y轴
+					c_Rot : { x:0, y:0, z:0, w:1, c_FrmTime:0 },	// 四元数
 					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 }
 				};
 			}
@@ -1165,7 +1168,7 @@ function fOnIcld(a_Errs)
 		/// c_Tot：Number，总数，＜0表示循环，0会立即结束动画并回调，默认1
 		/// c_EvenCntRvs：Boolean，偶数次倒放？若为true则当c_Tot＞1且第偶数次播放时，反转起始和结束值，默认false
 		/// c_fEsn：Number f(Number a_Scl)，松弛函数，默认线性渐变
-		/// c_fMove：void f(a_Rst, a_DomElmt, a_Bgn, a_End, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)，
+		/// c_fDplc：void f(a_Rst, a_DomElmt, a_Bgn, a_End, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)，
 		/// 移动，写入到a_Rst.x、y字段，a_Bgn和a_End表起终点
 		/// c_fOnUpd：void f(a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)，更新回调
 		/// c_fOnEnd：void f(a_DomElmt)，结束回调
@@ -1215,7 +1218,7 @@ function fOnIcld(a_Errs)
 			l_fAnmt.Wse_Items = {};		// 要动画的各项之记录
 			l_fAnmt.Wse_Cfg = a_Cfg;
 			l_fAnmt.Wse_Cnt = 1;		// 从1开始计数
-			l_fAnmt.Wse_HasMove = !! (a_Cfg.c_fMove);
+			l_fAnmt.Wse_HasDplc = !! (a_Cfg.c_fDplc);
 			l_fAnmt.Wse_HasLeft = false;
 			l_fAnmt.Wse_HasTop = false;
 			if (! l_fAnmt.Wse_Pos)
@@ -1226,7 +1229,7 @@ function fOnIcld(a_Errs)
 			}
 
 			// 设定起始值和结束值
-			var l_IsEmt = ! l_fAnmt.Wse_HasMove;	// 只要动画位置就不空
+			var l_IsEmt = ! l_fAnmt.Wse_HasDplc;	// 只要动画位置就不空
 			var l_PN, l_PV;
 			var l_Item = null, l_EndStr = null, l_BgnStr = null, l_EqIdx = -1, l_LtIdx = -1;
 			for (l_PN in a_End)
@@ -1320,10 +1323,10 @@ function fOnIcld(a_Errs)
 
 				if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
 				{
-					// 如果起始串和结束串相同，除非是“left、top”且提供了c_fMove，否则跳过
+					// 如果起始串和结束串相同，除非是“left、top”且提供了c_fDplc，否则跳过
 					if ((! a_Cfg.c_PsrvIdtcBesPpty) && (l_Item.c_BgnStr == l_Item.c_EndStr))
 					{
-						if (! (l_fAnmt.Wse_HasMove && (("left" == l_PN) || ("top" == l_PN))))
+						if (! (l_fAnmt.Wse_HasDplc && (("left" == l_PN) || ("top" == l_PN))))
 						{ continue; }
 
 					//	console.log("BS == ES，但未跳过！");
@@ -1333,7 +1336,7 @@ function fOnIcld(a_Errs)
 					l_IsEmt = false;	// 至少有一个项需要动画，不空
 
 					// 如果需要动画位置，检查left和/或top是否存在，是的话记录起始和结束值
-					if (l_fAnmt.Wse_HasMove)
+					if (l_fAnmt.Wse_HasDplc)
 					{
 						if ((! l_fAnmt.Wse_HasLeft) && ("left" == l_PN))
 						{
@@ -1353,7 +1356,7 @@ function fOnIcld(a_Errs)
 			}
 
 			// 如果需要动画位置，计算left和/或top缺省的起始和结束值（此时相同，皆为当前值）
-			if (l_fAnmt.Wse_HasMove)
+			if (l_fAnmt.Wse_HasDplc)
 			{
 				if (! l_fAnmt.Wse_HasLeft)
 				{ l_fAnmt.Wse_Sp.x = l_fAnmt.Wse_Tp.x = eCalcBgnPV(2, a_DomElmt, "left").c_Bgn; }
@@ -1535,23 +1538,31 @@ function fOnIcld(a_Errs)
 						else
 						if (e_Wse_CssExtd["rotate3d"] == l_Tsfm.c_TypeIdx)
 						{
-							l_Tsfm.c_Bgn = {};
+							l_Tsfm.c_Bgn = {};	// 四元数
 							l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.x;
 							l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.y;
 							l_Tsfm.c_Bgn.z = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.z;
 							l_Tsfm.c_Bgn.w = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.w;
-							if (l_Item.c_BgnStr)
-							{ l_Item.c_BgnStr += " "; }
-							l_Item.c_BgnStr += "rotate3d(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + "," + l_Tsfm.c_Bgn.z + "," + l_Tsfm.c_Bgn.w + "rad)";
+							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Bgn);	// 取得轴弧度
+							if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
+							{
+								if (l_Item.c_BgnStr)
+								{ l_Item.c_BgnStr += " "; }
+								l_Item.c_BgnStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
+							}
 
-							l_Tsfm.c_End = {};
+							l_Tsfm.c_End = {};	// 四元数
 							l_Tsfm.c_End.x = eCalcExtdEndPV(a_Tsfm, "x", 0);
 							l_Tsfm.c_End.y = eCalcExtdEndPV(a_Tsfm, "y", 0);
 							l_Tsfm.c_End.z = eCalcExtdEndPV(a_Tsfm, "z", 0);
-							l_Tsfm.c_End.w = eCalcExtdEndPV(a_Tsfm, "w", 0);
-							if (l_Item.c_EndStr)
-							{ l_Item.c_EndStr += " "; }
-							l_Item.c_EndStr += "rotate3d(" + l_Tsfm.c_End.x + "," + l_Tsfm.c_End.y + "," + l_Tsfm.c_End.z + "," + l_Tsfm.c_End.w + "rad)";
+							l_Tsfm.c_End.w = eCalcExtdEndPV(a_Tsfm, "w", 1);
+							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_End);	// 取得轴弧度
+							if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
+							{
+								if (l_Item.c_EndStr)
+								{ l_Item.c_EndStr += " "; }
+								l_Item.c_EndStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
+							}
 						}
 						else
 						//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
@@ -1840,11 +1851,12 @@ function fOnIcld(a_Errs)
 				l_CssStr += "scale3d(" + l_Tsfm.c_Scl.x + "," + l_Tsfm.c_Scl.y + "," + l_Tsfm.c_Scl.z + ")";
 			}
 
-			if ((0 != l_Tsfm.c_Rot.w)) // R
+			stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Rot);	// 取得轴弧度
+			if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w)) // R
 			{
 				if (l_CssStr)
 				{ l_CssStr += " "; }
-				l_CssStr += "rotate3d(" + l_Tsfm.c_Rot.x + "," + l_Tsfm.c_Rot.y + "," + l_Tsfm.c_Rot.z + "," + l_Tsfm.c_Rot.w + "rad)";
+				l_CssStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
 			}
 
 			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y) || (0 != l_Tsfm.c_Tslt.z)) // T
