@@ -46,6 +46,7 @@ function fOnIcld(a_Errs)
 	function fRsetMos(a_This)
 	{
 		a_This.e_MosDown = false;
+		a_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件
 	}
 
 	function eRegPageEvtHdlr(a_This)
@@ -65,15 +66,19 @@ function fOnIcld(a_Errs)
 		//	console.log("mousemove");
 
 			var l_This = a_This;
-			//var l_OldX = e_X, l_OldY = e_Y;
-			//eSetXY(a_Evt.clientX, a_Evt.clientY);
-			//e_OfstX = e_X - l_OldX;
-			//e_OfstY = e_Y - l_OldY;
+			if (! l_This.e_MosDown)		// 未按下时忽略
+			{
+			//	l_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件，【不要加上这句，Chrome模拟器会连续触发】
+				return;
+			}
 
-			if (! l_This.e_MosDown)
-			{ return; }
+			if (l_This.e_IgnrMosEvt)	// 忽略？
+			{
+				l_This.e_MosDown = false;	// 复位
+				return;
+			}
 
-			ePushMosIpt(l_This, i_TchId_Mos, tPntIpt.tKind.i_TchMove, a_Evt);
+			ePushMosIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
 		};
 
 		var l_fOnMosBtnDown = function (a_Evt)
@@ -82,13 +87,14 @@ function fOnIcld(a_Errs)
 			{ return; }
 
 			var l_This = a_This;
-
-//		// 如果起源不是主画布，忽略
-//		if ((a_Evt.target !== stRltmAfx.cAcsMainCvs()))
-//		{ return; }
+			if (l_This.e_IgnrMosEvt)	// 忽略？
+			{
+				l_This.e_MosDown = false;	// 复位
+				return;
+			}
 
 			l_This.e_MosDown = true;
-			ePushMosIpt(l_This, i_TchId_Mos, tPntIpt.tKind.i_TchBgn, a_Evt);
+			ePushMosIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
 		};
 
 		var l_fOnMosBtnUp = function (a_Evt)
@@ -96,16 +102,15 @@ function fOnIcld(a_Errs)
 			if (0 != a_Evt.button)	// 只响应主键
 			{ return; }
 
-			var l_This = this;
+			var l_This = a_This;
+			if (l_This.e_IgnrMosEvt)	// 忽略？
+			{
+				l_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件
+				return;
+			}
+
 			fRsetMos(l_This); // 谨慎的做法……
-
-			//【警告】不要忽略，用于应对“触点丢失”！
-			//// 如果起源不是主画布，忽略
-			//if ((a_Evt.target !== stRltmAfx.cAcsMainCvs()))
-			//{ return; }
-
-			//	console.log("eOnMosBtnUp");
-			ePushMosIpt(l_This, i_TchId_Mos, tPntIpt.tKind.i_TchEnd, a_Evt);
+			ePushMosIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
 		};
 
 		a_This.e_fOnMosMove = stFctnUtil.cBindThis(a_This, l_fOnMosMove);
@@ -115,12 +120,34 @@ function fOnIcld(a_Errs)
 		window.addEventListener("mousedown", a_This.e_fOnMosBtnDown, false);
 		window.addEventListener("mouseup", a_This.e_fOnMosBtnUp, false);
 
-//		document.addEventListener("dblclick", function (a_Evt)
-//		{
-//		//	console.log("dblclick")
-//			a_Evt.preventDefault();
-//			a_Evt.stopImmediatePropagation();
-//		});
+
+		var l_fOnTchMove = function (a_Evt)
+		{
+			var l_This = a_This;
+			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
+			ePushTchIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
+		};
+
+		var l_fOnTchDown = function (a_Evt)
+		{
+			var l_This = a_This;
+			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
+			ePushTchIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
+		};
+
+		var l_fOnTchUp = function (a_Evt)
+		{
+			var l_This = a_This;
+			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
+			ePushTchIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
+		};
+
+		a_This.e_fOnTchMove = stFctnUtil.cBindThis(a_This, l_fOnTchMove);
+		a_This.e_fOnTchDown = stFctnUtil.cBindThis(a_This, l_fOnTchDown);
+		a_This.e_fOnTchUp = stFctnUtil.cBindThis(a_This, l_fOnTchUp);
+		window.addEventListener("touchmove", a_This.e_fOnTchMove, false);
+		window.addEventListener("touchstart", a_This.e_fOnTchDown, false);
+		window.addEventListener("touchend", a_This.e_fOnTchUp, false);
 	}
 
 	function eUrgPageEvtHdlr(a_This)
@@ -134,16 +161,17 @@ function fOnIcld(a_Errs)
 		a_This.e_fOnMosMove = null;
 		a_This.e_fOnMosBtnDown = null;
 		a_This.e_fOnMosBtnUp = null;
+
+		window.removeEventListener("touchmove", a_This.e_fOnTchMove, false);
+		window.removeEventListener("touchstart", a_This.e_fOnTchDown, false);
+		window.removeEventListener("touchend", a_This.e_fOnTchUp, false);
+		a_This.e_fOnTchMove = null;
+		a_This.e_fOnTchDown = null;
+		a_This.e_fOnTchUp = null;
 	}
 
-	function ePushMosIpt(a_This, a_TchId, a_Kind, a_Evt)
+	function ePushMosIpt(a_This, a_Kind, a_Evt)
 	{
-		var l_X = a_Evt.clientX, l_Y = a_Evt.clientY;
-//		var l_MainCvsCltBbox = stRltmAfx.cAcsMainCvsCltBbox();
-//		var l_CvsX = a_CltX - l_MainCvsCltBbox.c_X;
-//		var l_CvsY = a_CltY - l_MainCvsCltBbox.c_Y;
-//		eTrgrTch(a_TchId, a_Kind, l_CvsX, l_CvsY);
-
 		// 立即处理？此时只有一个触点
 		var l_PntIpt;
 		if (a_This.e_ImdtHdl)
@@ -151,7 +179,7 @@ function fOnIcld(a_Errs)
 			if (a_This.e_fImdtHdlr)
 			{
 				l_PntIpt = a_This.e_ImdtPntIpt;
-				l_PntIpt.c_Tchs[0].cCrt(a_TchId, a_Kind, l_X, l_Y, a_Evt);
+				l_PntIpt.c_Tchs[0].cCrt(i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
 				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
 				a_This.e_fImdtHdlr(l_PntIpt);				// 处理
 				eActTchsUrg(a_This, l_PntIpt);				// 注销活动触点
@@ -160,7 +188,45 @@ function fOnIcld(a_Errs)
 		}
 		else // 把输入缓冲起来
 		{
-			eTrgrTch(a_This, a_TchId, a_Kind, a_Evt);
+			eTrgrTch(a_This, i_TchId_Mos, a_Kind, a_Evt);
+		}
+	}
+
+	function ePushTchIpt(a_This, a_Kind, a_Evt)
+	{
+		// 当前正在追踪的触点在touches，但是触摸结束时该数组就变空，此时应使用changedTouches
+	//	var l_EvtTchs = a_Evt.touches;
+		var l_EvtTchs = (tPntIptKind.i_TchEnd == a_Kind) ? a_Evt.changedTouches : a_Evt.touches;
+
+		// 立即处理？
+		var l_PntIpt;
+		if (a_This.e_ImdtHdl)
+		{
+			if (a_This.e_fImdtHdlr)
+			{
+				l_PntIpt = new tPntIpt(0);
+				stAryUtil.cFor(l_EvtTchs,
+					function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
+					{
+						l_PntIpt.eAddTch(null, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
+					});
+				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
+				a_This.e_fImdtHdlr(l_PntIpt);				// 处理
+				eActTchsUrg(a_This, l_PntIpt);				// 注销活动触点
+				stAryUtil.cFor(l_PntIpt.c_Tchs,
+					function (a_Tchs, a_TchIdx, a_Tch)
+					{
+						a_Tch.eRspsByDomEvtFlag();		// 响应事件标志
+					});
+			}
+		}
+		else // 把输入缓冲起来
+		{
+			stAryUtil.cFor(l_EvtTchs,
+				function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
+				{
+					eTrgrTch(a_This, a_EvtTch.identifier, a_Kind, a_EvtTch);
+				});
 		}
 	}
 
@@ -329,6 +395,7 @@ function fOnIcld(a_Errs)
 				l_This.e_PcdrTrgrTch = [];		// 程序触发触摸
 				l_This.e_ActTchs = [];			// 活动触点
 				l_This.e_MosDown = false;		// 鼠标按下？
+				l_This.e_IgnrMosEvt = false;	// 忽略鼠标事件？
 				l_This.e_ImdtHdl = true;		// 立即处理？
 				l_This.e_fImdtHdlr = null;		// 立即处理函数
 
@@ -632,7 +699,7 @@ function fOnIcld(a_Errs)
 			,
 			eRspsByDomEvtFlag : function ()
 			{
-				if (! this.c_Evt)
+				if ((! this.c_Evt) || (! this.c_Evt.preventDefault))
 				{ return this; }
 
 				if (this.c_Hdld || this.c_PvtDft)		{ this.c_Evt.preventDefault(); }

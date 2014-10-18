@@ -786,7 +786,16 @@
 		{
 			if (! e_Dom_body)
 		//	{ e_Dom_body = document.getElementsByTagName("body")[0]; }
-			{ e_Dom_body = document.getElementById("ok_3dBody"); }	// 用3D页体
+			{
+				// 用3D页体
+				e_Dom_body = document.getElementById("ok_3dBody");
+				if (! e_Dom_body)
+				{
+					e_Dom_body = document.createElement("div");
+					e_Dom_body.id = "ok_3dBody";
+					document.getElementsByTagName("body")[0].appendChild(e_Dom_body);
+				}
+			}
 
 			if (! e_DomAll)
 			{

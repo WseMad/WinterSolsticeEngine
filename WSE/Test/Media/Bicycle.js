@@ -329,7 +329,7 @@ function fOnIcld(a_Errs)
 								return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1, a_Scl, false);
 							};
 
-							a_Efc.c_fEntMove = function (a_Rst, a_DomElmt, a_Bgn, a_End,
+							a_Efc.c_fEntDplc = function (a_Rst, a_DomElmt, a_Bgn, a_End,
 														 a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 							{
 								var l_C1x = window.innerWidth / 2, l_C1y = Math.abs(a_End.y - a_Bgn.y) / 2;
