@@ -685,6 +685,188 @@
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 正在加载
+
+	var stNowLoad;
+	(function ()
+	{
+		/// 正在加载
+		stNowLoad = function () { };
+		nWse.stNowLoad = stNowLoad;
+		stNowLoad.oc_nHost = nWse;
+		stNowLoad.oc_FullName = nWse.ocBldFullName("stNowLoad");
+
+		/// 构建全名
+		stNowLoad.ocBldFullName = function (a_Name)
+		{ return stNowLoad.oc_FullName + "." + a_Name; };
+
+		//======== 私有字段
+
+		var e_TmotId = null, e_LastTime = 0, e_Timer = 0;
+		var e_SphTot = 7, e_SphFnlRds = 16, e_SphAry = [];
+		var e_Dom_body = null, e_WndInrHgt = 0, e_DomAll = null;
+
+		//======== 私有函数
+
+		// 一帧
+		function eOneFrm()
+		{
+			// 更新高度
+			if (e_WndInrHgt != window.innerHeight)
+			{
+				e_WndInrHgt = window.innerHeight;
+				e_DomAll.style.height = e_WndInrHgt.toString() + "px";
+			}
+
+			var l_Now = Date.now() / 1000;
+			var l_FrmItvl = Math.min(l_Now - e_LastTime, 1);	// 限制每秒1帧
+			e_LastTime = l_Now;
+			e_Timer += l_FrmItvl;
+
+			var l_Cx = window.innerWidth / 2, l_Cy = window.innerHeight / 2;
+			var l_Spd = 3.0;
+			var l_GrowTime = 3;
+			var l_MinRdsScl = 0.3;
+			var l_OvalAr = 2.0 / 1.00;
+			var l_A = Math.min(256, window.innerWidth / 4);
+			var l_B = l_A / l_OvalAr;
+			e_SphFnlRds = Math.floor(l_A / e_SphTot);
+			var l_X, l_Y, l_S, l_R;
+			var l_RadPerCir = 2 * Math.PI / e_SphTot;
+
+			var i, l_Rad, l_Sin, l_Sph, l_Stl;
+			for (i = 0; i<e_SphTot; ++i)
+			{
+				l_Sph = e_SphAry[i];
+				l_Stl = l_Sph.c_Dom.style;
+
+			//	e_Timer = l_GrowTime;
+				l_Rad = i * l_RadPerCir + e_Timer * l_Spd;
+				l_X = l_A * Math.cos(l_Rad);
+				l_Sin = Math.sin(l_Rad);
+				l_Y = l_B * l_Sin;
+				l_S = Math.max((l_Y + l_B) / (l_B + l_B), l_MinRdsScl);
+				l_Y *= (1.00 * Math.cos(e_Timer));
+				l_Sph.c_Rds = e_SphFnlRds * Math.min(e_Timer / l_GrowTime, 1);	// 成长
+				l_R = l_Sph.c_Rds * l_S;
+
+				l_Stl.left = Math.round(l_X - l_Sph.c_Rds + l_Cx).toString() + "px";
+				l_Stl.top  = Math.round(l_Y - l_Sph.c_Rds + l_Cy).toString() + "px";
+				l_Stl.width = Math.round(l_R * 2).toString() + "px";
+				l_Stl.height = l_Stl.width;
+				l_Stl.borderRadius = Math.floor(l_R).toString() + "px";
+				l_Stl.zIndex = Math.floor((l_Sin * 0.5 + 0.50001) * e_SphTot).toString();	// 把l_Sin规整到[0.00001, 1.00001]
+
+				if (l_R >= 1)
+				{ l_Stl.boxShadow = "0px 0px " + Math.floor(l_R * 2).toString() + "px " + l_Stl.backgroundColor; }
+				else
+				if (l_Stl.boxShadow)
+				{ l_Stl.boxShadow = ""; }
+			}
+
+			// 下一帧
+			eNextFrm();
+		}
+
+		function eNextFrm()
+		{
+			e_TmotId = setTimeout(eOneFrm, 15);	// FPS=60
+		}
+
+		function eCclTmr()
+		{
+			if (e_TmotId)
+			{
+				clearTimeout(e_TmotId);
+				e_TmotId = null;
+			}
+		}
+
+		function eSttAnmt()
+		{
+			if (! e_Dom_body)
+			{ e_Dom_body = document.getElementsByTagName("body")[0]; }
+
+			if (! e_DomAll)
+			{
+				e_DomAll = document.createElement("div");
+				e_DomAll.id = "ok_NowLoad";
+				e_WndInrHgt = window.innerHeight;
+				e_DomAll.style.height = e_WndInrHgt.toString() + "px";
+				e_DomAll.style.backgroundColor = "black";	// 黑色背景彰显夜空
+				e_Dom_body.appendChild(e_DomAll);	// 加入<body>
+			}
+
+			var i, l_Sph;
+			for (i = 0; i<e_SphTot; ++i)
+			{
+				l_Sph = {};
+				l_Sph.c_Dom = document.createElement("div");
+				l_Sph.c_Dom.style.position = "absolute";	// 绝对定位
+				e_SphAry.push(l_Sph);
+				e_DomAll.appendChild(l_Sph.c_Dom);	// 加入<div id="ok_NowLoad">
+			}
+
+			e_SphAry[0].c_Dom.style.backgroundColor = "rgba(255, 0, 0, 1)";
+			e_SphAry[6].c_Dom.style.backgroundColor = "rgba(255, 128, 0, 1)";
+			e_SphAry[5].c_Dom.style.backgroundColor = "rgba(255, 255, 0, 1)";
+			e_SphAry[4].c_Dom.style.backgroundColor = "rgba(0, 255, 0, 1)";
+			e_SphAry[3].c_Dom.style.backgroundColor = "rgba(0, 255, 255, 1)";
+			e_SphAry[2].c_Dom.style.backgroundColor = "rgba(0, 0, 255, 1)";
+			e_SphAry[1].c_Dom.style.backgroundColor = "rgba(255, 0, 255, 1)";
+
+			// 开始
+			stNowLoad.cBgn();
+		}
+
+		// DOM就绪时立即开始动画
+		document.addEventListener("DOMContentLoaded", eSttAnmt);
+
+		//======== 公有函数
+
+		/// 存取显示DOM元素
+		stNowLoad.cAcsDsplDom = function ()
+		{
+			return e_DomAll;
+		};
+
+		/// 开始
+		stNowLoad.cBgn = function ()
+		{
+			// 取消定时器并复位变量
+			eCclTmr();
+			e_Timer = 0;
+			e_LastTime = Date.now() / 1000;
+
+			// 显示
+			if (e_DomAll && e_DomAll.style.display)
+			{ e_DomAll.style.display = ""; }
+
+			// 第一帧
+			eNextFrm();
+			return stNowLoad;
+		};
+
+		/// 结束
+		/// a_fCabk：void f()，回调
+		stNowLoad.cEnd = function (a_fCabk)
+		{
+			// 取消定时器
+			eCclTmr();
+
+			// 不显示
+			if (e_DomAll && ("none" != e_DomAll.style.display))
+			{ e_DomAll.style.display = "none"; }
+
+			// 回调
+			if (a_fCabk)
+			{ a_fCabk(); }
+			return stNowLoad;
+		};
+	})();
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over
 
 	if (i_InNodeJs)

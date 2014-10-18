@@ -8,25 +8,30 @@
 	<title>UI</title>
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
-	<link rel="stylesheet" type="text/css" href="../cnWse/PcdrLot.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgts.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Blue.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Purple.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 	
-	<!--<link rel="stylesheet" type="text/css" href="./cnWse/(0)Plmvc.css" />
-	<link rel="stylesheet" type="text/css" href="./cnWse/PcdrLot.css" />
-	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgts.css" />
-	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Blue.css" />
-	<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Purple.css" />
-	<script type="text/javascript" src="./(0)Seed.js"></script>
-	<script type="text/javascript" src="./(1)WSE_nWse.js"></script>
-	<script type="text/javascript" src="./(2)WSE_nUi.js"></script>
-	<script type="text/javascript" src="./(3)WSE_nUi_nCmnWgts.js"></script>
-	<script type="text/javascript" src="./(4)WSE_nGpu.js"></script>-->
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/(0)Plmvc.css" />-->
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/PcdrLot.css" />-->
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgts.css" />-->
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Blue.css" />-->
+	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Purple.css" />-->
+	<!--<script type="text/javascript" src="./(0)Seed.js"></script>-->
+	<!--<script type="text/javascript" src="./(1)WSE_nWse.js"></script>-->
+	<!--<script type="text/javascript" src="./(2)WSE_nUi.js"></script>-->
+	<!--<script type="text/javascript" src="./(3)WSE_nUi_nCmnWgts.js"></script>-->
+	<!--<script type="text/javascript" src="./(4)WSE_nGpu.js"></script>-->
 
 
 	<style type="text/css">
+
+		html
+		{
+			/*min-height: 100%;*/
+			/*height: 100%;*/
+		}
 
 		body
 		{
@@ -283,9 +288,9 @@
 				<li ><a href="#About">About</a></li>
 				<li ><a href="#Contact">Contact</a></li>
 
-				<!--<li ><a href="#Home">Home</a></li>-->
-				<!--<li ><a href="#News">News</a></li>-->
-				<!--<li ><a href="#Archives">Archives</a></li>-->
+				<!--<li ><a href="#666">Home</a></li>-->
+				<!--<li ><a href="#777">News</a></li>-->
+				<!--<li ><a href="#888">Archives</a></li>-->
 				<!--<li ><a href="#Home">Home</a></li>-->
 				<!--<li ><a href="#News">News</a></li>-->
 				<!--<li ><a href="#Archives">Archives</a></li>-->
@@ -321,6 +326,7 @@
 		window.addEventListener("load", function ()
 		{
 			console.log("window.onload");
+			nWse.stNowLoad.cEnd(null);	// 结束
 
 			nWse.stAsynIcld.cFromApp("nWse",
 					[
@@ -715,11 +721,6 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Nav",
 						c_PutSrc: "k_Nav",
-						c_WidPct: 50,
-						c_MinWid: 300,
-						c_MaxWid: 500,
-						c_PutRad: 160 * Math.PI / 180,
-						c_GapRad: 5 * Math.PI / 180,
 					//	c_AutoRandEfc : true,
 						c_fOnAnmtEnd_Lea: function (a_Nav)
 						{

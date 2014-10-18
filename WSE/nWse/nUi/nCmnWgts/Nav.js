@@ -96,61 +96,65 @@ function fOnIcld(a_Errs)
 	function fRgltPosDim(a_This)
 	{
 		// 首先计算宽度，确定目标区域
-		tSara.scEnsrTemps(1);
-		var l_WndArea = tSara.sc_Temps[0], l_TgtArea = a_This.d_TgtArea;
-		l_WndArea.cCrt(0, 0, window.innerWidth, window.innerHeight);
+//		tSara.scEnsrTemps(1);
+//		var l_WndArea = tSara.sc_Temps[0], l_TgtArea = a_This.d_TgtArea;
+//		l_WndArea.cCrt(0, 0, window.innerWidth, window.innerHeight);
 
-		var l_Wid, l_Hgt;
-		l_Wid = l_WndArea.c_W * (a_This.d_Cfg.c_WidPct || 100) / 100;
-		l_Wid = Math.max(l_Wid, a_This.d_Cfg.c_MinWid || 300);
-		l_Wid = Math.min(l_Wid, a_This.d_Cfg.c_MaxWid || 600);
-		l_Hgt = l_Wid;
-		l_TgtArea.cCrt(0, 0, l_Wid, l_Hgt);
-		tSara.scDockPut(l_TgtArea, l_WndArea, (a_This.d_Cfg.c_DockMode || tSara.tBdrNum.i_CtDn));
-		tSara.scAlnPxl(l_TgtArea);
+		var l_IsLvesVsb = a_This.cIsLvesVsb();
 
-		// 然后，算法详见演算纸第五张……
-		a_This.d_PutRad = a_This.d_Cfg.c_PutRad || Math.PI;
-		a_This.d_GapRad = a_This.d_Cfg.c_GapRad || 0;
-		a_This.d_RootRdsScl = a_This.d_Cfg.c_RootRdsScl || 0.3;
+		var i_2Pi = 2 * Math.PI;
+		var i_RadRge = i_2Pi;
+		var i_MinR0 = 32, i_MaxR0 = 64;
+		var l_R0 = Math.round(stNumUtil.cClmOnNum(window.innerWidth / 8, i_MinR0, i_MaxR0));
+		var l_Dist = l_R0 * 3;
+		var l_L = a_This.d_LiAry.length;
 
-		// 下面几步计算使用数学书上的坐标系，X轴向右，Y轴向上
-		var l_LiAmt = a_This.d_LiAry.length;
-		a_This.d_LeafRad = a_This.d_PutRad / (l_LiAmt - 1) - a_This.d_GapRad;
-		var l_Tht0 = (Math.PI - a_This.d_PutRad) / 2;
-		var l_Phi = a_This.d_LeafRad / 2;
-		var l_CosTht0 = Math.cos(l_Tht0), l_SinPhi = Math.sin(l_Phi);
-		a_This.d_LeafDist = Math.round((a_This.d_TgtArea.c_W / 2) / (l_CosTht0 + l_SinPhi));
-		a_This.d_LeafRds = Math.round(a_This.d_LeafDist * l_SinPhi);
+		var l_R1 = l_R0;
+		var l_Tht = Math.asin(l_R1 / l_Dist);
+		var l_Phi = 5 * Math.PI / 180;
+		var l_Psi = 2 * l_Tht * l_L + l_Phi * (l_L - 1);
+		if (l_Psi > i_RadRge)
+		{
+			if (2 * l_Tht * l_L < i_RadRge)
+			{
+				l_Phi = (i_RadRge - 2 * l_Tht * l_L) / (l_L - 1);
+			}
+			else
+			{
+				l_Tht = Math.PI / l_L;
+				l_Phi = 0;
+				l_R1 = Math.round(l_Dist * Math.sin(l_Tht));
+			}
 
-		// 下面几步计算使用CSS的坐标系，X轴向右，Y轴向下
-		a_This.d_RootRds = Math.round(a_This.d_TgtArea.c_W / 2 * a_This.d_RootRdsScl);
-		var l_Cx = a_This.d_TgtArea.c_X + a_This.d_TgtArea.c_W / 2;
-		var l_Cy = a_This.d_TgtArea.c_Y + a_This.d_TgtArea.c_H - a_This.d_RootRds;
+			l_Psi = i_RadRge;
+		}
+
+		a_This.d_RootRds = l_R0;
+		a_This.d_LeafRds = l_R1;
+		a_This.d_LeafRad = 2 * l_Tht;
+		a_This.d_LeafDist = l_Dist;
+
+		var l_Cx = window.innerWidth / 2, l_Cy = window.innerHeight / 2;
 		a_This.d_RootX = l_Cx - a_This.d_RootRds;
-		a_This.d_RootY = l_Cy - a_This.d_RootRds;
-		stCssUtil.cSetPosDim(a_This.d_PutTgt, a_This.d_RootX, a_This.d_RootY,
+		a_This.d_RootY0 = window.innerHeight - a_This.d_RootRds * 2;
+		a_This.d_RootY1 = l_Cy - a_This.d_RootRds;
+		stCssUtil.cSetPosDim(a_This.d_PutTgt, a_This.d_RootX, a_This.d_RootY0,
 				a_This.d_RootRds * 2, a_This.d_RootRds * 2);
 		a_This.d_PutTgt.style.borderRadius = a_This.d_RootRds.toString() + "px";	// 设置根的边框半径，使成为圆形
 
 		a_This.d_CenX = l_Cx;
 		a_This.d_CenY = l_Cy;
-		a_This.d_LeafBornX = l_Cx - a_This.d_LeafRds;
-		a_This.d_LeafBornY = l_Cy - a_This.d_LeafRds;
-		if (1) // 叶片绝对定位，为了支持IE……
-		{
-			a_This.d_LeafBornX -= a_This.d_RootX;
-			a_This.d_LeafBornY -= a_This.d_RootY;
-		}
+		a_This.d_LeafBornX = 0;
+		a_This.d_LeafBornY = 0;
 
 		// 对每个<li>
-		var l_New = (! a_This.d_LeafAry) || (a_This.d_LeafAry.length != l_LiAmt);
+		var l_New = (! a_This.d_LeafAry) || (a_This.d_LeafAry.length != l_L);
 		if (l_New)
-		{ a_This.d_LeafAry = new Array(l_LiAmt); }
+		{ a_This.d_LeafAry = new Array(l_L); }
 
-		var l_TotBgnRad = l_Tht0 - Math.PI;	// 从左向右排列
+		var l_TotBgnRad = -Math.PI / 2 - l_Psi / 2 + l_Tht;	// 从左向右排列
 		var l_Idx, l_Leaf, l_Cos, l_Sin, l_X, l_Y;
-		for (l_Idx = 0; l_Idx<l_LiAmt; ++l_Idx)
+		for (l_Idx = 0; l_Idx<l_L; ++l_Idx)
 		{
 			if (! a_This.d_LeafAry[l_Idx])
 			{ a_This.d_LeafAry[l_Idx] = { c_TgtArea: new tSara() }; }
@@ -162,14 +166,8 @@ function fOnIcld(a_Errs)
 				stCssUtil.cAddCssc(l_Leaf.c_Dom, "cnWse_tNav_Leaf");
 			}
 
-			l_Leaf.c_TgtRad = l_TotBgnRad + a_This.d_LeafRad * l_Idx + a_This.d_GapRad * l_Idx;
+			l_Leaf.c_TgtRad = l_TotBgnRad + (a_This.d_LeafRad + l_Phi) * l_Idx;
 			fCalcLeafTgtAreaByRad(l_Leaf.c_TgtArea, a_This, l_Leaf.c_TgtRad);
-
-			if (1) // 叶片绝对定位，为了支持IE……
-			{
-				l_Leaf.c_TgtArea.c_X -= a_This.d_RootX;
-				l_Leaf.c_TgtArea.c_Y -= a_This.d_RootY;
-			}
 
 			// 设置<li>和<a>的边框半径，使成为圆形
 			var l_BdrRds = a_This.d_LeafRds.toString() + "px";
@@ -185,8 +183,9 @@ function fOnIcld(a_Errs)
 			// 添加到放置目标
 			if (l_New)
 			{
+				//【已经改成绝对定位，所以不用放在<body>里了】
 				a_This.d_PutTgt.appendChild(l_Leaf.c_Dom);		// 放在这里面更好，可IE愚蠢的脏矩形算法……
-			//	stDomUtil.cAcsBody().appendChild(l_Leaf.c_Dom);	// fixed里不能有fixed，所以放在<body>里
+				//	stDomUtil.cAcsBody().appendChild(l_Leaf.c_Dom);	// fixed里不能有fixed，所以放在<body>里
 			}
 		}
 
@@ -235,12 +234,12 @@ function fOnIcld(a_Errs)
 
 	function fCalcLeafTgtAreaByRad(a_Rst, a_This, a_Rad)
 	{
+		// 计算圆心(l_X, l_Y)，注意现在是绝对定位，不用 - a_This.d_LeafRds
 		var l_Cos = Math.cos(a_Rad);
 		var l_Sin = Math.sin(a_Rad);
-		var l_X = a_This.d_CenX + a_This.d_LeafDist * l_Cos;
-		var l_Y = a_This.d_CenY + a_This.d_LeafDist * l_Sin;
-		a_Rst.cCrt(l_X - a_This.d_LeafRds, l_Y - a_This.d_LeafRds,
-				a_This.d_LeafRds * 2, a_This.d_LeafRds * 2);
+		var l_X = a_This.d_LeafDist * l_Cos;
+		var l_Y = a_This.d_LeafDist * l_Sin;
+		a_Rst.cCrt(l_X, l_Y, a_This.d_LeafRds * 2, a_This.d_LeafRds * 2);
 	}
 
 	function fOnLvesAnmtBgn_Ent(a_This, a_Idx, a_Leaf)
@@ -312,13 +311,6 @@ function fOnIcld(a_Errs)
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
 			/// c_DomPrn：Node，父节点，默认<body>
-			/// c_WidPct：Number，宽度百分比∈[0, 100]，默认100
-			/// c_MinWid：Number，最小宽度（像素），默认300
-			/// c_MaxWid：Number，最大宽度（像素），默认600
-			/// c_DockMode：tSara.tBdrNum，停靠模式，默认i_CtDn
-			/// c_PutRad：Number，摆放弧度，默认π
-			/// c_GapRad：Number，间隔弧度，默认0
-			/// c_RootRdsScl：Number，根半径比例，默认0.3
 			/// c_AutoRandEfc：Boolean，自动随机特效，默认false
 			/// c_fOnAnmtEnd_Ent：void f(a_Nav)，当进入动画结束时
 			/// c_fOnAnmtEnd_Lea：void f(a_Nav)，当离开动画结束时
@@ -411,11 +403,11 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-						// 如果点中根，显示隐藏叶片
+						// 如果点中根，切换叶片显示
 						if (stDomUtil.cIsSelfOrAcst(l_This.d_PutTgt, a_DmntTch.cAcsEvtTgt()) &&
 							(! fIsPickLeaf(l_This, a_DmntTch.cAcsEvtTgt())))
 						{
-							l_ActvEfc.vcShowHideLves(! l_ActvEfc.vcIsLvesVsb());
+							l_This.dTglLvesDspl();
 						}
 
 						a_DmntTch.c_Hdld = true;		// 已处理
@@ -494,6 +486,30 @@ function fOnIcld(a_Errs)
 								{ return (a_Efc instanceof a_tClass); });
 				return (l_Idx >= 0) ? this.d_EfcAry[l_Idx] : null;
 			}
+			,
+			/// 切换叶片显示
+			dTglLvesDspl : function ()
+			{
+				var l_This = this;
+				var l_ActvEfc = l_This.d_EfcAry[l_This.d_ActvEfcIdx];
+				var l_IsLvesVsb = l_ActvEfc.vcIsLvesVsb();
+
+				// 根
+				stCssUtil.cAnmt(l_This.d_PutTgt,
+					{
+						"top" : (l_IsLvesVsb ? l_This.d_RootY0 : l_This.d_RootY1).toString() + "px"
+					},
+					{
+						c_Dur: 0.6,
+						c_fEsn: function (a_Scl)
+						{
+							return nWse.stNumUtil.cPrbItp(0, 1, a_Scl, false);
+						}
+					});
+
+				// 叶片
+				l_ActvEfc.vcShowHideLves(! l_IsLvesVsb);
+			}
 		}
 		,
 		{
@@ -542,7 +558,13 @@ function fOnIcld(a_Errs)
 			dGetNavX : function () { return this.d_Host.d_RootX; }
 			,
 			/// 获取导航y坐标
-			dGetNavY : function () { return this.d_Host.d_RootY; }
+			dGetNavY : function () { return this.vcIsLvesVsb() ? this.d_Host.d_RootY1 : this.d_Host.d_RootY0; }
+			,
+			/// 获取导航y0坐标
+			dGetNavY0 : function () { return this.d_Host.d_RootY0; }
+			,
+			/// 获取导航y1坐标
+			dGetNavY1 : function () { return this.d_Host.d_RootY1; }
 			,
 			/// 获取导航中心x坐标
 			dGetNavCenX : function () { return this.d_Host.d_CenX; }
@@ -557,22 +579,10 @@ function fOnIcld(a_Errs)
 			dGetLeafBornY : function () { return this.d_Host.d_LeafBornY; }
 			,
 			/// 获取叶瓣中年x坐标
-			dGetLeafMidX : function ()
-			{
-				var l_Rst = this.d_Host.d_CenX - this.d_Host.d_LeafRds;
-				if (1) // 叶片绝对定位，为了支持IE……
-				{ l_Rst -= this.d_Host.d_RootX; }
-				return l_Rst;
-			}
+			dGetLeafMidX : function () { return 0; }
 			,
 			/// 获取叶瓣中年y坐标
-			dGetLeafMidY : function ()
-			{
-				var l_Rst = this.d_Host.d_CenY - this.d_Host.d_LeafDist - this.d_Host.d_LeafRds;
-				if (1) // 叶片绝对定位，为了支持IE……
-				{ l_Rst -= this.d_Host.d_RootY; }
-				return l_Rst;
-			}
+			dGetLeafMidY : function () { return -this.d_Host.d_LeafDist; }
 			,
 			/// 获取叶瓣半径
 			dGetLeafRds : function () { return this.d_Host.d_LeafRds; }
@@ -729,7 +739,7 @@ function fOnIcld(a_Errs)
 						c_Dur: 0.6,
 						c_fEsn: function (a_Scl)
 						{
-							return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+							return nWse.stNumUtil.cPrbItp(0, 1, a_Scl, false);
 						},
 						c_fOnEnd: function ()
 						{
@@ -860,6 +870,8 @@ function fOnIcld(a_Errs)
 					var l_IP = tSara.sc_Temps[0].cCrt$Wh(a_Leaf.c_TgtArea.c_W, a_Leaf.c_TgtArea.c_H);
 					var l_RDx = (l_This.dGetNavX() + stEfcMgr.cGetTgtAreaCenX(a_Leaf.c_TgtArea)) - l_This.dGetNavCenX();
 					var l_RDy = (l_This.dGetNavY() + stEfcMgr.cGetTgtAreaCenY(a_Leaf.c_TgtArea)) - l_This.dGetNavCenY();
+//					var l_RDx = (l_This.dGetNavX() + a_Leaf.c_TgtArea.c_X) - l_This.dGetNavCenX();
+//					var l_RDy = (l_This.dGetNavY() + a_Leaf.c_TgtArea.c_Y) - l_This.dGetNavCenY();
 					var l_Tht = (a_Ent ? -Math.PI : Math.PI) / l_This.dGetLeafAmt();	// 转动量取决于叶瓣数
 					var l_Cos = Math.cos(l_Tht), l_Sin = Math.sin(l_Tht);
 					var l_RRDx = l_RDx * l_Cos - l_RDy * l_Sin;
@@ -868,7 +880,7 @@ function fOnIcld(a_Errs)
 					if (1) // 叶片绝对定位，为了支持IE……
 					{
 						l_IP.c_X -= l_This.dGetNavX();
-						l_IP.c_Y -= l_This.dGetNavY();
+						l_IP.c_Y -= l_This.dGetNavY0(); // 注意总是选Y0
 					}
 					return l_IP;
 				}
@@ -1016,11 +1028,6 @@ function fOnIcld(a_Errs)
 							fCalcLeafTgtAreaByRad(l_AnmtTgtArea, l_This.cAcsHost(), a_Leaf.c_Rad);
 							a_Rst.x = l_AnmtTgtArea.c_X;
 							a_Rst.y = l_AnmtTgtArea.c_Y;
-							if (1) // 叶片绝对定位，为了支持IE……
-							{
-								a_Rst.x -= l_This.dGetNavX();
-								a_Rst.y -= l_This.dGetNavY();
-							}
 						},
 						c_fOnEnd: function ()
 						{
@@ -1044,7 +1051,8 @@ function fOnIcld(a_Errs)
 						c_Dur: 0.4,
 						c_fEsn: function (a_Scl)
 						{
-							return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+							return nWse.stNumUtil.cPrbItp(0, 1, a_Scl, false);
+						//	return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
 						},
 						c_fOnEnd: function ()
 						{
@@ -1108,11 +1116,6 @@ function fOnIcld(a_Errs)
 							fCalcLeafTgtAreaByRad(l_AnmtTgtArea, l_This.cAcsHost(), a_Leaf.c_Rad);
 							a_Rst.x = l_AnmtTgtArea.c_X;
 							a_Rst.y = l_AnmtTgtArea.c_Y;
-							if (1) // 叶片绝对定位，为了支持IE……
-							{
-								a_Rst.x -= l_This.dGetNavX();
-								a_Rst.y -= l_This.dGetNavY();
-							}
 						},
 						c_fOnEnd: function ()
 						{

@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>??</title>
+	<title>示例应用程序</title>
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgts.css" />
@@ -27,6 +27,10 @@
 
 	<style type="text/css">
 
+		body
+		{
+			background-color: white;
+		}
 
 	</style>
 </head>
@@ -40,11 +44,11 @@
 <!--<canvas id="k_Cvs" width="300" height="300"></canvas>-->
 <!--<img src="Media/myship.png" style="cursor:pointer;border: 1px solid black;" />-->
 
-<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
+<div id="k_PutTgt_Lot">
 
 </div>
 
-<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
+<div id="k_PutSrc_Lot">
 
 	<!---->
 	<!--  -->
@@ -61,6 +65,7 @@ var l_Glb = i_InNodeJs ? global : self;
 window.addEventListener("load", function ()
 {
 	console.log("window.onload");
+//	-webkit-transform: rotateY(45deg);
 
 	nWse.stAsynIcld.cFromApp("nWse",
 	[
@@ -202,6 +207,56 @@ function fOnIcld(a_Errs)
 			stVtuCsl.cHotKeyUi(true);	// F2快捷键
 
 			//======================== 其他
+
+			var l_DsplDom = nWse.stNowLoad.cAcsDsplDom();
+			nWse.stCssUtil.cAnmt(l_DsplDom,
+					{
+						"Wse_3dTsfm" : [
+							{
+								c_Name : "scale3d",
+								c_End : { x:0.5, y:0.5, z:1 }
+							},
+							{
+								c_Name : "rotate3d",
+								c_End : { x:0, y:1, z:0, w: Math.PI * 0.5 }
+//								c_fDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
+//													a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+//								{
+//									a_Rst.c_FrmTime += a_FrmItvl;
+//									var l_a = Math.PI / 12, l_w = Math.PI;
+//									a_Rst.z = l_a * Math.sin(l_w * a_Rst.c_FrmTime);
+//								}
+							}
+						]
+					},
+					{
+						c_Dur : 3,
+						c_Tot: 1,
+						c_fOnEnd: function ()
+						{
+							nWse.stCssUtil.cAnmt(l_DsplDom,
+									{
+										"Wse_3dTsfm" : [
+											{
+												c_Name : "scale3d",
+												c_End : { x:1, y:1, z:1 }
+											},
+											{
+												c_Name : "rotate3d",
+												c_End : { x:0, y:1, z:0, w: 0 }
+											}
+										]
+									},
+									{
+										c_Dur : 3,
+										c_Tot: 1,
+										c_fOnEnd: function ()
+										{
+
+										}
+									});
+						}
+					});
 		}
 		,
 		// 运行

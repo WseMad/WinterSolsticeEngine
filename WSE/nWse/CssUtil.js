@@ -82,11 +82,15 @@ function fOnIcld(a_Errs)
 			{ return; }
 
 			e_Wse_CssExtd = {
-				c_Tsfm : 1000,
-				"scale" : 1001,
-				"skew" : 1002,
-				"rotate" : 1003,
-				"translate" : 1004
+				i_2dTsfm : 20000,
+				"scale" : 20001,
+				"skew" : 20002,
+				"rotate" : 20003,
+				"translate" : 20004,
+				i_3dTsfm : 30000,
+				"scale3d" : 30001,
+				"rotate3d" : 30003,
+				"translate3d" : 30004
 			};
 		}
 
@@ -97,6 +101,9 @@ function fOnIcld(a_Errs)
 
 			var l_Stl = a_DomElmt.style;
 
+			if ("transform" in l_Stl)
+			{ e_BrsPfx_Tsfm = "transform"; }
+			else
 			if ("webkitTransform" in l_Stl)
 			{ e_BrsPfx_Tsfm = "webkitTransform"; }
 			else
@@ -108,9 +115,6 @@ function fOnIcld(a_Errs)
 			else
 			if ("msTransform" in l_Stl)
 			{ e_BrsPfx_Tsfm = "msTransform"; }
-			else
-		//	if ("transform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "transform"; }
 		}
 
 		function eIsWse_Css_TypeIdx(a_Idx)
@@ -243,11 +247,22 @@ function fOnIcld(a_Errs)
 		function eJumpToAnmtEnd(a_DomElmt, a_Rvs)
 		{
 			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-			var l_PN, l_Item, l_V;
+			var l_PN, l_Item, l_SV;
 			for (l_PN in l_fAnmt.Wse_Items)
 			{
 				l_Item = l_fAnmt.Wse_Items[l_PN];
-				a_DomElmt.style[l_PN] = a_Rvs ? l_Item.c_BgnStr : l_Item.c_EndStr;
+				l_SV = a_Rvs ? l_Item.c_BgnStr : l_Item.c_EndStr;
+
+				//【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
+				if (0 == l_PN.indexOf("Wse_"))
+				{
+					// 目前，扩展动画只有变换，所以不用分支检测
+					a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
+				}
+				else
+				{
+					a_DomElmt.style[l_PN] = l_SV;
+				}
 			}
 		}
 
@@ -358,16 +373,21 @@ function fOnIcld(a_Errs)
 							  a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 		{
 			// 变换
-			if (e_Wse_CssExtd.c_Tsfm == a_Item.c_TypeIdx)
+			if (e_Wse_CssExtd.i_2dTsfm == a_Item.c_TypeIdx)
 			{
-				eAnmtWse_CssExtd_Tsfm.apply(null, arguments);
+				eAnmtWse_CssExtd_2dTsfm.apply(null, arguments);
+			}
+			else
+			if (e_Wse_CssExtd.i_3dTsfm == a_Item.c_TypeIdx)
+			{
+				eAnmtWse_CssExtd_3dTsfm.apply(null, arguments);
 			}
 		}
 
-		function eAnmtWse_CssExtd_Tsfm(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur,
+		function eAnmtWse_CssExtd_2dTsfm(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur,
 							a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 		{
-			var l_CUT = a_DomElmt.Wse_CssUtil.c_Tsfm;
+			var l_CUT = a_DomElmt.Wse_CssUtil.c_2dTsfm;
 			var l_Item = a_Item, l_EsnScl = a_EsnScl;
 			var l_Sqnc = l_Item.c_Sqnc;
 			var l_CssStr = "";
@@ -442,14 +462,14 @@ function fOnIcld(a_Errs)
 					}
 					else
 					{
-						l_CUT.c_Rot.z = stNumUtil.cLnrItp(l_Bgn.z, l_End.z, l_EsnScl);
+						l_CUT.c_Rot.w = stNumUtil.cLnrItp(l_Bgn.w, l_End.w, l_EsnScl);
 					}
 
-					l_CUT.c_Rot.z = stNumUtil.cNmlzRad(l_CUT.c_Rot.z, false);	// 标准化
+					l_CUT.c_Rot.w = stNumUtil.cNmlzRad(l_CUT.c_Rot.w, false);	// 标准化
 
 					if (l_CssStr)
 					{ l_CssStr += " "; }
-					l_CssStr += "rotate(" + l_CUT.c_Rot.z + "rad)";
+					l_CssStr += "rotate(" + l_CUT.c_Rot.w + "rad)";
 				}
 				else
 			//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
@@ -478,18 +498,125 @@ function fOnIcld(a_Errs)
 			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
 		}
 
-		function eEnsrExtdAnmtTsfm(a_DomElmt)
+		function eAnmtWse_CssExtd_3dTsfm(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur,
+										 a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+		{
+			var l_CUT = a_DomElmt.Wse_CssUtil.c_3dTsfm;
+			var l_Item = a_Item, l_EsnScl = a_EsnScl;
+			var l_Sqnc = l_Item.c_Sqnc;
+			var l_CssStr = "";
+			var l_Bgn, l_End;
+
+			stAryUtil.cFor(l_Sqnc,
+				function (a_Ary, a_Idx, a_Tsfm)
+				{
+					var l_Tsfm = a_Tsfm;
+					if (a_Rvs)	// 需要反转始终值
+					{
+						l_Bgn = l_Tsfm.c_End;
+						l_End = l_Tsfm.c_Bgn;
+					}
+					else
+					{
+						l_Bgn = l_Tsfm.c_Bgn;
+						l_End = l_Tsfm.c_End;
+					}
+
+					if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
+					{
+						if (a_Ifnt)
+						{
+							if (l_Tsfm.c_fDplc)
+							{
+								l_Tsfm.c_fDplc(l_CUT.c_Scl, a_DomElmt, l_Bgn, l_End,
+									a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							}
+						}
+						else
+						{
+							l_CUT.c_Scl.x = stNumUtil.cLnrItp(l_Bgn.x, l_End.x, l_EsnScl);
+							l_CUT.c_Scl.y = stNumUtil.cLnrItp(l_Bgn.y, l_End.y, l_EsnScl);
+							l_CUT.c_Scl.z = stNumUtil.cLnrItp(l_Bgn.z, l_End.z, l_EsnScl);
+						}
+
+						if (l_CssStr)
+						{ l_CssStr += " "; }
+						l_CssStr += "scale3d(" + l_CUT.c_Scl.x + "," + l_CUT.c_Scl.y + "," + l_CUT.c_Scl.z + ")";
+					}
+					else
+					if (e_Wse_CssExtd["rotate3d"] == l_Tsfm.c_TypeIdx)
+					{
+						if (a_Ifnt)
+						{
+							if (l_Tsfm.c_fDplc)
+							{
+								l_Tsfm.c_fDplc(l_CUT.c_Rot, a_DomElmt, l_Bgn, l_End,
+									a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							}
+						}
+						else
+						{
+							l_CUT.c_Rot.x = stNumUtil.cLnrItp(l_Bgn.x, l_End.x, l_EsnScl);
+							l_CUT.c_Rot.y = stNumUtil.cLnrItp(l_Bgn.y, l_End.y, l_EsnScl);
+							l_CUT.c_Rot.z = stNumUtil.cLnrItp(l_Bgn.z, l_End.z, l_EsnScl);
+							l_CUT.c_Rot.w = stNumUtil.cLnrItp(l_Bgn.w, l_End.w, l_EsnScl);
+						}
+
+						l_CUT.c_Rot.w = stNumUtil.cNmlzRad(l_CUT.c_Rot.w, false);	// 标准化
+
+						if (l_CssStr)
+						{ l_CssStr += " "; }
+						l_CssStr += "rotate3d(" + l_CUT.c_Rot.x + "," + l_CUT.c_Rot.y + "," + l_CUT.c_Rot.z + "," + l_CUT.c_Rot.w + "rad)";
+					}
+					else
+				//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
+					{
+						if (a_Ifnt)
+						{
+							if (l_Tsfm.c_fDplc)
+							{
+								l_Tsfm.c_fDplc(l_CUT.c_Tslt, a_DomElmt, l_Bgn, l_End,
+									a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							}
+						}
+						else
+						{
+							l_CUT.c_Tslt.x = stNumUtil.cLnrItp(l_Bgn.x, l_End.x, l_EsnScl);
+							l_CUT.c_Tslt.y = stNumUtil.cLnrItp(l_Bgn.y, l_End.y, l_EsnScl);
+							l_CUT.c_Tslt.z = stNumUtil.cLnrItp(l_Bgn.z, l_End.z, l_EsnScl);
+						}
+
+						if (l_CssStr)
+						{ l_CssStr += " "; }
+						l_CssStr += "translate3d(" + l_CUT.c_Tslt.x + "px," + l_CUT.c_Tslt.y + "px," + l_CUT.c_Tslt.z + "px)";
+					}
+				});
+
+			// 写成样式
+			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+		}
+
+		function eEnsrExtdAnmtTsfm(a_DomElmt, a_Dim)
 		{
 			if (! a_DomElmt.Wse_CssUtil)
 			{ a_DomElmt.Wse_CssUtil = {}; }
 
-			if (! a_DomElmt.Wse_CssUtil.c_Tsfm)
+			if ((! a_DomElmt.Wse_CssUtil.c_2dTsfm) && (2 == a_Dim))
 			{
-				a_DomElmt.Wse_CssUtil.c_Tsfm = {
+				a_DomElmt.Wse_CssUtil.c_2dTsfm = {
 					c_Scl : { x:1, y:1, c_FrmTime:0 },
 					c_Skew : { x:0, y:0, c_FrmTime:0 },
-					c_Rot : { z:0, c_FrmTime:0 },
+					c_Rot : { w:0, c_FrmTime:0 },
 					c_Tslt : { x:0, y:0, c_FrmTime:0 }
+				};
+			}
+			else
+			if ((! a_DomElmt.Wse_CssUtil.c_3dTsfm) && (3 == a_Dim))
+			{
+				a_DomElmt.Wse_CssUtil.c_3dTsfm = {
+					c_Scl : { x:1, y:1, z:1, c_FrmTime:0 },
+					c_Rot : { x:0, y:1, z:0, w:0, c_FrmTime:0 },	// 初始绕Y轴
+					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 }
 				};
 			}
 		}
@@ -1265,10 +1392,10 @@ function fOnIcld(a_Errs)
 				if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
 				{ eInitBrsrPfx_Tsfm(a_DomElmt); }
 
-				eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
+				eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
 
 				l_Item = {
-					c_TypeIdx: e_Wse_CssExtd.c_Tsfm,	// 必有
+					c_TypeIdx: e_Wse_CssExtd.i_2dTsfm,	// 必有
 					c_BgnStr: "",						// 必有
 					c_EndStr: "",						// 必有
 					c_Sqnc : []
@@ -1287,8 +1414,8 @@ function fOnIcld(a_Errs)
 					if (e_Wse_CssExtd["scale"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = {};
-						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Scl.x;
-						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Scl.y;
+						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Scl.x;
+						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Scl.y;
 						if (l_Item.c_BgnStr)
 						{ l_Item.c_BgnStr += " "; }
 						l_Item.c_BgnStr += "scale(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + ")";
@@ -1304,8 +1431,8 @@ function fOnIcld(a_Errs)
 					if (e_Wse_CssExtd["skew"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = {};
-						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Skew.x;
-						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Skew.y;
+						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Skew.x;
+						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Skew.y;
 						if (l_Item.c_BgnStr)
 						{ l_Item.c_BgnStr += " "; }
 						l_Item.c_BgnStr += "skew(" + l_Tsfm.c_Bgn.x + "rad," + l_Tsfm.c_Bgn.y + "rad)";
@@ -1321,23 +1448,23 @@ function fOnIcld(a_Errs)
 					if (e_Wse_CssExtd["rotate"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = {};
-						l_Tsfm.c_Bgn.z = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Rot.z;
+						l_Tsfm.c_Bgn.w = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Rot.w;
 						if (l_Item.c_BgnStr)
 						{ l_Item.c_BgnStr += " "; }
-						l_Item.c_BgnStr += "rotate(" + l_Tsfm.c_Bgn.z + "rad)";
+						l_Item.c_BgnStr += "rotate(" + l_Tsfm.c_Bgn.w + "rad)";
 
 						l_Tsfm.c_End = {};
-						l_Tsfm.c_End.z = eCalcExtdEndPV(a_Tsfm, "z", 0);
+						l_Tsfm.c_End.w = eCalcExtdEndPV(a_Tsfm, "w", 0);
 						if (l_Item.c_EndStr)
 						{ l_Item.c_EndStr += " "; }
-						l_Item.c_EndStr += "rotate(" + l_Tsfm.c_End.z + "rad)";
+						l_Item.c_EndStr += "rotate(" + l_Tsfm.c_End.w + "rad)";
 					}
 					else
 				//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = {};
-						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Tslt.x;
-						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_Tsfm.c_Tslt.y;
+						l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Tslt.x;
+						l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_2dTsfm.c_Tslt.y;
 						if (l_Item.c_BgnStr)
 						{ l_Item.c_BgnStr += " "; }
 						l_Item.c_BgnStr += "translate(" + l_Tsfm.c_Bgn.x + "px," + l_Tsfm.c_Bgn.y + "px)";
@@ -1352,6 +1479,102 @@ function fOnIcld(a_Errs)
 
 					l_Item.c_Sqnc.push(l_Tsfm);
 				});
+
+				if (l_Item.c_Sqnc.length > 0)
+				{
+					l_Items[a_PN] = l_Item;
+					l_IsEmt = false;
+				}
+			}
+			else
+			if ("Wse_3dTsfm" == a_PN)
+			{
+				if (! a_PV)
+				{ return; }
+
+				if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
+				{ eInitBrsrPfx_Tsfm(a_DomElmt); }
+
+				eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
+
+				l_Item = {
+					c_TypeIdx: e_Wse_CssExtd.i_3dTsfm,	// 必有
+					c_BgnStr: "",						// 必有
+					c_EndStr: "",						// 必有
+					c_Sqnc : []
+				};
+
+				stAryUtil.cFor(a_PV,					// 是个数组
+					function (a_Ary, a_Idx, a_Tsfm)
+					{
+						l_Tsfm = {};
+						l_Tsfm.c_TypeIdx = e_Wse_CssExtd[a_Tsfm.c_Name] || -1;	// 把变换名称映射成索引
+						if (l_Tsfm.c_TypeIdx < 0)
+						{ return; }
+
+						l_Tsfm.c_fDplc = a_Tsfm.c_fDplc || null;	// 位移函数
+
+						if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = {};
+							l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Scl.x;
+							l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Scl.y;
+							l_Tsfm.c_Bgn.z = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Scl.z;
+							if (l_Item.c_BgnStr)
+							{ l_Item.c_BgnStr += " "; }
+							l_Item.c_BgnStr += "scale3d(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + "," + l_Tsfm.c_Bgn.z + ")";
+
+							l_Tsfm.c_End = {};
+							l_Tsfm.c_End.x = eCalcExtdEndPV(a_Tsfm, "x", 1);
+							l_Tsfm.c_End.y = eCalcExtdEndPV(a_Tsfm, "y", 1);
+							l_Tsfm.c_End.z = eCalcExtdEndPV(a_Tsfm, "z", 1);
+							if (l_Item.c_EndStr)
+							{ l_Item.c_EndStr += " "; }
+							l_Item.c_EndStr += "scale3d(" + l_Tsfm.c_End.x + "," + l_Tsfm.c_End.y + "," + l_Tsfm.c_End.z + ")";
+						}
+						else
+						if (e_Wse_CssExtd["rotate3d"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = {};
+							l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.x;
+							l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.y;
+							l_Tsfm.c_Bgn.z = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.z;
+							l_Tsfm.c_Bgn.w = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Rot.w;
+							if (l_Item.c_BgnStr)
+							{ l_Item.c_BgnStr += " "; }
+							l_Item.c_BgnStr += "rotate3d(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + "," + l_Tsfm.c_Bgn.z + "," + l_Tsfm.c_Bgn.w + "rad)";
+
+							l_Tsfm.c_End = {};
+							l_Tsfm.c_End.x = eCalcExtdEndPV(a_Tsfm, "x", 0);
+							l_Tsfm.c_End.y = eCalcExtdEndPV(a_Tsfm, "y", 0);
+							l_Tsfm.c_End.z = eCalcExtdEndPV(a_Tsfm, "z", 0);
+							l_Tsfm.c_End.w = eCalcExtdEndPV(a_Tsfm, "w", 0);
+							if (l_Item.c_EndStr)
+							{ l_Item.c_EndStr += " "; }
+							l_Item.c_EndStr += "rotate3d(" + l_Tsfm.c_End.x + "," + l_Tsfm.c_End.y + "," + l_Tsfm.c_End.z + "," + l_Tsfm.c_End.w + "rad)";
+						}
+						else
+						//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = {};
+							l_Tsfm.c_Bgn.x = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Tslt.x;
+							l_Tsfm.c_Bgn.y = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Tslt.y;
+							l_Tsfm.c_Bgn.z = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Tslt.z;
+							if (l_Item.c_BgnStr)
+							{ l_Item.c_BgnStr += " "; }
+							l_Item.c_BgnStr += "translate3d(" + l_Tsfm.c_Bgn.x + "px," + l_Tsfm.c_Bgn.y + "px," + l_Tsfm.c_Bgn.z + "px)";
+
+							l_Tsfm.c_End = {};
+							l_Tsfm.c_End.x = eCalcExtdEndPV(a_Tsfm, "x", 0);
+							l_Tsfm.c_End.y = eCalcExtdEndPV(a_Tsfm, "y", 0);
+							l_Tsfm.c_End.z = eCalcExtdEndPV(a_Tsfm, "z", 0);
+							if (l_Item.c_EndStr)
+							{ l_Item.c_EndStr += " "; }
+							l_Item.c_EndStr += "translate3d(" + l_Tsfm.c_End.x + "px," + l_Tsfm.c_End.y + "px," + l_Tsfm.c_End.z + "px)";
+						}
+
+						l_Item.c_Sqnc.push(l_Tsfm);
+					});
 
 				if (l_Item.c_Sqnc.length > 0)
 				{
@@ -1502,112 +1725,47 @@ function fOnIcld(a_Errs)
 			return stDomUtil.cIsAnmtPau(l_fAnmt);
 		};
 
-		/// 存取扩展动画 - 缩放
+		/// 存取扩展动画 - 二维变换
 		/// 返回：Object
 		/// {
-		/// x，y：Number
-		/// c_FrmTime：Number
+		/// 	c_Scl:
+		///		{
+		///		x，y：Number
+		/// 	c_FrmTime：Number
+		///		}
+		/// 	c_Skew:
+		///		{
+		///		x，y：Number
+		/// 	c_FrmTime：Number
+		///		}
+		/// 	c_Rot:
+		///		{
+		///		w：Number，绕Z轴旋转的弧度
+		/// 	c_FrmTime：Number
+		///		}
+		/// 	c_Tslt:
+		///		{
+		///		x，y：Number
+		/// 	c_FrmTime：Number
+		///		}
 		/// }
-		stCssUtil.cAcsExtdAnmt_Scl = function (a_DomElmt)
+		stCssUtil.cAcsExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			return a_DomElmt.Wse_CssUtil.c_Tsfm.c_Scl;
+			eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
+			return a_DomElmt.Wse_CssUtil.c_2dTsfm;
 		};
 
-		/// 设置扩展动画 - 缩放
-		stCssUtil.cSetExtdAnmt_Scl = function (a_DomElmt, a_Sx, a_Sy, a_FrmTime)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_Tsfm;
-			l_Tsfm.c_Scl.x = a_Sx;
-			l_Tsfm.c_Scl.y = a_Sy;
-			if (nWse.fIsNum(a_FrmTime))
-			{ l_Tsfm.c_FrmTime = a_FrmTime; }
-			return stCssUtil;
-		};
-
-		/// 存取扩展动画 - 斜切
-		/// 返回：Object
-		/// {
-		/// x，y：Number
-		/// c_FrmTime：Number
-		/// }
-		stCssUtil.cAcsExtdAnmt_Skew = function (a_DomElmt)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			return a_DomElmt.Wse_CssUtil.c_Tsfm.c_Skew;
-		};
-
-		/// 设置扩展动画 - 斜切
-		stCssUtil.cSetExtdAnmt_Skew = function (a_DomElmt, a_Sx, a_Sy, a_FrmTime)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_Tsfm;
-			l_Tsfm.c_Skew.x = a_Sx;
-			l_Tsfm.c_Skew.y = a_Sy;
-			if (nWse.fIsNum(a_FrmTime))
-			{ l_Tsfm.c_FrmTime = a_FrmTime; }
-			return stCssUtil;
-		};
-
-		/// 存取扩展动画 - 旋转
-		/// 返回：Object
-		/// {
-		/// x，y：Number
-		/// c_FrmTime：Number
-		/// }
-		stCssUtil.cAcsExtdAnmt_Rot = function (a_DomElmt)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			return a_DomElmt.Wse_CssUtil.c_Tsfm.c_Rot;
-		};
-
-		/// 设置扩展动画 - 旋转
-		stCssUtil.cSetExtdAnmt_Rot = function (a_DomElmt, a_Rz, a_FrmTime)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_Tsfm;
-			l_Tsfm.c_Rot.z = a_Rz;
-			if (nWse.fIsNum(a_FrmTime))
-			{ l_Tsfm.c_FrmTime = a_FrmTime; }
-			return stCssUtil;
-		};
-
-		/// 存取扩展动画 - 平移
-		/// 返回：Object
-		/// {
-		/// x，y：Number
-		/// c_FrmTime：Number
-		/// }
-		stCssUtil.cAcsExtdAnmt_Tslt = function (a_DomElmt)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			return a_DomElmt.Wse_CssUtil.c_Tsfm.c_Tslt;
-		};
-
-		/// 设置扩展动画 - 平移
-		stCssUtil.cSetExtdAnmt_Tslt = function (a_DomElmt, a_Tx, a_Ty, a_FrmTime)
-		{
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_Tsfm;
-			l_Tsfm.c_Tslt.x = a_Tx;
-			l_Tsfm.c_Tslt.y = a_Ty;
-			if (nWse.fIsNum(a_FrmTime))
-			{ l_Tsfm.c_FrmTime = a_FrmTime; }
-			return stCssUtil;
-		};
-
-		/// 更新扩展动画
-		stCssUtil.cUpdExtdAnmt = function (a_DomElmt)
+		/// 更新扩展动画 - 二维变换
+		stCssUtil.cUpdExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
 			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
 			{ eInitBrsrPfx_Tsfm(a_DomElmt); }
 
-			eEnsrExtdAnmtTsfm(a_DomElmt);	// 确保动画变换
-			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_Tsfm;
+			eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
+			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_2dTsfm;
 			var l_CssStr = "";
 
-			if ((0 != l_Tsfm.c_Scl.x) || (0 != l_Tsfm.c_Scl.y)) // S
+			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y)) // S
 			{
 				if (l_CssStr)
 				{ l_CssStr += " "; }
@@ -1621,11 +1779,11 @@ function fOnIcld(a_Errs)
 				l_CssStr += "skew(" + l_Tsfm.c_Skew.x + "rad," + l_Tsfm.c_Skew.y + "rad)";
 			}
 
-			if ((0 != l_Tsfm.c_Rot.z)) // R
+			if ((0 != l_Tsfm.c_Rot.w)) // R
 			{
 				if (l_CssStr)
 				{ l_CssStr += " "; }
-				l_CssStr += "rotate(" + l_Tsfm.c_Rot.z + "rad)";
+				l_CssStr += "rotate(" + l_Tsfm.c_Rot.w + "rad)";
 			}
 
 			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y)) // T
@@ -1633,6 +1791,67 @@ function fOnIcld(a_Errs)
 				if (l_CssStr)
 				{ l_CssStr += " "; }
 				l_CssStr += "translate(" + l_Tsfm.c_Tslt.x + "px," + l_Tsfm.c_Tslt.y + "px)";
+			}
+
+			// 写成样式
+			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+			return stCssUtil;
+		};
+
+		/// 存取扩展动画 - 三维变换
+		/// 返回：Object
+		/// {
+		/// 	c_Scl:
+		///		{
+		///		x，y, z：Number
+		/// 	c_FrmTime：Number
+		///		}
+		/// 	c_Rot:
+		///		{
+		///		x，y, z, w：Number，四元数，xyz是转轴向量的三个分量，w是弧度
+		/// 	c_FrmTime：Number
+		///		}
+		/// 	c_Tslt:
+		///		{
+		///		x，y, z：Number
+		/// 	c_FrmTime：Number
+		///		}
+		/// }
+		stCssUtil.cAcsExtdAnmt_3dTsfm = function (a_DomElmt)
+		{
+			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
+			return a_DomElmt.Wse_CssUtil.c_3dTsfm;
+		};
+
+		/// 更新扩展动画 - 三维变换
+		stCssUtil.cUpdExtdAnmt_3dTsfm = function (a_DomElmt)
+		{
+			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
+			{ eInitBrsrPfx_Tsfm(a_DomElmt); }
+
+			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
+			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_3dTsfm;
+			var l_CssStr = "";
+
+			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y) || (1 != l_Tsfm.c_Scl.z)) // S
+			{
+				if (l_CssStr)
+				{ l_CssStr += " "; }
+				l_CssStr += "scale3d(" + l_Tsfm.c_Scl.x + "," + l_Tsfm.c_Scl.y + "," + l_Tsfm.c_Scl.z + ")";
+			}
+
+			if ((0 != l_Tsfm.c_Rot.w)) // R
+			{
+				if (l_CssStr)
+				{ l_CssStr += " "; }
+				l_CssStr += "rotate3d(" + l_Tsfm.c_Rot.x + "," + l_Tsfm.c_Rot.y + "," + l_Tsfm.c_Rot.z + "," + l_Tsfm.c_Rot.w + "rad)";
+			}
+
+			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y) || (0 != l_Tsfm.c_Tslt.z)) // T
+			{
+				if (l_CssStr)
+				{ l_CssStr += " "; }
+				l_CssStr += "translate3d(" + l_Tsfm.c_Tslt.x + "px," + l_Tsfm.c_Tslt.y + "px," + l_Tsfm.c_Tslt.z + "px)";
 			}
 
 			// 写成样式

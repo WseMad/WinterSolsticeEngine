@@ -20,6 +20,7 @@
 	window.addEventListener("load", function ()
 	{
 		console.log("window.onload");
+		nWse.stNowLoad.cEnd(null);	// 结束
 
 		nWse.stAsynIcld.cFromApp("nWse",
 			[
@@ -476,14 +477,13 @@ function fOnIcld(a_Errs)
 										"Wse_2dTsfm" : [
 											{
 												c_Name : "rotate",
-												c_End : { z:2 * Math.PI },
-											//#	c_EndStr : "",			// 空串表示不变换，可选"rotate(90deg)"
+												c_End : { w:2 * Math.PI },
 												c_fDplc : function (a_Rst, a_DomElmt, a_Bgn, a_End,
 																	a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 												{
 													a_Rst.c_FrmTime += a_FrmItvl;
 													var l_a = Math.PI / 12, l_w = Math.PI;
-													a_Rst.z = l_a * Math.sin(l_w * a_Rst.c_FrmTime);
+													a_Rst.w = l_a * Math.sin(l_w * a_Rst.c_FrmTime);
 												}
 											}
 										]
