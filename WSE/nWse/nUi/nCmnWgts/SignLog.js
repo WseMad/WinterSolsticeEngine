@@ -145,6 +145,8 @@ function fOnIcld(a_Errs)
 
 	function fNewWgt_Cls(a_This)
 	{
+		a_This.d_Dom_Cls.textContent = "关 闭";
+
 		var l_Wgt = new nCmnWgts.tBtn();
 		l_Wgt.vcBind({
 			c_PutTgt: a_This.d_PutTgtId_Cls,
@@ -156,13 +158,14 @@ function fOnIcld(a_Errs)
 		});
 		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
-		l_Wgt.cAcsPutTgt().textContent = "关 闭";
 		stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Cls");
 		return l_Wgt;
 	}
 
 	function fNewWgt_Sbmt(a_This)
 	{
+		a_This.d_Dom_Sbmt.textContent = "提 交";
+
 		var l_Wgt = new nCmnWgts.tBtn();
 		l_Wgt.vcBind({
 			c_PutTgt: a_This.d_PutTgtId_Sbmt,
@@ -174,7 +177,6 @@ function fOnIcld(a_Errs)
 		});
 		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
-		l_Wgt.cAcsPutTgt().textContent = "提 交";
 		stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Sbmt");
 		return l_Wgt;
 	}
@@ -194,10 +196,12 @@ function fOnIcld(a_Errs)
 	function fInit_LogIn(a_This)
 	{
 		// 得到子控件所需标记，插入到放置来源里
-		var l_Dom_Mail = fObtnDom(a_This, "Mail", "Mail");
-		var l_Dom_Pswd = fObtnDom(a_This, "Pswd", "Pswd");
-		var l_Dom_Cls = fObtnDom(a_This, "Cls");
-		var l_Dom_Sbmt = fObtnDom(a_This, "Sbmt");
+		a_This.d_Dom_Mail = fObtnDom(a_This, "Mail", "Mail");
+		a_This.d_Dom_Pswd = fObtnDom(a_This, "Pswd", "Pswd");
+		a_This.d_Dom_Cls = fObtnDom(a_This, "Cls");
+		a_This.d_Dom_Sbmt = fObtnDom(a_This, "Sbmt");
+		stCssUtil.cAddCssc(a_This.d_Dom_Cls, "cnWse_tSignLog_Cls");
+		stCssUtil.cAddCssc(a_This.d_Dom_Sbmt, "cnWse_tSignLog_Sbmt");
 
 		// 新建子控件
 		fNewWgt_Mail(a_This);
@@ -210,11 +214,13 @@ function fOnIcld(a_Errs)
 	function fInit_SignIn(a_This)
 	{
 		// 得到子控件所需标记，插入到放置来源里
-		var l_Dom_Mail = fObtnDom(a_This, "Mail", "Mail");
-		var l_Dom_Pswd = fObtnDom(a_This, "Pswd", "Pswd");
-		var l_Dom_CfmPswd = fObtnDom(a_This, "CfmPswd", "CfmPswd");
-		var l_Dom_Cls = fObtnDom(a_This, "Cls");	stCssUtil.cAddCssc(l_Dom_Cls, "cnWse_tSignLog_Cls");
-		var l_Dom_Sbmt = fObtnDom(a_This, "Sbmt");	stCssUtil.cAddCssc(l_Dom_Sbmt, "cnWse_tSignLog_Sbmt");
+		a_This.d_Dom_Mail = fObtnDom(a_This, "Mail", "Mail");
+		a_This.d_Dom_Pswd = fObtnDom(a_This, "Pswd", "Pswd");
+		a_This.d_Dom_CfmPswd = fObtnDom(a_This, "CfmPswd", "CfmPswd");
+		a_This.d_Dom_Cls = fObtnDom(a_This, "Cls");
+		a_This.d_Dom_Sbmt = fObtnDom(a_This, "Sbmt");
+		stCssUtil.cAddCssc(a_This.d_Dom_Cls, "cnWse_tSignLog_Cls");
+		stCssUtil.cAddCssc(a_This.d_Dom_Sbmt, "cnWse_tSignLog_Sbmt");
 
 		// 新建子控件
 		fNewWgt_Mail(a_This);

@@ -5,7 +5,7 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>示例应用程序</title>
+	<title>WSE示例应用程序</title>
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
 	<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgts.css" />
@@ -14,7 +14,6 @@
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/(0)Plmvc.css" />-->
-	<!--<link rel="stylesheet" type="text/css" href="./cnWse/PcdrLot.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgts.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Blue.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Purple.css" />-->
@@ -42,14 +41,18 @@
 			background-color: transparent;
 
 			-webkit-perspective:1000px;
-			-webkit-perspective-origin: center center;
 			perspective:1000px;
+
+			-webkit-perspective-origin: center center;
 			perspective-origin: center center;
 		}
 
 		#k_PutTgt_Lot
 		{
-			border: 2px solid orange;
+			border: 1px solid black;
+
+			-webkit-transform-style:preserve-3d;
+			transform-style:preserve-3d;
 		}
 
 		#k_TestBoa
@@ -71,11 +74,11 @@
 	<!--<canvas id="k_Cvs" width="300" height="300"></canvas>-->
 	<!--<img src="Media/myship.png" style="cursor:pointer;border: 1px solid black;" />-->
 
-	<div id="k_PutTgt_Lot">
+	<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
 
 	</div>
 
-	<div id="k_PutSrc_Lot">
+	<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
 
 		<div id="k_Put0" style="width:200px;height: 200px;background-color: blue"></div>
 
@@ -265,6 +268,7 @@ function fOnIcld(a_Errs)
 						c_Tot: 1,
 						c_fOnEnd: function ()
 						{
+						//	return;
 							nWse.stNowLoad.cEnd();
 
 							// 初始布局？

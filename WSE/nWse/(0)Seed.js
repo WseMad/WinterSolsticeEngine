@@ -804,7 +804,7 @@
 				e_WndInrHgt = window.innerHeight;
 				e_DomAll.style.height = e_WndInrHgt.toString() + "px";
 				e_DomAll.style.backgroundColor = "black";	// 黑色背景彰显夜空
-				e_Dom_body.appendChild(e_DomAll);	// 加入<body>
+				e_Dom_body.appendChild(e_DomAll);	// 加入<3d body>
 			}
 
 			var i, l_Sph;

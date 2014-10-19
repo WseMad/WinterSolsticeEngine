@@ -463,6 +463,12 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 追加到放置来源
+			dApdToSrc : function (a_Put)
+			{
+				unKnl.fApdToSrc(this.d_PutSrc, a_Put);
+			}
+			,
 			/// 归还至来源
 			dRtnToSrc : function (a_PutInTgt, a_Bef)
 			{

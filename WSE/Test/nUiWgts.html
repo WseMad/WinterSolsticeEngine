@@ -14,7 +14,6 @@
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 	
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/(0)Plmvc.css" />-->
-	<!--<link rel="stylesheet" type="text/css" href="./cnWse/PcdrLot.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgts.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Blue.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="./cnWse/CmnWgtsSkin_Purple.css" />-->
@@ -505,13 +504,13 @@
 //							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Blue"))
 //							{
 //								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Blue", "cnWse_Skin_Purple");
-//							//	a_Wgt.cAcsDomTit().textContent = "蓝色皮肤";
+//							//	a_Wgt.cAcsTit().textContent = "蓝色皮肤";
 //							}
 //							else
 //							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Purple"))
 //							{
 //								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Purple", "cnWse_Skin_Blue");
-//							//	a_Wgt.cAcsDomTit().textContent = "紫色皮肤";
+//							//	a_Wgt.cAcsTit().textContent = "紫色皮肤";
 //							}
 
 //							console.log();
@@ -639,17 +638,17 @@
 						{
 							var l_Menu = stFrmwk.cAcsStaWgtSet().cAcsByPutSrcId("k_Menu1");
 
-							if ("层叠式" == a_Wgt.cAcsDomTit().textContent)
+							if ("层叠式" == a_Wgt.cAcsTit().textContent)
 							{
 								l_Menu.cSetMode("Ovlp");
 
-								a_Wgt.cAcsDomTit().textContent = "展开式";
+								a_Wgt.cAcsTit().textContent = "展开式";
 							}
 							else
 							{
 								l_Menu.cSetMode("Expd");
 
-								a_Wgt.cAcsDomTit().textContent = "层叠式";
+								a_Wgt.cAcsTit().textContent = "层叠式";
 							}
 
 							stFrmwk.cRflLot();
@@ -667,13 +666,13 @@
 							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Blue"))
 							{
 								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Blue", "cnWse_Skin_Purple");
-								a_Wgt.cAcsDomTit().textContent = "蓝色皮肤";
+								a_Wgt.cAcsTit().textContent = "蓝色皮肤";
 							}
 							else
 							if (nWse.stCssUtil.cHasCssc(l_DomBody, "cnWse_Skin_Purple"))
 							{
 								nWse.stCssUtil.cRplcCssc(l_DomBody, "cnWse_Skin_Purple", "cnWse_Skin_Blue");
-								a_Wgt.cAcsDomTit().textContent = "紫色皮肤";
+								a_Wgt.cAcsTit().textContent = "紫色皮肤";
 							}
 						}
 					});

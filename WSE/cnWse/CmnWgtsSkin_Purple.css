@@ -13,20 +13,15 @@
 
 /*********************************************** tBtn ***********************************************/
 
-.cnWse_Skin_Purple .cnWse_tWgt_Nml.cnWse_tBtn
+.cnWse_Skin_Purple .cnWse_tWgt_Nml.cnWse_tBtn>.cnWse_tBtn_Body,
+.cnWse_Skin_Purple .cnWse_tWgt_Tch.cnWse_tBtn>.cnWse_tBtn_Body
 {
 	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
-}
 
-.cnWse_Skin_Purple .cnWse_tWgt_Tch.cnWse_tBtn
-{
-	background: -webkit-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
-	background: -moz-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
-	background: -ms-linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
-	background: linear-gradient(top, rgb(66%, 66%, 66%), rgb(66%, 66%, 66%) 40%, rgb(99, 24, 112) 90%, rgb(99, 24, 112));
+	border-bottom-color: rgb(99, 24, 112);
 }
 
 /*********************************************** tEdit ***********************************************/

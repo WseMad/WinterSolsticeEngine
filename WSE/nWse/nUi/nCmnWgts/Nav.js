@@ -765,7 +765,7 @@ function fOnIcld(a_Errs)
 						c_Dur: 0.6,
 						c_fEsn: function (a_Scl)
 						{
-							return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+							return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.5, a_Scl, false);
 						},
 						c_fOnEnd: function ()
 						{

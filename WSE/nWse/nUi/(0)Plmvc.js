@@ -161,6 +161,11 @@ function fOnIcld(a_Errs)
 		return (l_Prn === a_Put.parentNode);
 	};
 
+	unKnl.fApdToSrc = function (a_PutSrc, a_Put)
+	{
+		a_PutSrc.appendChild(a_Put);
+	};
+
 	unKnl.fRtnToSrc = function (a_PutTgt, a_PutSrc, a_PutInTgt, a_Bef, a_Vrf)
 	{
 		// 已经在了？
