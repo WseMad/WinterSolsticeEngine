@@ -602,9 +602,33 @@ function fOnIcld(a_Errs)
 				a_Picker.cPickEnd(l_This, a_EvtTgt || a_DomElmt);
 				return this;
 			}
+			,
+			/// 获取放置目标边框厚度，返回到tWgt.sd_PutTgtBdrThk
+			dGetPutTgtBdrThk : function ()
+			{
+				stCssUtil.cGetBdrThk(tWgt.sd_PutTgtBdrThk, this.d_PutTgt, null, true);
+				return tWgt.sd_PutTgtBdrThk;
+			}
+			,
+			/// 获取放置目标边框半径，返回到tWgt.sd_PutTgtBdrRds
+			dGetPutTgtBdrRds : function ()
+			{
+				stCssUtil.cGetBdrRds(tWgt.sd_PutTgtBdrRds, this.d_PutTgt, null, true);
+				return tWgt.sd_PutTgtBdrRds;
+			}
+			,
+			/// 获取放置目标内边距，返回到tWgt.sd_PutTgtPad
+			dGetPutTgtPad : function ()
+			{
+				stCssUtil.cGetPad(tWgt.sd_PutTgtPad, this.d_PutTgt, null, true);
+				return tWgt.sd_PutTgtPad;
+			}
 		}
 		,
 		{
+			/// 最小高度（部分支持固定宽高比的控件使用）
+			i_MinHgt : 32
+			,
 			/// 放置目标选择器
 			sd_PutTgtSlc : ""
 			,

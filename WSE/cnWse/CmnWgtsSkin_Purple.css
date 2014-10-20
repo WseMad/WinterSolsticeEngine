@@ -13,15 +13,16 @@
 
 /*********************************************** tBtn ***********************************************/
 
-.cnWse_Skin_Purple .cnWse_tWgt_Nml.cnWse_tBtn>.cnWse_tBtn_Body,
-.cnWse_Skin_Purple .cnWse_tWgt_Tch.cnWse_tBtn>.cnWse_tBtn_Body
+.cnWse_Skin_Purple .cnWse_tBtn_Body
 {
 	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(142, 34, 160) 90%, rgb(142, 34, 160));
 
-	border-bottom-color: rgb(99, 24, 112);
+	box-shadow: inset 0px 0px 20px transparent,		/* 为了正确动画这里使用透明色作为内阴影，若不加这句内阴影会突变 */
+		0px 10px 0px rgb(99, 24, 112),				/* 使用阴影产生背光面，体现立体效果 */
+		0px 20px 20px rgb(51, 51, 51);				/* 因为按钮上凸10px，故阴影再往下延伸10px，显得按钮很高 */
 }
 
 /*********************************************** tEdit ***********************************************/

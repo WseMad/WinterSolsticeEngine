@@ -149,6 +149,12 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 
 				// 注销放置目标事件处理器
+				if (l_This.d_fOnWidDtmnd)
+				{
+					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.d_fOnWidDtmnd = null;
+				}
+
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
 					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
@@ -335,12 +341,14 @@ function fOnIcld(a_Errs)
 			/// 根据宽高比修正高度
 			dFixHgtByAr : function (a_OfstWid)
 			{
+				a_OfstWid = Math.round(a_OfstWid);	// 规整
+
 				// 如果固定了宽高比，根据a_OfstWid计算高度
 				var l_This = this;
 				if (! l_This.d_Cfg.c_FxdAr)
 				{ return; }
 
-				var l_MinH = 32;	// 覆盖CSS里的min-height，选用2em
+				var l_MinH = tWgt.i_MinHgt;	// 覆盖CSS里的min-height
 				if (! l_This.d_PutTgt.style.minHeight)
 				{ l_This.d_PutTgt.style.minHeight = l_MinH.toString() + "px"; }
 

@@ -62,12 +62,10 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_TempRst = null;
+
 	function fBtnRset(a_This)
 	{
-		a_This.d_DoVticOfst = false;	// 进行垂直偏移？
-		a_This.d_DtaY = 0;
-
-
 		a_This.d_Body = null;
 		a_This.d_DomTit = null;
 	}
@@ -100,6 +98,9 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_Shp：tShp，形状，若为i_Cir则覆盖c_FxdAr（圆的宽高比总是1）
+			/// c_FxdAr：Number，固定宽高比
+			/// c_TitVcen：Boolean，标题垂直居中？仅当有标题时才有效
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -107,6 +108,7 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn");			// CSS类
+				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Hole");		// CSS类
 
 				if (l_This.cAcsTit())
 				{ stCssUtil.cAddCssc(l_This.cAcsTit(), "cnWse_tBtn_Tit"); }	// CSS类
@@ -126,6 +128,32 @@ function fOnIcld(a_Errs)
 
 				l_This.dApdToSrc(l_This.d_Body);	// 先追加到来源
 				l_This.dPutToTgt(l_This.d_Body);	// 后摆放到目标
+
+				// 注册放置目标事件处理器
+				if (! l_This.d_fOnWidDtmnd)
+				{
+					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					{
+						// 修正高度和形状
+						if (("c_FxdAr" in l_This.d_Cfg) || ("c_Shp" in l_This.d_Cfg))
+						{ l_This.dFixHgtAndShp(a_OfstWid); }
+					};
+
+					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+				}
+
+				if (l_This.d_Cfg.c_TitVcen && l_This.cAcsTit() && (! l_This.d_fOnAnmtUpdEnd))
+				{
+					// 展开式时必须校准位置
+					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+					{
+						// 标题垂直居中
+						l_This.dTitVcen();
+					};
+
+					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+				}
+
 				return this;
 			}
 			,
@@ -134,6 +162,18 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 				stCssUtil.cRmvCssc(l_This.cAcsTit(), "cnWse_tBtn_Tit");	// CSS类
+
+				if (l_This.d_fOnWidDtmnd)
+				{
+					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.d_fOnWidDtmnd = null;
+				}
+
+				if (l_This.d_fOnAnmtUpdEnd)
+				{
+					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.d_fOnAnmtUpdEnd = null;
+				}
 
 				// 重置
 				fBtnRset(this);
@@ -165,14 +205,6 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 
-//				// 垂直位移？
-//				var l_Y;
-//				if (l_This.d_DoVticOfst)
-//				{
-//					l_This.d_DoVticOfst = false;
-//					l_Y = stCssUtil.cGetPosUp(null, l_This.d_PutTgt);
-//					stCssUtil.cSetPosUp(l_This.d_PutTgt, l_Y + l_This.d_DtaY);
-//				}
 				return this;
 			}
 			,
@@ -186,13 +218,22 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_Body)
 				{ return this; }
 
+				// 计算包围盒
 				if (a_Bbox)
 				{
-					tSara.scCrt$DomBcr(a_Bbox, l_This.d_Body);
+					// 扩容至包含身体
+					tSara.scEnsrTemps(1);
+					tSara.scCrt$DomBcr(tSara.sc_Temps[0], l_This.d_Body);
+					tSara.scExpdToCtan$Sara(a_Bbox, tSara.sc_Temps[0]);
 					return this;
 				}
 
-				l_This.dPickDomElmtByPathPnt(l_This.d_Body, a_Picker, l_This.d_Body);
+				// 先拾取身体，未拾取到时再拾取底座
+				l_This.dPickDomElmtByPathPnt(l_This.d_Body, a_Picker);
+				if (a_Picker.cIsOver())
+				{ return this; }
+
+				l_This.dPickPutTgtByPathPnt(a_Picker);
 				return this;
 			}
 			,
@@ -205,25 +246,16 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 
+				// 点中身体或身体的子节点
+				var l_ClkBody = stDomUtil.cIsSelfOrAcst(l_This.d_Body, a_DmntTch.cAcsEvtTgt());
+
 				if (l_This.dIsTchBgn(a_DmntTch))
 				{
-//					// 加入一点垂直位移效果
-//					//【注意】只设置标志，不要在这里设置位置，表现相关的工作放在刷新里进行！
-//					l_This.d_DtaY = Math.max(8, l_This.d_PutTgt.offsetHeight * 0.3);
-//					l_This.d_DoVticOfst = true;
-//					l_This.cRfsh();
-//				//	stCssUtil.cSetPosUp(l_This.d_PutTgt, stCssUtil.cGetPosUp(null, l_This.d_PutTgt) + l_This.d_DtaY);
-
 					a_DmntTch.c_Hdld = true;		// 已处理
 				}
 				else
 				if (l_This.dIsTchLostOrEnd(a_DmntTch))
 				{
-					l_This.dRstoPos();	// 恢复原位
-
-					var l_Cabk = (a_DmntTch.c_PkdWgt === l_This);
-					var l_Sara;
-
 //					if (l_This.dIsTchLost(a_DmntTch))
 //					{
 //						//
@@ -231,15 +263,7 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-//						if (! l_Cabk) // 注意，由于按钮会向下移动，所以导致点击最上方时落空
-//						{
-//							tSara.scEnsrTemps(1);
-//							l_Sara = tSara.scCrt$DomBcr(tSara.sc_Temps[0], l_This.d_PutTgt);
-//							l_Sara.c_Y -= l_This.d_DtaY;	// 回到原位，进行包含测试
-//							l_Cabk = tSara.scCtan$Xy(l_Sara, a_DmntTch.c_X, a_DmntTch.c_Y);
-//						}
-
-						if (l_Cabk && l_This.d_Cfg.c_fOnClk)	// 回调
+						if (l_ClkBody && l_This.d_Cfg.c_fOnClk)	// 回调
 						{ l_This.d_Cfg.c_fOnClk(l_This); }
 
 						a_DmntTch.c_Hdld = true;		// 已处理
@@ -254,7 +278,7 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
-				l_This.dRstoPos();	// 恢复原位
+
 				return this;
 			}
 			,
@@ -264,7 +288,7 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
-				l_This.dRstoPos();	// 恢复原位
+
 				return this;
 			}
 			,
@@ -282,16 +306,77 @@ function fOnIcld(a_Errs)
 				return this.d_DomTit;
 			}
 			,
-			/// 恢复原位
-			dRstoPos : function ()
+			/// 修正高度和形状
+			dFixHgtAndShp : function (a_OfstWid)
 			{
-//				var l_Y = (this.d_PutTgt && this.d_DtaY) ? stCssUtil.cGetPosUp(null, this.d_PutTgt) : null;
-//				if ((! isNaN(l_Y)) && (this.d_DtaY > 0))
-//				{
-//					stCssUtil.cSetPosUp(this.d_PutTgt, l_Y - this.d_DtaY);
-//					this.d_DtaY = 0;
-//					this.cRfsh();		// 刷新
-//				}
+				a_OfstWid = Math.round(a_OfstWid);		// 规整
+
+				var l_This = this;
+				var l_FxdAr = l_This.d_Cfg.c_FxdAr;
+				var tShp = tBtn.tShp;
+				if (tShp.i_Cir == l_This.d_Cfg.c_Shp)	// 圆形时必须为1
+				{
+					l_FxdAr = 1;
+				}
+
+				// 注意放置目标上内边距的存在
+				var l_Pad = l_This.dGetPutTgtPad();
+				var l_BdrRdsStr = "";	// 由样式表控制
+				var l_PutTgtH = l_This.d_PutTgt.offsetHeight;
+				if (l_FxdAr)
+				{
+					l_PutTgtH = (Math.round(a_OfstWid / l_FxdAr));
+					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_PutTgtH);
+					stCssUtil.cSetDimHgt(l_This.d_Body, l_PutTgtH - l_Pad.c_PadUp - l_Pad.c_PadDn);
+				}
+
+				// 调整形状
+				if (! l_This.d_Cfg.c_Shp)
+				{ return this; }
+
+				if (tShp.i_Rect == l_This.d_Cfg.c_Shp)
+				{
+				//	l_BdrRdsStr = "";	// 由样式表控制
+					stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Shp_Rect");	// CSS类
+				}
+				else
+				if (tShp.i_Cir == l_This.d_Cfg.c_Shp)
+				{
+					l_BdrRdsStr = Math.round(a_OfstWid / 2).toString() + "px";
+					stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Shp_Cir");	// CSS类
+				}
+				else
+				if (tShp.i_Elps == l_This.d_Cfg.c_Shp)
+				{
+					l_BdrRdsStr = Math.round(a_OfstWid / 2).toString() + "px/" + Math.round(l_PutTgtH / 2).toString() + "px";
+					stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Shp_Elps");	// CSS类
+				}
+				else
+				if (tShp.i_Caps == l_This.d_Cfg.c_Shp)
+				{
+					if (a_OfstWid > l_PutTgtH) // 横放
+					{ l_BdrRdsStr = Math.round(l_PutTgtH / 2).toString() + "px"; }
+					else // 竖放
+					{ l_BdrRdsStr = Math.round(a_OfstWid / 2).toString() + "px"; }
+
+					stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Shp_Caps");	// CSS类
+				}
+
+				l_This.d_PutTgt.style.borderRadius = l_BdrRdsStr;
+				l_This.d_Body.style.borderRadius = l_BdrRdsStr;
+				return this;
+			}
+			,
+			/// 标题垂直对齐
+			dTitVcen : function ()
+			{
+				var l_This = this;
+
+				if (! s_TempRst)
+				{ s_TempRst = {}; }
+
+				var l_CtntH = stCssUtil.cGetCtntHgt(s_TempRst, l_This.d_Body).c_CtntHgt;
+				stCssUtil.cSetPosUp(l_This.cAcsTit(), (l_CtntH - l_This.cAcsTit().offsetHeight) / 2);
 				return this;
 			}
 		}
@@ -301,6 +386,24 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fEnum(tBtn,
+		/// 形状
+		function tShp() {},
+		null,
+		{
+			/// 长方形（默认）
+			i_Rect: 0
+			,
+			/// 圆形
+			i_Cir : 1
+			,
+			/// 椭圆
+			i_Elps : 2
+			,
+			/// 囊形
+			i_Caps : 3
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

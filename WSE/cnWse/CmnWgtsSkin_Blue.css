@@ -13,16 +13,33 @@
 
 /*********************************************** tBtn ***********************************************/
 
-.cnWse_Skin_Blue .cnWse_tWgt_Nml.cnWse_tBtn>.cnWse_tBtn_Body,
-.cnWse_Skin_Blue .cnWse_tWgt_Tch.cnWse_tBtn>.cnWse_tBtn_Body
+.cnWse_Skin_Blue .cnWse_tBtn_Body
 {
 	background: -webkit-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: -moz-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: -ms-linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 	background: linear-gradient(top, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 40%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));
 
-	border-bottom-color: rgb(0, 90, 133);
+	box-shadow: inset 0px 0px 20px transparent,		/* 为了正确动画这里使用透明色作为内阴影，若不加这句内阴影会突变 */
+		0px 10px 0px rgb(0, 90, 133),				/* 使用阴影产生背光面，体现立体效果 */
+		0px 20px 20px rgb(51, 51, 51);				/* 因为按钮上凸10px，故阴影再往下延伸10px，显得按钮很高 */
 }
+
+/*.cnWse_Skin_Blue .cnWse_tBtn_Shp_Cir>.cnWse_tBtn_Body*/
+/*{*/
+	/*background: -webkit-radial-gradient(50% 50%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: -moz-radial-gradient(50% 50%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: -ms-radial-gradient(50% 50%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: radial-gradient(50% 50%, circle, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+/*}*/
+
+/*.cnWse_Skin_Blue .cnWse_tBtn_Shp_Elps>.cnWse_tBtn_Body*/
+/*{*/
+	/*background: -webkit-radial-gradient(50% 50%, ellipse, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: -moz-radial-gradient(50% 50%, ellipse, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: -ms-radial-gradient(50% 50%, ellipse, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+	/*background: radial-gradient(50% 50%, ellipse, rgb(95%, 95%, 95%), rgb(95%, 95%, 95%) 20%, rgb(0, 128, 192) 90%, rgb(0, 128, 192));*/
+/*}*/
 
 /*********************************************** tEdit ***********************************************/
 

@@ -41,7 +41,7 @@
 		{
 			min-height: 500px;
 			background-color: rgb(239, 228, 176);
-			padding: 20px;
+			padding: 30px;
 		}
 
 		#k_PutTgt_Menu1
@@ -74,7 +74,12 @@
 			min-height: 100px;
 		}
 
-		#k_PutTgt_List1, #k_PutTgt_List2
+		#k_PutTgt_Btn1st, #k_PutTgt_Btn2nd, #k_PutTgt_Btn3rd, #k_PutTgt_Btn4th
+		{
+			margin: 0px 10px 50px 10px;
+		}
+
+		#k_PutTgt_List1, #k_PutTgt_List2, #k_PutTgt_Swch, #k_PutTgt_Edit2
 		{
 			margin-bottom: 50px;
 		}
@@ -82,11 +87,6 @@
 		#k_PutTgt_List1>ul, #k_PutTgt_List2>ul
 		{
 			/*height: 100px;*/
-		}
-
-		#k_PutTgt_Swch
-		{
-			margin-bottom: 50px;
 		}
 
 		#k_PutTgt_Srlz, #k_PutTgt_LogIn, #k_PutTgt_SignIn
@@ -132,8 +132,17 @@
 		<!---->
 		<!-- 按钮 -->
 		<!---->
-		<div id="k_BtnFirst" class="cnWse_PutSrc">
-			<span data-Wse_Tit>按 钮</span>
+		<div id="k_Btn1st" class="cnWse_PutSrc">
+			<span data-Wse_Tit>矩形按钮</span>
+		</div>
+		<div id="k_Btn2nd" class="cnWse_PutSrc">
+			<span data-Wse_Tit>圆形按钮</span>
+		</div>
+		<div id="k_Btn3rd" class="cnWse_PutSrc">
+			<span data-Wse_Tit>椭圆按钮</span>
+		</div>
+		<div id="k_Btn4th" class="cnWse_PutSrc">
+			<span data-Wse_Tit>囊形按钮</span>
 		</div>
 
 		<div id="k_Srlz" class="cnWse_PutSrc">
@@ -266,7 +275,7 @@
 		<!---->
 
 		<div id="k_Acod1" class="cnWse_PutSrc">
-			<h3 data-Wse_Tit class="ctAcodTit">First</h3>
+			<h3 data-Wse_Tit class="ctAcodTit">1st</h3>
 			<p data-Wse_Ctnt >Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.<br />Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
 			<h3 data-Wse_Tit>Second</h3>
 			<p data-Wse_Ctnt >Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.</p>
@@ -494,10 +503,12 @@
 					l_This.e_Form = l_Form;
 					l_This.e_StaWgtSet.cAdd(l_Form);
 
-					l_Wgt = new nCmnWgts.tBtn();	// BtnFirst
+					l_Wgt = new nCmnWgts.tBtn();	// Btn1st
 					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_BtnFirst",
-						c_PutSrc: "k_BtnFirst",
+						c_PutTgt: "k_PutTgt_Btn1st",
+						c_PutSrc: "k_Btn1st",
+						c_Shp : nCmnWgts.tBtn.tShp.i_Rect,
+					//	c_FxdAr: 2 / 1,
 						c_fOnClk: function (a_Wgt)
 						{
 //							var l_DomBody = nWse.stDomUtil.cAcsBody();
@@ -523,6 +534,36 @@
 						}
 					});
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// Btn2nd
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Btn2nd",
+						c_PutSrc: "k_Btn2nd",
+						c_Shp : nCmnWgts.tBtn.tShp.i_Cir,
+						c_TitVcen: true
+					//	c_FxdAr: 2 / 1,
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// Btn3rd
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Btn3rd",
+						c_PutSrc: "k_Btn3rd",
+						c_Shp : nCmnWgts.tBtn.tShp.i_Elps,
+						c_TitVcen: true,
+						c_FxdAr: 2 / 1
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tBtn();	// Btn4th
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Btn4th",
+						c_PutSrc: "k_Btn4th",
+						c_Shp : nCmnWgts.tBtn.tShp.i_Caps
+						//	c_FxdAr: 2 / 1,
+					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
+
 
 					l_Wgt = new nCmnWgts.tEdit();	// Edit
 					l_Wgt.vcBind({
@@ -809,19 +850,32 @@
 						})
 							.cPut({
 								c_NewRow : true,
-								c_Id: "k_PutTgt_BtnFirst",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 2
+								c_Id: "k_PutTgt_Btn1st",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Btn2nd",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Btn3rd",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Btn4th",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
 							})
 
 							// 表单
 							.cPut({
+								c_NewRow : true,
 								c_Id: "k_PutTgt_Edit1",
-								c_HrztAln: 0,
+								c_HrztAln: -1,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 							.cPut({
 								c_Id: "k_PutTgt_Edit2",
-								c_HrztAln: +1,
+								c_GridOfst: +2,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})
 							.cPut({

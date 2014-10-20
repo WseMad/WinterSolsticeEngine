@@ -18,46 +18,58 @@
 
 /*********************************************** tBtn ***********************************************/
 
-.cnWse_PutTgt.cnWse_tBtn,
+.cnWse_PutTgt.cnWse_tBtn_Hole,
 .cnWse_tBtn_Body
 {
 	text-align: center;
 	border-radius: 0.5em;
 }
 
-.cnWse_PutTgt.cnWse_tBtn
+.cnWse_PutTgt.cnWse_tBtn_Hole
 {
-	padding: 4px;
-	overflow: visible;
+	padding: 5px;		/* 底座总是比身体沿四个方向多出一小块（和字体大小无关，故用像素） */
+	overflow: visible;	/* 为了令按钮体上部超出的部分可见 */
+	cursor: default;
 
-	background-color: rgb(220, 220, 220);
+	background-color: rgb(200, 200, 200);
 	box-shadow: inset 0px 0px 20px rgb(0, 0, 0);
 }
 
 .cnWse_tBtn_Body
 {
-	position: relative;
+	padding: 0.5em;			/* 令文字周围多一点空间 */
+	cursor: pointer;
+
+	position: relative;		/* 上凸 */
 	top: -10px;
-	padding: 0.5em;
 
-	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+	-webkit-transition: top, box-shadow;
+	-moz-transition: top, box-shadow;
+	-ms-transition: top, box-shadow;
+	transition: top, box-shadow;
 
-	border-bottom-width: 0.5em;
-	border-bottom-style: solid;
-
-	-webkit-transition: top;
-	-moz-transition: top;
-	-ms-transition: top;
-	transition: top;
-
-	-webkit-transition-duration: 0.2s;
-	-moz-transition-duration: 0.2s;
-	-ms-transition-duration: 0.2s;
-	transition-duration: 0.2s;
+	-webkit-transition-duration: 0.3s;
+	-moz-transition-duration: 0.3s;
+	-ms-transition-duration: 0.3s;
+	transition-duration: 0.3s;
 }
 
-.cnWse_tWgt_Tch.cnWse_tBtn>.cnWse_tBtn_Body
+/* “.cnWse_PutTgt.cnWse_tBtn_Hole>”不能去掉，因为皮肤里的选择器都以某个CSS类开头，会覆盖这里的选择器 */
+/* 用第一行在火狐和IE里不行？！使用第二行就好！ */
+/*.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body:active*/
+.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn_Hole>.cnWse_tBtn_Body
 {
+	top: 0px;				/* 下陷 */
+
+	box-shadow: inset 0px 0px 20px rgb(0, 0, 0),
+		0px 5px 2px rgb(51, 51, 51);		/* 5px是为了对齐cnWse_tBtn的内边距，2px是为了模糊按钮身体边缘 */
+}
+
+/* 标题 */
+.cnWse_tBtn_Tit
+{
+	position: relative;
+	left: 0px;
 	top: 0px;
 }
 
@@ -522,17 +534,17 @@ ul.cnWse_tMenu_Plchd
 	margin-bottom: 2em;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn>.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body
 {
 	width: 4em;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tSignLog_Cls
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole.cnWse_tSignLog_Cls
 {
 	float: left;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tSignLog_Sbmt
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole.cnWse_tSignLog_Sbmt
 {
 	float: right;
 }
