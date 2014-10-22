@@ -150,16 +150,17 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc)
+				{ return this; }
 
-				// 簿记
-				var l_PutSrcUlAry = stDomUtil.cGetChdsOfTag(l_This.d_PutSrc, "UL");
-				var l_PutTgtUlAry = stDomUtil.cGetChdsOfTag(l_This.d_PutTgt, "UL");
-				stAryUtil.cFor(l_PutSrcUlAry, fNullWse_Menu);
-				stAryUtil.cFor(l_PutTgtUlAry, fNullWse_Menu);
+				// 下一级箭头和后退按钮
+				l_This.dRmvAllNextArw();
+				l_This.dRmvAllBackLi();
 
 				// CSS类
+				l_This.dAddRmvExpdLiCsscOfRootUl(null);
 				l_This.dAddRmvCsscOfRoot(false);
-				l_This.dAddRmvCsscOfNexts(false);
+			//	l_This.dAddRmvCsscOfNexts(false);	//【不要了】
 
 				// 注销放置目标事件处理器 - 当动画更新结束时
 				if (l_This.d_fOnAnmtUpdEnd)
@@ -401,8 +402,6 @@ function fOnIcld(a_Errs)
 			/// 存取DOM - 根
 			cAcsDomRoot : function ()
 			{
-				if (! this.d_RootUl)
-				{ this.d_RootUl = stDomUtil.cQryOne(this.dGnrtQrySlc_PutSrc() + ">[data-Wse_Root]"); }
 				return this.d_RootUl;
 			}
 			,
@@ -411,12 +410,12 @@ function fOnIcld(a_Errs)
 			{
 				// 根必须存在，并作为初始顶级列表
 				var l_This = this;
-				l_This.cAcsDomRoot();
+				l_This.d_RootUl = stDomUtil.cQryOne(l_This.dGnrtQrySlc_PutSrc() + ">[data-Wse_Root]");
 				stDomUtil.cRmvNonElmtChds(l_This.d_RootUl);		// 移除非元素子节点
 
 				// CSS类
 				l_This.dAddRmvCsscOfRoot(true);
-			//	l_This.dAddRmvCsscOfNexts(true);
+			//	l_This.dAddRmvCsscOfNexts(true);	//【不要了】
 
 				// 隐藏次级列表
 				l_This.dHideNexts();
@@ -833,10 +832,7 @@ function fOnIcld(a_Errs)
 					// 已经有则删
 					if (l_HasNextArw)
 					{
-						a_DomNode.innerHTML = a_DomNode.Wse_Menu.c_OrigHtml;
-						a_DomNode.Wse_Menu.c_OrigHtml = null;
-						a_DomNode.Wse_Menu.c_ArwDir = 0;
-
+						l_This.eRmvArwOfLi(a_DomNode);
 						if (! l_HasNextUl)	// 没有下一级就返回
 						{ return; }
 					}
@@ -853,6 +849,40 @@ function fOnIcld(a_Errs)
 					a_DomNode.innerHTML = a_DomNode.innerHTML + l_ArwHtml;
 				//	a_DomNode.innerHTML = l_ArwHtml + a_DomNode.innerHTML;
 				});
+			}
+			,
+			/// 移除全部下一级箭头
+			dRmvAllNextArw : function (a_Ul)
+			{
+				var l_This = this;
+				var l_Uls = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutTgt() + ">ul");
+				l_Uls.push.apply(l_Uls, stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul"));
+				stAryUtil.cFor(l_Uls,
+				function (a_Uls, a_UlIdx, a_Ul)
+				{
+					stAryUtil.cFor(a_Ul.childNodes,
+					function (a_Ary, a_Idx, a_DomNode)
+					{
+						// 只处理<li>
+						if ((1 != a_DomNode.nodeType) || ("LI" != a_DomNode.tagName))
+						{ return; }
+
+						var l_HasNextArw = !! (a_DomNode.Wse_Menu && a_DomNode.Wse_Menu.c_ArwDir);
+						if (l_HasNextArw)
+						{
+							l_This.eRmvArwOfLi(a_DomNode);
+						}
+					});
+				});
+				return this;
+			}
+			,
+			eRmvArwOfLi : function (a_Li)
+			{
+				a_Li.innerHTML = a_Li.Wse_Menu.c_OrigHtml;
+				a_Li.Wse_Menu.c_OrigHtml = null;
+				a_Li.Wse_Menu.c_ArwDir = 0;
+				return this;
 			}
 			,
 			/// 插入返回<li>
@@ -887,6 +917,20 @@ function fOnIcld(a_Errs)
 					a_Ul.removeChild(a_Ul.Wse_Menu.c_BackLi);
 					a_Ul.Wse_Menu.c_BackLi = null;
 				}
+				return this;
+			}
+			,
+			/// 移除全部返回<li>
+			dRmvAllBackLi : function ()
+			{
+				var l_This = this;
+				var l_Uls = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutTgt() + ">ul");
+				l_Uls.push.apply(l_Uls, stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul"));
+				stAryUtil.cFor(l_Uls,
+				function (a_Uls, a_UlIdx, a_Ul)
+				{
+					l_This.dRmvBackLi(a_Ul);
+				});
 				return this;
 			}
 			,
@@ -936,6 +980,9 @@ function fOnIcld(a_Errs)
 			dRgltListsPos_ExpdMode : function (a_Root, a_Nexts, a_UpdOnly)
 			{
 				var l_This = this;
+				if (! l_This.d_RootUl)
+				{ return this; }
+
 				if (! a_Nexts)
 				{ a_Nexts = l_This.dGetListsInPutTgt(); }
 
@@ -1172,6 +1219,9 @@ function fOnIcld(a_Errs)
 			dRgltListsPos_OvlpMode : function (a_Root, a_Nexts)
 			{
 				var l_This = this;
+				if (! l_This.d_RootUl)
+				{ return this; }
+
 				if (! a_Nexts)
 				{ a_Nexts = l_This.dGetListsInPutTgt(); }
 

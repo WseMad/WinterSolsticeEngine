@@ -118,7 +118,7 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
-			/// c_Kind：Number，种类，0=密码，1=单行（默认），2=多行
+			/// c_Kind：Number，种类，-1=未知（尚未绑定），0=密码，1=单行（默认），2=多行
 			/// c_Plchd：String，占位符
 			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
 			/// }
@@ -132,13 +132,11 @@ function fOnIcld(a_Errs)
 				var l_Kind = l_This.cGetKind();
 				if (2 == l_Kind)
 				{
-				//	l_This.d_DomText = document.createElement("textarea");
 					l_This.d_DomText = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">textarea",
 						"textarea", null, null, null);
 				}
 				else
 				{
-//					l_This.d_DomText = document.createElement("input");
 					l_This.d_DomText = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">input[type=text]",
 						"input", null, null, null);
 					l_This.d_DomText.type = (0 == l_Kind) ? "password" : "text";
@@ -189,6 +187,22 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc)
+				{ return this; }
+
+				// 文本框
+				if (l_This.d_DomText)
+				{
+					// 如果在来源里，且是新建的，移除
+					if (l_This.dIsPutInSrc(l_This.d_DomText) &&
+						l_This.d_DomText.Wse_DomUtil && l_This.d_DomText.Wse_DomUtil.c_New)
+					{
+					//	l_This.dRmvWhenInSrc("d_DomText");
+						l_This.d_DomText.parentNode.removeChild(l_This.d_DomText);
+					}
+
+					l_This.d_DomText = null;
+				}
 
 				// 重置
 				fRset(this);
@@ -292,7 +306,7 @@ function fOnIcld(a_Errs)
 			cGetKind : function ()
 			{
 				var l_Cfg = this.d_Cfg;
-				return ("c_Kind" in l_Cfg) ? l_Cfg.c_Kind : 1;
+				return l_Cfg ? (("c_Kind" in l_Cfg) ? l_Cfg.c_Kind : 1) : -1;
 			}
 			,
 			/// 为空？
@@ -331,6 +345,8 @@ function fOnIcld(a_Errs)
 			dRgltPosDim : function ()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc) // 尚未绑定？
+				{ return this; }
 
 				var l_CtntW = 0;
 				var l_OkX = 0, l_OkY = 0, l_OkW = 0, l_OkH = 0;

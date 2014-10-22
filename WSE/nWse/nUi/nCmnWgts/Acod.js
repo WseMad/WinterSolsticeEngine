@@ -126,8 +126,18 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc)
+				{ return this; }
 
-				l_This.dAddRmvCsscOf(true, false);	// CSS类
+				// 标题
+				stAryUtil.cFor(l_This.d_Tits,
+				function (a_Tits, a_TitIdx, a_Tit)
+				{
+					l_This.dClrTitArwHtml(a_Tit);
+				});
+
+				// CSS类
+				l_This.dAddRmvCsscOf(true, false);
 				l_This.dAddRmvCsscOf(false, false);
 
 				// 重置
@@ -505,6 +515,16 @@ function fOnIcld(a_Errs)
 
 				var l_ArwHtml = a_RtArw ? s_RtArwHtml : s_DnArwHtml;
 				a_Tit.innerHTML = l_ArwHtml + a_Tit.Wse_Acod.c_OrigInrHtml;
+				return this;
+			}
+			,
+			/// 清除标题箭头HTML
+			dClrTitArwHtml : function (a_Tit)
+			{
+				if (! a_Tit.Wse_Acod)
+				{ return this; }
+
+				a_Tit.innerHTML = a_Tit.Wse_Acod.c_OrigInrHtml;
 				return this;
 			}
 		}

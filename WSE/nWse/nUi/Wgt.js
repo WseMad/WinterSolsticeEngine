@@ -349,6 +349,12 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 已绑定？即检查放置来源是否有效
+			cHasBnd : function ()
+			{
+				return !! this.d_PutSrc;
+			}
+			,
 			/// 刷新
 			cRfsh : function ()
 			{
@@ -453,7 +459,7 @@ function fOnIcld(a_Errs)
 			/// 放置元素是否在来源里
 			dIsPutInSrc : function (a_Put)
 			{
-				return unKnl.fIsPutInSrc(this.d_PutSrc, a_Put);
+				return a_Put ? unKnl.fIsPutInSrc(this.d_PutSrc, a_Put) : false;
 			}
 			,
 			/// 摆放至目标
@@ -474,6 +480,16 @@ function fOnIcld(a_Errs)
 			{
 				unKnl.fRtnToSrc(this.d_PutTgt, this.d_PutSrc, a_PutInTgt, a_Bef, true);
 				return this;
+			}
+			,
+			/// 当在来源里时移除
+			/// a_FldName：String，this的字段名，标识一个DOM节点
+			dRmvWhenInSrc : function (a_FldName)
+			{
+				if (this.dIsPutInSrc(this[a_FldName]))
+				{ this[a_FldName].parentNode.removeChild(this[a_FldName]); }
+
+				this[a_FldName] = null;
 			}
 			,
 			/// 为放置目标替换CSS类

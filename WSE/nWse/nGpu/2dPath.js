@@ -51,7 +51,7 @@ function fOnIcld(a_Errs)
 	function fBldPath(a_This, a_Path, a_Mtx)
 	{
 		if (a_Mtx)
-		{ fSetTsfm(a_This, a_Mtx); }
+		{ unKnl.fSetTsfm(a_This, a_Mtx); }
 
 		nWse.stAryUtil.cFor(a_Path.e_StepAry,
 			function (a_Tgt, a_Idx, a_Step)
@@ -257,10 +257,10 @@ function fOnIcld(a_Errs)
 			/// 椭圆弧
 			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
 			/// a_Cx，a_Cy：Number，圆心（Center）坐标
-			/// a_HL：Number，横轴长（Horizontal Length）
-			/// a_VL：Number，竖轴长（Vertical Length）
+			/// a_HR：Number，横轴半径（Horizontal Radius）
+			/// a_VR：Number，竖轴半径（Vertical Radius）
 			/// a_BgnRad，a_EndRad：Number，起始和终止弧度
-			cElpsArc: function (a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad)
+			cElpsArc: function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad)
 			{
 				// 环？
 				var l_DtaRad = Math.abs(a_EndRad - a_BgnRad);
@@ -282,7 +282,7 @@ function fOnIcld(a_Errs)
 				if (! a_LineToSp)
 				{
 					l_Cos = Math.cos(a_BgnRad); l_Sin = Math.sin(a_BgnRad);
-					l_STPx = a_Cx + a_HL * l_Cos; l_STPy = a_Cy + a_VL * l_Sin;
+					l_STPx = a_Cx + a_HR * l_Cos; l_STPy = a_Cy + a_VR * l_Sin;
 					this.cMoveTo(l_STPx, l_STPy);
 				}
 
@@ -292,9 +292,9 @@ function fOnIcld(a_Errs)
 					//【注意】变换阵3·变换阵2·变换阵1·列向量
 					var l_Ctxt = a_Ctxt.cAcs();
 					l_Ctxt.translate(a_Cx, a_Cy);
-					l_Ctxt.scale(a_HL, a_VL);
+					l_Ctxt.scale(a_HR, a_VR);
 					l_Ctxt.arc(0, 0, 1, a_BgnRad, a_EndRad, (a_BgnRad > a_EndRad));
-					fSetTsfm(a_Ctxt, a_Mtx);	// 恢复变换，因为上面修改了变换
+					unKnl.fSetTsfm(a_Ctxt, a_Mtx);	// 恢复变换，因为上面修改了变换
 				};
 
 				this.e_StepAry.push(l_Step);
@@ -308,17 +308,17 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 椭圆扇
-			cElpsFan : function (a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad)
+			cElpsFan : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad)
 			{
 				// 椭圆？
 				var l_DtaRad = Math.abs(a_EndRad - a_BgnRad);
 				if (l_DtaRad >= Math.PI * 2)
 				{
-					this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad);
+					this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad);
 					return this;
 				}
 
-				this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad);
+				this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad);
 				this.cLineTo(a_Cx, a_Cy);
 				return this;
 			}
@@ -332,22 +332,22 @@ function fOnIcld(a_Errs)
 			,
 			/// 椭圆环弧
 			/// a_Thkns：Number，厚度，＞0向外延伸，＜0向内收缩
-			cElpsRingArc : function (a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad, a_Thkns)
+			cElpsRingArc : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad, a_Thkns)
 			{
 				// 退化成椭圆弧？
 				if (! a_Thkns)
-				{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad); }
+				{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad); }
 
 				// 退化成椭圆扇？
-				var l_HL2 = a_HL + a_Thkns, l_VL2 = a_VL + a_Thkns;
+				var l_HL2 = a_HR + a_Thkns, l_VL2 = a_VR + a_Thkns;
 				if ((l_HL2 <= 0) || (l_VL2 <= 0))
-				{ return this.cElpsFan(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad); }
+				{ return this.cElpsFan(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad); }
 
 				// 椭圆环？
 				var l_DtaRad = Math.abs(a_EndRad - a_BgnRad);
 				if (l_DtaRad >= Math.PI * 2)
 				{
-					this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad);
+					this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad);
 					this.cElpsArc(false, a_Cx, a_Cy, l_HL2, l_VL2, a_EndRad, a_BgnRad);
 					return this;
 				}
@@ -355,8 +355,8 @@ function fOnIcld(a_Errs)
 				// 计算四个端点
 				var l_CosBgn, l_SinBgn, l_P0x, l_P0y;
 				l_CosBgn = Math.cos(a_BgnRad);		l_SinBgn = Math.sin(a_BgnRad);
-				l_P0x = a_Cx + a_HL * l_CosBgn; 	l_P0y = a_Cy + a_VL * l_SinBgn;
-				this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_BgnRad, a_EndRad);
+				l_P0x = a_Cx + a_HR * l_CosBgn; 	l_P0y = a_Cy + a_VR * l_SinBgn;
+				this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad);
 				this.cElpsArc(true, a_Cx, a_Cy, l_HL2, l_VL2, a_EndRad, a_BgnRad);
 				this.cLineTo(l_P0x, l_P0y);
 				return this;
@@ -448,12 +448,12 @@ function fOnIcld(a_Errs)
 			{ return this.cRingArc(a_LineToSp, a_Cx, a_Cy, a_R, a_Thkns); }
 			,
 			/// 椭圆
-			cElps: function (a_LineToSp, a_Cx, a_Cy, a_HL, a_VL)
-			{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, 0, Math.PI * 2); }
+			cElps: function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR)
+			{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, 0, Math.PI * 2); }
 			,
 			/// 椭圆环
-			cElpsRing : function (a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, a_Thkns)
-			{ return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_HL, a_VL, 0, Math.PI * 2, a_Thkns); }
+			cElpsRing : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_Thkns)
+			{ return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, 0, Math.PI * 2, a_Thkns); }
 			,
 			/// 囊形
 			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
@@ -570,7 +570,7 @@ function fOnIcld(a_Errs)
 				}
 
 				// 宽高符号控制环绕方向
-				l_SignW = nWse.stNumUtil.cSign(a_W);//, l_SignH = nWse.stNumUtil.cSign(a_H);
+				var l_SignW = nWse.stNumUtil.cSign(a_W);//, l_SignH = nWse.stNumUtil.cSign(a_H);
 				fLineToSp(this, a_LineToSp, a_X + l_SignW * l_R0, a_Y);
 
 				// 圆角
@@ -581,10 +581,140 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 椭圆角矩形（Elliptical Corner Rectangle）
+			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
+			/// a_X，a_Y：Number，起点坐标
+			/// a_W：Number，有符号宽，＜0时向-X方向增长
+			/// a_H：Number，有符号高，＜0时向-Y方向增长
+			/// a_HR：Number$Number[]，角水平半径，≤0表示直角，＞0表示圆角，若过大可能退化成椭圆；数组时遵从CSS3标准
+			/// a_VR：Number$Number[]，角垂直半径，≤0表示直角，＞0表示圆角，若过大可能退化成椭圆；数组时遵从CSS3标准
+			///【注意】a_HR和a_VR的类型必须相同！即要么都是Number，要么都是Number[]
+			cEcRect: function (a_LineToSp, a_X, a_Y, a_W, a_H, a_HR, a_VR)
+			{
+				// CSS3风格，[↖，↗，↘，↙]
+				var l_AbsW = Math.abs(a_W), l_AbsH = Math.abs(a_H);
+				var l_HR0, l_HR1, l_HR2, l_HR3, l_hr0, l_hr1, l_hr2, l_hr3;
+				var l_VR0, l_VR1, l_VR2, l_VR3, l_vr0, l_vr1, l_vr2, l_vr3;
+				if (nWse.fIsNum(a_HR)) // 两方向各自等半径椭圆角矩形
+				{
+					// 直角
+					if ((a_HR <= 0) || (a_VR <= 0))
+					{ return this.cRect(a_LineToSp, a_X, a_Y, a_W, a_H); }
+
+					// 退化成椭圆
+					if ((a_HR * 2 >= l_AbsW) && (a_VR * 2 >= l_AbsH))
+					{ return this.cElps(a_LineToSp, a_X + a_W / 2, a_Y + a_H / 2, a_W / 2, a_H / 2); }
+
+					// 记录半径
+					l_HR0 = l_HR1 = l_HR2 = l_HR3 = a_HR;
+					l_VR0 = l_VR1 = l_VR2 = l_VR3 = a_VR;
+				}
+				else
+				if (nWse.fIsAry(a_HR)) // 不等半径椭圆角矩形
+				{
+					// 记录半径，溢出时等比例缩小
+					l_HR0 = a_HR[0];	l_HR1 = a_HR[1];	l_HR2 = a_HR[2];	l_HR3 = a_HR[3];
+					l_VR0 = a_VR[0];	l_VR1 = a_VR[1];	l_VR2 = a_VR[2];	l_VR3 = a_VR[3];
+
+					if (l_HR0 + l_HR1 > l_AbsW)	// 上边溢出
+					{
+						l_hr0 = l_AbsW / (l_HR0 + l_HR1) * l_HR0;
+						l_hr1 = l_AbsW / (l_HR0 + l_HR1) * l_HR1;
+						l_HR0 = l_hr0;
+						l_HR1 = l_hr1;
+					}
+
+					if (l_VR1 + l_VR2 > l_AbsH)	// 右边溢出
+					{
+						l_vr1 = l_AbsH / (l_VR1 + l_VR2) * l_VR1;
+						l_vr2 = l_AbsH / (l_VR1 + l_VR2) * l_VR2;
+						l_VR1 = l_vr1;
+						l_VR2 = l_vr2;
+					}
+
+					if (l_HR2 + l_HR3 > l_AbsW)	// 下边溢出
+					{
+						l_hr2 = l_AbsW / (l_HR2 + l_HR3) * l_HR2;
+						l_hr3 = l_AbsW / (l_HR2 + l_HR3) * l_HR3;
+						l_HR2 = l_hr2;
+						l_HR3 = l_hr3;
+					}
+
+					if (l_VR3 + l_VR0 > l_AbsH)	// 左边溢出
+					{
+						l_vr3 = l_AbsH / (l_VR3 + l_VR0) * l_VR3;
+						l_vr0 = l_AbsH / (l_VR3 + l_VR0) * l_VR0;
+						l_VR3 = l_vr3;
+						l_VR0 = l_vr0;
+					}
+				}
+				else // 按直角矩形处理
+				{
+					return this.cRect(a_LineToSp, a_X, a_Y, a_W, a_H);
+				}
+
+				// 宽高符号控制环绕方向
+				if (a_W < 0)
+				{
+					if (a_H < 0) // 右下角开始，顺时针
+					{
+						fLineToSp(this, a_LineToSp, a_X + l_AbsW - l_HR2, a_Y + l_AbsH);
+						this.cLineTo(a_X + l_HR3, a_Y + l_AbsH);
+						this.cElpsArc(true, a_X + l_HR3, a_Y + l_AbsH - l_VR3, l_HR3, l_VR3, -Math.PI * 3 / 2, -Math.PI);
+						this.cLineTo(a_X, a_Y + l_VR0);
+						this.cElpsArc(true, a_X + l_HR0, a_Y + l_VR0, l_HR0, l_VR0, -Math.PI, -Math.PI / 2);
+						this.cLineTo(a_X + l_AbsW - l_HR1, a_Y);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR1, a_Y + l_VR1, l_HR1, l_VR1, -Math.PI / 2, 0);
+						this.cLineTo(a_X + l_AbsW, a_Y + l_AbsH - l_VR2);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR2, a_Y + l_AbsH - l_VR2, l_HR2, l_VR2, 0, Math.PI / 2);
+					}
+					else // 右上角开始，逆时针
+					{
+						fLineToSp(this, a_LineToSp, a_X + l_AbsW - l_HR1, a_Y);
+						this.cLineTo(a_X + l_HR0, a_Y);
+						this.cElpsArc(true, a_X + l_HR0, a_Y + l_VR0, l_HR0, l_VR0, Math.PI * 3 / 2, Math.PI);
+						this.cLineTo(a_X, a_Y + l_AbsH - l_VR3);
+						this.cElpsArc(true, a_X + l_HR3, a_Y + l_AbsH - l_VR3, l_HR3, l_VR3, Math.PI, Math.PI / 2);
+						this.cLineTo(a_X + l_AbsW - l_HR2, a_Y + l_AbsH);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR2, a_Y + l_AbsH - l_VR2, l_HR2, l_VR2, +Math.PI / 2, 0);
+						this.cLineTo(a_X + l_AbsW, a_Y + l_VR1);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR1, a_Y + l_VR1, l_HR1, l_VR1, 0, -Math.PI / 2);
+					}
+				}
+				else
+				{
+					if (a_H < 0) // 左下角开始，逆时针
+					{
+						fLineToSp(this, a_LineToSp, a_X + l_HR0, a_Y + l_AbsH);
+						this.cLineTo(a_X + l_AbsW - l_HR2, a_Y + l_AbsH);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR2, a_Y + l_AbsH - l_VR2, l_HR2, l_VR2, +Math.PI / 2, 0);
+						this.cLineTo(a_X + l_AbsW, a_Y + l_VR1);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR1, a_Y + l_VR1, l_HR1, l_VR1, 0, -Math.PI / 2);
+						this.cLineTo(a_X + l_HR0, a_Y);
+						this.cElpsArc(true, a_X + l_HR0, a_Y + l_VR0, l_HR0, l_VR0, -Math.PI / 2, -Math.PI);
+						this.cLineTo(a_X, a_Y + l_AbsH - l_VR3);
+						this.cElpsArc(true, a_X + l_HR3, a_Y + l_AbsH - l_VR3, l_HR3, l_VR3, -Math.PI, -Math.PI * 3 / 2);
+					}
+					else // 左上角开始，顺时针
+					{
+						fLineToSp(this, a_LineToSp, a_X + l_HR0, a_Y);
+						this.cLineTo(a_X + l_AbsW - l_HR1, a_Y);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR1, a_Y + l_VR1, l_HR1, l_VR1, -Math.PI / 2, 0);
+						this.cLineTo(a_X + l_AbsW, a_Y + l_AbsH - l_VR2);
+						this.cElpsArc(true, a_X + l_AbsW - l_HR2, a_Y + l_AbsH - l_VR2, l_HR2, l_VR2, 0, +Math.PI / 2);
+						this.cLineTo(a_X + l_HR3, a_Y + l_AbsH);
+						this.cElpsArc(true, a_X + l_HR3, a_Y + l_AbsH - l_VR3, l_HR3, l_VR3, +Math.PI / 2, Math.PI);
+						this.cLineTo(a_X, a_Y + l_VR0);
+						this.cElpsArc(true, a_X + l_HR0, a_Y + l_VR0, l_HR0, l_VR0, Math.PI, Math.PI * 3 / 2);
+					}
+				}
+				return this;
+			}
+			,
 			/// 箭头
 			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
 			/// a_Sx, a_Sy, a_Tx, a_Ty：Number，起点和终点坐标
-			/// a_HL, a_HR, a_BR：Number，头部长度，头部半径，身体半径
+			/// a_HR, a_HR, a_BR：Number，头部长度，头部半径，身体半径
 			cArw: function (a_LineToSp, a_Sx, a_Sy, a_Tx, a_Ty, a_HL, a_HR, a_BR)
 			{
 				var l_DtaX = (a_Tx - a_Sx), l_DtaY = (a_Ty - a_Sy);
@@ -592,9 +722,9 @@ function fOnIcld(a_Errs)
 				if (nWse.stNumUtil.cIz(l_AL)) // 长度为0
 				{ return this; }
 
-				var l_DirX = l_DtaX / l_AL, l_DirY = l_DtaY / l_AL;		// 方向
-				var l_PerpX = -l_DirY, l_PerpY = l_DirX;				// 垂直方向
-				var l_BL = Math.max(l_AL - a_HL, 0);	// 如果头比整个箭头都长，退化成三角形
+				var l_DirX = l_DtaX / l_AL, l_DirY = l_DtaY / l_AL;	// 方向
+				var l_PerpX = -l_DirY, l_PerpY = l_DirX;			// 垂直方向
+				var l_BL = Math.max(l_AL - a_HL, 0);				// 如果头比整个箭头都长，退化成三角形
 
 				var l_BgnX = a_Sx - l_PerpX * a_BR, l_BgnY = a_Sy - l_PerpY * a_BR;
 				var l_BodyEndX = l_BgnX + l_DirX * l_BL, l_BodyEndY = l_BgnY + l_DirY * l_BL;

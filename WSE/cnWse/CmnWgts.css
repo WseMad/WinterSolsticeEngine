@@ -57,7 +57,8 @@
 /* “.cnWse_PutTgt.cnWse_tBtn_Hole>”不能去掉，因为皮肤里的选择器都以某个CSS类开头，会覆盖这里的选择器 */
 /* 用第一行在火狐和IE里不行？！使用第二行就好！ */
 /*.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body:active*/
-.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn_Hole>.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn_Hole>.cnWse_tBtn_Body,
+.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
 {
 	top: 0px;				/* 下陷 */
 
@@ -246,7 +247,7 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	background-color: rgb(220, 220, 220);
 }
 
-.cnWse_tSwch .cnWse_tSwch_Bar
+.cnWse_tSwch .cnWse_tSwch_Gap
 {
 	position: absolute;
 	width: 60%;
@@ -258,7 +259,7 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	z-index: 1;
 }
 
-.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Bar
+.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Gap
 {
 	border-top-color: rgb(96, 96, 96);		/* 颜色稍微亮一点 */
 }

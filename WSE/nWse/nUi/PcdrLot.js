@@ -882,7 +882,7 @@ function fOnIcld(a_Errs)
 		}
 		else // 计算栅格索引和个数
 		{
-			if (l_Cfg.c_NewRow && (l_RowHgts[l_RowHgts.length - 1] > 0))	// 换行
+			if (l_Cfg.c_NewRow)	// 换行
 			{ fFlow_NewLine(a_This, a_Boa, a_Col); }
 
 			if (l_GridCnt > l_GridTot)	// 确保c_GridCnt <= l_GridTot

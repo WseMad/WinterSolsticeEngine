@@ -98,6 +98,7 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_UpDown：Boolean，弹起按下？初始弹起，单击变按下，再单击变弹起，以此类推
 			/// c_Shp：tShp，形状，若为i_Cir则覆盖c_FxdAr（圆的宽高比总是1）
 			/// c_FxdAr：Number，固定宽高比
 			/// c_TitVcen：Boolean，标题垂直居中？仅当有标题时才有效
@@ -110,15 +111,16 @@ function fOnIcld(a_Errs)
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn");			// CSS类
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tBtn_Hole");		// CSS类
 
-				if (l_This.cAcsTit())
-				{ stCssUtil.cAddCssc(l_This.cAcsTit(), "cnWse_tBtn_Tit"); }	// CSS类
+				l_This.d_DomTit = l_This.dAcsDomNodeByAttr("Wse_Tit");		// 取得标题
+				if (l_This.d_DomTit)
+				{ stCssUtil.cAddCssc(l_This.d_DomTit, "cnWse_tBtn_Tit"); }	// CSS类
 
-				// 创建体，放入标题
+				// 创建身体，放入标题
 				l_This.d_Body = document.createElement("div");
 				stCssUtil.cAddCssc(l_This.d_Body, "cnWse_tBtn_Body");			// CSS类
-				if (l_This.cAcsTit())
+				if (l_This.d_DomTit)
 				{
-					l_This.d_Body.appendChild(l_This.cAcsTit());
+					l_This.d_Body.appendChild(l_This.d_DomTit);
 				}
 				else // 没有标题时，使用文本节点
 				if (l_This.d_PutSrc.textContent)
@@ -126,8 +128,7 @@ function fOnIcld(a_Errs)
 					l_This.d_Body.appendChild(document.createTextNode(l_This.d_PutSrc.textContent));
 				}
 
-				l_This.dApdToSrc(l_This.d_Body);	// 先追加到来源
-				l_This.dPutToTgt(l_This.d_Body);	// 后摆放到目标
+				l_This.dApdToSrc(l_This.d_Body);	// 先追加到来源，刷新时再摆放到目标
 
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
@@ -142,7 +143,7 @@ function fOnIcld(a_Errs)
 					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
 				}
 
-				if (l_This.d_Cfg.c_TitVcen && l_This.cAcsTit() && (! l_This.d_fOnAnmtUpdEnd))
+				if (l_This.d_Cfg.c_TitVcen && l_This.d_DomTit && (! l_This.d_fOnAnmtUpdEnd))
 				{
 					// 展开式时必须校准位置
 					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
@@ -161,8 +162,24 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
-				stCssUtil.cRmvCssc(l_This.cAcsTit(), "cnWse_tBtn_Tit");	// CSS类
+				if (! l_This.d_PutSrc)
+				{ return this; }
 
+				// 标题
+				if (l_This.d_DomTit)
+				{
+					stCssUtil.cRmvCssc(l_This.d_DomTit, "cnWse_tBtn_Tit");	// CSS类
+					l_This.d_PutSrc.appendChild(l_This.d_DomTit);
+					l_This.d_DomTit = null;
+				}
+
+				// 身体
+				if (l_This.d_Body)
+				{
+					l_This.dRmvWhenInSrc("d_Body");
+				}
+
+				// 事件处理器
 				if (l_This.d_fOnWidDtmnd)
 				{
 					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
@@ -190,11 +207,9 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 
-//				// 把标题摆放到目标
-//				if (l_This.cAcsTit())
-//				{
-//					l_This.dPutToTgt(l_This.d_DomTit);
-//				}
+				// 身体摆放到目标
+				if (l_This.d_Body)
+				{ l_This.dPutToTgt(l_This.d_Body); }
 				return this;
 			}
 			,
@@ -266,6 +281,12 @@ function fOnIcld(a_Errs)
 						if (l_ClkBody && l_This.d_Cfg.c_fOnClk)	// 回调
 						{ l_This.d_Cfg.c_fOnClk(l_This); }
 
+						// 如果开关
+						if (l_This.d_Cfg.c_UpDown)
+						{
+							stCssUtil.cTglCssc(l_This.d_Body, "cnWse_tBtn_Down");
+						}
+
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
@@ -301,9 +322,32 @@ function fOnIcld(a_Errs)
 			/// 存取DOM - 标题
 			cAcsTit : function ()
 			{
-				if (! this.d_DomTit)
-				{ this.d_DomTit = this.dAcsDomNodeByAttr("Wse_Tit"); }
 				return this.d_DomTit;
+			}
+			,
+			/// 弹起？当配置里的项c_UpDown为true时才有效
+			cIsUp : function ()
+			{
+				return this.d_Cfg.c_UpDown ? (! this.cIsDown()) : true;
+			}
+			,
+			/// 按下？当配置里的项c_UpDown为true时才有效
+			cIsDown : function ()
+			{
+				return this.d_Cfg.c_UpDown ? stCssUtil.cHasCssc(this.d_Body, "cnWse_tBtn_Down") : false;
+			}
+			,
+			/// 弹起按下，当配置里的项c_UpDown为true时才有效
+			cUpDown : function (a_Up)
+			{
+				var l_This = this;
+				if (! l_This.d_Cfg.c_UpDown)
+				{ return this; }
+
+				a_Up
+					? stCssUtil.cRmvCssc(l_This.d_Body, "cnWse_tBtn_Down")
+					: stCssUtil.cAddCssc(l_This.d_Body, "cnWse_tBtn_Down");
+				return this;
 			}
 			,
 			/// 修正高度和形状
@@ -371,12 +415,14 @@ function fOnIcld(a_Errs)
 			dTitVcen : function ()
 			{
 				var l_This = this;
+				if (! l_This.d_DomTit)
+				{ return this; }
 
 				if (! s_TempRst)
 				{ s_TempRst = {}; }
 
 				var l_CtntH = stCssUtil.cGetCtntHgt(s_TempRst, l_This.d_Body).c_CtntHgt;
-				stCssUtil.cSetPosUp(l_This.cAcsTit(), (l_CtntH - l_This.cAcsTit().offsetHeight) / 2);
+				stCssUtil.cSetPosUp(l_This.d_DomTit, (l_CtntH - l_This.d_DomTit.offsetHeight) / 2);
 				return this;
 			}
 		}

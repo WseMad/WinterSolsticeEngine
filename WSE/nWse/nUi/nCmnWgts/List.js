@@ -129,6 +129,18 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc)
+				{ return this; }
+
+				// 移除按钮
+				l_This.dRmvBtns();
+
+				// 如果是多选
+				if (l_This.d_Cfg.c_MltSlc)
+				{
+					// 删除两个辅助按钮，内部会进行检查
+					l_This.dRmvAsisBtns();
+				}
 
 				// 重置
 				fRset(this);
@@ -390,18 +402,34 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 				stAryUtil.cFor(l_This.d_LiAry,
-				function (a_Ary, a_Idx, a_Li)
-				{
-					var l_Dom = document.createElement("span");
-					stCssUtil.cSetCssc(l_Dom, "cnWse_tList_Btn");
-					a_Li.insertBefore(l_Dom, a_Li.firstChild);	// 插入到前方
+					function (a_Ary, a_Idx, a_Li)
+					{
+						var l_Dom = document.createElement("span");
+						stCssUtil.cSetCssc(l_Dom, "cnWse_tList_Btn");
+						a_Li.insertBefore(l_Dom, a_Li.firstChild);	// 插入到前方
 
-					// 簿记
-					if (! a_Li.Wse_List)
-					{ a_Li.Wse_List = {}; }
+						// 簿记
+						if (! a_Li.Wse_List)
+						{ a_Li.Wse_List = {}; }
 
-					a_Li.Wse_List.c_DomBtn = l_Dom;
-				});
+						a_Li.Wse_List.c_DomBtn = l_Dom;
+					});
+				return this;
+			}
+			,
+			/// 移除按钮
+			dRmvBtns : function ()
+			{
+				var l_This = this;
+				stAryUtil.cFor(l_This.d_LiAry,
+					function (a_Ary, a_Idx, a_Li)
+					{
+						if ((! a_Li.Wse_List) || (! a_Li.Wse_List.c_DomBtn))
+						{ return; }
+
+						a_Li.Wse_List.c_DomBtn.parentNode.removeChild(a_Li.Wse_List.c_DomBtn);
+						a_Li.Wse_List.c_DomBtn = null;
+					});
 				return this;
 			}
 			,
@@ -443,7 +471,15 @@ function fOnIcld(a_Errs)
 					});
 				l_This.d_SlcRvs = l_SlcRvs;
 				l_This.d_PutSrc.appendChild(l_SlcRvs);	// 放到来源
-
+				return this;
+			}
+			,
+			/// 移除辅助按钮，仅当它们在来源里时才有效
+			dRmvAsisBtns : function ()
+			{
+				var l_This = this;
+				l_This.dRmvWhenInSrc("d_SlcAll");
+				l_This.dRmvWhenInSrc("d_SlcRvs");
 				return this;
 			}
 			,

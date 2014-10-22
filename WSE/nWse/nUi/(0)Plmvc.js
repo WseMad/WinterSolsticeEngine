@@ -116,7 +116,7 @@ function fOnIcld(a_Errs)
 
 	unKnl.fAbdnPutTgt = function (a_PutTgt)
 	{
-		if (! a_PutTgt.Wse_PutTgt)
+		if ((! a_PutTgt) || (! a_PutTgt.Wse_PutTgt))
 		{ return; }
 
 		a_PutTgt.className = a_PutTgt.Wse_PutTgt.c_OrigCssc;	// CSS类
@@ -130,8 +130,8 @@ function fOnIcld(a_Errs)
 
 	unKnl.fPutToTgt = function (a_PutTgt, a_PutSrc, a_PutInSrc, a_Bef, a_Vrf)
 	{
-		// 已经在了？
-		if (a_PutTgt === a_PutInSrc.parentNode)
+		// 无效，或已经在了？
+		if ((! a_PutInSrc) || (a_PutTgt === a_PutInSrc.parentNode))
 		{ return; }
 
 		// 验证
@@ -168,9 +168,9 @@ function fOnIcld(a_Errs)
 
 	unKnl.fRtnToSrc = function (a_PutTgt, a_PutSrc, a_PutInTgt, a_Bef, a_Vrf)
 	{
-		// 已经在了？
-		var l_Prn = fObtnOrigPrnOfPut(a_PutSrc, a_PutInTgt);
-		if (l_Prn === a_PutInTgt.parentNode)
+		// 无效，或已经在了？
+		var l_Prn = a_PutInTgt && fObtnOrigPrnOfPut(a_PutSrc, a_PutInTgt);
+		if ((! a_PutInTgt) || (l_Prn === a_PutInTgt.parentNode))
 		{ return; }
 
 		// 验证

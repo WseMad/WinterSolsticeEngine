@@ -146,6 +146,7 @@ function fOnIcld(a_Errs)
 			? a_This.cAcs().setTransform(a_Mtx.c_11, a_Mtx.c_12, a_Mtx.c_21, a_Mtx.c_22, a_Mtx.c_41, a_Mtx.c_42)
 			: fRsetTsfm(a_This);
 	}
+	unKnl.fSetTsfm = fSetTsfm;
 
 	function eGetFontHgt(a_This)
 	{

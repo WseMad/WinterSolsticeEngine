@@ -111,10 +111,10 @@ function fOnIcld(a_Errs)
 				l_This.d_Lgt = l_Lgt;
 				l_This.d_Blk.appendChild(l_Lgt);		// 放入滑块
 
-				var l_Bar = document.createElement("div");
-				stCssUtil.cSetCssc(l_Bar, "cnWse_tSwch_Bar");
-				l_This.d_Bar = l_Bar;
-				l_This.d_PutSrc.appendChild(l_Bar);		// 放入来源
+				var l_Gap = document.createElement("div");
+				stCssUtil.cSetCssc(l_Gap, "cnWse_tSwch_Gap");
+				l_This.d_Gap = l_Gap;
+				l_This.d_PutSrc.appendChild(l_Gap);		// 放入来源
 
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
@@ -147,6 +147,24 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				if (! l_This.d_PutSrc)
+				{ return this; }
+				
+				// 块，灯，缝
+				if (l_This.d_Blk)
+				{
+					l_This.dRmvWhenInSrc("d_Blk");
+				}
+
+				if (l_This.d_Lgt)
+				{
+					l_This.dRmvWhenInSrc("d_Lgt");
+				}
+
+				if (l_This.d_Gap)
+				{
+					l_This.dRmvWhenInSrc("d_Gap");
+				}
 
 				// 注销放置目标事件处理器
 				if (l_This.d_fOnWidDtmnd)
@@ -191,7 +209,7 @@ function fOnIcld(a_Errs)
 
 				// 把滑块放入目标
 				l_This.dPutToTgt(l_This.d_Blk);
-				l_This.dPutToTgt(l_This.d_Bar);
+				l_This.dPutToTgt(l_This.d_Gap);
 				return this;
 			}
 			,

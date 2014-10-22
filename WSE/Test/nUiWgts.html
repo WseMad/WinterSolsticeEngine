@@ -34,7 +34,7 @@
 
 		body
 		{
-			min-height: 1500px;		/* 为了收起折叠框时不缩短页面 */
+			min-height: 2000px;		/* 为了收起折叠框时不缩短页面 */
 		}
 
 		#k_TestBoa
@@ -275,7 +275,7 @@
 		<!---->
 
 		<div id="k_Acod1" class="cnWse_PutSrc">
-			<h3 data-Wse_Tit class="ctAcodTit">1st</h3>
+			<h3 data-Wse_Tit class="ctAcodTit">First</h3>
 			<p data-Wse_Ctnt >Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.<br />Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</p>
 			<h3 data-Wse_Tit>Second</h3>
 			<p data-Wse_Ctnt >Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.<br />Phasellus mattis tincidunt nibh.</p>
@@ -395,18 +395,19 @@
 			var l_Ctxt = new nWse.nGpu.t2dCtxt();
 			l_Ctxt.cBindCvs(l_Cvs);
 
-//			var l_Path = new nWse.nGpu.t2dCtxt.tPath();
-//			l_Path.cRcRect(true, 50, 50, 100, 100, [10, 20, 30, 40]);
-//			l_Ctxt.cSetDrawMthd(0);
-//			l_Ctxt.cAcs().strokeStyle = "rgb(0, 0, 255)";
-//			l_Ctxt.cDrawPath(l_Path);
+			var l_Path = new nWse.nGpu.t2dCtxt.tPath();
+		//	l_Path.cRcRect(true, 50, 50, 100, 100, [10, 20, 30, 40]);
+		//	l_Path.cEcRect(true, 50, 50, -100, +100, 30, 20);
+			l_Path.cEcRect(true, 50, 50, +100, +100, [10, 20, 30, 40], [40, 30, 20, 10]);
+			l_Ctxt.cSetDrawMthd(0);
+			l_Ctxt.cAcs().strokeStyle = "rgb(0, 0, 255)";
+			l_Ctxt.cDrawPath(l_Path);
 
-			var l_Img = new Image();
-			l_Img.src = "Media/myship.png";
-
-			var l_DstSara = new nWse.tSara(50, 50, 142, 142);
-			var l_SrcSara = new nWse.tSara(0, 0, 40, 142);
-			l_Ctxt.cMap(l_DstSara, l_Img, l_SrcSara, null);
+//			var l_Img = new Image();
+//			l_Img.src = "Media/myship.png";
+//			var l_DstSara = new nWse.tSara(50, 50, 142, 142);
+//			var l_SrcSara = new nWse.tSara(0, 0, 40, 142);
+//			l_Ctxt.cMap(l_DstSara, l_Img, l_SrcSara, null);
 			//*/
 
 //			// AJAX
@@ -507,6 +508,7 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Btn1st",
 						c_PutSrc: "k_Btn1st",
+					//	c_UpDown: true,
 						c_Shp : nCmnWgts.tBtn.tShp.i_Rect,
 					//	c_FxdAr: 2 / 1,
 						c_fOnClk: function (a_Wgt)
@@ -533,6 +535,7 @@
 //							});
 						}
 					});
+				//	l_Wgt.cUpDown(false);
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tBtn();	// Btn2nd
@@ -679,7 +682,7 @@
 						{
 							var l_Menu = stFrmwk.cAcsStaWgtSet().cAcsByPutSrcId("k_Menu1");
 
-							if ("层叠式" == a_Wgt.cAcsTit().textContent)
+							if (l_Menu.cIsExpdMode())
 							{
 								l_Menu.cSetMode("Ovlp");
 
@@ -819,6 +822,34 @@
 							if (l_WgtPutTgt)
 							{ l_WgtPutTgt.style.display = l_WgtPutTgt.style.display ? "" : "none"; }
 						}
+
+
+						// 测试cClnPutTgt和vcUbnd
+						var l_PutSrcId = "k_Acod1";
+						var l_KWgt;
+						var l_WgtSet = stFrmwk.cAcsStaWgtSet();
+					//	var l_WgtSet = l_Form.cAcsWgtSet();
+						if ("K".charCodeAt(0) == a_Evt.keyCode)
+						{
+							l_KWgt = l_WgtSet.cAcsByPutSrcId(l_PutSrcId);
+							if (l_KWgt && l_KWgt.cHasBnd())
+							{
+								l_KWgt.cClnPutTgt();
+								l_KWgt.vcUbnd();
+								l_WgtSet.cRmvByPutSrcId(l_PutSrcId);
+							}
+							else
+							{
+								l_KWgt = new nCmnWgts.tAcod();
+								l_KWgt.vcBind({
+									c_PutTgt: l_PutSrcId.replace("k_", "k_PutTgt_"),
+									c_PutSrc: l_PutSrcId
+								});
+								l_WgtSet.cAdd(l_KWgt);
+								l_KWgt.cRfsh();
+							}
+						}
+
 					});
 				}
 				,

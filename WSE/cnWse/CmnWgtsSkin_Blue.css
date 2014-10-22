@@ -101,6 +101,11 @@
 .cnWse_Skin_Blue .cnWse_PutTgt.cnWse_tSwch
 {
 	border: 2px solid rgb(0, 128, 192);
+
+	/* 不太合理，去掉吧 */
+	/*box-shadow: inset 0px 0px 20px rgb(0, 0, 0),	*//* 为了正确动画这里使用透明色作为内阴影，若不加这句内阴影会突变 */
+		/*0px 10px 0px rgb(0, 90, 133),				*//* 使用阴影产生背光面，体现立体效果 */
+		/*0px 20px 20px rgb(51, 51, 51);				*//* 因为按钮上凸10px，故阴影再往下延伸10px，显得按钮很高 */
 }
 
 .cnWse_Skin_Blue .cnWse_tSwch .cnWse_tSwch_Lgt
