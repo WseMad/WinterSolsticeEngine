@@ -818,6 +818,11 @@ function fOnIcld(a_Errs)
 							{
 								fFlow(l_This, a_Boa, a_Col, a_Put, a_Rfl);
 							});
+
+						// 如果行高数组最后一项是0，弹出
+						var l_RowHgts = a_Col.Wse_PcdrLot.c_RowHgts;
+						if ((l_RowHgts.length > 0) && (0 == l_RowHgts[l_RowHgts.length - 1]))
+						{ l_RowHgts.pop(); }
 					});
 
 				// 计算板的内容H
@@ -950,10 +955,7 @@ function fOnIcld(a_Errs)
 			l_TgtArea.c_W = l_GridCnt * l_GridUnit;
 
 			// 立即触发摆放事件之宽度已决定，因为事件处理器可能会趁机修改高度
-			s_EvtAgms_WidDtmnd[0] = a_Put;
-			s_EvtAgms_WidDtmnd[1] = l_TgtArea.c_W;
-			s_EvtAgms_WidDtmnd[2] = (l_TgtArea.c_W - l_CssMgn.c_MgnLt - l_CssMgn.c_MgnRt);
-			nUi.fTrgrPutEvt(a_Put, "WidDtmnd", s_EvtAgms_WidDtmnd);
+			tPcdrLot.scTrgrPutEvt_WidDtmnd(a_Put);
 
 			if (l_FxdAr) // 如果提供了宽高比，使用它来计算
 			{
@@ -1777,6 +1779,21 @@ function fOnIcld(a_Errs)
 				,
 				/// 获取列内容宽度
 				scGetColCtntWid : function (a_Col) { return a_Col.Wse_PcdrLot ? a_Col.Wse_PcdrLot.c_CtntW : 0; }
+				,
+				/// 触发放置事件 - 宽度已决定
+				scTrgrPutEvt_WidDtmnd : function (a_Put)
+				{
+					if (! a_Put)
+					{ return tPcdrLot; }
+
+					var l_TgtArea = a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_TgtArea;
+					var l_CssMgn = a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_CssMgn;
+					s_EvtAgms_WidDtmnd[0] = a_Put;
+					s_EvtAgms_WidDtmnd[1] = l_TgtArea ? l_TgtArea.c_W : 0;
+					s_EvtAgms_WidDtmnd[2] = (l_TgtArea && l_CssMgn) ? (l_TgtArea.c_W - l_CssMgn.c_MgnLt - l_CssMgn.c_MgnRt) : 0;
+					nUi.fTrgrPutEvt(a_Put, "WidDtmnd", s_EvtAgms_WidDtmnd);
+					return tPcdrLot;
+				}
 			}
 			,
 			false);

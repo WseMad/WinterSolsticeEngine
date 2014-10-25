@@ -688,12 +688,26 @@ function fOnIcld(a_Errs)
 			return stFrmwk;
 		};
 
-		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或cRfshAftLot里调用，不要修改！
+		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或vcRfshAftLot里调用，不要修改！
 		stFrmwk.cAcsTgtAreaOfPut = function (a_Put)
 		{
 			if (! e_Lot)
 			{ return null; }
 
+			// 如果不在布局里，使用offsetLTWH
+			if (! e_Lot.cCtanPut(a_Put))
+			{
+				if (! e_Temp_CssUtilRst)
+				{
+					e_Temp_CssUtilRst = {};
+					e_Temp_TgtArea = new tSara();
+				}
+
+				e_Temp_TgtArea.cCrt(a_Put.offsetLeft, a_Put.offsetTop, a_Put.offsetWidth, a_Put.offsetHeight);
+				return e_Temp_TgtArea;
+			}
+
+			// 在布局里……
 			var l_scAcs = e_Lot.constructor.scAcsTgtAreaOfPut || null;
 			var l_Rst = l_scAcs && l_scAcs(a_Put);
 			if (! l_Rst) // 若没有，使用父元素的全宽，而高度保持a_Put的

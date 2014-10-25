@@ -278,7 +278,7 @@ function fOnIcld(a_Errs)
 				do
 				{
 					// 对每个<li>
-					var l_Lis = stDomUtil.cGetChdsOfTag(l_Ul, "LI");
+					l_Lis = stDomUtil.cGetChdsOfTag(l_Ul, "LI");
 					stAryUtil.cFind(l_Lis,
 						function (a_Lis, a_LiIdx, a_Li)
 						{

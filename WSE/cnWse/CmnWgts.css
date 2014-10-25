@@ -18,14 +18,14 @@
 
 /*********************************************** tBtn ***********************************************/
 
-.cnWse_PutTgt.cnWse_tBtn_Hole,
-.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole,
+.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
 {
 	text-align: center;
 	border-radius: 0.5em;
 }
 
-.cnWse_PutTgt.cnWse_tBtn_Hole
+.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole
 {
 	padding: 5px;		/* 底座总是比身体沿四个方向多出一小块（和字体大小无关，故用像素） */
 	overflow: visible;	/* 为了令按钮体上部超出的部分可见 */
@@ -35,7 +35,7 @@
 	box-shadow: inset 0px 0px 20px rgb(0, 0, 0);
 }
 
-.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
 {
 	padding: 0.5em;			/* 令文字周围多一点空间 */
 	cursor: pointer;
@@ -55,10 +55,11 @@
 }
 
 /* “.cnWse_PutTgt.cnWse_tBtn_Hole>”不能去掉，因为皮肤里的选择器都以某个CSS类开头，会覆盖这里的选择器 */
-/* 用第一行在火狐和IE里不行？！使用第二行就好！ */
+/* 用第一行在火狐和IE里不行？！使用第二行就好！*/
+/* 注意必须使用5个类，为了覆盖皮肤里的box-shadow项（那里用了4个类） */
 /*.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body:active*/
-.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn_Hole>.cnWse_tBtn_Body,
-.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
+.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body,
+.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
 {
 	top: 0px;				/* 下陷 */
 
@@ -67,7 +68,7 @@
 }
 
 /* 标题 */
-.cnWse_tBtn_Tit
+.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Tit
 {
 	position: relative;
 	left: 0px;
@@ -125,14 +126,14 @@
 }
 
 /* OK按钮 */
-.cnWse_tEdit *[data-Wse_Ok]
+.cnWse_PutTgt.cnWse_tEdit *[data-Wse_Ok]
 {
 	text-align: center;
 	cursor: pointer;
 }
 
 /* 占位符 */
-.cnWse_tEdit .cnWse_tEdit_Plchd
+.cnWse_PutTgt.cnWse_tEdit .cnWse_tEdit_Plchd
 {
 	color: rgba(0, 0, 0, 0.5);
 }
@@ -150,7 +151,7 @@
 	padding: 0.25em;
 }
 
-.cnWse_tList .cnWse_tList_Btn
+.cnWse_PutTgt.cnWse_tList .cnWse_tList_Btn
 {
 	display: inline-block;
 	margin: 0px 0.5em 0px 0px;
@@ -173,7 +174,7 @@
 }
 
 /* 辉光效果 */
-li.cnWse_tList_Slcd .cnWse_tList_Btn
+.cnWse_PutTgt.cnWse_tList li.cnWse_tList_Slcd .cnWse_tList_Btn
 {
 	-webkit-transition: background-color, box-shadow;
 	-moz-transition: background-color, box-shadow;
@@ -187,19 +188,19 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 }
 
 /* 单选框是圆形，复选框是正方形 */
-.cnWse_tList.cnWse_SglSlc .cnWse_tList_Btn
+.cnWse_PutTgt.cnWse_tList.cnWse_SglSlc .cnWse_tList_Btn
 {
 	border-radius: 0.6em;	/* 恰好是宽高的一半，形成圆形 */
 }
 
-.cnWse_tList.cnWse_MltSlc .cnWse_tList_Btn
+.cnWse_PutTgt.cnWse_tList.cnWse_MltSlc .cnWse_tList_Btn
 {
 	border-radius: 0px;
 }
 
 /* 多选框的辅助按钮 */
-.cnWse_tList .cnWse_tList_SlcAll,
-.cnWse_tList .cnWse_tList_SlcRvs
+.cnWse_PutTgt.cnWse_tList .cnWse_tList_SlcAll,
+.cnWse_PutTgt.cnWse_tList .cnWse_tList_SlcRvs
 {
 	display: inline-block;
 
@@ -213,8 +214,8 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	color: rgb(0, 255, 0);
 }
 
-.cnWse_tList .cnWse_tList_SlcAll:active,
-.cnWse_tList .cnWse_tList_SlcRvs:active
+.cnWse_PutTgt.cnWse_tList .cnWse_tList_SlcAll.cnWse_tWgt_Tch,
+.cnWse_PutTgt.cnWse_tList .cnWse_tList_SlcRvs.cnWse_tWgt_Tch
 {
 	background-color: rgb(128, 128, 128);
 	color: rgb(255, 255, 255);
@@ -242,12 +243,12 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	transition-duration: 0.6s;
 }
 
-.cnWse_tSwch.cnWse_tSwch_On
+.cnWse_PutTgt.cnWse_tSwch.cnWse_tSwch_On
 {
 	background-color: rgb(220, 220, 220);
 }
 
-.cnWse_tSwch .cnWse_tSwch_Gap
+.cnWse_PutTgt.cnWse_tSwch .cnWse_tSwch_Gap
 {
 	position: absolute;
 	width: 60%;
@@ -259,12 +260,12 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	z-index: 1;
 }
 
-.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Gap
+.cnWse_PutTgt.cnWse_tSwch.cnWse_tSwch_On .cnWse_tSwch_Gap
 {
 	border-top-color: rgb(96, 96, 96);		/* 颜色稍微亮一点 */
 }
 
-.cnWse_tSwch .cnWse_tSwch_Blk
+.cnWse_PutTgt.cnWse_tSwch .cnWse_tSwch_Blk
 {
 	position: absolute;
 	min-width: 2em;
@@ -275,7 +276,7 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	z-index: 2;
 }
 
-.cnWse_tSwch_Blk .cnWse_tSwch_Lgt
+.cnWse_PutTgt.cnWse_tSwch .cnWse_tSwch_Blk .cnWse_tSwch_Lgt
 {
 	width: 100%;
 	height: 100%;
@@ -292,6 +293,68 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	transition-duration: 0.6s;
 }
 
+/*********************************************** tCmb ***********************************************/
+
+.cnWse_PutTgt.cnWse_tCmb
+{
+	position: relative;
+	overflow: visible;		/* 由于子节点全都绝对定位，为了使他们显示出来 */
+	visibility: hidden;		/* 隐藏，用不到放置目标 */
+
+	height: auto;
+}
+
+.cnWse_PutTgt.cnWse_tCmb>*
+{
+	visibility: visible;	/* 放置目标里的东西应显示出来 */
+}
+
+/* 编辑 */
+.cnWse_PutTgt.cnWse_tCmb>.cnWse_tEdit
+{
+	position: absolute;
+	left: 0px;
+}
+
+/* 按钮 */
+.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn
+{
+	position: absolute;
+}
+
+.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole
+{
+	padding: 2px; 	/* 底座小一点 */
+}
+
+.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole>.cnWse_tBtn_Body
+{
+	font-weight: bold;	/* 箭头粗体显示 */
+}
+
+.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
+{
+	color: rgb(255, 255, 255);
+
+	box-shadow: inset 0px 0px 20px rgb(0, 0, 0),
+		0px 2px 2px rgb(51, 51, 51);		/* 2px是为了对齐上面底座的2px */
+}
+
+/* 列表 */
+.cnWse_PutTgt.cnWse_tCmb>ul
+{
+	position: absolute;
+	min-width: 100%;			/* 至少全宽 */
+	list-style-type: none;		/* 把方点去掉 */
+	border: 1px solid white;
+	box-shadow: 0px 10px 20px rgb(51, 51, 51);
+}
+
+.cnWse_PutTgt.cnWse_tCmb>ul>li
+{
+	padding: 5px;
+}
+
 /*********************************************** tMenu ***********************************************/
 
 /* 通用 */
@@ -300,78 +363,79 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	border-radius: 0px 0px 0.5em 0.5em;
 }
 
-.cnWse_tMenu ul
+.cnWse_PutTgt.cnWse_tMenu ul
 {
 	list-style-type: none;
 	font-size: 1em;
 }
 
-.cnWse_tMenu li
+.cnWse_PutTgt.cnWse_tMenu li
 {
 	padding: 5px 1.5em 5px 5px;
 	position: relative;
 }
 
 /* 展开式 */
-.cnWse_tMenu_Expd
+.cnWse_PutTgt.cnWse_tMenu_Expd
 {
 	overflow: visible;		/* 各级列表总是可见，即使放置目标尺寸不够 */
 }
 
-.cnWse_tMenu_Expd ul.cnWse_tMenu_Root
+.cnWse_PutTgt.cnWse_tMenu_Expd ul.cnWse_tMenu_Root
 {
 	/*position: static;		*//* 扩展式的根静态定位 */
 	text-align: center;
 	z-index: 0;
 }
 
-.cnWse_tMenu_Expd ul.cnWse_tMenu_Next
+.cnWse_PutTgt.cnWse_tMenu_Expd ul.cnWse_tMenu_Next
 {
 	position: absolute;
+	border: 1px solid rgb(95%, 95%, 95%);
 	box-shadow: 0px 10px 20px rgb(51, 51, 51);
 }
 
-.cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li
+.cnWse_PutTgt.cnWse_tMenu_Expd ul.cnWse_tMenu_Root>li
 {
 	display: inline-block;
 	text-align: center;
 }
 
-.cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li
+.cnWse_PutTgt.cnWse_tMenu_Expd ul.cnWse_tMenu_Next>li
 {
 	display: block;
 	text-align: left;
 }
 
 /* 层叠式 */
-.cnWse_tMenu_Ovlp
+.cnWse_PutTgt.cnWse_tMenu_Ovlp
 {
 	overflow: hidden;		/* 只显示顶级列表，放置目标尺寸与之匹配 */
 }
 
-.cnWse_tMenu_Ovlp ul
+.cnWse_PutTgt.cnWse_tMenu_Ovlp ul
 {
 	padding: 0 5px;
 }
 
-.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Root
+.cnWse_PutTgt.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Root
 {
 	/*position: static;		*//* 层叠式的根静态定位 */
 }
 
-.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Next
+.cnWse_PutTgt.cnWse_tMenu_Ovlp ul.cnWse_tMenu_Next
 {
 	position: absolute;
 }
 
-.cnWse_tMenu_Ovlp .cnWse_tMenu_Root>li
+.cnWse_PutTgt.cnWse_tMenu_Ovlp .cnWse_tMenu_Root>li
 {
 	display: block;
 	text-align: left;
 }
 
 /* 四个箭头 */
-.cnWse_tMenu .cnWse_LtArw
+.cnWse_PutTgt.cnWse_tMenu .cnWse_LtArw
 {
 	position: absolute;
 	left: 0px;
@@ -380,9 +444,9 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 	padding-bottom: inherit;
 }
 
-.cnWse_tMenu .cnWse_RtArw,
-.cnWse_tMenu .cnWse_UpArw,
-.cnWse_tMenu .cnWse_DnArw
+.cnWse_PutTgt.cnWse_tMenu .cnWse_RtArw,
+.cnWse_PutTgt.cnWse_tMenu .cnWse_UpArw,
+.cnWse_PutTgt.cnWse_tMenu .cnWse_DnArw
 {
 	position: absolute;
 	right: 0px;
@@ -392,24 +456,23 @@ li.cnWse_tList_Slcd .cnWse_tList_Btn
 }
 
 /* 展开式根<ul>展开的<li> */
-.cnWse_tMenu_Expd li.cnWse_tMenu_ExpdLi
+.cnWse_PutTgt.cnWse_tMenu_Expd li.cnWse_tMenu_ExpdLi
 {
 	background-color: rgba(255, 255, 255, 0.7);
 	box-shadow: inset 0px 0px 10px rgb(0, 0, 0);
 }
 
 /* 层叠式返回<li> */
-.cnWse_tMenu_Ovlp li.cnWse_tMenu_BackLi
+.cnWse_PutTgt.cnWse_tMenu_Ovlp li.cnWse_tMenu_BackLi
 {
 	text-align: center;
 }
 
 /* 占位<ul> */
-ul.cnWse_tMenu_Plchd
+.cnWse_PutTgt.cnWse_tMenu ul.cnWse_tMenu_Plchd
 {
 	height: 5em;
 }
-
 
 /*********************************************** tAcod ***********************************************/
 
@@ -424,13 +487,13 @@ ul.cnWse_tMenu_Plchd
 	visibility: visible;	/* 放置目标里的东西应显示出来 */
 }
 
-.cnWse_tAcod_Tit,
-.cnWse_tAcod_Ctnt
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_Tit,
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_Ctnt
 {
 	box-shadow: 0px 10px 20px rgb(51, 51, 51);
 }
 
-.cnWse_tAcod_Tit
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_Tit
 {
 	border: 1px solid black;
 	border-radius: 0.5em;
@@ -439,17 +502,17 @@ ul.cnWse_tMenu_Plchd
 	font-size: 1.2em;
 }
 
-.cnWse_tAcod_Tit:first-of-type
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_Tit:first-of-type
 {
 	margin-top: 0px;
 }
 
-.cnWse_tAcod_TitExpd
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_TitExpd
 {
 	border-radius: 0.5em 0.5em 0px 0px;
 }
 
-.cnWse_tAcod_Ctnt
+.cnWse_PutTgt.cnWse_tAcod .cnWse_tAcod_Ctnt
 {
 	border: 1px solid black;
 	border-radius: 0px 0px 0.5em 0.5em;
@@ -460,8 +523,8 @@ ul.cnWse_tMenu_Plchd
 }
 
 /* 两个标题箭头 */
-.cnWse_tAcod .cnWse_RtArw,
-.cnWse_tAcod .cnWse_DnArw
+.cnWse_PutTgt.cnWse_tAcod .cnWse_RtArw,
+.cnWse_PutTgt.cnWse_tAcod .cnWse_DnArw
 {
 	margin-right: 0.5em;
 }
@@ -476,15 +539,15 @@ ul.cnWse_tMenu_Plchd
 	z-index: 10000;
 }
 
-.cnWse_tNav li
+.cnWse_PutTgt.cnWse_tNav li
 {
 	list-style-type: none;
 	padding: 0px;
 	height: 100%;
 }
 
-.cnWse_tNav>*[data-Wse_Tit],
-.cnWse_tNav li>a
+.cnWse_PutTgt.cnWse_tNav>*[data-Wse_Tit],
+.cnWse_PutTgt.cnWse_tNav li>a
 {
 	display: block;					/* 令整个<li>成为可点击的按钮 */
 	border-radius: inherit;			/* 继承父节点的边框半径（可能是圆形） */
@@ -493,17 +556,17 @@ ul.cnWse_tMenu_Plchd
 }
 
 /* 导航<a> */
-.cnWse_tNav li>a:link,
-.cnWse_tNav li>a:visited,
-.cnWse_tNav li>a:hover,
-.cnWse_tNav li>a:active
+.cnWse_PutTgt.cnWse_tNav li>a:link,
+.cnWse_PutTgt.cnWse_tNav li>a:visited,
+.cnWse_PutTgt.cnWse_tNav li>a:hover,
+.cnWse_PutTgt.cnWse_tNav li>a:active
 {
 	text-decoration: none;
 	color: inherit;
 }
 
 /* 叶片 */
-.cnWse_tNav_Leaf
+.cnWse_PutTgt.cnWse_tNav .cnWse_tNav_Leaf
 {
 	display: none;
 	position: absolute;
@@ -535,17 +598,17 @@ ul.cnWse_tMenu_Plchd
 	margin-bottom: 2em;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body
 {
 	width: 4em;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole.cnWse_tSignLog_Cls
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole.cnWse_tSignLog_Cls
 {
 	float: left;
 }
 
-.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn_Hole.cnWse_tSignLog_Sbmt
+.cnWse_PutTgt.cnWse_tSignLog>.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole.cnWse_tSignLog_Sbmt
 {
 	float: right;
 }

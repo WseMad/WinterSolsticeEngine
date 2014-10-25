@@ -358,8 +358,16 @@ function fOnIcld(a_Errs)
 			/// 刷新
 			cRfsh : function ()
 			{
-				// 若在布局期间则忽略这次调用
-				return nUi.stFrmwk.cIsDurLot() ? this : this.vcRfshBefLot().vcRfshAftLot();
+				// 之前
+				this.vcRfshBefLot();
+
+				// 触发放置事件 - 宽度已决定
+				if (nUi.tPcdrLot && this.d_PutTgt)
+				{ nUi.tPcdrLot.scTrgrPutEvt_WidDtmnd(this.d_PutTgt); }
+
+				// 之后
+				this.vcRfshAftLot();
+				return this;
 			}
 			,
 			/// 触摸开始？

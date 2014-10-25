@@ -223,18 +223,42 @@ function fOnIcld(a_Errs)
 
 				if (l_This.dIsTchBgn(a_DmntTch))
 				{
+					// 如果是多选，修改两个辅助按钮样式类
+					if (l_This.d_Cfg.c_MltSlc)
+					{
+						if (l_This.d_SlcAll === a_DmntTch.cAcsEvtTgt())
+						{ stCssUtil.cAddCssc(l_This.d_SlcAll, "cnWse_tWgt_Tch"); }
+						else
+						{ stCssUtil.cRmvCssc(l_This.d_SlcAll, "cnWse_tWgt_Tch"); }
+
+						if (l_This.d_SlcRvs === a_DmntTch.cAcsEvtTgt())
+						{ stCssUtil.cAddCssc(l_This.d_SlcRvs, "cnWse_tWgt_Tch"); }
+						else
+						{ stCssUtil.cRmvCssc(l_This.d_SlcRvs, "cnWse_tWgt_Tch"); }
+					}
+
 					a_DmntTch.c_Hdld = true;		// 已处理
 				}
 				else
 				if (l_This.dIsTchLostOrEnd(a_DmntTch))
 				{
-//					if (l_This.dIsTchLost(a_DmntTch))
-//					{
-//						//
-//					}
-//					else
+					if (l_This.dIsTchLost(a_DmntTch))
+					{
+						// 如果是多选，修改两个辅助按钮样式类
+						if (l_This.d_Cfg.c_MltSlc)
+						{
+							l_This.dRmvCsscFromAsisBtns();
+						}
+					}
+					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
+						// 如果是多选，修改两个辅助按钮样式类
+						if (l_This.d_Cfg.c_MltSlc)
+						{
+							l_This.dRmvCsscFromAsisBtns();
+						}
+
 						l_This.dHdlSlc(a_DmntTch);		// 处理选取
 
 						a_DmntTch.c_Hdld = true;		// 已处理
@@ -249,6 +273,12 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				// 如果是多选，修改两个辅助按钮样式类
+				if (l_This.d_Cfg.c_MltSlc)
+				{
+					l_This.dRmvCsscFromAsisBtns();
+				}
 				return this;
 			}
 			,
@@ -258,6 +288,12 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				// 如果是多选，修改两个辅助按钮样式类
+				if (l_This.d_Cfg.c_MltSlc)
+				{
+					l_This.dRmvCsscFromAsisBtns();
+				}
 				return this;
 			}
 			,
@@ -584,6 +620,14 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				if (l_This.d_Cfg.c_fOnSlc)
 				{ l_This.d_Cfg.c_fOnSlc(l_This); }
+				return this;
+			}
+			,
+			/// 从辅助按钮移除CSS类
+			dRmvCsscFromAsisBtns : function ()
+			{
+				stCssUtil.cRmvCssc(this.d_SlcAll, "cnWse_tWgt_Tch");
+				stCssUtil.cRmvCssc(this.d_SlcRvs, "cnWse_tWgt_Tch");
 				return this;
 			}
 		}

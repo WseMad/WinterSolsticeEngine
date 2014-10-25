@@ -1175,9 +1175,9 @@ function fOnIcld(a_Errs)
 		/// }
 		stCssUtil.cAnmt = function (a_DomElmt, a_End, a_Cfg)
 		{
-			// 配置对象必须有效，但要注意不要修改传入的a_End和a_Cfg，调用者可能会继续使用！
-			if (! a_Cfg)
-			{ a_Cfg = {}; }
+			// 检查实参
+			if ((! a_DomElmt) || (! a_End) || (! a_Cfg))
+			{ return stCssUtil; }
 
 			// 如果正在延期，取消计时器
 			if (a_DomElmt.Wse_CssUtil && (! nWse.fIsUdfnOrNull(a_DomElmt.Wse_CssUtil.c_DlyTmrId)))
