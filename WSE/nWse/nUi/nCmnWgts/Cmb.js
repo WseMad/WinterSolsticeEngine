@@ -231,6 +231,39 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 拾取
+			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+			vcPick : function f(a_Bbox, a_Picker)
+			{
+				// 包围盒使用放置目标的即可（初始值）
+				if (a_Bbox)
+				{
+					return this;
+				}
+
+				// 拾取编辑
+				var l_This = this;
+				if (l_This.d_Edit)
+				{
+					l_This.d_Edit.vcPick(a_Bbox, a_Picker);
+					if (a_Picker.cIsOver())
+					{ return this; }
+				}
+
+				// 拾取按钮
+				if (l_This.d_Btn)
+				{
+					l_This.d_Btn.vcPick(a_Bbox, a_Picker);
+					if (a_Picker.cIsOver())
+					{ return this; }
+				}
+
+				// 拾取放置目标
+				l_This.dPickPutTgtByPathPnt(a_Picker, l_This.d_PutTgt);
+				return this;
+			}
+			,
 			/// 刷新在布局之前
 			vcRfshBefLot : function f()
 			{

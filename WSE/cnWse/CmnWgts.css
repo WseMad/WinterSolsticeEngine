@@ -31,7 +31,7 @@
 	overflow: visible;	/* 为了令按钮体上部超出的部分可见 */
 	cursor: default;
 
-	background-color: rgb(200, 200, 200);
+	background-color: rgb(160, 160, 160);
 	box-shadow: inset 0px 0px 20px rgb(0, 0, 0);
 }
 
@@ -73,6 +73,48 @@
 	position: relative;
 	left: 0px;
 	top: 0px;
+}
+
+/* 金属 */
+/*.cnWse_Skin_Metal .cnWse_tBtn.cnWse_tBtn_Hole,*/
+/*.cnWse_Skin_Metal.cnWse_PutTgt>.cnWse_tBtn.cnWse_tBtn_Hole, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole*/
+/*{*/
+	/*background-color: rgb(0, 0, 0);*/
+	/*box-shadow: inset 0px 0px 20px rgb(0, 0, 0);*/
+/*}*/
+
+/*.cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole*/
+/*{*/
+	/*background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);*/
+	/*background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);*/
+	/*background: -ms-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);*/
+	/*background: linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);*/
+/*}*/
+
+.cnWse_Skin_Metal .cnWse_tBtn_Body,
+.cnWse_Skin_Metal.cnWse_PutTgt>.cnWse_tBtn .cnWse_tBtn_Body, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
+{
+	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
+	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
+	background: -ms-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
+	background: linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
+
+	/* 【如果要添加纹理，必须增加一层<div>……先不弄了】 */
+	/*background-color: transparent;*/
+	/*background-image:*/
+	/*-webkit-repeating-radial-gradient(  50% 50%, 100% 100%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 3%, rgba(255, 255, 255, 0.1) 3.5%),*/
+	/*-webkit-repeating-radial-gradient(  50% 50%, 100% 100%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 6%, rgba(255, 255, 255, 0.1) 7.5%),*/
+	/*-webkit-repeating-radial-gradient(  50% 50%, 100% 100%, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 1.2%, rgba(255, 255, 255, 0) 2.2%);*/
+
+	box-shadow:
+		/*inset rgba(255,255,255,0.3) 0px -6em 10px,*//* 上半圆形阴影，【算了，距离不能指定百分比，但按钮尺寸是会变的】 */
+		/*inset rgba(255,255,255,0.3) 0px 60px 10px,*//* 下半圆形阴影，【同上】 */
+		inset rgba(255, 255, 255, 1) 0px 4px 2px,	/* 按钮顶部高光 */
+		0px 10px 0px rgb(102, 102, 102),			/* 底部的侧面视图 */
+		0px 20px 20px rgb(51, 51, 51);				/* 整体投影 */
+
+	color: rgba(0,0,0,0.5);
+	text-shadow: rgba(0,0,0,0.1) 0px -2px 1px, rgb(255,255,255) 0px 1px 2px;
 }
 
 /*********************************************** tEdit ***********************************************/
@@ -449,7 +491,7 @@
 .cnWse_PutTgt.cnWse_tMenu .cnWse_DnArw
 {
 	position: absolute;
-	right: 0px;
+	right: 2px;		/* 箭头和右边框增加点空间 */
 	top: 0px;
 	padding-top: inherit;
 	padding-bottom: inherit;
