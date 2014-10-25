@@ -120,6 +120,7 @@ function fOnIcld(a_Errs)
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
 			/// c_Kind：Number，种类，-1=未知（尚未绑定），0=密码，1=单行（默认），2=多行
 			/// c_Plchd：String，占位符
+			/// c_ReadOnly：Boolean，只读？
 			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
@@ -143,6 +144,10 @@ function fOnIcld(a_Errs)
 				}
 
 				l_This.d_DomText.value = "";	// 清空文本
+				if (a_Cfg.c_ReadOnly)	// 只读？
+				{
+					l_This.d_DomText.readOnly = true;
+				}
 
 				if (a_Cfg.c_Plchd)	// 占位符
 				{ l_This.d_DomText.setAttribute("placeholder", a_Cfg.c_Plchd); }

@@ -132,6 +132,12 @@ function fOnIcld(a_Errs)
 			return (l_DomSA && l_DomSA.Wse_Wgt) ? l_DomSA.Wse_Wgt.c_Wgt : null;
 		}
 
+		// 得到顶层控件，因为a_Foc可能是某个子控件
+		function fObtnTopWgt(a_Wgt)
+		{
+			return nUi.tWgt.scObtnTopWgtByPutTgt(a_Wgt);
+		}
+
 		function fAddFoc(a_Foc)
 		{
 			if ((! a_Foc) || (e_Focs.indexOf(a_Foc) >= 0))
@@ -140,8 +146,8 @@ function fOnIcld(a_Errs)
 			// 首先插入至适当位置
 			e_Focs.push(a_Foc);
 
-			// 然后通知
-			a_Foc.vcGainFoc();
+			// 然后通知，注意控件的选择
+			fObtnTopWgt(a_Foc).vcGainFoc();
 		}
 
 		function fRmvFoc(a_Foc)
@@ -150,8 +156,8 @@ function fOnIcld(a_Errs)
 			if (l_Idx < 0)
 			{ return; }
 
-			// 首先通知
-			a_Foc.vcLoseFoc();
+			// 首先通知，注意控件的选择
+			fObtnTopWgt(a_Foc).vcLoseFoc();
 
 			// 然后擦除
 			e_Focs.splice(l_Idx, 1);
@@ -159,8 +165,8 @@ function fOnIcld(a_Errs)
 
 		function fClrFocs()
 		{
-			// 首先通知
-			stAryUtil.cFor(e_Focs, function (a_Ary, a_Idx, a_Foc) { a_Foc.vcLoseFoc(); });
+			// 首先通知，注意控件的选择
+			stAryUtil.cFor(e_Focs, function (a_Ary, a_Idx, a_Foc) { fObtnTopWgt(a_Foc).vcLoseFoc(); });
 
 			// 然后清空
 			e_Focs.length = 0;
@@ -197,16 +203,6 @@ function fOnIcld(a_Errs)
 		{
 			return a_Wgt && (e_Focs.indexOf(a_Wgt) >= 0);
 		}
-
-		stFrmwk.eRmvFoc = function (a_Ipt, a_Wgt)
-		{
-			stAryUtil.cFor(a_Ipt.c_Tchs,
-			function (a_Ary, a_Idx, a_Tch)
-			{
-				if (a_Tch.c_FocWgt === a_Wgt)
-				{ a_Tch.c_FocWgt = null; }
-			});
-		};
 
 		// 初始化拾取系统
 		function eInitPickSys()
@@ -333,7 +329,8 @@ function fOnIcld(a_Errs)
 							{
 								// 记录触点和事件目标，但是注意：
 								// 若c_EvtTgt是c_Evt.target的祖先节点，则仍保持后者，为了更细粒度地拾取！
-								l_Tch.c_PkdWgt = a_Wgt;
+								l_Tch.c_PkdWgt = (a_Wgt);
+							//	l_Tch.c_PkdWgt = fObtnTopWgt(a_Wgt);	//【不要用这个，影响输入处理】
 								l_Tch.c_EvtTgt = a_EvtTgt || a_Wgt.cAcsPutTgt();
 								if (stDomUtil.cIsAcst(l_Tch.c_EvtTgt, l_Tch.c_Evt.target))
 								{
@@ -490,7 +487,8 @@ function fOnIcld(a_Errs)
 
 				// 点中了某个HTML元素，记录之
 				var l_Wgt = eObtnWgtByDomElmt(l_EvtTgt);
-				a_Tch.c_PkdWgt = l_Wgt;
+				a_Tch.c_PkdWgt = (l_Wgt);
+			//	a_Tch.c_PkdWgt = fObtnTopWgt(l_Wgt);	//【不要用这个，影响输入处理】
 
 				// 如果拾取到某个控件且开启拾取，则进行像素拾取
 				if (l_Wgt && e_EnabPick)
@@ -686,6 +684,12 @@ function fOnIcld(a_Errs)
 
 		//	console.log("stFrmwk.cRmvFocs");
 			return stFrmwk;
+		};
+
+		/// 是焦点？
+		stFrmwk.cIsFoc = function (a_Wgt)
+		{
+			return (e_Focs.indexOf(a_Wgt) >= 0);
 		};
 
 		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或vcRfshAftLot里调用，不要修改！

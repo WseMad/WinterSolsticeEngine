@@ -19,7 +19,8 @@
 	//@ 包含
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse",
 		[
-			"(3)CoreDast.js"
+		//	"(3)CoreDast.js"
+			"DomUtil.js"
 		]
 		,
 		fOnIcld);
@@ -547,9 +548,18 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 根据拾取到的控件查找触点
-			cFindTchByPkdWgt : function (a_PkdWgt)
+			/// a_fMap：Object f(Object a_PkdWgt)，将输入控件映射成另一个对象（比如控件→放置目标）再进行比较，默认null
+			cFindTchByPkdWgt : function (a_PkdWgt, a_fMap)
 			{
-				return a_PkdWgt ? stAryUtil.cFind(this.c_Tchs, function (a_Ary, a_Idx, a_Tch) { return (a_Tch.c_PkdWgt == a_PkdWgt); }) : -1;
+				return a_PkdWgt ? stAryUtil.cFind(this.c_Tchs,
+					function (a_Ary, a_Idx, a_Tch)
+					{
+						if (! a_fMap)
+						{ return a_Tch.c_PkdWgt === a_PkdWgt; }
+
+						var l_D = a_fMap(a_Tch.c_PkdWgt), l_A = a_fMap(a_PkdWgt);
+						return nWse.stDomUtil.cIsSelfOrAcst(l_A, l_D);
+					}) : -1;
 			}
 			,
 			/// 根据拾取到的面板查找触点（仅用于nPick)

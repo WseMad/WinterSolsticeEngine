@@ -665,11 +665,21 @@
 					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
-					l_Wgt = new nCmnWgts.tCmb();	// Cmb
+					l_Wgt = new nCmnWgts.tCmb();	// Cmb1
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Cmb1",
 						c_PutSrc: "k_Cmb1"
-					//	,c_ZidxOnShowList: 10
+						,c_Plchd: "可编辑"
+					});
+					l_Form.cAcsWgtSet().cAdd(l_Wgt);
+
+					l_Wgt = new nCmnWgts.tCmb();	// Cmb2
+					l_Wgt.vcBind({
+						c_PutTgt: "k_PutTgt_Cmb2",
+						c_PutSrc: "k_Cmb2"
+						,c_SlcOnly : true
+					//	,c_Plchd: "只选"
+					//	,c_InitSlc: 0
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
@@ -963,6 +973,11 @@
 							})
 							.cPut({
 								c_Id : "k_PutTgt_Cmb1",
+								c_GridOfst: +1,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id : "k_PutTgt_Cmb2",
 								c_GridOfst: +1,
 								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
 							})

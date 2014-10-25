@@ -268,8 +268,8 @@ function fOnIcld(a_Errs)
 				}
 				else // 尚无支配触点
 				{
-					// 找到最靠前的、拾取到自己的触点
-					l_TchIdx = a_Ipt.cFindTchByPkdWgt(this);
+					// 找到最靠前的、拾取到自己的触点，【先不要映射，继续研究……】
+					l_TchIdx = a_Ipt.cFindTchByPkdWgt(this);//, tWgt.seMapWgtToPutTgt);
 
 					// 如果没有找到
 					if (l_TchIdx < 0)
@@ -664,6 +664,32 @@ function fOnIcld(a_Errs)
 			,
 			/// 放置目标内边距
 			sd_PutTgtPad : {}
+			,
+			/// 是否为控件的放置目标
+			scIsPutTgtOfWgt : function (a_PutTgt) { return a_PutTgt && a_PutTgt.Wse_Wgt && a_PutTgt.Wse_Wgt.c_Wgt; }
+			,
+			/// 得到顶层控件
+			/// a_Wgt：tWgt，某个子控件
+			scObtnTopWgtByPutTgt : function (a_Wgt)
+			{
+				var l_PutTgt = a_Wgt && a_Wgt.cAcsPutTgt();
+				if (! tWgt.scIsPutTgtOfWgt(l_PutTgt))
+				{ return a_Wgt; }
+
+				var l_Rst;
+				do
+				{
+					l_Rst = l_PutTgt.Wse_Wgt.c_Wgt;
+					l_PutTgt = l_PutTgt.parentNode;
+				}
+				while (tWgt.scIsPutTgtOfWgt(l_PutTgt));
+				return l_Rst;
+			}
+			,
+			seMapWgtToPutTgt : function (a_Wgt)
+			{
+				return a_Wgt && a_Wgt.cAcsPutTgt();
+			}
 		}
 		,
 		false);

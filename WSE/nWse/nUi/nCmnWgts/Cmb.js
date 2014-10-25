@@ -91,6 +91,9 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+			/// c_Plchd：String，占位符
+			/// c_SlcOnly：Boolean，只选？
+			/// c_InitSlc：Number$String，初始选项索引或文本
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -108,14 +111,34 @@ function fOnIcld(a_Errs)
 				l_This.d_Edit = new nCmnWgts.tEdit();
 				l_This.d_Edit.vcBind({
 					c_PutTgt: l_This.d_PutTgtId_Edit,
-					c_PutSrc: l_This.d_PutSrcId_Edit
+					c_PutSrc: l_This.d_PutSrcId_Edit,
+					c_ReadOnly: a_Cfg.c_SlcOnly,
+					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd
 				});
+
+				var l_Lis;
+				if ("c_InitSlc" in a_Cfg) // 设置初始文本
+				{
+					if (nWse.fIsNum(a_Cfg.c_InitSlc))
+					{
+						l_Lis = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li");
+						if ((0 <= a_Cfg.c_InitSlc) && (a_Cfg.c_InitSlc < l_Lis.length))
+						{
+							l_This.d_Edit.cSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
+						}
+					}
+					else
+					if (nWse.fIsStr(a_Cfg.c_InitSlc))
+					{
+						l_This.d_Edit.cSetText(a_Cfg.c_InitSlc);
+					}
+				}
 
 				// 生成按钮
 				l_This.d_PutSrcId_Btn =  "o" + l_ThisPutSrcId + "_Btn";
 				l_This.d_PutTgtId_Btn =  "o" + l_ThisPutSrcId + "_PutTgt_Btn";
 				l_This.d_PutSrc_Btn = stDomUtil.cObtnOne(null, "div", l_This.d_PutSrcId_Btn, null, l_This.d_PutSrc);
-				l_This.d_PutSrc_Btn.textContent = "∨";
+				l_This.d_PutSrc_Btn.textContent = "▼";
 				l_This.d_Btn = new nCmnWgts.tBtn();
 				l_This.d_Btn.vcBind({
 					c_PutTgt: l_This.d_PutTgtId_Btn,
@@ -277,6 +300,14 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				// 通知编辑和按钮
+				if (l_This.d_Edit)
+				{
+					l_This.d_Edit.vcGainFoc();
+					l_This.d_Btn.vcGainFoc();
+				}
+
 				return this;
 			}
 			,
@@ -286,6 +317,16 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				// 通知编辑和按钮
+				if (l_This.d_Edit)
+				{
+					l_This.d_Edit.vcLoseFoc();
+					l_This.d_Btn.vcLoseFoc();
+				}
+
+				// 隐藏列表，【不要隐藏，会导致输入无法正确处理，有关的代码是“Wgt.js”里“a_Ipt.cFindTchByPkdWgt(this);”这句】
+			//	l_This.cHideList();
 				return this;
 			}
 			,
@@ -353,6 +394,9 @@ function fOnIcld(a_Errs)
 				l_EvtAgms[1] = l_BtnWid;
 				l_EvtAgms[2] = l_BtnWid;
 				nUi.fTrgrPutEvt(l_BtnPutTgt, "WidDtmnd", l_EvtAgms);
+
+				// 令放置目标的高度对齐
+				stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_EditPutTgt.offsetHeight);
 				return this;
 			}
 			,
@@ -377,6 +421,7 @@ function fOnIcld(a_Errs)
 				{ return this; }
 
 				l_This.d_ListShow = true;	// 设置标志
+				l_This.d_Btn.cUpDown(false);	// 按钮按下
 
 				// 把<ul>从来源摆放到目标，注意l_This.d_Ul可能已存在
 				if (! l_This.d_Ul)
@@ -389,9 +434,6 @@ function fOnIcld(a_Errs)
 				}
 
 				l_This.dRgltListPos();	// 校准列表位置
-
-				// 按钮按下
-				l_This.d_Btn.cUpDown(false);
 
 				// 渐现
 				// 首先设置初值，当未曾设置过或者为1时，设为0
@@ -418,13 +460,11 @@ function fOnIcld(a_Errs)
 				{ return this; }
 
 				l_This.d_ListShow = false;	// 设置标志
+				l_This.d_Btn.cUpDown(true);	// 按钮弹起
 
 //				// 把<ul>还给来源，【动画后再进行】
 //				l_This.dRtnToSrc(l_This.d_Ul);
 //				l_This.d_Ul = null;		// 清null
-
-				// 按钮弹起
-				l_This.d_Btn.cUpDown(true);
 
 				// 渐隐
 				stCssUtil.cAnmt(l_This.d_Ul,
@@ -456,14 +496,21 @@ function fOnIcld(a_Errs)
 				if (! l_PkdLi)
 				{ return this; }
 
-				// 设置文本，优选特性，没有时采用<li>.textContent
-				var l_TextTag = stDomUtil.cQryAll("*[data-Wse_Text]", l_PkdLi);
-				l_TextTag = (l_TextTag.length > 0) ? l_TextTag[0] : l_PkdLi;
-				l_This.cSetText(l_TextTag.textContent);
+				// 设置文本
+				l_This.cSetText(l_This.dGetTextOfLi(l_PkdLi));
 
 				// 隐藏列表
 				l_This.dHideList();
 				return this;
+			}
+			,
+			/// 获取<li>的文本
+			dGetTextOfLi : function (a_Li)
+			{
+				// 优选特性，没有时采用<li>.textContent
+				var l_TextTag = stDomUtil.cQryAll("[data-Wse_Text]", a_Li);
+				l_TextTag = (l_TextTag.length > 0) ? l_TextTag[0] : a_Li;
+				return l_TextTag.textContent;
 			}
 		}
 		,
