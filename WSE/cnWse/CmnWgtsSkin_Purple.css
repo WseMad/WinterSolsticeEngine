@@ -107,6 +107,27 @@
 	box-shadow: 0px 0px 20px rgb(232, 46, 255);
 }
 
+/*********************************************** tCmb ***********************************************/
+
+.cnWse_Skin_Purple .cnWse_tCmb>ul,
+.cnWse_Skin_Purple.cnWse_PutTgt>.cnWse_tCmb>ul, .cnWse_Skin_Purple.cnWse_PutTgt.cnWse_tCmb>ul
+{
+	background-color: rgb(214, 76, 240);
+}
+
+/* <ul>的<li>奇偶色 */
+.cnWse_Skin_Purple .cnWse_tCmb>ul>li:nth-of-type(odd),
+.cnWse_Skin_Purple.cnWse_PutTgt>.cnWse_tCmb>ul>li:nth-of-type(odd), .cnWse_Skin_Purple.cnWse_PutTgt.cnWse_tCmb>ul>li:nth-of-type(odd)
+{
+	background-color: transparent;	/* 用<ul>的背景色 */
+}
+
+.cnWse_Skin_Purple .cnWse_tCmb>ul>li:nth-of-type(even),
+.cnWse_Skin_Purple.cnWse_PutTgt>.cnWse_tCmb>ul>li:nth-of-type(even), .cnWse_Skin_Purple.cnWse_PutTgt.cnWse_tCmb>ul>li:nth-of-type(even)
+{
+	background-color: rgb(184, 73, 210);
+}
+
 /*********************************************** tMenu ***********************************************/
 
 /* 背景渐变 */

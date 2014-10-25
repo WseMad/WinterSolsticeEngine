@@ -279,7 +279,7 @@ function fOnIcld(a_Errs)
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
 						// 如果开关，先进行切换样式类，后回调！
-						if (l_This.d_Cfg.c_UpDown)
+						if (l_ClkBody && l_This.d_Cfg.c_UpDown)
 						{
 							stCssUtil.cTglCssc(l_This.d_Body, "cnWse_tBtn_Down");
 						}

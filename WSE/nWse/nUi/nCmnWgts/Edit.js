@@ -147,6 +147,10 @@ function fOnIcld(a_Errs)
 				if (a_Cfg.c_ReadOnly)	// 只读？
 				{
 					l_This.d_DomText.readOnly = true;
+					l_This.d_DomText.addEventListener("focus", function ()
+					{
+						l_This.d_DomText.blur();	// 若得到焦点，立即放弃焦点
+					});
 				}
 
 				if (a_Cfg.c_Plchd)	// 占位符

@@ -66,6 +66,7 @@ function fOnIcld(a_Errs)
 	function fRset(a_This)
 	{
 		a_This.d_ListShow = false;	// 列表显示？
+		a_This.d_Val = "";			// 值
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,6 +95,7 @@ function fOnIcld(a_Errs)
 			/// c_Plchd：String，占位符
 			/// c_SlcOnly：Boolean，只选？
 			/// c_InitSlc：Number$String，初始选项索引或文本
+			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -113,7 +115,13 @@ function fOnIcld(a_Errs)
 					c_PutTgt: l_This.d_PutTgtId_Edit,
 					c_PutSrc: l_This.d_PutSrcId_Edit,
 					c_ReadOnly: a_Cfg.c_SlcOnly,
-					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd
+					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd,
+					c_fOnOk : function (a_Edit, a_Text)
+					{
+					//	console.log("OK: " + a_Text)
+						// 触发确定事件
+						l_This.dTrgrOkEvt();
+					}
 				});
 
 				var l_Lis;
@@ -124,13 +132,13 @@ function fOnIcld(a_Errs)
 						l_Lis = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li");
 						if ((0 <= a_Cfg.c_InitSlc) && (a_Cfg.c_InitSlc < l_Lis.length))
 						{
-							l_This.d_Edit.cSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
+							l_This.cSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
 						}
 					}
 					else
 					if (nWse.fIsStr(a_Cfg.c_InitSlc))
 					{
-						l_This.d_Edit.cSetText(a_Cfg.c_InitSlc);
+						l_This.cSetText(a_Cfg.c_InitSlc);
 					}
 				}
 
@@ -336,12 +344,19 @@ function fOnIcld(a_Errs)
 				return this.d_Edit ? this.d_Edit.cGetText() : "";
 			}
 			,
+			/// 获取值
+			cGetVal : function ()
+			{
+				return this.d_Val;
+			}
+			,
 			/// 设置文本
 			cSetText : function (a_Text)
 			{
 				if (this.d_Edit)
 				{ this.d_Edit.cSetText(a_Text); }
 
+				this.d_Val = a_Text;	// 亦修改值
 				return this;
 			}
 			,
@@ -496,11 +511,15 @@ function fOnIcld(a_Errs)
 				if (! l_PkdLi)
 				{ return this; }
 
-				// 设置文本
+				// 设置文本和值
 				l_This.cSetText(l_This.dGetTextOfLi(l_PkdLi));
+				l_This.d_Val = l_PkdLi.getAttribute("value") || l_This.cGetText();
 
 				// 隐藏列表
 				l_This.dHideList();
+
+				// 触发确定事件
+				l_This.dTrgrOkEvt();
 				return this;
 			}
 			,
@@ -510,7 +529,18 @@ function fOnIcld(a_Errs)
 				// 优选特性，没有时采用<li>.textContent
 				var l_TextTag = stDomUtil.cQryAll("[data-Wse_Text]", a_Li);
 				l_TextTag = (l_TextTag.length > 0) ? l_TextTag[0] : a_Li;
-				return l_TextTag.textContent;
+				return l_TextTag.getAttribute("data-Wse_Text") || l_TextTag.textContent;
+			}
+			,
+			/// 触发确定事件
+			dTrgrOkEvt : function ()
+			{
+				var l_This = this;
+				if ((! l_This.d_Cfg.c_fOnOk) || (! l_This.cGetText()))
+				{ return this; }
+
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText());
+				return this;
 			}
 		}
 		,
@@ -519,6 +549,42 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fClassItfcImp(tCmb,
+		nUi.itForm,
+		{
+			/// 序列化
+			/// a_Kvo：Object，若为null则新建一个对象
+			/// 返回：a_Kvo
+			vcSrlz : function f(a_Kvo)
+			{
+				if (! a_Kvo)
+				{ a_Kvo = {}; }
+
+				var l_This = this;
+				if ((! l_This.d_Val))
+				{ return a_Kvo; }
+
+				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
+				a_Kvo[l_Key] = l_This.d_Val;
+				return a_Kvo;
+			}
+			,
+			/// 输入焦点
+			vcIptFoc : function f(a_YesNo)
+			{
+				var l_This = this;
+				if (l_This.d_Edit)
+				{
+					nUi.itForm.ocBindUbnd(l_This.d_Edit,
+						function (a_Istn)
+						{
+							a_Istn.vcIptFoc(a_YesNo);
+						});
+				}
+				return this;
+			}
+		});
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

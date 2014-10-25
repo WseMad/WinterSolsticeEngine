@@ -580,10 +580,10 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 获取序列化的键，依次选：Wse_Name，name，id
+			/// 获取序列化的键，依次选：data-Wse_Name，name，id
 			dGetKeyOfSrlz : function ()
 			{
-				return this.d_PutSrc ? (this.d_PutSrc.Wse_Name || this.d_PutSrc.name || this.d_PutSrc.id) : "";
+				return this.d_PutSrc ? (this.d_PutSrc.getAttribute("data-Wse_Name") || this.d_PutSrc.name || this.d_PutSrc.id) : "";
 			}
 			,
 			/// 当序列化时检查键

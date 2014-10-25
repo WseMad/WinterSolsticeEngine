@@ -241,7 +241,9 @@ function fOnIcld(a_Errs)
 
 		// 记录名字，序列化时使用
 		if (a_Name)
-		{ l_Rst.Wse_Name = a_Name; }
+		{
+			l_Rst.setAttribute("data-Wse_Name", a_Name);
+		}
 
 		return l_Rst;
 	}
@@ -416,6 +418,8 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+
 				return this;
 			}
 			,

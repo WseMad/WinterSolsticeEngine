@@ -225,16 +225,16 @@
 		<div id="k_Cmb1">
 			<ul>
 				<li><span data-Wse_Text>Option1</span></li>
-				<li>Option2</li>
+				<li value="optn2">Option2</li>
 				<li>Option3</li>
 				<li>Option4</li>
 			</ul>
 		</div>
 
-		<div id="k_Cmb2">
+		<div id="k_Cmb2" data-Wse_Name="Cmb2">
 			<ul>
 				<li>Option1</li>
-				<li>Option2</li>
+				<li value="optn2">Option2</li>
 				<li>Option3</li>
 				<li>Option4</li>
 			</ul>
@@ -670,6 +670,10 @@
 						c_PutTgt: "k_PutTgt_Cmb1",
 						c_PutSrc: "k_Cmb1"
 						,c_Plchd: "可编辑"
+						,c_fOnOk : function (a_Wgt, a_Text)
+						{
+							console.log(a_Text);
+						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
@@ -680,6 +684,10 @@
 						,c_SlcOnly : true
 					//	,c_Plchd: "只选"
 					//	,c_InitSlc: 0
+						,c_fOnOk : function (a_Wgt, a_Text)
+						{
+							console.log(a_Text);
+						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
