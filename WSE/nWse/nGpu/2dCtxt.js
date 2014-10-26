@@ -36,6 +36,7 @@ function fOnIcld(a_Errs)
 	var stStrUtil = nWse.stStrUtil;
 	var stAryUtil = nWse.stAryUtil;
 	var tSara = nWse.tSara;
+	var tClo = nWse.tClo;
 
 	var nGpu = nWse.nGpu;
 	var unKnl = nGpu.unKnl;
@@ -429,6 +430,17 @@ function fOnIcld(a_Errs)
 				a_Sara
 				? l_Ctxt.clearRect(a_Sara.c_X, a_Sara.c_Y, a_Sara.c_W, a_Sara.c_H)
 				: l_Ctxt.clearRect(0, 0, this.cGetCvsWid(), this.cGetCvsHgt());
+				return this;
+			}
+			,
+			/// 填充
+			cFill : function (a_Sara, a_Clo)
+			{
+				var l_Ctxt = this.cAcs();
+				l_Ctxt.fillStyle = a_Clo ? tClo.scToCssCloStr(a_Clo) : "rgba(0, 0, 0, 1)";
+				a_Sara
+					? l_Ctxt.fillRect(a_Sara.c_X, a_Sara.c_Y, a_Sara.c_W, a_Sara.c_H)
+					: l_Ctxt.fillRect(0, 0, this.cGetCvsWid(), this.cGetCvsHgt());
 				return this;
 			}
 			,

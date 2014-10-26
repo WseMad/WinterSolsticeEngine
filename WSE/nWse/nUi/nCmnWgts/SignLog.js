@@ -232,9 +232,9 @@ function fOnIcld(a_Errs)
 
 	function fObtnDom(a_This, a_Key, a_Name)
 	{
-		var l_ThisPutSrcId = a_This.d_PutSrc.id;
-		var l_DomPutSrcId = "o" + l_ThisPutSrcId + "_" + a_Key;
-		var l_DomPutTgtId = "o" + l_ThisPutSrcId + "_PutTgt_" + a_Key;
+		l_This.dGnrtSubWgtId(a_Key);
+		var l_DomPutSrcId = tWgt.sd_SubWgtPutSrcId;
+		var l_DomPutTgtId = tWgt.sd_SubWgtPutTgtId;
 		var l_Rst = stDomUtil.cObtnOne(null, "div", l_DomPutSrcId, null, a_This.d_PutSrc);
 		a_This["d_PutSrcId_" + a_Key] = l_DomPutSrcId;
 		a_This["d_PutTgtId_" + a_Key] = l_DomPutTgtId;

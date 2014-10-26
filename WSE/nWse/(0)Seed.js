@@ -702,15 +702,36 @@
 
 		//======== 私有字段
 
-		var e_TmotId = null, e_LastTime = 0, e_Timer = 0;
+		var e_LastTime = 0, e_FrmTime = 0;
 		var e_SphTot = 7, e_SphFnlRds = 16, e_SphAry = [];
 		var e_Dom_body = null, e_WndInrHgt = 0, e_DomAll = null;
+		var e_End = false, e_fCabk = null;
+		var e_fRAF = l_Glb.requestAnimationFrame ||
+			l_Glb.webkitRequestAnimationFrame ||
+			l_Glb.mozRequestAnimationFrame ||
+			l_Glb.oRequestAnimationFrame ||
+			l_Glb.msRequestAnimationFrame ||
+			function (a_fCabk) { l_Glb.setTimeout(a_fCabk, 15); };
 
 		//======== 私有函数
 
 		// 一帧
 		function eOneFrm()
 		{
+			// 结束？
+			if (e_End)
+			{
+				// 不显示
+				if (e_DomAll && ("none" != e_DomAll.style.display))
+				{ e_DomAll.style.display = "none"; }
+
+				// 回调
+				if (e_fCabk)
+				{ e_fCabk(); }
+
+				return;
+			}
+
 			// 更新高度
 			if (e_WndInrHgt != window.innerHeight)
 			{
@@ -721,7 +742,7 @@
 			var l_Now = Date.now() / 1000;
 			var l_FrmItvl = Math.min(l_Now - e_LastTime, 1);	// 限制每秒1帧
 			e_LastTime = l_Now;
-			e_Timer += l_FrmItvl;
+			e_FrmTime += l_FrmItvl;
 
 			var l_Cx = window.innerWidth / 2, l_Cy = window.innerHeight / 2;
 			var l_Spd = 3.0;
@@ -740,14 +761,14 @@
 				l_Sph = e_SphAry[i];
 				l_Stl = l_Sph.c_Dom.style;
 
-			//	e_Timer = l_GrowTime;
-				l_Rad = i * l_RadPerCir + e_Timer * l_Spd;
+			//	e_FrmTime = l_GrowTime;
+				l_Rad = i * l_RadPerCir + e_FrmTime * l_Spd;
 				l_X = l_A * Math.cos(l_Rad);
 				l_Sin = Math.sin(l_Rad);
 				l_Y = l_B * l_Sin;
 				l_S = Math.max((l_Y + l_B) / (l_B + l_B), l_MinRdsScl);
-				l_Y *= (1.00 * Math.cos(e_Timer));
-				l_Sph.c_Rds = e_SphFnlRds * Math.min(e_Timer / l_GrowTime, 1);	// 成长
+				l_Y *= (1.00 * Math.cos(e_FrmTime));
+				l_Sph.c_Rds = e_SphFnlRds * Math.min(e_FrmTime / l_GrowTime, 1);	// 成长
 				l_R = l_Sph.c_Rds * l_S;
 
 				l_Stl.left = Math.round(l_X - l_Sph.c_Rds + l_Cx).toString() + "px";
@@ -770,16 +791,7 @@
 
 		function eNextFrm()
 		{
-			e_TmotId = setTimeout(eOneFrm, 15);	// FPS=60
-		}
-
-		function eCclTmr()
-		{
-			if (e_TmotId)
-			{
-				clearTimeout(e_TmotId);
-				e_TmotId = null;
-			}
+			e_fRAF(eOneFrm);
 		}
 
 		function eSttAnmt()
@@ -843,9 +855,9 @@
 		/// 开始
 		stNowLoad.cBgn = function ()
 		{
-			// 取消定时器并复位变量
-			eCclTmr();
-			e_Timer = 0;
+			// 复位变量
+			e_End = false;
+			e_FrmTime = 0;
 			e_LastTime = Date.now() / 1000;
 
 			// 显示
@@ -857,20 +869,12 @@
 			return stNowLoad;
 		};
 
-		/// 结束
+		/// 结束，【注意】异步执行
 		/// a_fCabk：void f()，回调
 		stNowLoad.cEnd = function (a_fCabk)
 		{
-			// 取消定时器
-			eCclTmr();
-
-			// 不显示
-			if (e_DomAll && ("none" != e_DomAll.style.display))
-			{ e_DomAll.style.display = "none"; }
-
-			// 回调
-			if (a_fCabk)
-			{ a_fCabk(); }
+			e_End = true;
+			e_fCabk = a_fCabk;
 			return stNowLoad;
 		};
 	})();

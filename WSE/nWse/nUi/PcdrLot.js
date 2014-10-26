@@ -863,9 +863,10 @@ function fOnIcld(a_Errs)
 	// 排版
 	function fFlow(a_This, a_Boa, a_Col, a_Put, a_Rfl)
 	{
-		// 如果这是第一行
+		// 如果这是第一行，装入一个数，该数用于追踪行高
 		var l_RowHgts = a_Col.Wse_PcdrLot.c_RowHgts;
-		if (0 == l_RowHgts.length)
+		var l_1stRow = (0 == l_RowHgts.length);
+		if (l_1stRow)
 		{ l_RowHgts.push(0); }
 
 		// 准备
@@ -887,7 +888,7 @@ function fOnIcld(a_Errs)
 		}
 		else // 计算栅格索引和个数
 		{
-			if (l_Cfg.c_NewRow)	// 换行
+			if ((! l_1stRow) && l_Cfg.c_NewRow)	// 若不是第一行，且要求换行
 			{ fFlow_NewLine(a_This, a_Boa, a_Col); }
 
 			if (l_GridCnt > l_GridTot)	// 确保c_GridCnt <= l_GridTot

@@ -135,7 +135,8 @@ function fOnIcld(a_Errs)
 		// 得到顶层控件，因为a_Foc可能是某个子控件
 		function fObtnTopWgt(a_Wgt)
 		{
-			return nUi.tWgt.scObtnTopWgtByPutTgt(a_Wgt);
+			return a_Wgt;
+		//	return nUi.tWgt.scObtnTopWgtByPutTgt(a_Wgt);	//【不要用这个，影响输入处理】
 		}
 
 		function fAddFoc(a_Foc)

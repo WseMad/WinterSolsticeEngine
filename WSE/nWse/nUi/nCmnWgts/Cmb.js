@@ -104,11 +104,10 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tCmb");			// CSS类
 
-				var l_ThisPutSrcId = l_This.d_PutSrc.id;
-
 				// 生成编辑框
-				l_This.d_PutSrcId_Edit =  "o" + l_ThisPutSrcId + "_Edit";
-				l_This.d_PutTgtId_Edit =  "o" + l_ThisPutSrcId + "_PutTgt_Edit";
+				l_This.dGnrtSubWgtId("Edit");
+				l_This.d_PutSrcId_Edit = tWgt.sd_SubWgtPutSrcId;
+				l_This.d_PutTgtId_Edit = tWgt.sd_SubWgtPutTgtId;
 				l_This.d_PutSrc_Edit = stDomUtil.cObtnOne(null, "div", l_This.d_PutSrcId_Edit, null, l_This.d_PutSrc);
 				l_This.d_Edit = new nCmnWgts.tEdit();
 				l_This.d_Edit.vcBind({
@@ -143,8 +142,9 @@ function fOnIcld(a_Errs)
 				}
 
 				// 生成按钮
-				l_This.d_PutSrcId_Btn =  "o" + l_ThisPutSrcId + "_Btn";
-				l_This.d_PutTgtId_Btn =  "o" + l_ThisPutSrcId + "_PutTgt_Btn";
+				l_This.dGnrtSubWgtId("Btn");
+				l_This.d_PutSrcId_Btn = tWgt.sd_SubWgtPutSrcId;
+				l_This.d_PutTgtId_Btn = tWgt.sd_SubWgtPutTgtId;
 				l_This.d_PutSrc_Btn = stDomUtil.cObtnOne(null, "div", l_This.d_PutSrcId_Btn, null, l_This.d_PutSrc);
 				l_This.d_PutSrc_Btn.textContent = "▼";
 				l_This.d_Btn = new nCmnWgts.tBtn();

@@ -102,6 +102,7 @@ function fOnIcld(a_Errs)
 			/// c_Shp：tShp，形状，若为i_Cir则覆盖c_FxdAr（圆的宽高比总是1）
 			/// c_FxdAr：Number，固定宽高比
 			/// c_TitVcen：Boolean，标题垂直居中？仅当有标题时才有效
+			/// c_TxtrLyr：Number，纹理层，默认0
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -155,7 +156,6 @@ function fOnIcld(a_Errs)
 
 				if (l_This.d_Cfg.c_TitVcen && l_This.d_DomTit && (! l_This.d_fOnAnmtUpdEnd))
 				{
-					// 展开式时必须校准位置
 					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 					{
 						// 标题垂直居中
@@ -426,6 +426,12 @@ function fOnIcld(a_Errs)
 				if (l_This.d_Txtr) // 如果有，同时校准纹理层
 				{
 					l_This.d_Txtr.style.borderRadius = l_BdrRdsStr;
+				}
+
+				// 标题垂直居中
+				if (l_This.d_Cfg.c_TitVcen && l_This.d_DomTit)
+				{
+					l_This.dTitVcen();
 				}
 				return this;
 			}

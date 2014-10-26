@@ -647,14 +647,42 @@ function fOnIcld(a_Errs)
 				stCssUtil.cGetPad(tWgt.sd_PutTgtPad, this.d_PutTgt, null, true);
 				return tWgt.sd_PutTgtPad;
 			}
+			,
+			/// 生成子控件ID，写入至sd_SubWgtPutSrcId和sd_SubWgtPutTgtId里
+			dGnrtSubWgtId : function (a_Name)
+			{
+				var l_ThisPutSrcId = this.d_PutSrc && this.d_PutSrc.id;
+				if (! l_ThisPutSrcId)
+				{
+					tWgt.sd_SubWgtPutSrcId = "";
+					tWgt.sd_SubWgtPutTgtId = "";
+					return this;
+				}
+
+				if (111 != l_ThisPutSrcId.charCodeAt(0))	// 以“o”开头
+				{ l_ThisPutSrcId = "o" + l_ThisPutSrcId; }
+
+				tWgt.sd_SubWgtPutSrcId = l_ThisPutSrcId + "_" + a_Name;
+				tWgt.sd_SubWgtPutTgtId = l_ThisPutSrcId + "_PutTgt_" + a_Name;
+				return this;
+			}
 		}
 		,
 		{
 			/// 最小高度（部分支持固定宽高比的控件使用）
 			i_MinHgt : 32
 			,
+			/// 子控件放置来源ID
+			sd_SubWgtPutSrcId : ""
+			,
+			/// 子控件放置目标ID
+			sd_SubWgtPutTgtId : ""
+			,
 			/// 放置目标选择器
 			sd_PutTgtSlc : ""
+			,
+			/// 放置目标外边距
+			sd_PutTgtMgn : {}
 			,
 			/// 放置目标边框厚度
 			sd_PutTgtBdrThk : {}

@@ -39,7 +39,7 @@
 
 	</style>
 </head>
-<body class="cnWse_Skin_Blue">
+<body class="cnWse_Skin_Purple">
 
 <div id="ok_3dBody">
 	<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
@@ -51,8 +51,15 @@
 		<!---->
 		<!-- 按钮 -->
 		<!---->
-		<div id="k_Btn" class="cnWse_PutSrc">
+		<div id="k_Btn">
 			<span data-Wse_Tit>按钮</span>
+		</div>
+
+		<!---->
+		<!-- 幻灯片 -->
+		<!---->
+		<div id="k_SldPlr">
+
 		</div>
 
 		<!---->
@@ -75,29 +82,30 @@ window.addEventListener("load", function ()
 	nWse.stNowLoad.cEnd(null);	// 结束
 
 	nWse.stAsynIcld.cFromApp("nWse",
-			[
-				"Ajax",
+	[
+		"Ajax",
 
-				"VtuCsl.js",
-				"PntIptTrkr.js",
+		"VtuCsl.js",
+		"PntIptTrkr.js",
 
-				"nUi/PcdrLot.js",
-				"nUi/EfcMgr.js",
-				"nUi/Frmwk.js",
+		"nUi/PcdrLot.js",
+		"nUi/EfcMgr.js",
+		"nUi/Frmwk.js",
 
-				"nUi/nCmnWgts/Btn.js",
-				"nUi/nCmnWgts/Edit.js",
-				"nUi/nCmnWgts/List.js",
-				"nUi/nCmnWgts/Swch.js",
-				"nUi/nCmnWgts/Menu.js",
-				"nUi/nCmnWgts/Acod.js",
-				"nUi/nCmnWgts/Nav.js",
-				"nUi/nCmnWgts/SignLog.js"
+		"nUi/nCmnWgts/Btn.js",
+		"nUi/nCmnWgts/Edit.js",
+		"nUi/nCmnWgts/List.js",
+		"nUi/nCmnWgts/Swch.js",
+		"nUi/nCmnWgts/Menu.js",
+		"nUi/nCmnWgts/Acod.js",
+		"nUi/nCmnWgts/Nav.js",
+		"nUi/nCmnWgts/SignLog.js",
+		"nUi/nCmnWgts/GpuSldPlr.js"
 
-				,"nGpu/2dPath.js"
-			]
-			,
-			fOnIcld);
+	//	,"nGpu/2dPath.js"
+	]
+	,
+	fOnIcld);
 });
 
 
@@ -129,97 +137,116 @@ function fOnIcld(a_Errs)
 	// 示例应用程序
 
 	var tExmApp = nWse.fClass(nApp,
-			function tExmApp()
-			{
-				var l_This = this;
-				l_This.e_WidPct = 100;						// 宽度百分比
-				l_This.e_PcdrLot = new tPcdrLot();			// 程序化布局
-				stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
-			},
-			null,
-			{
-				eInit: function ()
-				{
-					var l_This = this;
-					l_This.e_PcdrLot.cPlan({
-						c_PutTgt: "k_PutTgt_Lot",
-						c_PutSrc: "k_PutSrc_Lot",
-						c_WidPct: l_This.e_WidPct,
-						c_MinWid: 256,
-						c_MaxWid: 2000,
-						c_MinHgt: null,	// 同window.innerHeight
-						c_BrkPnts: [0, 480, 960],
-						c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
-					});
-
-					l_This.e_PcdrLot.cShowHideGridUi(true);
-
-					// 自定义默认进离动画
-					var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
-					l_DftEfc.cSetUniDur(0.6);
-					l_DftEfc.cSetUniEsn(function (a_Scl)
-					{
-						//	return a_Scl;
-						return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
-					});
-
-					stEfcMgr.cBind(l_This.e_PcdrLot.cAcsDftEfc())
-							.cCssEntBgn_FromRt()
-							.cCssLeaEnd_ToRt()
-							.cCssEntLea_Fade();
-
-					// 虚拟控制台
-					stVtuCsl.cHotKeyUi(true);	// F2快捷键
-
-					//======================== 其他
-
-					//【控件】
-					var l_Wgt = null;
-					l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
-					stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
-
-					l_Wgt = new nCmnWgts.tBtn();	// Btn3rd
-					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_Btn",
-						c_PutSrc: "k_Btn",
-						c_Shp : nCmnWgts.tBtn.tShp.i_Rect
-					});
-					l_This.e_StaWgtSet.cAdd(l_Wgt);
-				}
-				,
-				// 运行
-				cRun: function ()
-				{
-					var l_This = this;
-
-					// 初始化
-					l_This.eInit();
-
-					// 初始布局？
-					stFrmwk.cRunLot();			// 运行布局
-				}
-				,
-				cBpc : function (a_Lot)
-				{
-					var l_This = this;
-					var l_Lot = a_Lot;
-					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
-
-					l_Lot
-							.cBoa({
-								c_Id: "k_TestBoa"
-							})
-							.cCol({
-								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
-							})
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Btn",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
-							})
-					;
-				}
+	function tExmApp()
+	{
+		var l_This = this;
+		l_This.e_WidPct = 100;						// 宽度百分比
+		l_This.e_PcdrLot = new tPcdrLot();			// 程序化布局
+		stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
+	},
+	null,
+	{
+		eInit: function ()
+		{
+			var l_This = this;
+			l_This.e_PcdrLot.cPlan({
+				c_PutTgt: "k_PutTgt_Lot",
+				c_PutSrc: "k_PutSrc_Lot",
+				c_WidPct: l_This.e_WidPct,
+				c_MinWid: 256,
+				c_MaxWid: 2000,
+				c_MinHgt: null,	// 同window.innerHeight
+				c_BrkPnts: [0, 480, 960],
+				c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
 			});
+
+			l_This.e_PcdrLot.cShowHideGridUi(true);
+
+			// 自定义默认进离动画
+			var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
+			l_DftEfc.cSetUniDur(0.6);
+			l_DftEfc.cSetUniEsn(function (a_Scl)
+			{
+				//	return a_Scl;
+				return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
+			});
+
+			stEfcMgr.cBind(l_This.e_PcdrLot.cAcsDftEfc())
+					.cCssEntBgn_FromRt()
+					.cCssLeaEnd_ToRt()
+					.cCssEntLea_Fade();
+
+			// 虚拟控制台
+			stVtuCsl.cHotKeyUi(true);	// F2快捷键
+
+			//======================== 其他
+
+			//【控件】
+			var l_Wgt = null;
+			l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
+			stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
+
+			l_Wgt = new nCmnWgts.tBtn();	// Btn3rd
+			l_Wgt.vcBind({
+				c_PutTgt: "k_PutTgt_Btn",
+				c_PutSrc: "k_Btn",
+				c_Shp : nCmnWgts.tBtn.tShp.i_Caps
+				,c_FxdAr : 2/1
+				,c_TxtrLyr : 1		// 纹理层
+				,c_TitVcen: true
+			});
+			l_This.e_StaWgtSet.cAdd(l_Wgt);
+			nWse.stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_Skin_Metal");
+
+			l_Wgt = new nCmnWgts.tGpuSldPlr();
+			l_Wgt.vcBind({
+				c_PutTgt: "k_PutTgt_SldPlr",
+				c_PutSrc: "k_SldPlr"
+				,c_FxdAr : 16 / 10
+			});
+			l_This.e_StaWgtSet.cAdd(l_Wgt);
+			nWse.stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_Skin_Metal");
+		}
+		,
+		// 运行
+		cRun: function ()
+		{
+			var l_This = this;
+
+			// 初始化
+			l_This.eInit();
+
+			// 初始布局？
+			stFrmwk.cRunLot();			// 运行布局
+		}
+		,
+		cBpc : function (a_Lot)
+		{
+			var l_This = this;
+			var l_Lot = a_Lot;
+			var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
+
+			l_Lot
+				.cBoa({
+					c_Id: "k_TestBoa"
+				})
+					.cCol({
+						c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+					})
+
+					.cPut({
+						c_NewRow : true,
+						c_Id : "k_PutTgt_SldPlr"
+						,c_GridCnt: (2 == l_BrkPntIdx) ? 16 : 10
+					})
+//					.cPut({
+//						c_NewRow : true,
+//						c_Id: "k_PutTgt_Btn",
+//						c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+//					})
+			;
+		}
+	});
 
 	var zzz = 0;
 
