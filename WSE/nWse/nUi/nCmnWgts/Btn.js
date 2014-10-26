@@ -115,10 +115,19 @@ function fOnIcld(a_Errs)
 				if (l_This.d_DomTit)
 				{ stCssUtil.cAddCssc(l_This.d_DomTit, "cnWse_tBtn_Tit"); }	// CSS类
 
-				// 创建身体，放入标题
+				// 创建身体，放入纹理层和标题
 				l_This.d_Body = document.createElement("div");
 				stCssUtil.cAddCssc(l_This.d_Body, "cnWse_tBtn_Body");			// CSS类
-				if (l_This.d_DomTit)
+
+				if (a_Cfg.c_TxtrLyr) // 纹理层
+				{
+					l_This.d_Txtr = document.createElement("div");
+					stCssUtil.cAddCssc(l_This.d_Txtr, "cnWse_tBtn_Txtr");			// CSS类
+					l_This.d_Body.appendChild(l_This.d_Txtr);
+					l_This.dRgltTxtrLyr();
+				}
+
+				if (l_This.d_DomTit) // 标题
 				{
 					l_This.d_Body.appendChild(l_This.d_DomTit);
 				}
@@ -129,6 +138,7 @@ function fOnIcld(a_Errs)
 				}
 
 				l_This.dApdToSrc(l_This.d_Body);	// 先追加到来源，刷新时再摆放到目标
+
 
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
@@ -165,7 +175,7 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_PutSrc)
 				{ return this; }
 
-				// 标题
+				// 标题，身体和纹理层
 				if (l_This.d_DomTit)
 				{
 					stCssUtil.cRmvCssc(l_This.d_DomTit, "cnWse_tBtn_Tit");	// CSS类
@@ -173,10 +183,14 @@ function fOnIcld(a_Errs)
 					l_This.d_DomTit = null;
 				}
 
-				// 身体
 				if (l_This.d_Body)
 				{
 					l_This.dRmvWhenInSrc("d_Body");
+				}
+
+				if (l_This.d_Txtr)
+				{
+					l_This.dRmvWhenInSrc("d_Txtr");
 				}
 
 				// 事件处理器
@@ -408,6 +422,11 @@ function fOnIcld(a_Errs)
 
 				l_This.d_PutTgt.style.borderRadius = l_BdrRdsStr;
 				l_This.d_Body.style.borderRadius = l_BdrRdsStr;
+
+				if (l_This.d_Txtr) // 如果有，同时校准纹理层
+				{
+					l_This.d_Txtr.style.borderRadius = l_BdrRdsStr;
+				}
 				return this;
 			}
 			,
@@ -423,6 +442,17 @@ function fOnIcld(a_Errs)
 
 				var l_CtntH = stCssUtil.cGetCtntHgt(s_TempRst, l_This.d_Body).c_CtntHgt;
 				stCssUtil.cSetPosUp(l_This.d_DomTit, (l_CtntH - l_This.d_DomTit.offsetHeight) / 2);
+				return this;
+			}
+			,
+			/// 校准纹理层
+			dRgltTxtrLyr : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_Txtr)
+				{ return this; }
+
+			//	stCssUtil.cSetDim(l_This.d_Txtr, l_This.d_Body.offsetWidth, l_This.d_Body.offsetHeight);
 				return this;
 			}
 		}
