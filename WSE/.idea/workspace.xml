@@ -52,34 +52,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CmnWgts.css" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/cnWse/CmnWgts.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.16568916" vertical-offset="1958" max-vertical-offset="12825">
-              <caret line="109" column="47" selection-start-line="109" selection-start-column="47" selection-end-line="109" selection-end-column="47" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="nUiWgts.html" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="nUiWgts.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Test/nUiWgts.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.178571" vertical-offset="10724" max-vertical-offset="20007">
-              <caret line="575" column="50" selection-start-line="575" selection-start-column="50" selection-end-line="575" selection-end-column="50" />
+            <state vertical-scroll-proportion="0.1281296" vertical-offset="10724" max-vertical-offset="20007">
+              <caret line="569" column="24" selection-start-line="569" selection-start-column="24" selection-end-line="569" selection-end-column="24" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Btn.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.16" vertical-offset="2072" max-vertical-offset="12426">
-              <caret line="129" column="42" selection-start-line="129" selection-start-column="42" selection-end-line="129" selection-end-column="42" />
-              <folding>
-                <element signature="n#!!doc" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -140,10 +118,10 @@
         <option value="$PROJECT_DIR$/cnWse/CmnWgtsSkin_Purple.css" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Edit.js" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Cmb.js" />
-        <option value="$PROJECT_DIR$/../../MyHome/nUiWgts.html" />
         <option value="$PROJECT_DIR$/../../MyHome/index.html" />
         <option value="$PROJECT_DIR$/Test/nUiWgts.html" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Btn.js" />
+        <option value="$PROJECT_DIR$/../../MyHome/nUiWgts.html" />
         <option value="$PROJECT_DIR$/cnWse/CmnWgts.css" />
       </list>
     </option>
@@ -441,7 +419,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1456" height="876" extended-state="0" />
+    <frame x="-8" y="-8" width="1456" height="876" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -836,25 +814,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../MyHome/nUiWgts.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.035714" vertical-offset="81" max-vertical-offset="19988">
-          <caret line="22" column="57" selection-start-line="22" selection-start-column="57" selection-end-line="22" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../MyHome/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.52430046" vertical-offset="1905" max-vertical-offset="3002">
           <caret line="119" column="8" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test/nUiWgts.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.178571" vertical-offset="10724" max-vertical-offset="20007">
-          <caret line="575" column="50" selection-start-line="575" selection-start-column="50" selection-end-line="575" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -868,10 +831,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../../MyHome/nUiWgts.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-6.785714" vertical-offset="0" max-vertical-offset="20007">
+          <caret line="10" column="49" selection-start-line="10" selection-start-column="49" selection-end-line="10" selection-end-column="49" />
+          <folding>
+            <element signature="n#style#0;n#div#0;n#div#10;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#11;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cnWse/CmnWgts.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.16568916" vertical-offset="1958" max-vertical-offset="12825">
-          <caret line="109" column="47" selection-start-line="109" selection-start-column="47" selection-end-line="109" selection-end-column="47" />
+        <state vertical-scroll-proportion="-6.04" vertical-offset="1502" max-vertical-offset="12863">
+          <caret line="87" column="16" selection-start-line="87" selection-start-column="16" selection-end-line="87" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/nUiWgts.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.1281296" vertical-offset="10724" max-vertical-offset="20007">
+          <caret line="569" column="24" selection-start-line="569" selection-start-column="24" selection-end-line="569" selection-end-column="24" />
           <folding />
         </state>
       </provider>

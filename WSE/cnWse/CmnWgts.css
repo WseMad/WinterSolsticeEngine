@@ -90,10 +90,10 @@
 .cnWse_Skin_Metal .cnWse_tBtn .cnWse_tBtn_Body,
 .cnWse_Skin_Metal.cnWse_PutTgt>.cnWse_tBtn .cnWse_tBtn_Body, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
 {
-	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
-	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
-	background: -ms-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
-	background: linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 50%, rgb(160, 160, 160) 100%);
+	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: -ms-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
 
 	box-shadow:
 		/*inset rgba(255,255,255,0.3) 0px -100px 10px,	*//* 上半圆形阴影，【算了，距离不能指定百分比，但按钮尺寸是会变的】 */
@@ -125,8 +125,10 @@
 	/*-webkit-repeating-radial-gradient(50% 50%, 100% 100%,*/
 		/*rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 1.2%, rgba(255, 255, 255, 0) 2.2%);*/
 
-	background: -webkit-repeating-radial-gradient(50% 50%,
-		rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 1.2%, rgba(255, 255, 255, 0) 2.2%);
+	background: -webkit-repeating-radial-gradient(center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 2px, rgba(255, 255, 255, 0) 4px);
+	background: -moz-repeating-radial-gradient(center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 2px, rgba(255, 255, 255, 0) 4px);
+	background: -ms-repeating-radial-gradient(center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 2px, rgba(255, 255, 255, 0) 4px);
+	background: repeating-radial-gradient(center, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.5) 2px, rgba(255, 255, 255, 0) 4px);
 }
 
 /*********************************************** tEdit ***********************************************/
