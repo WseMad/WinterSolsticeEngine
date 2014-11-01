@@ -174,7 +174,9 @@ function fOnIcld(a_Errs)
 				l_Step.c_fMthd = function (a_Ctxt, a_Path, a_Idx, a_Mtx)
 				{
 					a_Ctxt.cAcs().beginPath();
-					a_Ctxt.cAcs().moveTo(0, 0);		// 移动到原点
+
+					//【BUG】Chrome：加上这句后，似乎无法使用cRect围成矩形，除非cRect(true, ...)
+				//	a_Ctxt.cAcs().moveTo(0, 0);		// 移动到原点
 				};
 
 				this.e_StepAry.push(l_Step);
@@ -490,8 +492,6 @@ function fOnIcld(a_Errs)
 			/// a_H：Number，有符号高，＜0时向-Y方向增长
 			cRect: function (a_LineToSp, a_X, a_Y, a_W, a_H)
 			{
-				// 宽高符号控制环绕方向
-				var l_SignW = nWse.stNumUtil.cSign(a_W);//, l_SignH = nWse.stNumUtil.cSign(a_H);
 				fLineToSp(this, a_LineToSp, a_X, a_Y);
 
 				// 直角

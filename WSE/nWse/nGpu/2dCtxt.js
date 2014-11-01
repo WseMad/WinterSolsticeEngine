@@ -611,6 +611,20 @@ function fOnIcld(a_Errs)
 				l_Ctxt.shadowBlur = 0;
 				return this;
 			}
+			,
+			/// 保存配置
+			cSaveCfg : function ()
+			{
+				this.cAcs().save();
+				return this;
+			}
+			,
+			/// 还原配置
+			cRstoCfg : function ()
+			{
+				this.cAcs().restore();
+				return this;
+			}
 		});
 	})();
 

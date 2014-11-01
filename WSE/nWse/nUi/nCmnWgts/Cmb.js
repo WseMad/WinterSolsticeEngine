@@ -95,7 +95,7 @@ function fOnIcld(a_Errs)
 			/// c_Plchd：String，占位符
 			/// c_SlcOnly：Boolean，只选？
 			/// c_InitSlc：Number$String，初始选项索引或文本
-			/// c_fOnOk：void f(a_Edit, a_Text)，当确定时
+			/// c_fOnOk：void f(a_Edit, a_NewText, a_OldText)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -116,7 +116,7 @@ function fOnIcld(a_Errs)
 					c_PutSrc: l_This.d_PutSrcId_Edit,
 					c_ReadOnly: a_Cfg.c_SlcOnly,
 					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd,
-					c_fOnOk : function (a_Edit, a_Text)
+					c_fOnOk : function (a_Edit, a_NewText, a_OldText)
 					{
 					//	console.log("OK: " + a_Text)
 						// 触发确定事件
@@ -408,6 +408,12 @@ function fOnIcld(a_Errs)
 				return this.d_Edit ? this.d_Edit.cGetText() : "";
 			}
 			,
+			/// 获取旧文本
+			cGetOldText: function ()
+			{
+				return this.d_Edit ? this.d_Edit.cGetOldText() : "";
+			}
+			,
 			/// 获取值
 			cGetVal : function ()
 			{
@@ -678,7 +684,7 @@ function fOnIcld(a_Errs)
 				if ((! l_This.d_Cfg.c_fOnOk) || (! l_This.cGetText()))
 				{ return this; }
 
-				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText());
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText(), l_This.cGetOldText());
 				return this;
 			}
 		}
