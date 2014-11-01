@@ -700,9 +700,19 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 是焦点？
-		stFrmwk.cIsFoc = function (a_Wgt)
+		/// a_OrAcst：Boolean，若为true则a_Wgt是焦点的祖先时也返回true，默认false
+		stFrmwk.cIsFoc = function (a_Wgt, a_OrAcst)
 		{
-			return (e_Focs.indexOf(a_Wgt) >= 0);
+			if (! a_OrAcst)
+			{
+				return (e_Focs.indexOf(a_Wgt) >= 0);
+			}
+
+			return (stAryUtil.cFind(e_Focs,
+			function (a_Focs, a_Idx, a_Foc)
+			{
+				return nUi.tWgt.scIsSelfOrAcst(a_Wgt, a_Foc);
+			}) >= 0);
 		};
 
 		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或vcRfshAftLot里调用，不要修改！

@@ -82,6 +82,15 @@ function fOnIcld(a_Errs)
 		a_This.d_ArStr = "";		// 宽高比字符串
 		a_This.d_ImgAry = null;		// 图像数组
 
+		a_This.d_fAnmtUpd = null;	// 动画更新
+		a_This.d_PlaySta = 2;		// 播放状态：1=播放，2=切换（初始）
+		a_This.d_OldPlayIdx = -1;	// 旧播放索引，初始-1
+		a_This.d_PlayIdx = -1;		// 播放索引，初始-1
+		a_This.d_AsNext = true;		// 作为下一张
+		a_This.d_FrmDur = 2;		// 帧时长
+		a_This.d_ManuSwch = false;	// 手动切换
+		a_This.d_RandPost = true;	// 随机张贴
+
 		// 控件集
 		a_This.d_WgtSet = null;
 		a_This.d_DivCvsDta = -1;	// -1表示待计算
@@ -140,12 +149,21 @@ function fOnIcld(a_Errs)
 
 						// 修正控件位置尺寸
 						l_This.dFixWgtsPosDim(l_OfstWid);
-
-						// 贴图
-						l_This.dMap();
 					};
 
 					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
+				}
+
+				// 动画更新
+				if (! l_This.d_fAnmtUpd)
+				{
+					l_This.d_fAnmtUpd = function (a_FrmTime, a_FrmItvl, a_FrmNum)
+					{
+						// 一帧
+						l_This.dOneFrm(a_FrmTime, a_FrmItvl, a_FrmNum);
+					};
+
+					stDomUtil.cRegAnmt(l_This.d_fAnmtUpd);
 				}
 
 				return this;
@@ -308,11 +326,11 @@ function fOnIcld(a_Errs)
 				// 取得这一组的图像源路径，发出请求
 				l_This.d_ImgSrcNodeAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() +
 					">[data-Wse_Ar=\"" + a_ArStr + "\"]>*[data-Wse_Src]");//, l_ArAry[l_This.d_ArIdx]);
-				l_This.dSetNumTot(l_This.d_ImgSrcNodeAry.length);	// 设置总数
+				l_This.dUpdImgTot();	// 更新图像总数
 
-				if (l_This.d_ImgSrcNodeAry.length > 0)
+				if (l_This.cGetSldTot() > 0)
 				{
-					l_This.d_ImgAry = new Array(l_This.d_ImgSrcNodeAry.length);
+					l_This.d_ImgAry = new Array(l_This.cGetSldTot());
 					stAryUtil.cFor(l_This.d_ImgAry,
 					function (a_ImgAry, a_ImgIdx, a_Null)
 					{
@@ -326,6 +344,9 @@ function fOnIcld(a_Errs)
 					l_This.d_ImgAry = null;
 				}
 
+				// 截断索引至[-1, l_This.cGetSldTot() - 1]
+				l_This.d_PlayIdx = stNumUtil.cClmOnNum(l_This.d_PlayIdx, -1, l_This.cGetSldTot() - 1);
+
 				// 若尚未建立画布，立即返回，等到建立后再修正
 				if (! l_This.d_Cvs)
 				{ return this; }
@@ -338,6 +359,12 @@ function fOnIcld(a_Errs)
 				// 修正控件位置尺寸
 				l_This.dFixWgtsPosDim(l_OfstWid);
 				return this;
+			}
+			,
+			/// 获取幻灯片总数
+			cGetSldTot : function ()
+			{
+				return this.d_ImgSrcNodeAry ? this.d_ImgSrcNodeAry.length : 0;
 			}
 			,
 			/// 存取张贴数组
@@ -378,10 +405,26 @@ function fOnIcld(a_Errs)
 				// 控件集
 				l_This.d_WgtSet = new nUi.tWgtSet();
 				l_This.eNewNumIpt();
-				l_This.eNewBtn("Prev", "＜");
-				l_This.eNewBtn("Next", "＞");
-				l_This.eNewBtn("Auto", "►", true);
-				l_This.eNewBtn("Rand", "※", true);
+				l_This.eNewBtn("Prev", "＜", false,
+					function (a_Btn)
+					{
+						l_This.dPostNewImg(false);
+					});
+				l_This.eNewBtn("Next", "＞", false,
+					function (a_Btn)
+					{
+						l_This.dPostNewImg(true);
+					});
+				l_This.eNewBtn("Auto", "►", true,
+					function (a_Btn)
+					{
+						l_This.d_ManuSwch = a_Btn.cIsUp();
+					});
+				l_This.eNewBtn("Rand", "※", true,
+					function (a_Btn)
+					{
+						l_This.d_RandPost = a_Btn.cIsUp();
+					});
 				l_This.d_Auto.cUpDown(false);
 				l_This.d_Rand.cUpDown(false);
 				l_This.eNewCmb();
@@ -446,17 +489,46 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 设置总数
-			dSetNumTot : function (a_Tot)
+			/// 更新图像总数
+			dUpdImgTot : function ()
 			{
 				var l_This = this;
 				if (! l_This.d_NumIpt)
 				{ return this; }
 
-				l_This.d_NumIpt.cAcsDomSfx().innerHTML = "&nbsp;/&nbsp;" + a_Tot.toString();	// ／
+				var l_Tot = l_This.cGetSldTot();
+				l_This.d_NumIpt.cAcsDomSfx().innerHTML = "&nbsp;/&nbsp;" + l_Tot.toString();	// ／
 
 				// 刷新
 				l_This.d_NumIpt.cRfsh();
+				return this;
+			}
+			,
+			/// 更新图像索引
+			dUpdImgIdx : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_NumIpt)
+				{ return this; }
+
+				// 如果输入框是焦点（或焦点的祖先），不要更新
+				if (stFrmwk.cIsFoc(l_This.d_NumIpt, true))
+				{
+					return this;
+				}
+
+				// 使数字右停靠
+				var l_SN = l_This.d_PlayIdx + 1;
+//				var l_DomIpt = l_This.d_NumIpt.cAcsDomIpt();
+//				var l_CmptStl = stCssUtil.cGetCmptStl(l_DomIpt);
+//				var l_FontSize = parseFloat(l_CmptStl.fontSize);
+//				var l_CtntWid = stCssUtil.cGetCtntWid({}, l_DomIpt, l_CmptStl).c_CtntWid;
+//				var l_ShowCh = Math.floor(l_CtntWid / l_FontSize * 2);	// 数字宽度是一半
+//				var l_IntDgtAmt = stNumUtil.cGetIntDgtAmt(l_ShowCh);
+//				var l_Pad = Math.max(l_ShowCh - l_IntDgtAmt, 0);
+//				l_SN = stStrUtil.cPad(l_SN.toString(), -l_Pad);	// 左补白
+			//	console.log(l_Text);
+				l_This.d_NumIpt.cSetText(l_SN);
 				return this;
 			}
 			,
@@ -514,7 +586,14 @@ function fOnIcld(a_Errs)
 
 				// 清屏，用哪个？
 			//	l_This.d_2dCtxt.cClr();
-				l_This.d_2dCtxt.cFill();//null, tClo.i_White);	// 黑白？
+				if (l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg())) // 若当前图像可用
+				{
+					l_This.dMapCrntImg();	// 贴当前图
+				}
+				else
+				{
+					l_This.d_2dCtxt.cFill();//null, tClo.i_White);	// 黑白？
+				}
 				return this;
 			}
 			,
@@ -740,14 +819,136 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 贴图
-			dMap : function ()
+			/// 一帧
+			dOneFrm : function (a_FrmTime, a_FrmItvl, a_FrmNum)
 			{
 				var l_This = this;
-				tSara.scEnsrTemps(2);
-				var l_DstSara = tSara.sc_Temps[0], l_SrcSara = tSara.sc_Temps[1];
-				l_This.d_2dCtxt.cMap(null, l_This.d_ImgAry[0], null, null);
+
+				//【允许-1】
+			//	nWse.fAst(stAryUtil.cIsIdxVld(l_This.d_ImgAry, l_This.d_PlayIdx), "d_PlayIdx无效！");
+
+				// 播放
+				var l_Post, l_Img;
+				if (1 == l_This.d_PlaySta)
+				{
+					// 若当前图像尚不可用，不计时
+					if (! l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg()))
+					{
+						a_FrmTime = 0;
+					}
+
+					// 如果自动切换，且时间已到
+					if ((! l_This.d_ManuSwch) && (a_FrmTime >= l_This.d_FrmDur))
+					{
+						// 张贴新图像，下一张
+						l_This.dPostNewImg(true);
+					}
+				}
+				else // 切换
+				{
+					l_Post = l_This.d_PostAry[l_This.dGetPostIdx()];
+					l_Img = l_This.dAcsCrntImg();
+					if (l_Post)
+					{
+						// 动画
+						l_Post.vcAnmt(l_This, l_Img, l_This.d_AsNext, a_FrmTime, a_FrmItvl, a_FrmNum);
+					}
+					else
+					{
+						// 没有时，立即贴图并结束
+						l_This.dMapCrntImg();
+						l_This.cFnshPostAnmt(null);
+					}
+				}
+
 				return this;
+			}
+			,
+			/// 存取当前图像
+			dAcsCrntImg : function ()
+			{
+				// 允许是-1，此时选0
+				var l_PlayIdx = Math.max(this.d_PlayIdx, 0);
+				return this.d_ImgAry ? (this.d_ImgAry[l_PlayIdx] || null) : null;
+			}
+			,
+			/// 贴当前图
+			dMapCrntImg : function ()
+			{
+				var l_This = this;
+				var l_Img = l_This.dAcsCrntImg();
+				l_This.d_2dCtxt.cMap(null, l_Img, null, null);
+				return this;
+			}
+			,
+			/// 张贴新图像
+			/// a_Next：Boolean，后一张？默认false，即前一张
+			dPostNewImg : function (a_Next)
+			{
+				var l_This = this;
+				var l_SldTot = l_This.cGetSldTot();
+				var l_NewPlayIdx = stNumUtil.cWrap(l_This.d_PlayIdx, (a_Next ? +1 : -1), l_SldTot);
+				l_This.d_AsNext = a_Next;	// 作为下一个？
+				l_This.dPostImgByIdx(l_NewPlayIdx);
+				return this;
+			}
+			,
+			/// 根据索引张贴图像
+			/// a_PlayIdx：Number，播放索引，必须有效
+			dPostImgByIdx : function (a_PlayIdx)
+			{
+				var l_This = this;
+				l_This.d_OldPlayIdx = l_This.d_PlayIdx;	// 记录旧索引
+				l_This.d_PlayIdx = a_PlayIdx;
+
+				// 更新图像索引
+				l_This.dUpdImgIdx();
+
+				// 转成切换状态，重置动画时间
+				l_This.d_PlaySta = 2;
+				l_This.dRsetAnmtTime();
+				return this;
+			}
+			,
+			/// 获取张贴索引
+			dGetPostIdx : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_Post)
+				{ return -1; }
+
+				var l_Name = l_This.d_Post.cGetText();
+				return stAryUtil.cFind(l_This.d_PostAry,
+				function (a_Ary, a_Idx, a_Post)
+				{
+					return (a_Post.cGetName() == l_Name);
+				});
+			}
+			,
+			/// 结束张贴动画
+			/// a_Post：tPost，张贴，可能为null（默认）
+			cFnshPostAnmt : function (a_Post)
+			{
+				var l_This = this;
+
+				// 转成播放状态，重置动画时间
+				l_This.d_PlaySta = 1;
+				l_This.dRsetAnmtTime();
+				return this;
+			}
+			,
+			/// 重置动画时间
+			dRsetAnmtTime : function ()
+			{
+				stDomUtil.cRsetAnmtTimeByIdx(stDomUtil.cFindAnmt(this.d_fAnmtUpd));
+				return this;
+			}
+			,
+			/// 存取二维上下文
+			/// 返回：t2dCtxt
+			cAcs2dCtxt : function ()
+			{
+				return this.d_2dCtxt;
 			}
 		}
 		,
@@ -765,9 +966,27 @@ function fOnIcld(a_Errs)
 		},
 		null,
 		{
+			/// 获取名称
 			cGetName : function ()
 			{
 				return this.e_Name;
+			}
+			,
+			/// 动画
+			/// a_Plr：tGpuSldPlr，播放器，动画结束时必须调用a_Plr.cFnshPostAnmt(this)
+			/// a_Img：Image，图像，即正在播放的幻灯片
+			/// a_AsNext：Boolean，作为下一张？
+			vcAnmt : function f(a_Plr, a_Img, a_AsNext, a_FrmTime, a_FrmItvl, a_FrmNum)
+			{
+				var l_This = this;
+
+				// 立即张贴
+				var l_2dCtxt = a_Plr.cAcs2dCtxt();
+//				tSara.scEnsrTemps(2);
+//				var l_DstSara = tSara.sc_Temps[0], l_SrcSara = tSara.sc_Temps[1];
+				l_2dCtxt.cMap(null, a_Img, null, null);
+				a_Plr.cFnshPostAnmt(l_This);
+				return this;
 			}
 		});
 

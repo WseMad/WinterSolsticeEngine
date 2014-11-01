@@ -325,7 +325,7 @@ function fOnIcld(a_Errs)
 						function()
 						{
 							// 校准
-							fRgltPosDim(a_This);
+							fRgltPosDim(l_This);
 						});
 				}
 				return this;

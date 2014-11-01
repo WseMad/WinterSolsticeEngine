@@ -51,6 +51,9 @@ function fOnIcld(a_Errs)
 
 	function fIsSrcImgAvlb(a_SrcImg)
 	{
+		if (! a_SrcImg)
+		{ return false; }
+
 		if ((a_SrcImg instanceof Image))
 		{
 			return a_SrcImg.complete;
@@ -513,6 +516,13 @@ function fOnIcld(a_Errs)
 			{
 				this.e_Ctxt.globalCompositeOperation = "source-over";
 				return this;
+			}
+			,
+			/// 图像是否可用？
+			/// a_Img：Image$HTMLCanvasElement$HTMLVideoElement，图像
+			cIsImgAvlb : function (a_Img)
+			{
+				return fIsSrcImgAvlb(a_Img);
 			}
 			,
 			/// 贴图

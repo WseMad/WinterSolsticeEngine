@@ -749,20 +749,28 @@ function fOnIcld(a_Errs)
 			,
 			/// 得到顶层控件
 			/// a_Wgt：tWgt，某个子控件
-			scObtnTopWgtByPutTgt : function (a_Wgt)
+//			scObtnTopWgtByPutTgt : function (a_Wgt)
+//			{
+//				//【不太好判定“顶层控件”，可能需要回溯到文档元素】
+//				return a_Wgt;
+//				var l_PutTgt = a_Wgt && a_Wgt.cAcsPutTgt();
+//				if (! tWgt.scIsPutTgtOfWgt(l_PutTgt))
+//				{ return a_Wgt; }
+//
+//				var l_Rst;
+//				do
+//				{
+//					l_Rst = l_PutTgt.Wse_Wgt.c_Wgt;
+//					l_PutTgt = l_PutTgt.parentNode;
+//				}
+//				while (tWgt.scIsPutTgtOfWgt(l_PutTgt));
+//				return l_Rst;
+//			}
+//			,
+			/// 是否为自己或先辈？（根据放置目标的父子关系判断）
+			scIsSelfOrAcst : function (a_WgtA, a_WgtD)
 			{
-				var l_PutTgt = a_Wgt && a_Wgt.cAcsPutTgt();
-				if (! tWgt.scIsPutTgtOfWgt(l_PutTgt))
-				{ return a_Wgt; }
-
-				var l_Rst;
-				do
-				{
-					l_Rst = l_PutTgt.Wse_Wgt.c_Wgt;
-					l_PutTgt = l_PutTgt.parentNode;
-				}
-				while (tWgt.scIsPutTgtOfWgt(l_PutTgt));
-				return l_Rst;
+				return stDomUtil.cIsSelfOrAcst(a_WgtA.cAcsPutTgt(), a_WgtD.cAcsPutTgt());
 			}
 			,
 			seMapWgtToPutTgt : function (a_Wgt)

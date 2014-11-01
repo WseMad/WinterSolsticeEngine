@@ -400,10 +400,16 @@ function fOnIcld(a_Errs)
 			/// 设置文本
 			cSetText: function (a_Text)
 			{
-				this.d_DomIpt.value = a_Text;
+				this.d_DomIpt.value = a_Text.toString();
 			//	this.dUpdTypedText();	//【不用了】
 				this.dUpdOldText();		// 更新旧文本
 				return this;
+			}
+			,
+			/// 存取DOM节点 - 输入
+			cAcsDomIpt : function ()
+			{
+				return this.d_DomIpt;
 			}
 			,
 			/// 存取DOM节点 - OK按钮

@@ -226,6 +226,19 @@ function fOnIcld(a_Errs)
 			return false;
 		};
 
+		/// 获取整数位数
+		stNumUtil.cGetIntDgtAmt = function (a_Num)
+		{
+			a_Num = Math.abs(a_Num);
+			var l_Rst = 0;
+			while (a_Num >= 1)
+			{
+				++ l_Rst;
+				a_Num /= 10;
+			}
+			return l_Rst;
+		};
+
 		/// 相等
 		/// a_L：Number，左运算数
 		/// a_R：Number，右运算数
@@ -424,6 +437,16 @@ function fOnIcld(a_Errs)
 			a_Rst.c_Bgn = a_Bgn;
 			a_Rst.c_Amt = a_Udfn$Amt;
 			return a_Rst;
+		};
+
+		/// 环绕
+		/// a_Num, a_Dta, a_Tot：Number，数字，增量，总数
+		stNumUtil.cWrap = function (a_Num, a_Dta, a_Tot)
+		{
+			var l_Rst = (a_Num + a_Dta) % a_Tot;	// 符号和被求余的数相同
+			while (l_Rst < 0)
+			{ l_Rst += a_Tot; }
+			return l_Rst;
 		};
 
 
