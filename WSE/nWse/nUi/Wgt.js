@@ -1,5 +1,8 @@
 ﻿/*
 *
+* 部分常用特殊字符：
+* ▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅
+*
 */
 
 
@@ -362,8 +365,16 @@ function fOnIcld(a_Errs)
 				this.vcRfshBefLot();
 
 				// 触发放置事件 - 宽度已决定
-				if (nUi.tPcdrLot && this.d_PutTgt)
-				{ nUi.tPcdrLot.scTrgrPutEvt_WidDtmnd(this.d_PutTgt); }
+				if (this.d_PutTgt)
+				{
+					nUi.fTrgrPutEvt(this.d_PutTgt, "WidDtmnd");
+				}
+
+				// 触发子控件放置事件 - 宽度已决定
+				if (this.d_SubWgtSet)
+				{
+					this.d_SubWgtSet.cTrgrPutEvt_WidDtmnd();
+				}
 
 				// 之后
 				this.vcRfshAftLot();
@@ -441,10 +452,10 @@ function fOnIcld(a_Errs)
 			/// 根据特性存取DOM节点，首先搜索放置来源，若未找到再搜索放置目标
 			dAcsDomNodeByAttr : function (a_AttrName)
 			{
-				var l_Rst = stDomUtil.cQryOne(this.dGnrtQrySlc_PutSrc() + ">[data-" + a_AttrName + "]");
+				var l_Rst = stDomUtil.cQryOne(this.dGnrtQrySlc_PutSrc() + " [data-" + a_AttrName + "]");
 				if (! l_Rst)
 				{
-					l_Rst = stDomUtil.cQryOne(this.dGnrtQrySlc_PutTgt() + ">[data-" + a_AttrName + "]");
+					l_Rst = stDomUtil.cQryOne(this.dGnrtQrySlc_PutTgt() + " [data-" + a_AttrName + "]");
 				}
 				return l_Rst;
 			}
@@ -454,7 +465,7 @@ function fOnIcld(a_Errs)
 			dGetDomNodesByAttr : function (a_AttrName, a_InPutTgt)
 			{
 				var l_Slc = a_InPutTgt ? this.dGnrtQrySlc_PutTgt() : this.dGnrtQrySlc_PutSrc();
-				var l_Rst = stDomUtil.cQryAll(l_Slc + ">[data-" + a_AttrName + "]");
+				var l_Rst = stDomUtil.cQryAll(l_Slc + " [data-" + a_AttrName + "]");
 				return l_Rst;
 			}
 			,
@@ -490,14 +501,39 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 当在来源里时移除
-			/// a_FldName：String，this的字段名，标识一个DOM节点
-			dRmvWhenInSrc : function (a_FldName)
+			/// 解绑字段，该函数主要用于vcUbnd()
+			/// a_FldName：String，this的字段名，标识一个DOM节点或控件，对于控件将移除其放置目标和来源
+			/// a_RmvFromSrcWhenNew：Boolean，当该字段是新建的DOM节点时才从来源中移除，默认false
+			dUbndFld : function (a_FldName, a_RmvFromSrcWhenNew)
 			{
-				if (this.dIsPutInSrc(this[a_FldName]))
-				{ this[a_FldName].parentNode.removeChild(this[a_FldName]); }
+				if ((! this.d_PutSrc) || (! this[a_FldName]))
+				{ return this; }
 
-				this[a_FldName] = null;
+				// DOM节点
+				if (this.dIsPutInSrc(this[a_FldName]))
+				{
+					if ((! a_RmvFromSrcWhenNew) ||
+						(this[a_FldName].Wse_DomUtil && this[a_FldName].Wse_DomUtil.c_New))
+					{
+						this.d_PutSrc.removeChild(this[a_FldName]);
+					}
+				}
+				else
+			//	if (this[a_FldName] instanceof tWgt) // 控件
+				{
+					if (this.dIsPutInSrc(this[a_FldName].cAcsPutTgt()))
+					{
+						this.d_PutSrc.removeChild(this[a_FldName].cAcsPutTgt());
+					}
+
+					if (this.dIsPutInSrc(this[a_FldName].cAcsPutSrc()))
+					{
+						this.d_PutSrc.removeChild(this[a_FldName].cAcsPutSrc());
+					}
+				}
+
+				this[a_FldName] = null;	// 清null
+				return this;
 			}
 			,
 			/// 为放置目标替换CSS类
@@ -520,17 +556,24 @@ function fOnIcld(a_Errs)
 				return a_Rst.cCrt(0, 0, this.d_PutTgt.offsetWidth, this.d_PutTgt.offsetHeight);
 			}
 			,
-			/// 获取放置目标宽度，必须在vcRfshAftLot里调用
-			dGetPutTgtWid : function ()
+			/// 获取放置目标完全宽度（相当于DOM的offsetWidth＋左右外边距），必须在vcRfshAftLot里调用
+			dGetPutTgtFullWid : function ()
 			{
-				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt);
+				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt, false);
+				return l_TgtArea ? l_TgtArea.c_W : 0;
+			}
+			,
+			/// 获取放置目标偏移宽度（相当于DOM的offsetWidth），必须在vcRfshAftLot里调用
+			dGetPutTgtOfstWid : function ()
+			{
+				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt, true);
 				return l_TgtArea ? l_TgtArea.c_W : 0;
 			}
 			,
 			/// 获取放置目标内容宽度，必须在vcRfshAftLot里调用，同时更新sd_PutTgtBdrThk和sd_PutTgtPad
 			dGetPutTgtCtntWid : function ()
 			{
-				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt);
+				var l_TgtArea = nUi.stFrmwk.cAcsTgtAreaOfPut(this.d_PutTgt, true);
 				if (! l_TgtArea)
 				{ return 0; }
 
@@ -551,21 +594,21 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 注册放置目标事件处理器 - 当宽度已决定时
-			dRegPutTgtEvtHdlr_OnWidDtmnd : function (a_fOn)
+			dRegPutTgtEvtHdlr_WidDtmnd : function (a_fOn)
 			{
 				nUi.fRegPutEvtHdlr(this.d_PutTgt, "WidDtmnd", a_fOn);
 				return this;
 			}
 			,
 			/// 注销放置目标事件处理器 - 当宽度已决定时
-			dUrgPutTgtEvtHdlr_OnWidDtmnd : function (a_fOn)
+			dUrgPutTgtEvtHdlr_WidDtmnd : function (a_fOn)
 			{
 				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "WidDtmnd", a_fOn);
 				return this;
 			}
 			,
 			/// 注册放置目标事件处理器 - 当动画更新结束时
-			dRegPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOn)
+			dRegPutTgtEvtHdlr_AnmtUpdEnd : function (a_fOn)
 			{
 				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOn);
 				nUi.fRegPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOn);
@@ -573,7 +616,7 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 注销放置目标事件处理器 - 当动画更新结束时
-			dUrgPutTgtEvtHdlr_OnAnmtUpdEnd : function (a_fOn)
+			dUrgPutTgtEvtHdlr_AnmtUpdEnd : function (a_fOn)
 			{
 				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtUpd", a_fOn);
 				nUi.fUrgPutEvtHdlr(this.d_PutTgt, "AnmtEnd", a_fOn);
@@ -646,6 +689,14 @@ function fOnIcld(a_Errs)
 			{
 				stCssUtil.cGetPad(tWgt.sd_PutTgtPad, this.d_PutTgt, null, true);
 				return tWgt.sd_PutTgtPad;
+			}
+			,
+			/// 存取子控件集
+			dAcsSubWgtSet : function ()
+			{
+				if (! this.d_SubWgtSet)
+				{ this.d_SubWgtSet = new tWgtSet(); }
+				return this.d_SubWgtSet;
 			}
 			,
 			/// 生成子控件ID，写入至sd_SubWgtPutSrcId和sd_SubWgtPutTgtId里
@@ -832,6 +883,15 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 结束动画
+			cFnshAnmt : function f()
+			{
+				stAryUtil.cFor(this.e_Wgts,
+				function (a_Ary, a_Idx, a_Wgt)
+				{ a_Wgt.vcFnshAnmt(); });
+				return this;
+			}
+			,
 			/// 刷新在布局之前
 			cRfshBefLot : function ()
 			{
@@ -853,13 +913,28 @@ function fOnIcld(a_Errs)
 			/// 刷新
 			cRfsh : function ()
 			{
-				// 若在布局期间则忽略这次调用
-				if (nUi.stFrmwk.cIsDurLot())
-				{ return this; }
-
 				stAryUtil.cFor(this.e_Wgts,
 					function (a_Ary, a_Idx, a_Wgt)
 					{ a_Wgt.cRfsh(); });
+				return this;
+			}
+			,
+			/// 触发放置事件 - 宽度已决定
+			cTrgrPutEvt_WidDtmnd : function ()
+			{
+				// 在每个控件的放置目标上触发
+				stAryUtil.cFor(this.e_Wgts,
+					function (a_Ary, a_Idx, a_Wgt)
+					{ nUi.fTrgrPutEvt(a_Wgt.cAcsPutTgt(), "WidDtmnd"); });
+				return this;
+			}
+			,
+			/// 输入复位
+			cIptRset : function ()
+			{
+				stAryUtil.cFor(this.e_Wgts,
+					function (a_Ary, a_Idx, a_Wgt)
+					{ a_Wgt.vcIptRset(); });
 				return this;
 			}
 		}
@@ -879,7 +954,7 @@ function fOnIcld(a_Errs)
 		{
 			this.odBase(tForm).odCall();	// 基类版本
 
-			this.d_WgtSet = new nUi.tWgtSet();	// 控件集
+			this.dAcsSubWgtSet();	// 新建子控件集
 		}
 		,
 		tWgt
@@ -892,10 +967,11 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 解绑，无需调用
+			/// 解绑，同cClr()
 			vcUbnd : function f()
 			{
 				var l_This = this;
+				l_This.cClr();
 				return this;
 			}
 			,
@@ -903,13 +979,8 @@ function fOnIcld(a_Errs)
 			vcFnshAnmt : function f()
 			{
 				var l_This = this;
-
-				// 对每个控件
-				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
-					function (a_Ary, a_Idx, a_Wgt)
-					{
-						a_Wgt.vcFnshAnmt();
-					});
+				if (l_This.d_SubWgtSet)
+				{ l_This.d_SubWgtSet.cFnshAnmt(); }
 				return this;
 			}
 			,
@@ -917,13 +988,8 @@ function fOnIcld(a_Errs)
 			vcRfshBefLot : function f()
 			{
 				var l_This = this;
-
-				// 对每个控件
-				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
-					function (a_Ary, a_Idx, a_Wgt)
-					{
-						a_Wgt.vcRfshBefLot();
-					});
+				if (l_This.d_SubWgtSet)
+				{ l_This.d_SubWgtSet.cRfshBefLot(); }
 				return this;
 			}
 			,
@@ -931,13 +997,8 @@ function fOnIcld(a_Errs)
 			vcRfshAftLot : function f()
 			{
 				var l_This = this;
-
-				// 对每个控件
-				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
-					function (a_Ary, a_Idx, a_Wgt)
-					{
-						a_Wgt.vcRfshAftLot();
-					});
+				if (l_This.d_SubWgtSet)
+				{ l_This.d_SubWgtSet.cRfshAftLot(); }
 				return this;
 			}
 			,
@@ -953,7 +1014,7 @@ function fOnIcld(a_Errs)
 
 				// 拾取表单里的各个控件
 				var l_This = this;
-				stAryUtil.cFind(l_This.d_WgtSet.cAcsWgts(),
+				stAryUtil.cFind(l_This.d_SubWgtSet.cAcsWgts(),
 					function (a_Wgts, a_Idx, a_Wgt)
 					{
 						a_Wgt.vcPick(null, a_Picker);
@@ -975,32 +1036,28 @@ function fOnIcld(a_Errs)
 			vcIptRset : function f()
 			{
 				var l_This = this;
-
-				// 对每个控件
-				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
-					function (a_Ary, a_Idx, a_Wgt)
-					{
-						a_Wgt.vcIptRset();
-					});
+				if (l_This.d_SubWgtSet)
+				{ l_This.d_SubWgtSet.cIptRset(); }
 				return this;
 			}
 			,
 			/// 存取控件集
 			cAcsWgtSet : function ()
 			{
-				return this.d_WgtSet;
+				return this.d_SubWgtSet;
 			}
 			,
 			/// 存取控件数组
 			cAcsWgts : function ()
 			{
-				return this.d_WgtSet.cAcsWgts();
+				return this.d_SubWgtSet && this.d_SubWgtSet.cAcsWgts();
 			}
 			,
 			/// 清空
 			cClr : function ()
 			{
-				this.d_WgtSet.cClr();
+				if (this.d_SubWgtSet)
+				{ this.d_SubWgtSet.cClr(); }
 				return this;
 			}
 			,
@@ -1014,7 +1071,10 @@ function fOnIcld(a_Errs)
 
 				// 对每个控件
 				var l_This = this;
-				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
+				if (! l_This.d_SubWgtSet)
+				{ return a_Kvo; }
+
+				stAryUtil.cFor(l_This.d_SubWgtSet.cAcsWgts(),
 					function (a_Ary, a_Idx, a_Wgt)
 					{
 						nUi.itForm.ocBindUbnd(a_Wgt, function (a_Istn) { a_Istn.vcSrlz(a_Kvo); });
@@ -1026,7 +1086,7 @@ function fOnIcld(a_Errs)
 			cIptFoc : function (a_PutSrcId, a_YesNo)
 			{
 				var l_This = this;
-				var l_Wgt = l_This.d_WgtSet && l_This.d_WgtSet.cAcsByPutSrcId(a_PutSrcId);
+				var l_Wgt = l_This.d_SubWgtSet && l_This.d_SubWgtSet.cAcsByPutSrcId(a_PutSrcId);
 				if (! l_Wgt)
 				{ return this; }
 

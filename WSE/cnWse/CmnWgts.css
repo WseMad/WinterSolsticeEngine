@@ -58,8 +58,9 @@
 /* 用第一行在火狐和IE里不行？！使用第二行就好！*/
 /* 注意必须使用5个类，为了覆盖皮肤里的box-shadow项（那里用了4个类） */
 /*.cnWse_PutTgt.cnWse_tBtn_Hole>.cnWse_tBtn_Body:active*/
-.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body,
-.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
+/* 注意并排右边的选择器使用6个类，是为了覆盖金属身体的最后一个选择器（那里用了5个类） */
+.cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body, .cnWse_PutTgt .cnWse_PutTgt.cnWse_tWgt_Tch.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body,
+.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down, .cnWse_PutTgt .cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
 {
 	top: 0px;				/* 下陷 */
 
@@ -95,7 +96,7 @@
 
 /* 身体 */
 .cnWse_Skin_Metal .cnWse_tBtn .cnWse_tBtn_Body,
-.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn .cnWse_tBtn_Body, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn .cnWse_tBtn_Body, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Body
 {
 	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
 	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
@@ -115,7 +116,7 @@
 
 /* 纹理 */
 .cnWse_Skin_Metal .cnWse_tBtn .cnWse_tBtn_Txtr,
-.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn .cnWse_tBtn_Txtr, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Txtr
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn .cnWse_tBtn_Txtr, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn .cnWse_tBtn_Txtr
 {
 	position: absolute;			/* 和身体完全匹配 */
 	left: 0px;
@@ -136,8 +137,8 @@
 /* 圆和椭圆形状的条纹 */
 .cnWse_Skin_Metal .cnWse_tBtn.cnWse_tBtn_Shp_Cir .cnWse_tBtn_Txtr,
 .cnWse_Skin_Metal .cnWse_tBtn.cnWse_tBtn_Shp_Elps .cnWse_tBtn_Txtr,
-.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn.cnWse_tBtn_Shp_Cir .cnWse_tBtn_Txtr, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Shp_Cir .cnWse_tBtn_Txtr,
-.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn.cnWse_tBtn_Shp_Elps .cnWse_tBtn_Txtr, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Shp_Elps .cnWse_tBtn_Txtr
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn.cnWse_tBtn_Shp_Cir .cnWse_tBtn_Txtr, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Shp_Cir .cnWse_tBtn_Txtr,
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tBtn.cnWse_tBtn_Shp_Elps .cnWse_tBtn_Txtr, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tBtn.cnWse_tBtn_Shp_Elps .cnWse_tBtn_Txtr
 {
 	/*background-image:*/
 	/*-webkit-repeating-radial-gradient(50% 50%, 100% 100%,*/
@@ -204,9 +205,12 @@
 				0px 0px 10px rgb(0, 255, 0);
 }
 
-/* OK按钮 */
-.cnWse_PutTgt.cnWse_tEdit *[data-Wse_Ok]
+/* OK按钮和前后缀 */
+.cnWse_PutTgt.cnWse_tEdit *[data-Wse_Ok],
+.cnWse_PutTgt.cnWse_tEdit *[data-Wse_Pfx],
+.cnWse_PutTgt.cnWse_tEdit *[data-Wse_Sfx]
 {
+	/*display: inline-block;*/
 	text-align: center;
 	cursor: pointer;
 }
@@ -220,7 +224,7 @@
 /***** 金属 *****/
 
 .cnWse_Skin_Metal .cnWse_tEdit,
-.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tEdit, .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tEdit
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tEdit, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tEdit
 {
 	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
 	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
@@ -414,22 +418,22 @@
 }
 
 /* 按钮 */
-.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn
+.cnWse_PutTgt.cnWse_tCmb .cnWse_tBtn
 {
 	position: absolute;
 }
 
-.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole
+.cnWse_PutTgt.cnWse_tCmb .cnWse_tBtn_Hole
 {
 	padding: 2px; 	/* 底座小一点 */
 }
 
-.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole>.cnWse_tBtn_Body
+.cnWse_PutTgt.cnWse_tCmb .cnWse_tBtn_Hole>.cnWse_tBtn_Body
 {
 	font-weight: bold;	/* 箭头粗体显示 */
 }
 
-.cnWse_PutTgt.cnWse_tCmb>.cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
+.cnWse_PutTgt.cnWse_tCmb .cnWse_tBtn_Hole>.cnWse_tBtn_Body.cnWse_tBtn_Down
 {
 	box-shadow: inset 0px 0px 20px rgb(0, 0, 0),
 		0px 2px 2px rgb(51, 51, 51);		/* 2px是为了对齐上面底座的2px */
@@ -441,6 +445,7 @@
 	position: absolute;
 	min-width: 100%;			/* 至少全宽 */
 	list-style-type: none;		/* 把方点去掉 */
+	overflow: auto;				/* 按需滚动 */
 	border: 1px solid white;
 	box-shadow: 0px 10px 20px rgb(51, 51, 51);
 }
@@ -448,6 +453,40 @@
 .cnWse_PutTgt.cnWse_tCmb>ul>li
 {
 	padding: 5px;
+}
+
+/***** 金属 *****/
+
+.cnWse_Skin_Metal .cnWse_tCmb>ul,
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tCmb>ul, .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tCmb>ul
+{
+	background: -webkit-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: -moz-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: -ms-linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+	background: linear-gradient(left, rgb(160, 160, 160) 0%, rgb(240, 240, 240) 48%, rgb(240, 240, 240) 52%, rgb(160, 160, 160) 100%);
+
+	box-shadow: inset rgba(255, 255, 255, 1) 0px 4px 2px,	/* 顶部高光 */
+	0px 10px 20px rgb(51, 51, 51);						/* 整体投影 */
+
+	color: rgba(0, 0, 0, 0.6);
+	text-shadow: rgba(0,0,0,0.1) 0px -2px 2px, rgb(255,255,255) 0px 2px 2px;
+}
+
+/* <ul>的<li>奇偶色 */
+.cnWse_Skin_Metal .cnWse_tCmb>ul>li:nth-of-type(odd),
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tCmb>ul>li:nth-of-type(odd), .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tCmb>ul>li:nth-of-type(odd)
+{
+	background-color: transparent;	/* 用<ul>的背景色 */
+}
+
+.cnWse_Skin_Metal .cnWse_tCmb>ul>li:nth-of-type(even),
+.cnWse_Skin_Metal.cnWse_PutTgt .cnWse_tCmb>ul>li:nth-of-type(even), .cnWse_PutTgt .cnWse_Skin_Metal.cnWse_PutTgt.cnWse_tCmb>ul>li:nth-of-type(even)
+{
+	/*background-color: rgb(160, 160, 160);*/
+	background: -webkit-linear-gradient(left, rgb(147, 147, 147) 0%, rgb(210, 210, 210) 48%, rgb(210, 210, 210) 52%, rgb(147, 147, 147) 100%);
+	background: -moz-linear-gradient(left, rgb(147, 147, 147) 0%, rgb(210, 210, 210) 48%, rgb(210, 210, 210) 52%, rgb(147, 147, 147) 100%);
+	background: -ms-linear-gradient(left, rgb(147, 147, 147) 0%, rgb(210, 210, 210) 48%, rgb(210, 210, 210) 52%, rgb(147, 147, 147) 100%);
+	background: linear-gradient(left, rgb(147, 147, 147) 0%, rgb(210, 210, 210) 48%, rgb(210, 210, 210) 52%, rgb(147, 147, 147) 100%);
 }
 
 /*********************************************** tMenu ***********************************************/
@@ -714,39 +753,36 @@
 {
 	background-color: lightgray;
 	overflow: visible;
+	cursor: default;
 }
 
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt,
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_NumTot
+.cnWse_PutTgt.cnWse_tGpuSldPlr>canvas
+{
+	cursor: default;
+}
+
+.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt
 {
 	position: absolute;		/* 使用绝对定位！IE11当把按钮按下后，高度竟然会变化？！所以自己全面接管位置尺寸计算！ */
 }
 
+/* 所有按钮，为方便计算，要求他们的CSS样式一致，且都是正方形（算上外边距） */
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tBtn
 {
-	display: inline-block;
-	margin: 5px;
+	/*display: inline-block;*/
+	margin: 5px;		/* 四个外边距必须一样！ */
 	width: 3em;
 	font-weight: bold;
 	/*float: left;*/
 }
 
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tBtn.cnWse_tGpuSldPlr_Prev
-{
-	margin-left: 10px;
-}
-
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tBtn.cnWse_tGpuSldPlr_Auto
-{
-	margin-right: 10px;
-}
-
+/* 数组输入框 */
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit
 {
-	display: inline-block;
-	margin: 5px;
+	/*display: inline-block;*/
+	margin: 0px 10px;
 	padding: 0px;
-	width: 4em;
+	width: 4em;		/* 64px */
 	border-radius: 0px;
 	background-image: none;
 	box-shadow: none;
@@ -755,26 +791,23 @@
 	color: rgb(0, 0, 0);
 }
 
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit>input[type="text"],
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_NumTot
+.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit>input[type="text"]
 {
 	padding: 4px;	/* 他们俩的边距必须相同 */
 }
 
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_NumTot
-{
-	display: inline-block;
-	margin: 5px;
-	width: auto;
-	font-weight: bold;
-}
 
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tCmb
 {
-	display: inline-block;
+	/*display: inline-block;*/
 	margin: 5px 10px;
-	width: 12em;
+	width: 12em;		/* 192px */
 	float: right;
+}
+
+.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tCmb>ul
+{
+	height: 7.5em;	/* 限制一下高度，约120px */
 }
 
 /*.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_Pnl*/

@@ -119,14 +119,14 @@ function fOnIcld(a_Errs)
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
 				{
-					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					l_This.d_fOnWidDtmnd = function ()
 					{
 						// 根据宽高比修正高度
 						if (l_This.d_Cfg.c_FxdAr)
-						{ l_This.dFixHgtByAr(a_OfstWid); }
+						{ l_This.dFixHgtByAr(l_This.dGetPutTgtOfstWid()); }
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 				}
 
 				if (! l_This.d_fOnAnmtUpdEnd)
@@ -138,7 +138,7 @@ function fOnIcld(a_Errs)
 						l_This.dRgltBlkX();
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 				}
 				return this;
 			}
@@ -153,29 +153,29 @@ function fOnIcld(a_Errs)
 				// 块，灯，缝
 				if (l_This.d_Blk)
 				{
-					l_This.dRmvWhenInSrc("d_Blk");
+					l_This.dUbndFld("d_Blk");
 				}
 
 				if (l_This.d_Lgt)
 				{
-					l_This.dRmvWhenInSrc("d_Lgt");
+					l_This.dUbndFld("d_Lgt");
 				}
 
 				if (l_This.d_Gap)
 				{
-					l_This.dRmvWhenInSrc("d_Gap");
+					l_This.dUbndFld("d_Gap");
 				}
 
 				// 注销放置目标事件处理器
 				if (l_This.d_fOnWidDtmnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 					l_This.d_fOnWidDtmnd = null;
 				}
 
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 					l_This.d_fOnAnmtUpdEnd = null;
 				}
 

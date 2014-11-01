@@ -139,7 +139,7 @@ function fOnIcld(a_Errs)
 						{ l_This.dRgltListsPos_ExpdMode(l_This.d_RootUl, null, true); }
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 				}
 
 			//	l_This.d_PutTgt
@@ -165,7 +165,7 @@ function fOnIcld(a_Errs)
 				// 注销放置目标事件处理器 - 当动画更新结束时
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 					l_This.d_fOnAnmtUpdEnd = null;
 				}
 

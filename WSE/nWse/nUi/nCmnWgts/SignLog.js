@@ -91,7 +91,7 @@ function fOnIcld(a_Errs)
 			c_fOnOk: function (a_Wgt, a_Text)
 			{
 				// 下一个得到输入焦点
-				a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, true);
+			//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, true);
 			}
 		});
 		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
@@ -116,24 +116,24 @@ function fOnIcld(a_Errs)
 					if (a_Cfm)
 					{
 						// 撤销自己的输入焦点
-						a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, false);
+					//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, false);
 
 						// 提交
-						fSbmt(a_This);
+					//	fSbmt(a_This);	//【会连续提交两次？！】
 					}
 					else
 					{
 						// 下一个得到输入焦点
-						a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, true);
+					//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, true);
 					}
 				}
 				else // 登录时
 				{
 					// 撤销自己的输入焦点
-					a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, false);
+				//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, false);
 
 					// 提交
-					fSbmt(a_This);
+				//	fSbmt(a_This);		//【会连续提交两次？！】
 				}
 			}
 		});
@@ -232,7 +232,7 @@ function fOnIcld(a_Errs)
 
 	function fObtnDom(a_This, a_Key, a_Name)
 	{
-		l_This.dGnrtSubWgtId(a_Key);
+		a_This.dGnrtSubWgtId(a_Key);
 		var l_DomPutSrcId = tWgt.sd_SubWgtPutSrcId;
 		var l_DomPutTgtId = tWgt.sd_SubWgtPutTgtId;
 		var l_Rst = stDomUtil.cObtnOne(null, "div", l_DomPutSrcId, null, a_This.d_PutSrc);
@@ -316,6 +316,19 @@ function fOnIcld(a_Errs)
 
 				var l_Prn = a_Cfg.c_DomPrn || stDomUtil.cAcsBody();		// 加入到文档
 				l_Prn.appendChild(l_This.d_PutTgt);
+
+				// 注册放置目标事件处理器
+//				if (! l_This.d_fOnWidDtmnd)
+//				{
+//					l_This.d_fOnWidDtmnd = function ()
+//					{
+//						// 刷新表单
+//						if (l_This.d_Form)
+//						{ l_This.d_Form.cAcsWgtSet().cTrgrPutEvt_WidDtmnd(); }
+//					};
+//
+//					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
+//				}
 				return this;
 			}
 			,
@@ -323,6 +336,13 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+
+				// 事件处理器
+//				if (l_This.d_fOnWidDtmnd)
+//				{
+//					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
+//					l_This.d_fOnWidDtmnd = null;
+//				}
 
 				// 重置
 				fRset(this);

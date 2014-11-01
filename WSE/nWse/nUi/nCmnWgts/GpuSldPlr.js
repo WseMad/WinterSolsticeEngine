@@ -40,6 +40,7 @@ function fOnIcld(a_Errs)
 	var stDomUtil = nWse.stDomUtil;
 	var stCssUtil = nWse.stCssUtil;
 	var tSara = nWse.tSara;
+	var tClo = nWse.tClo;
 
 	var tPntIptTrkr = nWse.tPntIptTrkr;
 	var tPntIpt = tPntIptTrkr.tPntIpt;
@@ -68,15 +69,25 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_PostAry = [];
+
 	function fRset(a_This)
 	{
 		a_This.d_Cvs = null;
 		a_This.d_2dCtxt = null;
 		a_This.d_Path = null;
 
+		a_This.d_Ar = 1;			// 宽高比，默认1:1
+		a_This.d_ArIdx = -1;		// 宽高比索引
+		a_This.d_ArStr = "";		// 宽高比字符串
+		a_This.d_ImgAry = null;		// 图像数组
+
 		// 控件集
 		a_This.d_WgtSet = null;
 		a_This.d_DivCvsDta = -1;	// -1表示待计算
+
+		// 张贴，拷贝一份
+		a_This.d_PostAry = s_PostAry.slice(0);
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +113,6 @@ function fOnIcld(a_Errs)
 			/// {
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
-			/// c_FxdAr：Number，固定宽高比
 			/// }
 			vcBind : function f(a_Cfg)
 			{
@@ -110,6 +120,9 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tGpuSldPlr");			// CSS类
+
+				// 取得所有宽高比组
+				l_This.d_ArAry = l_This.dGetDomNodesByAttr("Wse_Ar", false);
 
 				// 新建画布，面板，控件集
 				l_This.dNewCvs();
@@ -119,16 +132,20 @@ function fOnIcld(a_Errs)
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
 				{
-					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					l_This.d_fOnWidDtmnd = function ()
 					{
-						// 修正画布尺寸
-						l_This.dFixCvsDim(a_OfstWid);
+						// 修正放置目标和画布尺寸
+						var l_OfstWid = l_This.dGetPutTgtOfstWid();
+						l_This.dFixPutTgtAndCvsDim(l_OfstWid);
 
 						// 修正控件位置尺寸
-						l_This.dFixWgtsPosDim(a_OfstWid);
+						l_This.dFixWgtsPosDim(l_OfstWid);
+
+						// 贴图
+						l_This.dMap();
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 				}
 
 				return this;
@@ -173,14 +190,6 @@ function fOnIcld(a_Errs)
 					{
 						l_This.dPutToTgt(a_Wgt.cAcsPutTgt());
 						a_Wgt.vcRfshBefLot();
-
-						// 加入总数至数字框的后面
-					//	if ((l_This.d_NumIpt === a_Wgt) && (! l_This.d_NumTot.parentNode))
-						if ((l_This.d_NumIpt === a_Wgt) && (! l_This.dIsPutInTgt(l_This.d_NumTot)))
-						{
-					//		l_This.d_NumIpt.cAcsPutTgt().appendChild(l_This.d_NumTot);
-							l_This.dPutToTgt(l_This.d_NumTot);
-						}
 					});
 
 				return this;
@@ -260,6 +269,83 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 使用宽高比
+			/// a_ArStr：String，宽高比，形如“400:300”，以冒号分隔两个正整数
+			cUseAr : function (a_ArStr)
+			{
+				// 在来源里搜索指定的宽高比
+				var l_This = this;
+				var l_ArAry = l_This.d_ArAry;
+				if (0 == l_ArAry.length)
+				{ return this; }
+
+				var l_Idx = a_ArStr ? stAryUtil.cFind(l_ArAry,
+				function (a_Ary, a_Idx, a_Elmt)
+				{
+					var l_AV = a_Elmt.getAttribute("data-Wse_Ar");
+					return (l_AV == a_ArStr);
+				}) : -1;
+
+				if (l_Idx < 0) // 若未找到
+				{
+					if (l_This.d_ArIdx >= 0) // 若已设置，则保持不变
+					{ return this; }
+
+					l_Idx = 0;	// 选择[0]
+				}
+
+				if (l_This.d_ArIdx == l_Idx) // 没变？
+				{ return this; }
+
+				// 计算宽高比
+				l_This.d_ArIdx = l_Idx;		// 记录宽高比索引
+				l_This.d_ArStr = a_ArStr;	// 记录宽高比字符串
+				var l_ColonIdx = a_ArStr.indexOf(":");
+				var l_W = parseInt(a_ArStr.slice(0, l_ColonIdx));
+				var l_H = parseInt(a_ArStr.slice(l_ColonIdx + 1, a_ArStr.length));
+				l_This.d_Ar = l_W / l_H;
+
+				// 取得这一组的图像源路径，发出请求
+				l_This.d_ImgSrcNodeAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() +
+					">[data-Wse_Ar=\"" + a_ArStr + "\"]>*[data-Wse_Src]");//, l_ArAry[l_This.d_ArIdx]);
+				l_This.dSetNumTot(l_This.d_ImgSrcNodeAry.length);	// 设置总数
+
+				if (l_This.d_ImgSrcNodeAry.length > 0)
+				{
+					l_This.d_ImgAry = new Array(l_This.d_ImgSrcNodeAry.length);
+					stAryUtil.cFor(l_This.d_ImgAry,
+					function (a_ImgAry, a_ImgIdx, a_Null)
+					{
+						var l_Img = new Image();
+						l_Img.src = l_This.d_ImgSrcNodeAry[a_ImgIdx].getAttribute("data-Wse_Src");
+						l_This.d_ImgAry[a_ImgIdx] = l_Img;
+					});
+				}
+				else
+				{
+					l_This.d_ImgAry = null;
+				}
+
+				// 若尚未建立画布，立即返回，等到建立后再修正
+				if (! l_This.d_Cvs)
+				{ return this; }
+
+				// 画布已建立……
+				// 修正放置目标和画布尺寸
+				var l_OfstWid = l_This.d_Cvs.width;	// 保持宽度不变
+				l_This.dFixPutTgtAndCvsDim(l_OfstWid);
+
+				// 修正控件位置尺寸
+				l_This.dFixWgtsPosDim(l_OfstWid);
+				return this;
+			}
+			,
+			/// 存取张贴数组
+			cAcsPostAry : function ()
+			{
+				return this.d_PostAry;
+			}
+			,
 			/// 新建画布
 			dNewCvs : function ()
 			{
@@ -291,11 +377,13 @@ function fOnIcld(a_Errs)
 
 				// 控件集
 				l_This.d_WgtSet = new nUi.tWgtSet();
+				l_This.eNewNumIpt();
 				l_This.eNewBtn("Prev", "＜");
 				l_This.eNewBtn("Next", "＞");
-				l_This.eNewBtn("Auto", "▶", true);
+				l_This.eNewBtn("Auto", "►", true);
+				l_This.eNewBtn("Rand", "※", true);
 				l_This.d_Auto.cUpDown(false);
-				l_This.eNewNumIpt();
+				l_This.d_Rand.cUpDown(false);
 				l_This.eNewCmb();
 				return this;
 			}
@@ -336,6 +424,8 @@ function fOnIcld(a_Errs)
 
 				l_This.dGnrtSubWgtId("NumIpt");
 				var l_Div = stDomUtil.cObtnOne(null, "div", tWgt.sd_SubWgtPutSrcId, null, l_This.d_PutSrc);
+				l_Div.innerHTML = "<span data-Wse_Sfx>&nbsp;/&nbsp;0</span>";
+
 				l_Wgt = new nCmnWgts.tEdit();
 				l_Wgt.vcBind({
 					c_PutTgt: tWgt.sd_SubWgtPutTgtId,
@@ -353,12 +443,6 @@ function fOnIcld(a_Errs)
 				l_This.d_NumIpt = l_Wgt;
 				l_This.d_WgtSet.cAdd(l_Wgt);
 			//	l_This.d_Pnl.appendChild(l_Wgt.cAcsPutTgt());	// 放入到面板里
-
-				// 创建总数
-				l_This.d_NumTot = document.createElement("div");
-				nWse.stCssUtil.cAddCssc(l_This.d_NumTot, "cnWse_tGpuSldPlr_NumTot");	// CSS类
-				l_This.dApdToSrc(l_This.d_NumTot);	// 放入来源
-				l_This.dSetNumTot(9999);
 				return this;
 			}
 			,
@@ -366,10 +450,13 @@ function fOnIcld(a_Errs)
 			dSetNumTot : function (a_Tot)
 			{
 				var l_This = this;
-				if (! l_This.d_NumTot)
+				if (! l_This.d_NumIpt)
 				{ return this; }
 
-				l_This.d_NumTot.textContent = "/ " + a_Tot.toString();	// ／
+				l_This.d_NumIpt.cAcsDomSfx().innerHTML = "&nbsp;/&nbsp;" + a_Tot.toString();	// ／
+
+				// 刷新
+				l_This.d_NumIpt.cRfsh();
 				return this;
 			}
 			,
@@ -377,9 +464,9 @@ function fOnIcld(a_Errs)
 			eNewCmb : function ()
 			{
 				var l_This = this;
-				l_This.dGnrtSubWgtId("Exchg");
+				l_This.dGnrtSubWgtId("Post");
 				var l_Div = stDomUtil.cObtnOne(null, "div", tWgt.sd_SubWgtPutSrcId, null, l_This.d_PutSrc);
-			//	var l_Ul =
+
 				var l_Wgt = new nCmnWgts.tCmb();
 				l_Wgt.vcBind({
 					c_PutTgt: tWgt.sd_SubWgtPutTgtId,
@@ -390,31 +477,44 @@ function fOnIcld(a_Errs)
 						//
 					}
 				});
-				l_This.d_Exchg = l_Wgt;
+				l_This.d_Post = l_Wgt;
 				l_This.d_WgtSet.cAdd(l_Wgt);
 			//	l_This.d_Pnl.appendChild(l_Wgt.cAcsPutTgt());	// 放入到面板里
+
+				// 把张贴数组里的名称装入
+				l_This.dLoadCmbFromPostAry();
+				return this;
 			}
 			,
-			/// 修正画布尺寸
-			dFixCvsDim : function (a_OfstWid)
+			/// 修正放置目标和画布尺寸
+			dFixPutTgtAndCvsDim : function (a_OfstWid)
 			{
 				a_OfstWid = Math.round(a_OfstWid);
 
 				var l_This = this;
-				if ((! l_This.d_Cvs) || (l_This.d_Cvs.width == a_OfstWid))
+				if ((! l_This.d_Cvs) || (l_This.d_Cvs.width == a_OfstWid)) // 无变化
 				{ return l_This; }
 
-				l_This.d_Cvs.width = a_OfstWid;
-				var l_CvsH;
-				if (l_This.d_Cfg.c_FxdAr)
+				if (l_This.d_Cvs.width != a_OfstWid)
 				{
-					l_CvsH = Math.round(a_OfstWid / l_This.d_Cfg.c_FxdAr);
+					l_This.d_Cvs.width = a_OfstWid;
+				}
+
+				var l_CvsH = Math.round(a_OfstWid / l_This.d_Ar);
+				if (l_This.d_Cvs.height != l_CvsH)
+				{
 					l_This.d_Cvs.height = l_CvsH;
+				}
+
+				// 放置目标的高度不能低于画布
+				if (l_This.d_PutTgt.offsetHeight < l_CvsH)
+				{
+					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_CvsH);
 				}
 
 				// 清屏，用哪个？
 			//	l_This.d_2dCtxt.cClr();
-				l_This.d_2dCtxt.cFill();
+				l_This.d_2dCtxt.cFill();//null, tClo.i_White);	// 黑白？
 				return this;
 			}
 			,
@@ -427,12 +527,13 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_WgtSet)
 				{ return this; }
 
-				// 先计算各个控件的尺寸
+				l_This.d_PnlW = a_OfstWid;	// 面板宽
+
+				// 先计算各个控件的尺寸，触发各个控件的“WidDtmnd”事件
 				var l_EvtAgms = [0, 1, 2];
 				stAryUtil.cFor(l_This.d_WgtSet.cAcsWgts(),
 					function (a_Wgts, a_Idx, a_Wgt)
 					{
-						// 触发编辑框和按钮的事件
 						var l_PutTgt = a_Wgt.cAcsPutTgt();
 						l_EvtAgms[0] = l_PutTgt;
 						l_EvtAgms[1] = l_PutTgt.offsetWidth;
@@ -442,111 +543,210 @@ function fOnIcld(a_Errs)
 
 				// 计算整个放置目标的高度
 
-				// 计算<div>与<canvas>的差量
+				// 计算<div>与<canvas>的差量，以此确定面板Y
 				if (l_This.d_DivCvsDta < 0)
 				{
 					l_This.d_DivCvsDta = Math.max(0, l_This.d_PutTgt.offsetHeight - l_This.d_Cvs.height);
 				//	console.log("l_This.d_DivCvsDta = " + l_This.d_DivCvsDta)
 				}
 
+				l_This.d_PnlY = l_This.d_Cvs.height + l_This.d_DivCvsDta;
+
 				// 修正位置，即排版……
+				l_This.dCalcEachDim();
+				l_This.dFlowNumIpt();
+				l_This.dFlowBtns();
+				l_This.dFlowPost();
 
-				var l_Rcd = {
-					c_Y : l_This.d_Cvs.height + l_This.d_DivCvsDta,
-					c_AccW : 0,
-					c_RowH : 0,
-					c_RowAmt : 1
-				};
-				var l_TotW = l_This.d_PutTgt.offsetWidth;
+				// 修正放置目标的高度
+				var l_TotH = l_This.d_PnlY + l_This.d_RowHgt1 + l_This.d_RowHgt2 + l_This.d_RowHgt3;
+				stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_TotH);
 
-				// 先排三个按钮
-				l_This.eFlow(l_Rcd, l_This.d_Prev.cAcsPutTgt());
-				l_This.eFlow(l_Rcd, l_This.d_Next.cAcsPutTgt());
-				l_This.eFlow(l_Rcd, l_This.d_Auto.cAcsPutTgt());
-				var l_1stRowH = l_Rcd.c_RowH;
-				var l_BtnsRt = l_Rcd.c_AccW;
-
-				// 计算数字和组合框的总宽
-				var l_Put = l_This.d_NumIpt.cAcsPutTgt();
-				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_Put, null, true);
-				l_Rcd.e_NumIptTotWid = l_Put.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
-				l_Rcd.e_NumIptTotHgt = l_Put.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
-
-				l_Put = l_This.d_NumTot;
-				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_Put, null, true);
-				l_Rcd.e_NumTotTotWid = l_Put.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
-			//	l_Rcd.e_NumTotTotHgt = l_Put.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;	//【见下】
-				var l_NumTotWid = l_Rcd.e_NumIptTotWid + l_Rcd.e_NumTotTotWid;
-
-//				// 换行？【在下面检查】
-//				if (l_Rcd.c_AccW + l_Rcd.e_NumIptTotWid + l_Rcd.e_NumTotTotWid >= l_TotW)
-//				{
-//					l_This.eFlow_NewLine(l_Rcd);
-//				}
-
-				// 排数字
-				var l_NumX = (l_TotW - l_NumTotWid) / 2;
-				var l_NumsRt = l_NumX + l_NumTotWid;
-				if (l_NumX <= l_BtnsRt)	// 与三个按钮重叠，换行
-				{
-					l_This.eFlow_NewLine(l_Rcd);
-				}
-
-				var l_NumY = l_Rcd.c_Y + (l_1stRowH - l_Rcd.e_NumIptTotHgt) / 2;
-				stCssUtil.cSetPos(l_This.d_NumIpt.cAcsPutTgt(), l_NumX, l_NumY);
-
-				l_NumX += l_Rcd.e_NumIptTotWid;
-			//	l_NumY = l_Rcd.c_Y + Math.max(0, l_1stRowH - l_Rcd.e_NumTotTotHgt) / 2;	//【续用上面的】
-				stCssUtil.cSetPos(l_This.d_NumTot, l_NumX, l_NumY);
-
-				// 排组合框
-				if (2 == l_Rcd.c_RowAmt) // 已经排了两行，则把组合框排到第三行
-				{
-					l_This.eFlow_NewLine(l_Rcd);
-				}
-
-				l_Put = l_This.d_Exchg.cAcsPutTgt();
-				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_Put, null, true);
-				var l_ExchgTotWid = l_Put.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
-				var l_ExchgTotHgt = l_Put.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
-				var l_ExchgX = l_TotW - l_ExchgTotWid;
-				if (l_ExchgX <= l_NumsRt)	// 检查与数字的重叠，若重叠则换行
-				{
-					l_This.eFlow_NewLine(l_Rcd);
-				}
-
-				stCssUtil.cSetPos(l_Put, l_ExchgX, l_Rcd.c_Y);
-
-				// 设置放置目标的高度，即为当前的c_Y + max(c_RowH, l_ExchgTotHgt)
-				var l_PutTgtHgt = l_Rcd.c_Y + Math.max(l_Rcd.c_RowH, l_ExchgTotHgt);
-				stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_PutTgtHgt);
 				return this;
 			}
 			,
-			eFlow : function (a_Rcd, a_Put, a_1stRowH)
+			/// 计算各个尺寸
+			dCalcEachDim : function ()
 			{
 				var l_This = this;
-				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, a_Put, null, true);
-				var l_TotH = a_Put.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
-				a_Rcd.c_RowH = Math.max(a_Rcd.c_RowH, l_TotH);
-
-				var l_Y = a_Rcd.c_Y;
-				if (a_1stRowH)
+				if (! l_This.d_Prev)
 				{
-					l_Y += (a_1stRowH - l_TotH) / 2;
+					l_This.d_BtnDim = l_This.d_NumIptW = 0;
+					return this;
 				}
 
-				stCssUtil.cSetPos(a_Put, a_Rcd.c_AccW, l_Y);
-				a_Rcd.c_AccW += a_Put.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
+				// 按钮宽度
+				var l_PutTgt = l_This.d_Prev.cAcsPutTgt();
+				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_PutTgt, null, true);
+				l_This.d_BtnDim = l_PutTgt.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
+
+				// 数字框
+				l_PutTgt = l_This.d_NumIpt.cAcsPutTgt();
+				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_PutTgt, null, true);
+				l_This.d_NumIptW = l_PutTgt.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
+				l_This.d_NumIptH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
+
+				// 贴图模式
+				l_PutTgt = l_This.d_Post.cAcsPutTgt();
+				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_PutTgt, null, true);
+				l_This.d_PostW = l_PutTgt.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
+				l_This.d_PostH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
+
+				// 确定排成几行，和每行高度
+				l_This.d_RowAmt = 1;
+				l_This.d_RowHgt1 = Math.max(l_This.d_NumIptH, l_This.d_BtnDim, l_This.d_PostH);
+				l_This.d_RowHgt2 = l_This.d_RowHgt3 = 0;
+				if (l_This.d_NumIptW + l_This.d_BtnDim * 4 + l_This.d_PostW > l_This.d_PnlW) // 一行摆不开
+				{
+					l_This.d_RowAmt = 2;
+					l_This.d_RowHgt1 = Math.max(l_This.d_NumIptH, l_This.d_BtnDim);
+					if (l_This.d_PostW + l_This.d_BtnDim > l_This.d_PnlW)	// 两行摆不开
+					{
+						l_This.d_RowAmt = 3;
+						l_This.d_RowHgt2 = l_This.d_BtnDim;
+						l_This.d_RowHgt3 = l_This.d_PostH;
+					}
+					else
+					{
+						l_This.d_RowHgt2 = Math.max(l_This.d_BtnDim, l_This.d_PostH);
+						l_This.d_RowHgt3 = 0;
+					}
+				}
+
 				return this;
 			}
 			,
-			eFlow_NewLine : function (a_Rcd)
+			/// 排列数字输入
+			dFlowNumIpt : function ()
 			{
-				a_Rcd.c_Y += a_Rcd.c_RowH;
-				a_Rcd.c_AccW = 0;
-				a_Rcd.c_RowH = 0;
-				++ a_Rcd.c_RowAmt;
+				var l_This = this;
+				var l_PutTgt = l_This.d_NumIpt.cAcsPutTgt();
+				var l_Y = l_This.d_PnlY + (l_This.d_RowHgt1 - l_This.d_NumIptH) / 2;
+				stCssUtil.cSetPos(l_PutTgt, 0, l_Y);
+				return this;
+			}
+			,
+			/// 排列按钮
+			dFlowBtns : function ()
+			{
+				var l_This = this;
+				var l_PnlAW = l_This.d_PnlW / 2;
+				var l_PutTgt, l_X, l_Y, l_AutoX, l_RandX;
+
+				if (1 == l_This.d_RowAmt)
+				{
+					// 随机
+					l_RandX = l_This.d_PnlW - l_This.d_PostW - l_This.d_BtnDim;
+					l_PutTgt = l_This.d_Rand.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_RandX, l_This.d_PnlY);
+
+					// 自动
+					l_AutoX = l_PnlAW;
+					if (l_AutoX + l_This.d_BtnDim >= l_RandX) // 与随机重叠，向左推
+					{
+						l_AutoX = l_RandX - l_This.d_BtnDim;
+					}
+					l_PutTgt = l_This.d_Auto.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX, l_This.d_PnlY);
+
+					// 后，前
+					l_PutTgt = l_This.d_Next.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX - l_This.d_BtnDim, l_This.d_PnlY);
+					l_PutTgt = l_This.d_Prev.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX - l_This.d_BtnDim * 2, l_This.d_PnlY);
+				}
+				else
+				if (2 == l_This.d_RowAmt)
+				{
+					// 随机
+					l_RandX = l_This.d_PnlW - l_This.d_PostW - l_This.d_BtnDim;
+					l_PutTgt = l_This.d_Rand.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_RandX, l_This.d_PnlY + l_This.d_RowHgt1);
+
+					// 自动
+					l_AutoX = l_PnlAW;
+				//	if (l_AutoX - l_This.d_BtnDim * 2 < 0 + l_This.d_NumIptW) // 与数字框重叠，向右至尽头
+					{
+						l_AutoX = l_This.d_PnlW - l_This.d_BtnDim;	//【还是摆在右头吧】
+					}
+					l_PutTgt = l_This.d_Auto.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX, l_This.d_PnlY);
+
+					// 后，前
+					l_PutTgt = l_This.d_Next.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX - l_This.d_BtnDim, l_This.d_PnlY);
+					l_PutTgt = l_This.d_Prev.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_AutoX - l_This.d_BtnDim * 2, l_This.d_PnlY);
+				}
+				else // 3
+				{
+					// 前，后
+					l_X = l_This.d_PnlW - l_This.d_BtnDim * 2;
+					l_PutTgt = l_This.d_Prev.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_X, l_This.d_PnlY);
+					l_PutTgt = l_This.d_Next.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_X + l_This.d_BtnDim, l_This.d_PnlY);
+
+					// 自动，随机
+					l_Y = l_This.d_PnlY + l_This.d_RowHgt1;
+					l_PutTgt = l_This.d_Auto.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_X, l_Y);
+					l_PutTgt = l_This.d_Rand.cAcsPutTgt();
+					stCssUtil.cSetPos(l_PutTgt, l_X + l_This.d_BtnDim, l_Y);
+				}
+
+				return this;
+			}
+			,
+			/// 排列贴图模式
+			dFlowPost : function ()
+			{
+				var l_This = this;
+				var l_PutTgt = l_This.d_Post.cAcsPutTgt();
+				var l_X = l_This.d_PnlW - l_This.d_PostW;
+				var l_Y = l_This.d_PnlY;
+				if (2 == l_This.d_RowAmt)
+				{
+					l_Y += l_This.d_RowHgt1;
+				}
+				else
+				if (3 == l_This.d_RowAmt)
+				{
+					l_Y += l_This.d_RowHgt1 + l_This.d_RowHgt2;
+				}
+				stCssUtil.cSetPos(l_PutTgt, l_X, l_Y);
+				return this;
+			}
+			,
+			/// 从张贴数组装载组合框
+			dLoadCmbFromPostAry : function ()
+			{
+				var l_This = this;
+				var l_Ul = l_This.d_Post.cAcsDomUl();
+				stAryUtil.cFor(l_This.d_PostAry,
+					function (a_PostAry, a_PostIdx, a_Post)
+					{
+						var l_Li = document.createElement("li");
+						l_Li.textContent = a_Post.cGetName();
+						l_Ul.appendChild(l_Li);
+					});
+
+				// 一开始选中首个
+				if (! l_This.d_Post.cGetText())
+				{
+					l_This.d_Post.cSlcItem(0);
+				}
+
+				return this;
+			}
+			,
+			/// 贴图
+			dMap : function ()
+			{
+				var l_This = this;
+				tSara.scEnsrTemps(2);
+				var l_DstSara = tSara.sc_Temps[0], l_SrcSara = tSara.sc_Temps[1];
+				l_This.d_2dCtxt.cMap(null, l_This.d_ImgAry[0], null, null);
 				return this;
 			}
 		}
@@ -556,6 +756,87 @@ function fOnIcld(a_Errs)
 		}
 		,
 		false);
+
+		nWse.fClass(tGpuSldPlr,
+		/// 张贴
+		function atPost(a_Name)
+		{
+			this.e_Name = a_Name;
+		},
+		null,
+		{
+			cGetName : function ()
+			{
+				return this.e_Name;
+			}
+		});
+
+		nWse.fClass(tGpuSldPlr,
+		function tPost_飞入()
+		{
+			this.odBase(tPost_飞入).odCall("飞入");	// 基类版本
+		},
+		tGpuSldPlr.atPost,
+		{
+			//
+		});
+		s_PostAry.push(new tGpuSldPlr.tPost_飞入());
+
+		nWse.fClass(tGpuSldPlr,
+		function tPost_渐显()
+		{
+			this.odBase(tPost_渐显).odCall("渐显");	// 基类版本
+		},
+		tGpuSldPlr.atPost,
+		{
+			//
+		});
+		s_PostAry.push(new tGpuSldPlr.tPost_渐显());
+
+		nWse.fClass(tGpuSldPlr,
+		function tPost_百叶窗()
+		{
+			this.odBase(tPost_百叶窗).odCall("百叶窗");	// 基类版本
+		},
+		tGpuSldPlr.atPost,
+		{
+			//
+		});
+		s_PostAry.push(new tGpuSldPlr.tPost_百叶窗());
+
+		nWse.fClass(tGpuSldPlr,
+		function tPost_阶梯()
+		{
+			this.odBase(tPost_阶梯).odCall("阶梯");	// 基类版本
+		},
+		tGpuSldPlr.atPost,
+		{
+			//
+		});
+		s_PostAry.push(new tGpuSldPlr.tPost_阶梯());
+
+		nWse.fClass(tGpuSldPlr,
+		function tPost_六边形泛填充()
+		{
+			this.odBase(tPost_六边形泛填充).odCall("六边形泛填充");	// 基类版本
+		},
+		tGpuSldPlr.atPost,
+		{
+			//
+		});
+		s_PostAry.push(new tGpuSldPlr.tPost_六边形泛填充());
+
+//		nWse.fClass(tGpuSldPlr,
+//		function tPost_()
+//		{
+//			this.odBase(tPost_).odCall("");	// 基类版本
+//		},
+//		tGpuSldPlr.atPost,
+//		{
+//			//
+//		});
+//		s_PostAry.push(new tGpuSldPlr.tPost_());
+
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

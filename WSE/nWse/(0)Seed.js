@@ -749,7 +749,7 @@
 			var l_GrowTime = 3;
 			var l_MinRdsScl = 0.3;
 			var l_OvalAr = 2.0 / 1.00;
-			var l_A = Math.min(256, window.innerWidth / 4);
+			var l_A = Math.min(200, window.innerWidth / 4);
 			var l_B = l_A / l_OvalAr;
 			e_SphFnlRds = Math.floor(l_A / e_SphTot);
 			var l_X, l_Y, l_S, l_R;
@@ -876,6 +876,12 @@
 			e_End = true;
 			e_fCabk = a_fCabk;
 			return stNowLoad;
+		};
+
+		/// 获取帧时间（自上次cBgn()调用以来经过的时间）
+		stNowLoad.cGetFrmTime = function ()
+		{
+			return e_FrmTime;
 		};
 	})();
 

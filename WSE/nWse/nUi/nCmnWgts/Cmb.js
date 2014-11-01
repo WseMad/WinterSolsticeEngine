@@ -110,6 +110,7 @@ function fOnIcld(a_Errs)
 				l_This.d_PutTgtId_Edit = tWgt.sd_SubWgtPutTgtId;
 				l_This.d_PutSrc_Edit = stDomUtil.cObtnOne(null, "div", l_This.d_PutSrcId_Edit, null, l_This.d_PutSrc);
 				l_This.d_Edit = new nCmnWgts.tEdit();
+				l_This.dAcsSubWgtSet().cAdd(l_This.d_Edit);	// 添加到子控件集
 				l_This.d_Edit.vcBind({
 					c_PutTgt: l_This.d_PutTgtId_Edit,
 					c_PutSrc: l_This.d_PutSrcId_Edit,
@@ -131,13 +132,13 @@ function fOnIcld(a_Errs)
 						l_Lis = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li");
 						if ((0 <= a_Cfg.c_InitSlc) && (a_Cfg.c_InitSlc < l_Lis.length))
 						{
-							l_This.cSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
+							l_This.dSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
 						}
 					}
 					else
 					if (nWse.fIsStr(a_Cfg.c_InitSlc))
 					{
-						l_This.cSetText(a_Cfg.c_InitSlc);
+						l_This.dSetText(a_Cfg.c_InitSlc);
 					}
 				}
 
@@ -148,6 +149,7 @@ function fOnIcld(a_Errs)
 				l_This.d_PutSrc_Btn = stDomUtil.cObtnOne(null, "div", l_This.d_PutSrcId_Btn, null, l_This.d_PutSrc);
 				l_This.d_PutSrc_Btn.textContent = "▼";
 				l_This.d_Btn = new nCmnWgts.tBtn();
+				l_This.dAcsSubWgtSet().cAdd(l_This.d_Btn);	// 添加到子控件集
 				l_This.d_Btn.vcBind({
 					c_PutTgt: l_This.d_PutTgtId_Btn,
 					c_PutSrc: l_This.d_PutSrcId_Btn,
@@ -164,13 +166,13 @@ function fOnIcld(a_Errs)
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
 				{
-					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					l_This.d_fOnWidDtmnd = function ()
 					{
 						// 校准位置尺寸
-						l_This.dRgltPosDim(a_OfstWid);
+						l_This.dRgltPosDim(l_This.dGetPutTgtOfstWid());
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 				}
 
 //				if (! l_This.d_fOnAnmtUpdEnd)	//【不用了】
@@ -185,8 +187,20 @@ function fOnIcld(a_Errs)
 //						}
 //					};
 //
-//					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+//					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 //				}
+
+				// 当窗口滚动时，校准位置尺寸
+				if (stFrmwk)
+				{
+					stFrmwk.cRegEvtHdlr("WndScrl",
+						function()
+						{
+							console.log("tCmb.WndScrl");
+							// 校准
+						//	fRgltPosDim(a_This);
+						});
+				}
 				return this;
 			}
 			,
@@ -197,16 +211,33 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_PutSrc)
 				{ return this; }
 
+				// 清除编辑框和按钮
+				if (l_This.d_Edit)
+				{
+					l_This.dUbndFld("d_Edit");
+				}
+
+				if (l_This.d_Btn)
+				{
+					l_This.dUbndFld("d_Btn");
+				}
+
+				// 清空子控件集
+				l_This.dAcsSubWgtSet().cClr();
+
+				// 把<ul>还给来源
+				l_This.dRtnUlToSrc();
+
 				// 注销放置目标事件处理器
 				if (l_This.d_fOnWidDtmnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 					l_This.d_fOnWidDtmnd = null;
 				}
 
 //				if (l_This.d_fOnAnmtUpdEnd)	//【不用了】
 //				{
-//					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+//					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 //					l_This.d_fOnAnmtUpdEnd = null;
 //				}
 
@@ -386,11 +417,26 @@ function fOnIcld(a_Errs)
 			/// 设置文本
 			cSetText : function (a_Text)
 			{
-				if (this.d_Edit)
-				{ this.d_Edit.cSetText(a_Text); }
+				// 只选时不允许任意文本
+				if (this.d_Cfg.c_SlcOnly)
+				{
+					throw new Error("只选模式下，不能设置任意文本，请调用cSlcItem()");
+				}
 
-				this.d_Val = a_Text;	// 亦修改值
-				return this;
+				return this.dSetText(a_Text);
+			}
+			,
+			/// 获取选项数量
+			cGetItemAmt : function ()
+			{
+				var l_Ul = this.cAcsDomUl();
+				return stDomUtil.cGetChdAmtOfTag(l_Ul, "LI");
+			}
+			,
+			/// 选取选项
+			cSlcItem : function (a_Idx)
+			{
+				return this.dSlcLi(a_Idx);
 			}
 			,
 			/// 列表显示？
@@ -411,6 +457,28 @@ function fOnIcld(a_Errs)
 			cHideList : function ()
 			{
 				return this.dHideList();
+			}
+			,
+			/// 存取<ul>
+			cAcsDomUl : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_PutSrc) // 未绑定？
+				{ return null; }
+
+				// 若已经存在则立即返回
+				if (l_This.d_Ul)
+				{ return l_This.d_Ul; }
+
+				// 尝试从来源或目标中提取
+				var l_Ul = stDomUtil.cQryOne(l_This.dGnrtQrySlc_PutSrc() + ">ul") ||
+							stDomUtil.cQryOne(l_This.dGnrtQrySlc_PutTgt() + ">ul");
+				if (l_Ul)
+				{ return l_Ul; }
+
+				// 新建，存入来源
+				l_Ul = stDomUtil.cObtnOne(null, "ul", null, null, l_This.d_PutSrc);
+				return l_Ul;
 			}
 			,
 			/// 校准位置尺寸
@@ -524,10 +592,21 @@ function fOnIcld(a_Errs)
 						c_fOnEnd: function ()
 						{
 							// 把<ul>还给来源
-							l_This.dRtnToSrc(l_This.d_Ul);
-							l_This.d_Ul = null;		// 清null
+							l_This.dRtnUlToSrc();
 						}
 					});
+				return this;
+			}
+			,
+			/// 把<ul>还给来源
+			dRtnUlToSrc : function ()
+			{
+				var l_This = this;
+				if (! l_This.d_Ul)
+				{ return this; }
+
+				l_This.dRtnToSrc(l_This.d_Ul);
+				l_This.d_Ul = null;		// 清null
 				return this;
 			}
 			,
@@ -544,15 +623,42 @@ function fOnIcld(a_Errs)
 				if (! l_PkdLi)
 				{ return this; }
 
-				// 设置文本和值
-				l_This.cSetText(l_This.dGetTextOfLi(l_PkdLi));
-				l_This.d_Val = l_PkdLi.getAttribute("value") || l_This.cGetText();
+				// 选中<li>
+				l_This.dSlcLi(null, l_PkdLi);
 
 				// 隐藏列表
 				l_This.dHideList();
 
 				// 触发确定事件
 				l_This.dTrgrOkEvt();
+				return this;
+			}
+			,
+			/// 选中<li>
+			dSlcLi : function (a_Idx, a_Li)
+			{
+				var l_This = this;
+				var l_Ul = l_This.cAcsDomUl();
+				if (! a_Li)
+				{
+					a_Li = stDomUtil.cGetChdsOfTag(l_Ul, "LI", a_Idx);
+					if (! a_Li) // 没有？可能索引无效
+					{ return this; }
+				}
+
+				// 设置文本和值
+				l_This.dSetText(l_This.dGetTextOfLi(a_Li));
+				l_This.d_Val = a_Li.getAttribute("value") || l_This.cGetText();
+				return this;
+			}
+			,
+			/// 设置文本
+			dSetText : function (a_Text)
+			{
+				if (this.d_Edit)
+				{ this.d_Edit.cSetText(a_Text); }
+
+				this.d_Val = a_Text;	// 亦修改值
 				return this;
 			}
 			,

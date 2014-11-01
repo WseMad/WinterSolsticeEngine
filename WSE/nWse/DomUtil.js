@@ -176,19 +176,16 @@ function fOnIcld(a_Errs)
 //		};
 
 		/// 得到一个，首先获取，若没有则新建
-		/// a_Slc：String，选择器，默认为："#" + a_Id，不能与a_Id同时为空
+		/// a_Slc：String，选择器，默认为："#" + a_Id，若与a_Id同时为空则总是新建
 		/// a_Tag：String，标记，新建时使用，必须有效
-		/// a_Id：String，元素ID，可以为空，但当a_Slc为空时必须有效
+		/// a_Id：String，元素ID，若与a_Slc同时为空则总是新建
 		/// a_Cssc：String，CSS类，新建时使用，可以为空
 		/// a_Prn：Node，父节点，新建时使用，可以为空
 		/// 返回：Node，仅当Boolean Wse_DomUtil.c_New字段为true时表示新建
 		stDomUtil.cObtnOne = function (a_Slc, a_Tag, a_Id, a_Cssc, a_Prn)
 		{
-			if ((! a_Slc) && (! a_Id))
-			{ throw new Error("cObtnOne：选择器和ID不能同时为空！"); }
-
-			a_Tag = a_Tag.toLowerCase();
-			var l_Rst = stDomUtil.cQryOne(a_Slc || ("#" + a_Id));
+			a_Tag = a_Tag.toLowerCase(); // 这里应是小写
+			var l_Rst = (a_Slc || a_Id) && stDomUtil.cQryOne(a_Slc || ("#" + a_Id));
 			if (! l_Rst)
 			{
 				l_Rst = document.createElement(a_Tag);
@@ -245,23 +242,48 @@ function fOnIcld(a_Errs)
 			return l_Rst;
 		};
 
-		/// 获取指定标记的子节点
-		stDomUtil.cGetChdsOfTag = function (a_DomPrn, a_Tag, a_1st)
+		/// 获取指定标记的子元素数量
+		stDomUtil.cGetChdAmtOfTag = function (a_DomPrn, a_Tag)
 		{
-			a_Tag = a_Tag.toUpperCase();
-			var l_Rst = a_1st ? null : [];
-			var l_Nl = a_DomPrn.childNodes, n = 0, l_Len = l_Nl.length;
+			a_Tag = a_Tag.toUpperCase();	// 这里应是大写
+			var l_Rst = 0;
+			var l_Nl = a_DomPrn && a_DomPrn.childNodes, n = 0, l_Len = l_Nl ? l_Nl.length : 0;
 			for (; n<l_Len; ++n)
 			{
 				if ((1 == l_Nl[n].nodeType) && (l_Nl[n].tagName == a_Tag))
 				{
-					if (a_1st)
-					{
-						l_Rst = l_Nl[n];
-						break;
-					}
+					++ l_Rst;
+				}
+			}
+			return l_Rst;
+		};
 
-					l_Rst.push(l_Nl[n]);
+		/// 获取指定标记的子元素
+		/// a_Idx：Number，索引，若有效则返回指定的子节点
+		/// 返回：HTMLElement$HTMLElement[]
+		stDomUtil.cGetChdsOfTag = function (a_DomPrn, a_Tag, a_Idx)
+		{
+			a_Tag = a_Tag.toUpperCase();	// 这里应是大写
+			var l_IdxVld = nWse.fIsNum(a_Idx);
+			var l_Cnt = 0;
+			var l_Rst = l_IdxVld ? null : [];
+			var l_Nl = a_DomPrn && a_DomPrn.childNodes, n = 0, l_Len = l_Nl ? l_Nl.length : 0;
+			for (; n<l_Len; ++n)
+			{
+				if ((1 == l_Nl[n].nodeType) && (l_Nl[n].tagName == a_Tag))
+				{
+					if (l_IdxVld)
+					{
+						if (l_Cnt ++ == a_Idx)
+						{
+							l_Rst = l_Nl[n];
+							break;
+						}
+					}
+					else
+					{
+						l_Rst.push(l_Nl[n]);
+					}
 				}
 			}
 			return l_Rst;
@@ -443,7 +465,7 @@ function fOnIcld(a_Errs)
 		/// 搜索自己和先辈为找到标记
 		stDomUtil.cSrchSelfAndAcstForTag = function (a_DomD, a_Tag)
 		{
-			a_Tag = a_Tag.toUpperCase();
+			a_Tag = a_Tag.toUpperCase();	// 这里应是大写
 			var l_Prn = a_DomD;
 			while (l_Prn)// !== document.documentElement)
 			{

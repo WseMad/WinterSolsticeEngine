@@ -144,14 +144,14 @@ function fOnIcld(a_Errs)
 				// 注册放置目标事件处理器
 				if (! l_This.d_fOnWidDtmnd)
 				{
-					l_This.d_fOnWidDtmnd = function (a_Put, a_TotWid, a_OfstWid)
+					l_This.d_fOnWidDtmnd = function ()
 					{
 						// 修正高度和形状
 						if (("c_FxdAr" in l_This.d_Cfg) || ("c_Shp" in l_This.d_Cfg))
-						{ l_This.dFixHgtAndShp(a_OfstWid); }
+						{ l_This.dFixHgtAndShp(l_This.dGetPutTgtOfstWid()); }
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 				}
 
 				if (l_This.d_Cfg.c_TitVcen && l_This.d_DomTit && (! l_This.d_fOnAnmtUpdEnd))
@@ -162,7 +162,7 @@ function fOnIcld(a_Errs)
 						l_This.dTitVcen();
 					};
 
-					l_This.dRegPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 				}
 
 				return this;
@@ -185,24 +185,24 @@ function fOnIcld(a_Errs)
 
 				if (l_This.d_Body)
 				{
-					l_This.dRmvWhenInSrc("d_Body");
+					l_This.dUbndFld("d_Body");
 				}
 
 				if (l_This.d_Txtr)
 				{
-					l_This.dRmvWhenInSrc("d_Txtr");
+					l_This.dUbndFld("d_Txtr");
 				}
 
 				// 事件处理器
 				if (l_This.d_fOnWidDtmnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnWidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 					l_This.d_fOnWidDtmnd = null;
 				}
 
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
-					l_This.dUrgPutTgtEvtHdlr_OnAnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 					l_This.d_fOnAnmtUpdEnd = null;
 				}
 

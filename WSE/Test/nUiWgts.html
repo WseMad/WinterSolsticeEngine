@@ -176,7 +176,10 @@
 		<!---->
 
 		<div id="k_Edit1" class="cnWse_PutSrc">
-			<div data-Wse_Ok style="padding: 0.25em;">OK</div>
+			<!--<div data-Wse_Ok style="padding: 0.25em; background-color: yellow; width: 4em;"></div>-->
+			<span data-Wse_Ok style="padding: 0.25em;">OK</span>
+			<!--<span data-Wse_Pfx style="padding: 0.25em;">Pfx</span>-->
+			<!--<span data-Wse_Sfx style="padding: 0.25em;">Sfx</span>-->
 		</div>
 
 		<div id="k_Edit2" class="cnWse_PutSrc">
@@ -603,9 +606,9 @@
 						c_PutTgt: "k_PutTgt_Edit1",
 						c_PutSrc: "k_Edit1",
 						c_Plchd: "搜索什么？",
-						c_fOnOk: function (a_Wgt, a_Text)
+						c_fOnOk: function (a_Wgt, a_NewText, a_OldText)
 						{
-						//	console.log("文本框的内容是：" + a_Text);
+							console.log("文本框的内容是：" + a_NewText + ", Old =" + a_OldText);
 						}
 					});
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
@@ -617,9 +620,9 @@
 						c_PutSrc: "k_Edit2",
 						c_Kind: 2,
 						c_Plchd: "搜索什么？",
-						c_fOnOk: function (a_Wgt, a_Text)
+						c_fOnOk: function (a_Wgt, a_NewText, a_OldText)
 						{
-						//	console.log("文本框的内容是：" + a_Text);
+						//	console.log("文本框的内容是：" + a_NewText);
 						}
 					});
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
@@ -881,10 +884,10 @@
 
 
 						// 测试cClnPutTgt和vcUbnd
-						var l_PutSrcId = "k_Acod1";
+						var l_PutSrcId = "k_Cmb1";
 						var l_KWgt;
-						var l_WgtSet = stFrmwk.cAcsStaWgtSet();
-					//	var l_WgtSet = l_Form.cAcsWgtSet();
+					//	var l_WgtSet = stFrmwk.cAcsStaWgtSet();
+						var l_WgtSet = l_Form.cAcsWgtSet();
 						if ("K".charCodeAt(0) == a_Evt.keyCode)
 						{
 							l_KWgt = l_WgtSet.cAcsByPutSrcId(l_PutSrcId);
@@ -896,10 +899,11 @@
 							}
 							else
 							{
-								l_KWgt = new nCmnWgts.tAcod();
+								l_KWgt = new nCmnWgts.tCmb();
 								l_KWgt.vcBind({
 									c_PutTgt: l_PutSrcId.replace("k_", "k_PutTgt_"),
 									c_PutSrc: l_PutSrcId
+									,c_Plchd: "可编辑"
 								});
 								l_WgtSet.cAdd(l_KWgt);
 								l_KWgt.cRfsh();

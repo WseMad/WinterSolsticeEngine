@@ -165,6 +165,26 @@ function fOnIcld(a_Errs)
 					return this;
 				});
 
+			// 添加odDfnFld至原型
+			fDfnDataPpty(l_Pttp, "odDfnFld", false, false, false,
+				function odDfnFld(a_Flds)
+				{
+					var l_Name;
+					for (l_Name in a_Flds)
+					{
+						// 如果已定义
+						if (l_Name in this)
+						{
+							throw new Error(a_fCtor.oc_FullName + "：字段“" + l_Name + "”重定义！");
+						}
+
+						this[l_Name] = a_Flds[l_Name];	// 赋予
+					}
+
+					// 返回自己，实现链式调用
+					return this;
+				});
+
 			// 在构造函数上记录构造器
 			fDfnDataPpty(a_fCtor, "constructor", false, false, false, nWse.fClassHead);
 

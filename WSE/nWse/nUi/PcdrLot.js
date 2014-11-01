@@ -604,7 +604,7 @@ function fOnIcld(a_Errs)
 	function fCrtAllZones(a_This)
 	{
 		a_This.e_DomFlow = fCrtZone(a_This, "FlowZone", "cnWse_tPcdrLot_FlowZone");
-		//	a_This.e_DomCstm = fCrtZone(a_This, "CstmZone", "cnWse_tPcdrLot_CstmZone");
+	//	a_This.e_DomCstm = fCrtZone(a_This, "CstmZone", "cnWse_tPcdrLot_CstmZone");	//【暂时不提供】
 		a_This.e_DomRmvd = fCrtZone(a_This, "RmvdZone", "cnWse_tPcdrLot_RmvdZone");
 	}
 
@@ -956,7 +956,7 @@ function fOnIcld(a_Errs)
 			l_TgtArea.c_W = l_GridCnt * l_GridUnit;
 
 			// 立即触发摆放事件之宽度已决定，因为事件处理器可能会趁机修改高度
-			tPcdrLot.scTrgrPutEvt_WidDtmnd(a_Put);
+			nUi.fTrgrPutEvt(a_Put, "WidDtmnd");
 
 			if (l_FxdAr) // 如果提供了宽高比，使用它来计算
 			{
@@ -1060,9 +1060,7 @@ function fOnIcld(a_Errs)
 			l_PPP = l_PutAry[i].Wse_PcdrLot;
 			if (stNumUtil.cHasOvlp(l_PPP.c_ActGridIdx, l_PPP.c_ActGridIdx + l_PPP.c_ActGridCnt - 1,
 				a_Put.Wse_PcdrLot.c_ActGridIdx, a_Put.Wse_PcdrLot.c_ActGridIdx + a_Put.Wse_PcdrLot.c_ActGridCnt - 1))
-			{
-				l_Bm = Math.max(l_Bm, l_PPP.c_TgtArea.c_Y + l_PPP.c_TgtArea.c_H);
-			}
+			{ l_Bm = Math.max(l_Bm, l_PPP.c_TgtArea.c_Y + l_PPP.c_TgtArea.c_H); }
 		}
 		return l_Bm;
 	}
@@ -1137,12 +1135,12 @@ function fOnIcld(a_Errs)
 	function fImgLodSys(a_This)
 	{
 		// 取得所有需要该系统的元素，对每一个
-		var l_AllImg = stDomUtil.cQryAll("#" + a_This.cAcsPutTgt().id + " *[data-Wse_ImgSrc]");
+		var l_AllImg = stDomUtil.cQryAll("#" + a_This.cAcsPutTgt().id + " *[data-Wse_ImgLodSrc]");
 		stAryUtil.cFor(l_AllImg,
 			function (a_Ary, a_Idx, a_DomElmt)
 			{
 				// 跳过不是属于自身的，取得文件路径，跳过无效的
-				var l_Src = a_This.cCtanPut(a_DomElmt) ? a_DomElmt.getAttribute("data-Wse_ImgSrc"): null;
+				var l_Src = a_This.cCtanPut(a_DomElmt) ? a_DomElmt.getAttribute("data-Wse_ImgLodSrc"): null;
 				var l_DotIdx = l_Src ? l_Src.lastIndexOf(".") : -1;	// 必须有扩展名
 				if (l_DotIdx < 0)
 				{ return; }
@@ -1780,21 +1778,6 @@ function fOnIcld(a_Errs)
 				,
 				/// 获取列内容宽度
 				scGetColCtntWid : function (a_Col) { return a_Col.Wse_PcdrLot ? a_Col.Wse_PcdrLot.c_CtntW : 0; }
-				,
-				/// 触发放置事件 - 宽度已决定
-				scTrgrPutEvt_WidDtmnd : function (a_Put)
-				{
-					if (! a_Put)
-					{ return tPcdrLot; }
-
-					var l_TgtArea = a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_TgtArea;
-					var l_CssMgn = a_Put.Wse_PcdrLot && a_Put.Wse_PcdrLot.c_CssMgn;
-					s_EvtAgms_WidDtmnd[0] = a_Put;
-					s_EvtAgms_WidDtmnd[1] = l_TgtArea ? l_TgtArea.c_W : 0;
-					s_EvtAgms_WidDtmnd[2] = (l_TgtArea && l_CssMgn) ? (l_TgtArea.c_W - l_CssMgn.c_MgnLt - l_CssMgn.c_MgnRt) : 0;
-					nUi.fTrgrPutEvt(a_Put, "WidDtmnd", s_EvtAgms_WidDtmnd);
-					return tPcdrLot;
-				}
 			}
 			,
 			false);

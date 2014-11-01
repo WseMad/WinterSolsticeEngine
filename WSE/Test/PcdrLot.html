@@ -120,7 +120,7 @@
 		</p>
 		<p id="k_5" class=""
 		   style=""
-		   data-Wse_ImgSrc="Media/Cloud.jpg">
+		   data-Wse_ImgLodSrc="Media/Cloud.jpg">
 			什么是Viewport<br/>
 			手机浏览器是把页面放在一个虚拟的“窗口”（viewport）中，通常这个虚拟的“窗口”（viewport）比屏幕宽，
 			这样就不用把每个网页挤 到很小的窗口中（这样会破坏没有针对手机浏览器优化的网页的布局），
@@ -128,7 +128,7 @@
 			移动版的 Safari  浏览器最新引进了 viewport 这个 meta tag，让网页开发者来控制 viewport 的大小和缩放，
 			其他手机浏览器也基本支持。
 		</p>
-		<img id="k_FootballImg" class="" src="Media/Football.jpg" data-Wse_ImgSrc="Media/Football.jpg" />
+		<img id="k_FootballImg" class="" src="Media/Football.jpg" data-Wse_ImgLodSrc="Media/Football.jpg" />
 
 		<div id="k_VA0" class="ctVA" style="height:80px">顶</div>
 		<div id="k_VA1" class="ctVA" style="height:60px">对</div>
@@ -163,6 +163,8 @@
 		window.onload = function ()
 		{
 			console.log("window.onload");
+
+			nWse.stNowLoad.cEnd();
 
 			nWse.stAsynIcld.cFromApp("nWse",
 			[

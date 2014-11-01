@@ -514,8 +514,8 @@ function fOnIcld(a_Errs)
 			dRmvAsisBtns : function ()
 			{
 				var l_This = this;
-				l_This.dRmvWhenInSrc("d_SlcAll");
-				l_This.dRmvWhenInSrc("d_SlcRvs");
+				l_This.dUbndFld("d_SlcAll");
+				l_This.dUbndFld("d_SlcRvs");
 				return this;
 			}
 			,

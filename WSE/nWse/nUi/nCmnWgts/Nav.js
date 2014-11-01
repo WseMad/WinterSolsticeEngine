@@ -78,17 +78,6 @@ function fOnIcld(a_Errs)
 			new tNav.tEfc_Bzr(a_This)
 		];
 		a_This.d_ActvEfcIdx = 0;
-
-		// 当窗口调整大小时，校准位置尺寸
-		if (stFrmwk)
-		{
-			stFrmwk.cRegEvtHdlr("WndRszBefLot",
-			function()
-			{
-				// 校准
-				fRgltPosDim(a_This);
-			});
-		}
 	}
 
 
@@ -173,7 +162,7 @@ function fOnIcld(a_Errs)
 			var l_BdrRds = a_This.d_LeafRds.toString() + "px";
 			l_Leaf.c_Dom.style.borderRadius = l_BdrRds;
 
-			var l_Dom_a = stDomUtil.cGetChdsOfTag(l_Leaf.c_Dom, "A", true);	// 得到第一个<a>
+			var l_Dom_a = stDomUtil.cGetChdsOfTag(l_Leaf.c_Dom, "A", 0);	// 得到第一个<a>
 			if (l_Dom_a)
 			{ l_Dom_a.style.borderRadius = l_BdrRds; }
 
@@ -328,6 +317,17 @@ function fOnIcld(a_Errs)
 
 				var l_Prn = a_Cfg.c_DomPrn || stDomUtil.cAcsBody();		// 加入到文档
 				l_Prn.appendChild(l_This.d_PutTgt);
+
+				// 当窗口调整大小时，校准位置尺寸
+				if (stFrmwk)
+				{
+					stFrmwk.cRegEvtHdlr("WndRszBefLot",
+						function()
+						{
+							// 校准
+							fRgltPosDim(a_This);
+						});
+				}
 				return this;
 			}
 			,

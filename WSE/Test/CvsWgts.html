@@ -49,17 +49,21 @@
 	<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
 
 		<!---->
-		<!-- 按钮 -->
-		<!---->
-		<div id="k_Btn">
-			<span data-Wse_Tit>按钮</span>
-		</div>
-
-		<!---->
 		<!-- 幻灯片 -->
 		<!---->
 		<div id="k_SldPlr">
-
+			<div data-Wse_Ar="220:220">
+				<img src="" data-Wse_Src="Media/more1_220.jpg" />
+				<img src="" data-Wse_Src="Media/more2_220.jpg" />
+				<img src="" data-Wse_Src="Media/more3_220.jpg" />
+				<img src="" data-Wse_Src="Media/more4_220.jpg" />
+			</div>
+			<div data-Wse_Ar="220:125">
+				<img src="" data-Wse_Src="Media/more1.jpg" />
+				<img src="" data-Wse_Src="Media/more2.jpg" />
+				<img src="" data-Wse_Src="Media/more3.jpg" />
+				<img src="" data-Wse_Src="Media/more4.jpg" />
+			</div>
 		</div>
 
 		<!---->
@@ -186,26 +190,14 @@ function fOnIcld(a_Errs)
 			l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
 			stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
 
-			l_Wgt = new nCmnWgts.tBtn();	// Btn3rd
-			l_Wgt.vcBind({
-				c_PutTgt: "k_PutTgt_Btn",
-				c_PutSrc: "k_Btn",
-				c_Shp : nCmnWgts.tBtn.tShp.i_Caps
-				,c_FxdAr : 2/1
-				,c_TxtrLyr : 1		// 纹理层
-				,c_TitVcen: true
-			});
-			l_This.e_StaWgtSet.cAdd(l_Wgt);
-			nWse.stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_Skin_Metal");
-
 			l_Wgt = new nCmnWgts.tGpuSldPlr();
 			l_Wgt.vcBind({
 				c_PutTgt: "k_PutTgt_SldPlr",
 				c_PutSrc: "k_SldPlr"
-				,c_FxdAr : 16 / 10
 			});
 			l_This.e_StaWgtSet.cAdd(l_Wgt);
 			nWse.stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_Skin_Metal");
+
 		}
 		,
 		// 运行
@@ -226,6 +218,17 @@ function fOnIcld(a_Errs)
 			var l_Lot = a_Lot;
 			var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
 
+			// 调整宽高比
+			var l_Wgt = l_This.e_StaWgtSet.cAcsByPutSrcId("k_SldPlr");
+			if (0 == l_BrkPntIdx)
+			{
+				l_Wgt.cUseAr("220:220");
+			}
+			else
+			{
+				l_Wgt.cUseAr("220:125");
+			}
+
 			l_Lot
 				.cBoa({
 					c_Id: "k_TestBoa"
@@ -237,13 +240,8 @@ function fOnIcld(a_Errs)
 					.cPut({
 						c_NewRow : true,
 						c_Id : "k_PutTgt_SldPlr"
-						,c_GridCnt: (2 == l_BrkPntIdx) ? 16 : 10
+						,c_GridCnt: (2 == l_BrkPntIdx) ? 12 : 10
 					})
-//					.cPut({
-//						c_NewRow : true,
-//						c_Id: "k_PutTgt_Btn",
-//						c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
-//					})
 			;
 		}
 	});

@@ -105,6 +105,8 @@ function fOnIcld(a_Errs)
 			e_PntIptTrkr.cInit(true);
 			e_PntIptTrkr.cSetImdtHdlr(fIptHdlr);
 
+			// —— 窗口事件 ——
+
 			// 响应窗口尺寸变化
 			stDomUtil.cAddEvtHdlr_WndRsz(
 				function ()
@@ -119,6 +121,16 @@ function fOnIcld(a_Errs)
 
 					// 触发事件
 					l_Hdlrs = e_EvtSys["WndRszAftLot"];
+					if (l_Hdlrs)
+					{ l_Hdlrs.cFor(); }
+				}, 0.1);	// 1秒更新10次足够了
+
+			// 响应窗口滚动
+			stDomUtil.cAddEvtHdlr_WndScrl(
+				function ()
+				{
+					// 触发事件
+					var l_Hdlrs = e_EvtSys["WndScrl"];
 					if (l_Hdlrs)
 					{ l_Hdlrs.cFor(); }
 				}, 0.1);	// 1秒更新10次足够了
@@ -694,13 +706,15 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 存取放置元素的目标区域，必须在"WidDtmnd"事件里或vcRfshAftLot里调用，不要修改！
-		stFrmwk.cAcsTgtAreaOfPut = function (a_Put)
+		/// a_Put：HTMLElement，放置元素，若不在布局里则使用offsetLTWH
+		/// a_NoMgn：Boolean，是否不含外边距，默认false，即包含了外边距
+		stFrmwk.cAcsTgtAreaOfPut = function (a_Put, a_NoMgn)
 		{
-			if (! e_Lot)
+			if (! a_Put)
 			{ return null; }
 
-			// 如果不在布局里，使用offsetLTWH
-			if (! e_Lot.cCtanPut(a_Put))
+			// 如果没有布局或放置元素不在布局里，使用offsetLTWH
+			if ((! e_Lot) || (! e_Lot.cCtanPut(a_Put)))
 			{
 				if (! e_Temp_CssUtilRst)
 				{
@@ -708,7 +722,16 @@ function fOnIcld(a_Errs)
 					e_Temp_TgtArea = new tSara();
 				}
 
-				e_Temp_TgtArea.cCrt(a_Put.offsetLeft, a_Put.offsetTop, a_Put.offsetWidth, a_Put.offsetHeight);
+				if (! a_NoMgn)
+				{
+					stCssUtil.cGetMgn(e_Temp_CssUtilRst, a_Put);
+				}
+
+				e_Temp_TgtArea.cCrt(
+					a_Put.offsetLeft - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnLt),
+					a_Put.offsetTop - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnUp),
+					a_Put.offsetWidth + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnLt + e_Temp_CssUtilRst.c_MgnRt)),
+					a_Put.offsetHeight + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnUp + e_Temp_CssUtilRst.c_MgnDn)));
 				return e_Temp_TgtArea;
 			}
 
@@ -717,13 +740,33 @@ function fOnIcld(a_Errs)
 			var l_Rst = l_scAcs && l_scAcs(a_Put);
 			if (! l_Rst) // 若没有，使用父元素的全宽，而高度保持a_Put的
 			{
+				throw new Error("stFrmwk.cAcsTgtAreaOfPut：在布局里时，不应该没有！");
+
+//				if (! e_Temp_CssUtilRst)
+//				{
+//					e_Temp_CssUtilRst = {};
+//					e_Temp_TgtArea = new tSara();
+//				}
+//
+//				stCssUtil.cGetCtntWid(e_Temp_CssUtilRst, a_Put.parentNode);
+//				l_Rst = e_Temp_TgtArea.cCrt$Wh(e_Temp_CssUtilRst.c_CtntWid, a_Put.offsetHeight);
+			}
+
+			var l_Mgn = a_NoMgn && stFrmwk.cAcsCssMgnOfPut(a_Put);
+			if (l_Mgn)
+			{
 				if (! e_Temp_CssUtilRst)
 				{
 					e_Temp_CssUtilRst = {};
 					e_Temp_TgtArea = new tSara();
 				}
 
-				l_Rst = e_Temp_TgtArea.cCrt$Wh(stCssUtil.cGetCtntWid(e_Temp_CssUtilRst, a_Put.parentNode).c_CtntWid, a_Put.offsetHeight);
+				l_Rst = e_Temp_TgtArea.cCrt(
+					l_Rst.c_X + l_Mgn.c_MgnLt,
+					l_Rst.c_Y + l_Mgn.c_MgnUp,
+					l_Rst.c_W - (l_Mgn.c_MgnLt + l_Mgn.c_MgnRt),
+					l_Rst.c_H - (l_Mgn.c_MgnUp + l_Mgn.c_MgnDn)
+				)
 			}
 			return l_Rst;
 		};
