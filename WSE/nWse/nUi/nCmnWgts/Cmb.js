@@ -183,22 +183,20 @@ function fOnIcld(a_Errs)
 //						// 校准列表位置
 //						if (l_This.cIsListShow())
 //						{
-//						//	l_This.dRgltListPos();
+//						//	l_This.dAjsListPos();
 //						}
 //					};
 //
 //					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
 //				}
 
-				// 当窗口滚动时，校准位置尺寸
+				// 当窗口滚动时，调整列表位置
 				if (stFrmwk)
 				{
 					stFrmwk.cRegEvtHdlr("WndScrl",
 						function()
 						{
-							console.log("tCmb.WndScrl");
-							// 校准
-						//	fRgltPosDim(a_This);
+							l_This.dAjsListPos();
 						});
 				}
 				return this;
@@ -537,19 +535,6 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 校准列表位置
-			dRgltListPos : function ()
-			{
-				var l_This = this;
-				if (! l_This.d_Ul)
-				{ return this; }
-
-				var l_EditPutTgt = l_This.d_Edit.cAcsPutTgt();
-				var l_Y = l_EditPutTgt.offsetHeight;
-				stCssUtil.cSetPos(l_This.d_Ul, 0, l_Y);
-				return this;
-			}
-			,
 			/// 显示列表
 			dShowList : function ()
 			{
@@ -570,7 +555,7 @@ function fOnIcld(a_Errs)
 					l_This.dPutToTgt(l_This.d_Ul);
 				}
 
-				l_This.dRgltListPos();	// 校准列表位置
+				l_This.dAjsListPos();	// 校准列表位置
 
 				// 渐现
 				// 首先设置初值，当未曾设置过或者为1时，设为0
@@ -599,10 +584,6 @@ function fOnIcld(a_Errs)
 				l_This.d_ListShow = false;	// 设置标志
 				l_This.d_Btn.cUpDown(true);	// 按钮弹起
 
-//				// 把<ul>还给来源，【动画后再进行】
-//				l_This.dRtnToSrc(l_This.d_Ul);
-//				l_This.d_Ul = null;		// 清null
-
 				// 渐隐
 				stCssUtil.cAnmt(l_This.d_Ul,
 					{
@@ -616,6 +597,36 @@ function fOnIcld(a_Errs)
 							l_This.dRtnUlToSrc();
 						}
 					});
+				return this;
+			}
+			,
+			/// 调整列表位置
+			dAjsListPos : function ()
+			{
+				var l_This = this;
+				if (! l_This.cIsListShow()) // 仅当显示时
+				{ return this; }
+
+				// 计算客户区和列表的包围盒
+				tSara.scEnsrTemps(3);
+				var l_CltSara = tSara.sc_Temps[0], l_UlSara = tSara.sc_Temps[1];
+				l_CltSara.cCrt$Wh(window.innerWidth, document.documentElement.scrollHeight);	// 使用文档元素的垂直空间
+				tSara.scCrt$DomBcr(l_UlSara, l_This.d_Ul);
+
+				// 若下方能放开则放在下方，否则放在空间更大的地方
+				var l_PtSara = tSara.sc_Temps[2];
+				tSara.scCrt$DomBcr(l_PtSara, l_This.d_PutTgt);
+				var l_UpSpc = l_PtSara.c_Y - l_CltSara.c_Y;
+				var l_DnSpc = l_CltSara.c_Y + l_CltSara.c_H - (l_PtSara.c_Y + l_PtSara.c_H);
+				if ((l_DnSpc < l_UlSara.c_H) && (l_UpSpc > l_DnSpc)) // 放上方
+				{
+					stCssUtil.cSetPosUp(l_This.d_Ul, -l_UlSara.c_H);
+				}
+				else // 放下方
+				{
+					stCssUtil.cSetPosUp(l_This.d_Ul, l_PtSara.c_H);
+				}
+				
 				return this;
 			}
 			,

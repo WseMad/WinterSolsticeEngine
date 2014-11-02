@@ -1077,7 +1077,6 @@ function fOnIcld(a_Errs)
 //				{ l_NextUl.style.height = ""; }
 
 				tSara.scEnsrTemps(2);
-			//	var l_PtBbox = l_This.dCalcPutTgtBbox(tSara.sc_Temps[0]);
 				var l_PtBbox = tSara.sc_Temps[0].cCrt(0, 0, window.innerWidth, window.innerHeight);	// 这个更好！
 				var l_UlSara = tSara.sc_Temps[1];
 				var l_LoopCnt = 0, l_LtSpc = 0, l_RtSpc = 0;

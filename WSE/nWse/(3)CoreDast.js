@@ -619,17 +619,25 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 包含
-				/// a_P：tPnt
-				scCtan : function (a_Tgt, a_P)
+				/// a_P$S：tPnt$tSara
+				scCtan : function (a_Tgt, a_P$S)
 				{
-					return tSara.scCtan$Xy(a_Tgt, a_P.x, a_P.y);
+					if (a_P$S instanceof tSara)
+					{
+						return	(a_Tgt.c_X <= a_P$S.c_X) && (a_P$S.c_X + a_P$S.c_W <= a_Tgt.c_X + a_Tgt.c_W) &&
+								(a_Tgt.c_Y <= a_P$S.c_Y) && (a_P$S.c_Y + a_P$S.c_H <= a_Tgt.c_Y + a_Tgt.c_H);
+					}
+					else
+					{
+						return tSara.scCtan$Xy(a_Tgt, a_P.x, a_P.y);
+					}
 				}
 				,
 				/// 包含
 				scCtan$Xy : function (a_Tgt, a_Px, a_Py)
 				{
 					return	(a_Tgt.c_X <= a_Px) && (a_Px < a_Tgt.c_X + a_Tgt.c_W) &&
-						(a_Tgt.c_Y <= a_Py) && (a_Py < a_Tgt.c_Y + a_Tgt.c_H);
+							(a_Tgt.c_Y <= a_Py) && (a_Py < a_Tgt.c_Y + a_Tgt.c_H);
 				}
 				,
 				/// 交叠

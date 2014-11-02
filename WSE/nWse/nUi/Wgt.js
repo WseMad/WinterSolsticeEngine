@@ -549,13 +549,6 @@ function fOnIcld(a_Errs)
 				return stDomUtil.cIsSelfOrAcst(this.d_PutTgt, a_DomElmt);
 			}
 			,
-			/// 计算放置目标包围区，忽略外边距
-			/// a_Rst：tSara
-			dCalcPutTgtBbox : function (a_Rst)
-			{
-				return a_Rst.cCrt(0, 0, this.d_PutTgt.offsetWidth, this.d_PutTgt.offsetHeight);
-			}
-			,
 			/// 获取放置目标完全宽度（相当于DOM的offsetWidth＋左右外边距），必须在vcRfshAftLot里调用
 			dGetPutTgtFullWid : function ()
 			{
