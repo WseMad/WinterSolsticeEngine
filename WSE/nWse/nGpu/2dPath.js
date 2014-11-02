@@ -86,6 +86,17 @@ function fOnIcld(a_Errs)
 	{
 		nWse.fClassBody(t2dCtxt,
 		{
+			/// 建立路径
+			/// a_Path：tPath，路径，若为null则假定已经建立，只绘制
+			/// a_Mtx：t4dMtx，变换阵，默认单位阵
+			cBldPath : function (a_Path, a_Mtx)
+			{
+				if (a_Path)
+				{ fBldPath(this, a_Path, a_Mtx); }
+
+				return this;
+			}
+			,
 			/// 裁剪路径
 			/// a_Path：tPath，路径，若为null则假定已经建立，只绘制
 			/// a_Mtx：t4dMtx，变换阵，默认单位阵
@@ -326,22 +337,22 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 圆环弧
-			/// a_Thkns：Number，厚度，＞0向外延伸，＜0向内收缩
-			cRingArc : function (a_LineToSp, a_Cx, a_Cy, a_R, a_BgnRad, a_EndRad, a_Thkns)
+			/// a_Thk：Number，厚度，＞0向外延伸，＜0向内收缩
+			cRingArc : function (a_LineToSp, a_Cx, a_Cy, a_R, a_BgnRad, a_EndRad, a_Thk)
 			{
-				return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_R, a_R, a_BgnRad, a_EndRad, a_Thkns);
+				return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_R, a_R, a_BgnRad, a_EndRad, a_Thk);
 			}
 			,
 			/// 椭圆环弧
-			/// a_Thkns：Number，厚度，＞0向外延伸，＜0向内收缩
-			cElpsRingArc : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad, a_Thkns)
+			/// a_Thk：Number，厚度，＞0向外延伸，＜0向内收缩
+			cElpsRingArc : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad, a_Thk)
 			{
 				// 退化成椭圆弧？
-				if (! a_Thkns)
+				if (! a_Thk)
 				{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad); }
 
 				// 退化成椭圆扇？
-				var l_HL2 = a_HR + a_Thkns, l_VL2 = a_VR + a_Thkns;
+				var l_HL2 = a_HR + a_Thk, l_VL2 = a_VR + a_Thk;
 				if ((l_HL2 <= 0) || (l_VL2 <= 0))
 				{ return this.cElpsFan(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_BgnRad, a_EndRad); }
 
@@ -442,20 +453,33 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 圆
-			cCir: function (a_LineToSp, a_Cx, a_Cy, a_R)
-			{ return this.cArc(a_LineToSp, a_Cx, a_Cy, a_R, 0, Math.PI * 2); }
+			/// a_Ccw：Boolean，逆时针？默认false（即顺时针）
+			cCir: function (a_LineToSp, a_Cx, a_Cy, a_R, a_Ccw)
+			{
+				var l_BgnRad = a_Ccw ? (Math.PI * 2) : 0, l_EndRad = a_Ccw ? 0 : (Math.PI * 2);
+				return this.cArc(a_LineToSp, a_Cx, a_Cy, a_R, l_BgnRad, l_EndRad);
+			}
 			,
 			/// 圆环
-			cRing : function (a_LineToSp, a_Cx, a_Cy, a_R, a_Thkns)
-			{ return this.cRingArc(a_LineToSp, a_Cx, a_Cy, a_R, a_Thkns); }
+			cRing : function (a_LineToSp, a_Cx, a_Cy, a_R, a_Thk, a_Ccw)
+			{
+				var l_BgnRad = a_Ccw ? (Math.PI * 2) : 0, l_EndRad = a_Ccw ? 0 : (Math.PI * 2);
+				return this.cRingArc(a_LineToSp, a_Cx, a_Cy, a_R, l_BgnRad, l_EndRad, a_Thk);
+			}
 			,
 			/// 椭圆
-			cElps: function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR)
-			{ return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, 0, Math.PI * 2); }
+			cElps: function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_Ccw)
+			{
+				var l_BgnRad = a_Ccw ? (Math.PI * 2) : 0, l_EndRad = a_Ccw ? 0 : (Math.PI * 2);
+				return this.cElpsArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, l_BgnRad, l_EndRad);
+			}
 			,
 			/// 椭圆环
-			cElpsRing : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_Thkns)
-			{ return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, 0, Math.PI * 2, a_Thkns); }
+			cElpsRing : function (a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, a_Thk, a_Ccw)
+			{
+				var l_BgnRad = a_Ccw ? (Math.PI * 2) : 0, l_EndRad = a_Ccw ? 0 : (Math.PI * 2);
+				return this.cElpsRingArc(a_LineToSp, a_Cx, a_Cy, a_HR, a_VR, l_BgnRad, l_EndRad, a_Thk);
+			}
 			,
 			/// 囊形
 			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
@@ -749,10 +773,12 @@ function fOnIcld(a_Errs)
 			/// a_LineToSp：Boolean，若为false则直线到起点，若为true则移动到起点
 			/// a_Cx, a_Cy：Number，圆心（Center）坐标
 			/// a_R：Number，半径（Radius）
-			/// a_BgnRad：Number，起始弧度
 			/// a_N：Number，边数，必须≥2，＝2时退化成线段
-			cEqlaPlgn: function (a_LineToSp, a_Cx, a_Cy, a_R, a_BgnRad, a_N)
+			/// a_BgnRad：Number，起始弧度，默认0
+			cEqlaPlgn: function (a_LineToSp, a_Cx, a_Cy, a_R, a_N, a_BgnRad)
 			{
+				a_BgnRad = a_BgnRad || 0;
+
 				// 移动到起点
 				var l_Cos = Math.cos(a_BgnRad), l_Sin = Math.sin(a_BgnRad);
 				var l_SPx = a_Cx + a_R * l_Cos, l_SPy = a_Cy + a_R * l_Sin;
@@ -777,13 +803,15 @@ function fOnIcld(a_Errs)
 			/// a_Cx, a_Cy：Number，圆心（Center）坐标
 			/// a_InrR：Number，内半径（Inner Radius）
 			/// a_OtrR：Number，外半径（Outer Radius）
-			/// a_BgnRad：Number，起始弧度
 			/// a_N：Number，边数，必须≥2，＝2时退化成线段
-			cStarPlgn : function (a_LineToSp, a_Cx, a_Cy, a_InrR, a_OtrR, a_BgnRad, a_N)
+			/// a_BgnRad：Number，起始弧度，默认0
+			cStarPlgn : function (a_LineToSp, a_Cx, a_Cy, a_InrR, a_OtrR, a_N, a_BgnRad)
 			{
+				a_BgnRad = a_BgnRad || 0;
+
 				// 直径
 				if (a_N <= 2)
-				{ return this.cEqlaPlgn(a_LineToSp, a_Cx, a_Cy, a_OtrR, a_BgnRad, a_N); }
+				{ return this.cEqlaPlgn(a_LineToSp, a_Cx, a_Cy, a_OtrR, a_N, a_BgnRad); }
 
 				// 移动到起点
 				var l_Cos = Math.cos(a_BgnRad), l_Sin = Math.sin(a_BgnRad);
