@@ -124,15 +124,15 @@ function fOnIcld(a_Errs)
 					}
 				});
 
-				var l_Lis;
+				var l_LiAry;
 				if ("c_InitSlc" in a_Cfg) // 设置初始文本
 				{
 					if (nWse.fIsNum(a_Cfg.c_InitSlc))
 					{
-						l_Lis = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li");
-						if ((0 <= a_Cfg.c_InitSlc) && (a_Cfg.c_InitSlc < l_Lis.length))
+						l_LiAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() + ">ul>li");
+						if ((0 <= a_Cfg.c_InitSlc) && (a_Cfg.c_InitSlc < l_LiAry.length))
 						{
-							l_This.dSetText(l_This.dGetTextOfLi(l_Lis[a_Cfg.c_InitSlc]));
+							l_This.dSetText(l_This.dGetTextOfLi(l_LiAry[a_Cfg.c_InitSlc]));
 						}
 					}
 					else
@@ -443,6 +443,21 @@ function fOnIcld(a_Errs)
 			cSlcItem : function (a_Idx)
 			{
 				return this.dSlcLi(a_Idx);
+			}
+			,
+			/// 获取选取索引，若编辑框里的文字不与任何选项相同则返回-1
+			cGetSlcIdx : function ()
+			{
+				var l_This = this;
+				var l_Text = l_This.cGetText();
+				if (! l_Text)
+				{ return -1; }
+
+				var l_Ul = this.cAcsDomUl();
+				var l_LiAry = stDomUtil.cGetChdsOfTag(l_Ul, "LI");
+				return stAryUtil.cFind(l_LiAry,
+					function (a_Ary, a_Idx, a_Li)
+					{ return (l_Text == l_This.dGetTextOfLi(a_Li)); });
 			}
 			,
 			/// 列表显示？

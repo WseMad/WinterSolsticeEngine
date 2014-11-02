@@ -769,17 +769,14 @@
 /* 所有按钮，为方便计算，要求他们的CSS样式一致，且都是正方形（算上外边距） */
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tBtn
 {
-	/*display: inline-block;*/
 	margin: 5px;		/* 四个外边距必须一样！ */
 	width: 3em;
 	font-weight: bold;
-	/*float: left;*/
 }
 
 /* 数组输入框 */
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit
 {
-	/*display: inline-block;*/
 	margin: 0px 10px;
 	padding: 0px;
 	width: 4em;		/* 64px */
@@ -796,41 +793,15 @@
 	padding: 4px;	/* 他们俩的边距必须相同 */
 }
 
-
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tCmb
 {
-	/*display: inline-block;*/
 	margin: 5px 10px;
 	width: 12em;		/* 192px */
-	float: right;
 }
 
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tCmb>ul
 {
-	height: 7.5em;	/* 限制一下高度，约120px */
+	max-height: 7.5em;	/* 限制一下高度，约120px */
 }
-
-/*.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_Pnl*/
-/*{*/
-	/*width: 100%;*/
-	/*height: auto;*/
-	/*padding: 5px;*/
-/*}*/
-
-/*.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_Pnl>.cnWse_PutTgt.cnWse_tBtn*/
-/*{*/
-	/*display: inline-block;*/
-	/*margin: 0px 5px;*/
-	/*width: 3em;*/
-
-	/*font-weight: bold;*/
-/*}*/
-
-/*.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_tGpuSldPlr_Pnl>.cnWse_PutTgt.cnWse_tCmb*/
-/*{*/
-	/*display: inline-block;*/
-	/*width: 12em;*/
-	/*float: right;*/
-/*}*/
 
 /*********************************************************************** Over ***********************************************************************/

@@ -165,20 +165,27 @@ function fOnIcld(a_Errs)
 					return this;
 				});
 
-			// 添加odDfnFld至原型
-			fDfnDataPpty(l_Pttp, "odDfnFld", false, false, false,
-				function odDfnFld(a_Flds)
+			// 添加odDfnFlds至原型
+			fDfnDataPpty(l_Pttp, "odDfnFlds", false, false, false,
+				function odDfnFlds(a_Flds$Key, a_Udfn$Val)
 				{
-					var l_Name;
-					for (l_Name in a_Flds)
+					var l_Name = a_Flds$Key;
+					if (nWse.fIsStr(l_Name)) // String
 					{
-						// 如果已定义
-						if (l_Name in this)
-						{
-							throw new Error(a_fCtor.oc_FullName + "：字段“" + l_Name + "”重定义！");
-						}
+						if (l_Name in this) // 如果已定义
+						{ throw new Error(a_fCtor.oc_FullName + "：字段“" + l_Name + "”重定义！"); }
 
-						this[l_Name] = a_Flds[l_Name];	// 赋予
+						this[l_Name] = a_Udfn$Val;	// 赋予
+					}
+					else // Object
+					{
+						for (l_Name in a_Flds$Key)
+						{
+							if (l_Name in this) // 如果已定义
+							{ throw new Error(a_fCtor.oc_FullName + "：字段“" + l_Name + "”重定义！"); }
+
+							this[l_Name] = a_Flds$Key[l_Name];	// 赋予
+						}
 					}
 
 					// 返回自己，实现链式调用

@@ -88,8 +88,6 @@ function fOnIcld(a_Errs)
 		a_This.d_PlayIdx = -1;		// 播放索引，初始-1
 		a_This.d_AsNext = true;		// 作为下一张
 		a_This.d_FrmDur = 3;		// 帧时长
-		a_This.d_ManuSwch = false;	// 手动切换
-		a_This.d_RandPost = true;	// 随机张贴
 
 		// 控件集
 		a_This.d_WgtSet = null;
@@ -325,7 +323,7 @@ function fOnIcld(a_Errs)
 
 				// 取得这一组的图像源路径，发出请求
 				l_This.d_ImgSrcNodeAry = stDomUtil.cQryAll(l_This.dGnrtQrySlc_PutSrc() +
-					">[data-Wse_Ar=\"" + a_ArStr + "\"]>*[data-Wse_Src]");//, l_ArAry[l_This.d_ArIdx]);
+					">[data-Wse_Ar=\"" + a_ArStr + "\"] *[data-Wse_Src]");//, l_ArAry[l_This.d_ArIdx]);
 				l_This.dUpdImgTot();	// 更新图像总数
 
 				if (l_This.cGetSldTot() > 0)
@@ -439,12 +437,12 @@ function fOnIcld(a_Errs)
 				l_This.eNewBtn("Auto", "►", true,
 					function (a_Btn)
 					{
-						l_This.d_ManuSwch = a_Btn.cIsUp();
+						//
 					});
 				l_This.eNewBtn("Rand", "※", true,
 					function (a_Btn)
 					{
-						l_This.d_RandPost = a_Btn.cIsUp();
+						//
 					});
 				l_This.d_Auto.cUpDown(false);
 				l_This.d_Rand.cUpDown(false);
@@ -873,13 +871,13 @@ function fOnIcld(a_Errs)
 				else
 				if (1 == l_This.d_PlaySta)
 				{
-					// 若自动切换，或当前图像尚不可用，不计时
-					if (l_This.d_ManuSwch || (! l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg())))
+					// 若手动切换，或当前图像尚不可用，不计时
+					if (l_This.d_Auto.cIsUp() || (! l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg())))
 					{
 						a_FrmTime = 0;
 					}
 
-					// 如果自动切换，且时间已到
+					// 如果时间已到
 					if ((a_FrmTime >= l_This.d_FrmDur))
 					{
 						// 张贴新图像，下一张
@@ -993,6 +991,13 @@ function fOnIcld(a_Errs)
 				// 转成播放状态，重置动画时间
 				l_This.d_PlaySta = 1;
 				l_This.dRsetAnmtTime();
+
+				// 如果随机，产生一个新项，【还是轮流比较好】
+				if (l_This.d_Rand.cIsDown())
+				{
+				//	l_This.d_Post.cSlcItem(stNumUtil.cRandInt(0, l_This.d_Post.cGetItemAmt() - 1));
+					l_This.d_Post.cSlcItem((l_This.d_Post.cGetSlcIdx() + 1) % l_This.d_Post.cGetItemAmt());
+				}
 				return this;
 			}
 			,
@@ -1288,9 +1293,9 @@ function fOnIcld(a_Errs)
 		s_PostAry.push(new tGpuSldPlr.tPost_扩大收缩());
 
 		nWse.fClass(tGpuSldPlr,
-		function tPost_六边形泛填充()
+		function tPost_瀑布流()
 		{
-			this.odBase(tPost_六边形泛填充).odCall("六边形泛填充");	// 基类版本
+			this.odBase(tPost_瀑布流).odCall("瀑布流");	// 基类版本
 
 			this.d_ClipPath = new tPath();
 		},
@@ -1299,12 +1304,24 @@ function fOnIcld(a_Errs)
 			/// 准备动画
 			vcRdyToAnmt : function f(a_Plr, a_Img, a_AsNext)
 			{
-				// 半径和六边形中心数组
 				var l_This = this;
 				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
-				var l_Cx = l_CvsW / 2, l_Cy = l_CvsH / 2;
-				l_This.d_GrowAry = [{ c_X:l_Cx, c_Y:l_Cy }];		// 压入种子
-				l_This.d_CenAry = [];
+				l_This.d_FlowDur = 2;
+				l_This.d_StrmTot = 20;
+				l_This.d_StrmAry = new Array(l_This.d_StrmTot);
+				var l_MaxDly = 0;
+				stAryUtil.cFor(l_This.d_StrmAry,
+				function (a_Ary, a_Idx, a_Null)
+				{
+					var l_Strm = {
+						c_Dly : stNumUtil.cRand(0, l_This.d_FlowDur),
+						c_Time : 0
+					};
+					a_Ary[a_Idx] = l_Strm;
+					l_MaxDly = Math.max(l_MaxDly, l_Strm.c_Dly);
+				});
+
+				l_This.d_Dur = l_MaxDly + l_This.d_FlowDur;
 				return this;
 			}
 			,
@@ -1312,80 +1329,28 @@ function fOnIcld(a_Errs)
 			vcAnmt : function f(a_Plr, a_Img, a_AsNext, a_FrmTime, a_FrmItvl, a_FrmNum)
 			{
 				var l_This = this;
-//				if (l_This.dChkFnsh(a_Plr, a_FrmTime, a_Img))
-//				{ return this; }
+				if (l_This.dChkFnsh(a_Plr, a_FrmTime, a_Img))
+				{ return this; }
 
 				var l_2dCtxt = a_Plr.cAcs2dCtxt();
-			//	var l_Scl = l_This.dCalcTimeScl(a_FrmTime);
-
-				// 完全覆盖时结束
-				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
-				l_This.d_Rds = Math.max(Math.max(l_CvsW, l_CvsH) / 20, 10);	// 并排10个（直径），至少10像素（否则会太多）
-				var l_Sqrt3 = 1.732051;
-				var l_EachArea = l_Sqrt3 / 4 * l_This.d_Rds * l_This.d_Rds;	// √3/4 * R^2
-				var l_TotArea = l_EachArea * l_This.d_CenAry.length;
-				if (l_TotArea > l_CvsW * l_CvsH)
-				{
-					l_2dCtxt.cMap(null, a_Img, null, null); // 再完整贴一次
-					a_Plr.cFnshPostAnmt(l_This);
-					return this;
-				}
-
-				// 继续填充
-				var l_Head, l_ACx, l_ACy, l_R = l_This.d_Rds, l_C = 0;
-				while ((l_This.d_GrowAry.length > 0) && (l_C < 2))	// 限制每帧迭代数
-				{
-					// 弹出队头，装入中心数组
-					l_Head = l_This.d_GrowAry.shift();
-					l_This.d_CenAry.push(l_Head);
-
-					// 产生6个邻居，没有时压入增长数组
-					// ①
-					l_ACx = l_Head.c_X + 3 / 2 * l_R;
-					l_ACy = l_Head.c_Y - l_Sqrt3 / 2 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// ②
-					l_ACx = l_Head.c_X;
-					l_ACy = l_Head.c_Y - l_Sqrt3 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// ③
-					l_ACx = l_Head.c_X - 3 / 2 * l_R;
-					l_ACy = l_Head.c_Y - l_Sqrt3 / 2 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// ④
-					l_ACx = l_Head.c_X - 3 / 2 * l_R;
-					l_ACy = l_Head.c_Y + l_Sqrt3 / 2 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// ⑤
-					l_ACx = l_Head.c_X;
-					l_ACy = l_Head.c_Y + l_Sqrt3 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// ⑥
-					l_ACx = l_Head.c_X + 3 / 2 * l_R;
-					l_ACy = l_Head.c_Y + l_Sqrt3 / 2 * l_R;
-					if (! l_This.dHasHxg(l_ACx, l_ACy))
-					{ l_This.d_GrowAry.push({ c_X:l_ACx, c_Y:l_ACy }); }
-
-					// 递增计数
-					++ l_C;
-				}
 
 				// 构建裁剪路径
+				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
+				var l_StrmWid = Math.max(l_CvsW / l_This.d_StrmTot, 2);
+				var l_Cap = Math.min(l_StrmWid, l_CvsH) / 2;
 				l_This.d_ClipPath.cRset();
-				stAryUtil.cFor(l_This.d_CenAry,
-					function (a_Ary, a_Idx, a_Cen)
+				stAryUtil.cFor(l_This.d_StrmAry,
+					function (a_Ary, a_Idx, a_Strm)
 					{
-						l_This.d_ClipPath.cEqlaPlgn(false, a_Cen.c_X, a_Cen.c_Y, l_This.d_Rds, 6, 0);
+						if (a_FrmTime < a_Strm.c_Dly) // 还不到时间
+						{ return; }
+
+						a_Strm.c_Time += a_FrmItvl; // 计时
+
+						var l_X = a_Idx * l_StrmWid;
+						var l_TimeScl = stNumUtil.cClmOnNum(a_Strm.c_Time / l_This.d_FlowDur, 0, 1);
+						var l_Y = stNumUtil.cPrbItp(-l_CvsH, 0, l_TimeScl, true);	// 加速下落
+						l_This.d_ClipPath.cCaps(false, l_X, l_Y - l_Cap, l_StrmWid, l_CvsH + l_Cap * 2);
 					});
 
 				l_2dCtxt.cSaveCfg();
@@ -1394,23 +1359,8 @@ function fOnIcld(a_Errs)
 				l_2dCtxt.cRstoCfg();
 				return this;
 			}
-			,
-			/// 已有？
-			dHasHxg : function (a_Cx, a_Cy)
-			{
-				// 判断中心间距是否＜半径一半（为了防止浮点误差）
-				var l_This = this;
-				var l_Lmt = l_This.d_Rds / 2;
-				l_Lmt *= l_Lmt;	// 比较平方
-				return (stAryUtil.cFind(l_This.d_GrowAry,
-				function (a_Ary, a_Idx, a_Cen)
-				{
-					var l_DtaX = a_Cen.c_X - a_Cx, l_DtaY = a_Cen.c_Y - a_Cy;
-					return (l_DtaX * l_DtaX + l_DtaY * l_DtaY < l_Lmt);
-				}) >= 0);
-			}
 		});
-		s_PostAry.push(new tGpuSldPlr.tPost_六边形泛填充());
+		s_PostAry.push(new tGpuSldPlr.tPost_瀑布流());
 
 //		nWse.fClass(tGpuSldPlr,
 //		function tPost_()
