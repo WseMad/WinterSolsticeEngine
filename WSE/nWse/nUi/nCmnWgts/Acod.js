@@ -69,8 +69,8 @@ function fOnIcld(a_Errs)
 		a_This.d_CtntPad = {};
 	}
 
-	var s_RtArwHtml = '<span class="cnWse_RtArw">＞</span>';
-	var s_DnArwHtml = '<span class="cnWse_DnArw">∨</span>';
+	var s_RtArwHtml = '<span class="cnWse_RtArw">►</span>';
+	var s_DnArwHtml = '<span class="cnWse_DnArw">▼</span>';
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -321,20 +321,18 @@ function fOnIcld(a_Errs)
 				else
 				if (l_This.dIsTchLostOrEnd(a_DmntTch))
 				{
+//					if (l_This.dIsTchLost(a_DmntTch))
+//					{
+//						//
+//					}
+//					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-						// 找到选中的标题
-						l_EvtTgt = a_DmntTch.cAcsEvtTgt();
-						l_PkdTitIdx = l_This.dFindPkdTit(l_EvtTgt);
-						if (l_PkdTitIdx >= 0)
-						{
-						//	console.log("选中 : " + l_PkdTit.textContent);
+						// 处理单击
+						l_This.dHdlClk(a_DmntTch);
 
-							// 转移内容
-							l_This.dTsfrCtnt(l_PkdTitIdx, true);	// 允许进入时重排
-						}
+						a_DmntTch.c_Hdld = true;		// 已处理
 					}
-
 				}
 				return this;
 			}
@@ -369,6 +367,31 @@ function fOnIcld(a_Errs)
 						? stCssUtil.cAddCssc(a_Elmt, l_Cssc)
 						: stCssUtil.cRmvCssc(a_Elmt, l_Cssc);
 					});
+			}
+			,
+			/// 处理单击
+			dHdlClk : function (a_DmntTch)
+			{
+				var l_This = this;
+
+				// 若发生滑动，不处理
+				if (a_DmntTch.cHasSldn())
+				{
+					return this;
+				}
+
+				// 找到选中的标题
+				l_EvtTgt = a_DmntTch.cAcsEvtTgt();
+				l_PkdTitIdx = l_This.dFindPkdTit(l_EvtTgt);
+				if (l_PkdTitIdx >= 0)
+				{
+					//	console.log("选中 : " + l_PkdTit.textContent);
+
+					// 转移内容
+					l_This.dTsfrCtnt(l_PkdTitIdx, true);	// 允许进入时重排
+				}
+
+				return this;
 			}
 			,
 			/// 查找拾取到的标题

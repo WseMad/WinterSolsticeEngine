@@ -83,10 +83,10 @@ function fOnIcld(a_Errs)
 		{ a_Ul.Wse_Menu = null; }
 	}
 
-	var s_LtArwHtml = '<div class="cnWse_LtArw">＜</div>';
-	var s_RtArwHtml = '<div class="cnWse_RtArw">＞</div>';
-	var s_UpArwHtml = '<div class="cnWse_UpArw">∧</div>';
-	var s_DnArwHtml = '<div class="cnWse_DnArw">∨</div>';
+	var s_LtArwHtml = '<div class="cnWse_LtArw">◄</div>';
+	var s_RtArwHtml = '<div class="cnWse_RtArw">►</div>';
+	var s_UpArwHtml = '<div class="cnWse_UpArw">▲</div>';
+	var s_DnArwHtml = '<div class="cnWse_DnArw">▼</div>';
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -1007,12 +1007,17 @@ function fOnIcld(a_Errs)
 					var l_NextUl = a_Next;
 					var l_AnmtEnd = null, l_fOnEnd = null;
 					var l_Lev1 = l_This.dIsLev1Ul(a_Next);
-					l_AnmtEnd = l_Lev1
-					? {
-						"top": "0px"
-					}
-					: {
-						"left": (l_NextUl.offsetLeft - l_NextUl.offsetWidth).toString() + "px"
+//					l_AnmtEnd = l_Lev1
+//					? {
+//						"top": "0px"
+//					}
+//					: {
+//						"left": (l_NextUl.offsetLeft - l_NextUl.offsetWidth).toString() + "px"
+//					};
+
+					l_AnmtEnd = {
+						"width": "0px=",	// 注意“=”的使用！
+						"height": "0px="
 					};
 
 					l_fOnEnd = function ()
@@ -1039,7 +1044,8 @@ function fOnIcld(a_Errs)
 							c_fEsn: function (a_Scl)
 							{
 								//	return a_Scl;
-								return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.5, a_Scl, false);
+								return stNumUtil.cPrbItp(0, 1, a_Scl, false);
+							//	return stNumUtil.cPrbItp$Ovfl(0, 1, 1.5, a_Scl, false);
 							},
 							c_fOnEnd : l_fOnEnd
 						});
@@ -1175,12 +1181,17 @@ function fOnIcld(a_Errs)
 				else
 				if (+1 == l_NextUl.Wse_Menu.c_Sta)
 				{
-					l_AnmtEnd = l_Lev1
-					? {
-						"top": l_UlSara.c_Y.toString() + "px"
-					}
-					: {
-						"left": l_UlSara.c_X.toString() + "px"
+//					l_AnmtEnd = l_Lev1
+//					? {
+//						"top": l_UlSara.c_Y.toString() + "px"
+//					}
+//					: {
+//						"left": l_UlSara.c_X.toString() + "px"
+//					};
+
+					l_AnmtEnd = {
+						"width": l_UlSara.c_W.toString() + "px=",	// 注意“=”的使用！
+						"height": l_UlSara.c_H.toString() + "px="
 					};
 
 					l_fOnEnd = function ()
@@ -1191,9 +1202,11 @@ function fOnIcld(a_Errs)
 					// 没在动画中时，设置动画初值
 					if (! stCssUtil.cIsDurAnmt(l_NextUl))
 					{
-						l_Lev1
-						? stCssUtil.cSetPos(l_NextUl, l_UlSara.c_X, 0)
-						: stCssUtil.cSetPos(l_NextUl, l_UlSara.c_X - l_UlSara.c_W, l_UlSara.c_Y);
+//						l_Lev1
+//						? stCssUtil.cSetPos(l_NextUl, l_UlSara.c_X, 0)
+//						: stCssUtil.cSetPos(l_NextUl, l_UlSara.c_X - l_UlSara.c_W, l_UlSara.c_Y);
+
+						stCssUtil.cSetPosDim(l_NextUl, l_UlSara.c_X, l_UlSara.c_Y, 0, 0);
 					}
 				}
 
@@ -1206,7 +1219,8 @@ function fOnIcld(a_Errs)
 						c_fEsn: function (a_Scl)
 						{
 							//	return a_Scl;
-							return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.5, a_Scl, false);
+							return stNumUtil.cPrbItp(0, 1, a_Scl, false);
+						//	return stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
 						},
 						c_fOnEnd : l_fOnEnd
 					});

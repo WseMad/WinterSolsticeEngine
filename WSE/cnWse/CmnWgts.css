@@ -501,6 +501,7 @@
 {
 	list-style-type: none;
 	font-size: 1em;
+	overflow: hidden;	/* 动画宽高时，文字可能溢出，把他们裁剪掉 */
 }
 
 .cnWse_PutTgt.cnWse_tMenu li
@@ -801,7 +802,7 @@
 
 .cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tCmb>ul
 {
-	max-height: 7.5em;	/* 限制一下高度，约120px */
+	max-height: 8em;	/* 限制一下高度，约120px */
 }
 
 /*********************************************************************** Over ***********************************************************************/
