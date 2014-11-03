@@ -321,9 +321,6 @@ function fOnIcld(a_Errs)
 //					else
 					if (l_This.dIsTchEnd(a_DmntTch))
 					{
-						//if (l_This.d_Cfg.c_fOnClk)	// 回调
-						//{ l_This.d_Cfg.c_fOnClk(l_This); }
-
 						// 处理输入
 						l_This.dHdlIptFromDmntTch_Mode(a_DmntTch, l_This.cIsExpdMode());
 						a_DmntTch.c_Hdld = true;		// 已处理
@@ -666,6 +663,12 @@ function fOnIcld(a_Errs)
 			dHdlIptFromDmntTch_Mode : function (a_DmntTch, a_ExpdMode)
 			{
 				var l_This = this;
+
+				// 若发生滑动，不处理
+				if (a_DmntTch.cHasSldn())
+				{
+					return this;
+				}
 
 				// 如果有正在动画的，吃掉这个输入
 				var l_Nexts = l_This.dGetListsInPutTgt();

@@ -36,7 +36,7 @@ function fOnIcld(a_Errs)
 	var stAryUtil = nWse.stAryUtil;
 	var stFctnUtil = nWse.stFctnUtil;
 
-	var tPntIptTrkr, tPntIpt, tPntIptKind;
+	var tPntIptTrkr, tPntIpt, tPntIptKind, tTch;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -310,6 +310,8 @@ function fOnIcld(a_Errs)
 					l_TchInIpt = a_Ipt.c_Tchs[l_IdxInIpt];
 					l_TchInIpt.c_OfstX = l_TchInIpt.c_X - a_AT.c_X;	// 计算偏移量
 					l_TchInIpt.c_OfstY = l_TchInIpt.c_Y - a_AT.c_Y;
+					l_TchInIpt.c_AccOfstDistX += Math.abs(l_TchInIpt.c_OfstX);	// 计算累计偏移距离
+					l_TchInIpt.c_AccOfstDistY += Math.abs(l_TchInIpt.c_OfstY);
 					a_AT.c_X = l_TchInIpt.c_X;
 					a_AT.c_Y = l_TchInIpt.c_Y;
 				}
@@ -654,7 +656,7 @@ function fOnIcld(a_Errs)
 			i_TchLost : 4
 		});
 
-	nWse.fClass(tPntIpt,
+		tTch = nWse.fClass(tPntIpt,
 		/// 触点
 		/// —— 字段 ——
 		/// c_TchId：String，触点ID
@@ -689,6 +691,15 @@ function fOnIcld(a_Errs)
 				this.c_PvtDft = false;
 				this.c_StopPpgt = false;
 				this.c_StopImdtPpgt = false;
+
+				if (tPntIptKind.i_TchBgn == a_Kind) // 记录起点坐标，累计偏移距离
+				{
+					this.c_BgnX = a_X;
+					this.c_BgnY = a_Y;
+					this.c_AccOfstDistX = 0;
+					this.c_AccOfstDistY = 0;
+				}
+
 				return this;
 			}
 			,
@@ -707,6 +718,18 @@ function fOnIcld(a_Errs)
 				return this.c_EvtTgt || (this.c_Evt && this.c_Evt.target);
 			}
 			,
+			/// 当前位置偏离起始点？
+			cIsDvtFromBgn : function ()
+			{
+				return Math.max(Math.abs(this.c_X - this.c_BgnX), Math.abs(this.c_Y - this.c_BgnY)) > tTch.sc_DvtThrhd;
+			}
+			,
+			/// 发生滑动？
+			cHasSldn : function ()
+			{
+				return Math.max(this.c_AccOfstDistX, this.c_AccOfstDistY) > tTch.sc_DvtThrhd;
+			}
+			,
 			eRspsByDomEvtFlag : function ()
 			{
 				if ((! this.c_Evt) || (! this.c_Evt.preventDefault))
@@ -717,6 +740,13 @@ function fOnIcld(a_Errs)
 				if (this.c_Hdld || this.c_StopImdtPpgt)	{ this.c_Evt.stopImmediatePropagation(); }
 				return this;
 			}
+		}
+		,
+		{
+			/// 偏离阈值
+			/// 当水平和垂直偏移量绝对值皆≤时，cIsDvtFromBgn()返回false，否则返回true
+			/// 当水平和垂直累计偏移距离皆≤时，cHasSldn()返回false，否则返回true
+			sc_DvtThrhd : 4
 		});
 	})();
 

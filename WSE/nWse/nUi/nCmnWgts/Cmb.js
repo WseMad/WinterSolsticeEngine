@@ -649,6 +649,12 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_Ul)
 				{ return this; }
 
+				// 若发生滑动，不处理
+				if (a_DmntTch.cHasSldn())
+				{
+					return this;
+				}
+
 				// 找到点中的<li>，没有点中时不作处理
 				var l_EvtTgt = a_DmntTch.cAcsEvtTgt();
 				var l_PkdLi = stDomUtil.cSrchSelfAndAcstForTag(l_EvtTgt, "LI");

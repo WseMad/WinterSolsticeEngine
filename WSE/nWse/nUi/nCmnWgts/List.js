@@ -559,6 +559,12 @@ function fOnIcld(a_Errs)
 			{
 				var l_This = this;
 
+				// 若发生滑动，不处理
+				if (a_DmntTch.cHasSldn())
+				{
+					return this;
+				}
+
 				// 如果未拾取到，或不是放置目标或其后代，不作处理
 				var l_EvtTgt = a_DmntTch.cAcsEvtTgt();
 				if ((! l_EvtTgt) || (! l_This.dIsSelfOrDsdtOfPutTgt(l_EvtTgt)))
