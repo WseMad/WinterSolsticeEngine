@@ -540,8 +540,8 @@ function fOnIcld(a_Errs)
 				if (! l_This.d_NumIpt)
 				{ return this; }
 
-				// 如果输入框是焦点（或焦点的祖先），不要更新，除非强制
-				if ((! a_Fce) && stFrmwk.cIsFoc(l_This.d_NumIpt, true))
+				// 如果输入框拥有输入焦点，不要更新，除非强制
+				if ((! a_Fce) && (l_This.d_NumIpt.cPsesIptFoc()))
 				{
 					return this;
 				}
@@ -871,8 +871,10 @@ function fOnIcld(a_Errs)
 				else
 				if (1 == l_This.d_PlaySta)
 				{
-					// 若手动切换，或当前图像尚不可用，不计时
-					if (l_This.d_Auto.cIsUp() || (! l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg())))
+					// 若数字框拥有输入焦点，或手动切换，或当前图像尚不可用，不计时
+					if (l_This.d_NumIpt.cPsesIptFoc() ||
+						l_This.d_Auto.cIsUp() ||
+						(! l_This.d_2dCtxt.cIsImgAvlb(l_This.dAcsCrntImg())))
 					{
 						a_FrmTime = 0;
 					}
@@ -1040,7 +1042,7 @@ function fOnIcld(a_Errs)
 		{
 			this.e_Name = a_Name;
 
-			this.d_Dur = 0.4;	// 动画时长，默认0.4
+			this.d_Dur = 1;		// 动画时长，默认1
 			this.d_Bgn = null;	// 动画起始值
 			this.d_End = null;	// 动画结束值
 		},
@@ -1104,6 +1106,8 @@ function fOnIcld(a_Errs)
 		function tPost_飞入()
 		{
 			this.odBase(tPost_飞入).odCall("飞入");	// 基类版本
+
+			this.d_Dur = 0.6;
 		},
 		tGpuSldPlr.atPost,
 		{
@@ -1236,16 +1240,16 @@ function fOnIcld(a_Errs)
 				l_2dCtxt.cClipPath(l_This.d_ClipPath);
 				l_2dCtxt.cMap(null, a_Img, null, null);
 				l_2dCtxt.cRstoCfg();
-			//	l_2dCtxt.cSetAph(1);		// 复位透明度
+				l_2dCtxt.cSetAph(1);		// 复位透明度
 				return this;
 			}
 		});
 		s_PostAry.push(new tGpuSldPlr.tPost_百叶窗());
 
 		nWse.fClass(tGpuSldPlr,
-		function tPost_扩大收缩()
+		function tPost_扩大()
 		{
-			this.odBase(tPost_扩大收缩).odCall("扩大收缩");	// 基类版本
+			this.odBase(tPost_扩大).odCall("扩大");	// 基类版本
 
 			this.d_Dur = 2;
 			this.d_ClipPath = new tPath();
@@ -1290,12 +1294,12 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 		});
-		s_PostAry.push(new tGpuSldPlr.tPost_扩大收缩());
+		s_PostAry.push(new tGpuSldPlr.tPost_扩大());
 
 		nWse.fClass(tGpuSldPlr,
-		function tPost_瀑布流()
+		function tPost_流淌()
 		{
-			this.odBase(tPost_瀑布流).odCall("瀑布流");	// 基类版本
+			this.odBase(tPost_流淌).odCall("流淌");	// 基类版本
 
 			this.d_ClipPath = new tPath();
 		},
@@ -1360,7 +1364,7 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 		});
-		s_PostAry.push(new tGpuSldPlr.tPost_瀑布流());
+		s_PostAry.push(new tGpuSldPlr.tPost_流淌());
 
 //		nWse.fClass(tGpuSldPlr,
 //		function tPost_()

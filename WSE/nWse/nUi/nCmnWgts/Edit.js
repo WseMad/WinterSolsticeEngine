@@ -71,6 +71,7 @@ function fOnIcld(a_Errs)
 		a_This.d_ClkOk = false;		// 这次触发事件是因为单击OK按钮引起的？
 	//	a_This.d_TypedText = false;	// 键入过文本？
 		a_This.d_OldText = "";		// 旧文本
+		a_This.d_PsesIptFoc = false;	// 拥有焦点
 	}
 
 	//【直接用浏览器的行了】
@@ -133,6 +134,7 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tEdit");	// CSS类
 
+				// 输入框
 				var l_Kind = l_This.cGetKind();
 				if (2 == l_Kind)
 				{
@@ -147,14 +149,30 @@ function fOnIcld(a_Errs)
 				}
 
 				l_This.d_DomIpt.value = "";	// 清空文本
+
 				if (a_Cfg.c_ReadOnly)	// 只读？
 				{
 					l_This.d_DomIpt.readOnly = true;
-					l_This.d_DomIpt.addEventListener("focus", function ()
-					{
-						l_This.d_DomIpt.blur();	// 若得到焦点，立即放弃焦点
-					});
 				}
+
+				l_This.d_DomIpt.addEventListener("focus", // 得到焦点事件
+					function ()
+					{
+						if (a_Cfg.c_ReadOnly)	// 只读？在这里再次处理一下更好，IE里即使只读光标也会闪烁！
+						{
+							l_This.d_DomIpt.blur();	// 若得到焦点，立即放弃焦点
+						}
+						else
+						{
+							l_This.d_PsesIptFoc = true;	// 拥有输入焦点
+						}
+					});
+
+				l_This.d_DomIpt.addEventListener("blur", // 失去焦点事件
+					function ()
+					{
+						l_This.d_PsesIptFoc = false;	// 没有输入焦点
+					});
 
 				if (a_Cfg.c_Plchd)	// 占位符
 				{ l_This.d_DomIpt.setAttribute("placeholder", a_Cfg.c_Plchd); }
@@ -362,8 +380,10 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 
-				if (l_This.d_DomIpt)		// 清除焦点
+				if (l_This.d_DomIpt)			// 清除焦点
 				{ l_This.d_DomIpt.blur(); }
+
+				l_This.d_PsesIptFoc = false;	// 没有输入焦点
 				return this;
 			}
 			,
@@ -404,6 +424,12 @@ function fOnIcld(a_Errs)
 			//	this.dUpdTypedText();	//【不用了】
 				this.dUpdOldText();		// 更新旧文本
 				return this;
+			}
+			,
+			/// 拥有输入焦点？
+			cPsesIptFoc : function ()
+			{
+				return this.d_PsesIptFoc;
 			}
 			,
 			/// 存取DOM节点 - 输入
