@@ -95,6 +95,7 @@ function fOnIcld(a_Errs)
 			/// c_Plchd：String，占位符
 			/// c_SlcOnly：Boolean，只选？
 			/// c_InitSlc：Number$String，初始选项索引或文本
+			/// c_fOnType：void f(a_Edit, a_NewText, a_OldText)，当键入时
 			/// c_fOnOk：void f(a_Edit, a_NewText, a_OldText)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
@@ -116,9 +117,13 @@ function fOnIcld(a_Errs)
 					c_PutSrc: l_This.d_PutSrcId_Edit,
 					c_ReadOnly: a_Cfg.c_SlcOnly,
 					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd,
+					c_fOnType : function (a_Edit, a_NewText, a_OldText)
+					{
+						// 触发键入事件
+						l_This.dTrgrTypeEvt();
+					},
 					c_fOnOk : function (a_Edit, a_NewText, a_OldText)
 					{
-					//	console.log("OK: " + a_Text)
 						// 触发确定事件
 						l_This.dTrgrOkEvt();
 					}
@@ -406,10 +411,16 @@ function fOnIcld(a_Errs)
 				return this.d_Edit ? this.d_Edit.cGetText() : "";
 			}
 			,
-			/// 获取旧文本
-			cGetOldText: function ()
+			/// 获取旧键入文本
+			cGetOldTypeText: function ()
 			{
-				return this.d_Edit ? this.d_Edit.cGetOldText() : "";
+				return this.d_Edit ? this.d_Edit.cGetOldTypeText() : "";
+			}
+			,
+			/// 获取旧OK文本
+			cGetOldOkText: function ()
+			{
+				return this.d_Edit ? this.d_Edit.cGetOldOkText() : "";
 			}
 			,
 			/// 获取值
@@ -709,14 +720,25 @@ function fOnIcld(a_Errs)
 				return l_TextTag.getAttribute("data-Wse_Text") || l_TextTag.textContent;
 			}
 			,
+			/// 触发键入事件
+			dTrgrTypeEvt : function ()
+			{
+				var l_This = this;
+				if ((! l_This.d_Cfg.c_fOnType))
+				{ return this; }
+
+				l_This.d_Cfg.c_fOnType(l_This, l_This.cGetText(), l_This.cGetOldTypeText());
+				return this;
+			}
+			,
 			/// 触发确定事件
 			dTrgrOkEvt : function ()
 			{
 				var l_This = this;
-				if ((! l_This.d_Cfg.c_fOnOk) || (! l_This.cGetText()))
+				if ((! l_This.d_Cfg.c_fOnOk))
 				{ return this; }
 
-				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText(), l_This.cGetOldText());
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText(), l_This.cGetOldOkText());
 				return this;
 			}
 		}

@@ -606,9 +606,13 @@
 						c_PutTgt: "k_PutTgt_Edit1",
 						c_PutSrc: "k_Edit1",
 						c_Plchd: "搜索什么？",
+						c_fOnType: function (a_Wgt, a_NewText, a_OldText)
+						{
+							console.log("<c_fOnType>文本框的内容是：" + a_NewText + ", Old =" + a_OldText);
+						},
 						c_fOnOk: function (a_Wgt, a_NewText, a_OldText)
 						{
-							console.log("文本框的内容是：" + a_NewText + ", Old =" + a_OldText);
+							console.log("<c_fOnOk>文本框的内容是：" + a_NewText + ", Old =" + a_OldText);
 						}
 					});
 				//	l_This.e_StaWgtSet.cAdd(l_Wgt);

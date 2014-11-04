@@ -68,9 +68,10 @@ function fOnIcld(a_Errs)
 		a_This.d_DomOk = null;
 		a_This.d_DomPfx = null;
 		a_This.d_DomSfx = null;
-		a_This.d_ClkOk = false;		// 这次触发事件是因为单击OK按钮引起的？
-	//	a_This.d_TypedText = false;	// 键入过文本？
-		a_This.d_OldText = "";		// 旧文本
+		a_This.d_ClkOk = false;			// 这次触发事件是因为单击OK按钮引起的？
+	//	a_This.d_TypedText = false;		// 键入过文本？
+		a_This.d_OldTypeText = "";		// 旧键入文本
+		a_This.d_OldOkText = "";			// 旧OK文本
 		a_This.d_PsesIptFoc = false;	// 拥有焦点
 	}
 
@@ -125,6 +126,7 @@ function fOnIcld(a_Errs)
 			/// c_Kind：Number，种类，-1=未知（尚未绑定），0=密码，1=单行（默认），2=多行
 			/// c_Plchd：String，占位符
 			/// c_ReadOnly：Boolean，只读？
+			/// c_fOnType：void f(a_Edit, a_NewText, a_OldText)，当键入时
 			/// c_fOnOk：void f(a_Edit, a_NewText, a_OldText)，当确定时
 			/// }
 			vcBind : function f(a_Cfg)
@@ -187,13 +189,22 @@ function fOnIcld(a_Errs)
 //					fAddRmvPlchd(l_This, true);
 //				});
 
-				l_This.d_DomIpt.addEventListener("change", function ()
+				l_This.d_DomIpt.addEventListener("input",
+				function ()
+				{
+				//	console.log("oninput");
+					l_This.dTrgrTypeEvt();		// 触发事件
+					l_This.dUpdOldTypeText();	// 更新旧文本，在触发事件后
+				});
+
+				l_This.d_DomIpt.addEventListener("change",
+				function ()
 				{
 				//	l_This.dUpdTypedText();			// 更新键入过文本，【不用了，使用浏览器的占位符功能】
 					if (! l_This.d_ClkOk)			// 当没有按OK按钮时
 					{
 						l_This.dTrgrOkEvt();		// 触发事件
-						l_This.dUpdOldText();		// 更新旧文本，在触发事件后
+						l_This.dUpdOldOkText();		// 更新旧文本，在触发事件后
 					}
 				});
 				l_This.d_PutSrc.appendChild(l_This.d_DomIpt);	// 添加到放置来源
@@ -345,10 +356,10 @@ function fOnIcld(a_Errs)
 						{
 							// 很难知道现在文本框是否是焦点，为了避免连续两次触发OK事件，设置一个标志
 							l_This.d_ClkOk = true;
-							l_This.d_DomIpt.blur();	// 清除焦点
+							l_This.d_DomIpt.blur();		// 清除焦点
 							l_This.d_ClkOk = false;
 							l_This.dTrgrOkEvt();		// 触发事件
-							l_This.dUpdOldText();		// 更新旧文本，在触发事件后
+							l_This.dUpdOldOkText();		// 更新旧文本，在触发事件后
 						}
 
 						a_DmntTch.c_Hdld = true;		// 已处理
@@ -383,7 +394,7 @@ function fOnIcld(a_Errs)
 				if (l_This.d_DomIpt)			// 清除焦点
 				{ l_This.d_DomIpt.blur(); }
 
-				l_This.d_PsesIptFoc = false;	// 没有输入焦点
+			//	l_This.d_PsesIptFoc = false;	// 没有输入焦点，【onblur会进行】
 				return this;
 			}
 			,
@@ -411,10 +422,16 @@ function fOnIcld(a_Errs)
 				return l_This.d_DomIpt.value;
 			}
 			,
-			/// 获取旧文本
-			cGetOldText: function ()
+			/// 获取旧键入文本
+			cGetOldTypeText: function ()
 			{
-				return this.d_OldText;
+				return this.d_OldTypeText;
+			}
+			,
+			/// 获取旧OK文本
+			cGetOldOkText: function ()
+			{
+				return this.d_OldOkText;
 			}
 			,
 			/// 设置文本
@@ -422,7 +439,7 @@ function fOnIcld(a_Errs)
 			{
 				this.d_DomIpt.value = a_Text.toString();
 			//	this.dUpdTypedText();	//【不用了】
-				this.dUpdOldText();		// 更新旧文本
+				this.dUpdOldOkText();	// 更新旧文本
 				return this;
 			}
 			,
@@ -463,10 +480,17 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 更新旧文本
-			dUpdOldText : function ()
+			/// 更新旧键入文本
+			dUpdOldTypeText : function ()
 			{
-				this.d_OldText = this.cGetText();	// 更新旧文本
+				this.d_OldTypeText = this.cGetText();
+				return this;
+			}
+			,
+			/// 更新旧OK文本
+			dUpdOldOkText : function ()
+			{
+				this.d_OldOkText = this.cGetText();
 				return this;
 			}
 			,
@@ -526,14 +550,25 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
+			/// 触发键入事件
+			dTrgrTypeEvt : function ()
+			{
+				var l_This = this;
+				if ((! l_This.d_Cfg.c_fOnType))
+				{ return this; }
+
+				l_This.d_Cfg.c_fOnType(l_This, l_This.d_DomIpt.value, l_This.d_OldTypeText);
+				return this;
+			}
+			,
 			/// 触发确定事件
 			dTrgrOkEvt : function ()
 			{
 				var l_This = this;
-				if (l_This.d_ClkOk || (! l_This.d_Cfg.c_fOnOk) || (! l_This.cGetText()))
+				if (l_This.d_ClkOk || (! l_This.d_Cfg.c_fOnOk))
 				{ return this; }
 
-				l_This.d_Cfg.c_fOnOk(l_This, l_This.d_DomIpt.value, l_This.d_OldText);
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.d_DomIpt.value, l_This.d_OldOkText);
 				return this;
 			}
 		}
