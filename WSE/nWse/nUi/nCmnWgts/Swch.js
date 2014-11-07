@@ -398,20 +398,28 @@ function fOnIcld(a_Errs)
 		nUi.itForm,
 		{
 			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
+			/// a_Kvo：Object，键值对象
 			vcSrlz : function f(a_Kvo)
 			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
-				var l_This = this;
-
 				// 0=关，1=开
+				var l_This = this;
 				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
 				var l_Val = l_This.cIsOn() ? "1" : "0";
 				a_Kvo[l_Key] = l_Val;
-				return a_Kvo;
+				return this;
+			}
+			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			vcDsrlz : function f(a_Kvo)
+			{
+				var l_This = this;
+				var l_Key = l_This.dGetKeyOfSrlz();
+				if (! l_Key)
+				{ return this; }
+
+				l_This.cOnOff(("1" == a_Kvo[l_Key]));
+				return this;
 			}
 			,
 			/// 输入焦点

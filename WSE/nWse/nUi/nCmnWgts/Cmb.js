@@ -119,13 +119,13 @@ function fOnIcld(a_Errs)
 					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd,
 					c_fOnType : function (a_Edit, a_NewText, a_OldText)
 					{
-						// 触发键入事件
-						l_This.dTrgrTypeEvt();
+						l_This.dSetVal(a_NewText);	// 设置值
+						l_This.dTrgrTypeEvt();		// 触发键入事件
 					},
 					c_fOnOk : function (a_Edit, a_NewText, a_OldText)
 					{
-						// 触发确定事件
-						l_This.dTrgrOkEvt();
+						l_This.dSetVal(a_NewText);	// 设置值
+						l_This.dTrgrOkEvt();		// 触发确定事件
 					}
 				});
 
@@ -426,6 +426,10 @@ function fOnIcld(a_Errs)
 			/// 获取值
 			cGetVal : function ()
 			{
+				// 如果没有文本，值也为空
+				if (! this.cGetText())
+				{ this.dSetVal(); }
+
 				return this.d_Val;
 			}
 			,
@@ -439,6 +443,12 @@ function fOnIcld(a_Errs)
 				}
 
 				return this.dSetText(a_Text);
+			}
+			,
+			/// 设置值
+			cSetVal : function (a_Val)
+			{
+				return this.dSetVal(a_Val);
 			}
 			,
 			/// 获取选项数量
@@ -697,7 +707,7 @@ function fOnIcld(a_Errs)
 
 				// 设置文本和值
 				l_This.dSetText(l_This.dGetTextOfLi(a_Li));
-				l_This.d_Val = a_Li.getAttribute("value") || l_This.cGetText();
+				l_This.dSetVal(a_Li.getAttribute("value") || l_This.cGetText());
 				return this;
 			}
 			,
@@ -707,7 +717,13 @@ function fOnIcld(a_Errs)
 				if (this.d_Edit)
 				{ this.d_Edit.cSetText(a_Text); }
 
-				this.d_Val = a_Text;	// 亦修改值
+				return this;
+			}
+			,
+			/// 设置值
+			dSetVal : function (a_Val)
+			{
+				this.d_Val = a_Val ? a_Val.toString() : "";
 				return this;
 			}
 			,
@@ -753,20 +769,43 @@ function fOnIcld(a_Errs)
 		nUi.itForm,
 		{
 			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
+			/// a_Kvo：Object，键值对象
 			/// 返回：a_Kvo
 			vcSrlz : function f(a_Kvo)
 			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
+				// 保存值
 				var l_This = this;
-				if ((! l_This.d_Val))
-				{ return a_Kvo; }
-
 				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
-				a_Kvo[l_Key] = l_This.d_Val;
-				return a_Kvo;
+				if (l_This.cGetVal())
+				{
+					a_Kvo[l_Key] = l_This.cGetVal();
+				}
+
+				// 也保存文本，以便反序列化
+				if (l_This.cGetText())
+				{
+					nWse.stObjUtil.cDfnDataPpty(a_Kvo, nUi.itForm.scGnrtInrKey(l_Key),
+						false, false, false, l_This.cGetText());
+				}
+
+				return this;
+			}
+			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			vcDsrlz : function f(a_Kvo)
+			{
+				var l_This = this;
+				var l_Key = l_This.dGetKeyOfSrlz();
+				if (! l_Key)
+				{ return this; }
+
+				// 载入值
+				l_This.cSetVal(a_Kvo[l_Key]);
+
+				// 载入文本
+				l_This.cSetText(a_Kvo[nUi.itForm.scGnrtInrKey(l_Key)]);
+				return this;
 			}
 			,
 			/// 输入焦点

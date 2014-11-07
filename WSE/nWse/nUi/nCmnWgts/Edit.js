@@ -437,9 +437,10 @@ function fOnIcld(a_Errs)
 			/// 设置文本
 			cSetText: function (a_Text)
 			{
-				this.d_DomIpt.value = a_Text.toString();
-			//	this.dUpdTypedText();	//【不用了】
-				this.dUpdOldOkText();	// 更新旧文本
+				this.d_DomIpt.value = a_Text ? a_Text.toString() : "";
+			//	this.dUpdTypedText();		//【不用了】
+				this.dUpdOldOkText();		// 更新旧文本
+				this.dUpdOldTypeText();
 				return this;
 			}
 			,
@@ -472,13 +473,13 @@ function fOnIcld(a_Errs)
 			{
 				return this.d_DomSfx;
 			}
-			,
-			/// 更新键入过文本
-			dUpdTypedText : function ()
-			{
-			//	this.d_TypedText = !! this.d_DomIpt.value;	// 键入过文本？
-				return this;
-			}
+//			,
+//			/// 更新键入过文本
+//			dUpdTypedText : function ()
+//			{
+//				this.d_TypedText = !! this.d_DomIpt.value;	// 键入过文本？
+//				return this;
+//			}
 			,
 			/// 更新旧键入文本
 			dUpdOldTypeText : function ()
@@ -557,7 +558,7 @@ function fOnIcld(a_Errs)
 				if ((! l_This.d_Cfg.c_fOnType))
 				{ return this; }
 
-				l_This.d_Cfg.c_fOnType(l_This, l_This.d_DomIpt.value, l_This.d_OldTypeText);
+				l_This.d_Cfg.c_fOnType(l_This, l_This.cGetText(), l_This.d_OldTypeText);
 				return this;
 			}
 			,
@@ -568,7 +569,7 @@ function fOnIcld(a_Errs)
 				if (l_This.d_ClkOk || (! l_This.d_Cfg.c_fOnOk))
 				{ return this; }
 
-				l_This.d_Cfg.c_fOnOk(l_This, l_This.d_DomIpt.value, l_This.d_OldOkText);
+				l_This.d_Cfg.c_fOnOk(l_This, l_This.cGetText(), l_This.d_OldOkText);
 				return this;
 			}
 		}
@@ -583,20 +584,31 @@ function fOnIcld(a_Errs)
 		nUi.itForm,
 		{
 			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
+			/// a_Kvo：Object，键值对象
 			vcSrlz : function f(a_Kvo)
 			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
 				var l_This = this;
-				if ((! l_This.d_DomIpt) || (! l_This.cGetText()))
+				if ((! l_This.cGetText()))
 				{ return a_Kvo; }
 
+				// 保存文本
 				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
-				a_Kvo[l_Key] = l_This.d_DomIpt.value;
-				return a_Kvo;
+				a_Kvo[l_Key] = l_This.cGetText();
+				return this;
+			}
+			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			vcDsrlz : function f(a_Kvo)
+			{
+				var l_This = this;
+				var l_Key = l_This.dGetKeyOfSrlz();
+				if (! l_Key)
+				{ return this; }
+
+				// 载入文本
+				l_This.cSetText(a_Kvo[l_Key]);
+				return this;
 			}
 			,
 			/// 输入焦点

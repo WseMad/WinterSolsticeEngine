@@ -823,7 +823,15 @@ function fOnIcld(a_Errs)
 
 					if (a_Bind) // 绑定
 					{
-						l_Pttp[l_PN] = (l_ItfcImp[l_PN] || function () { nWse.fThrowNotImpPureVtu(a_fCtor.oc_FullName + "." + l_PN); });
+						l_Pttp[l_PN] = l_ItfcImp[l_PN];
+						if (! l_Pttp[l_PN])
+						{
+							// 注意这里的l_PN可能会变！
+							(function (a_PN)
+							{
+								l_Pttp[a_PN] = function () { nWse.fThrowNotImpPureVtu(a_fCtor.oc_FullName + "." + a_PN); };
+							})(l_PN);
+						}
 					}
 					else
 					if (l_Pttp[l_PN]) // 解绑，若有效
@@ -866,9 +874,16 @@ function fOnIcld(a_Errs)
 		/// 接口体
 		/// a_tItfcHead：接口头，必须是nWse.fItfcHead函数的返回值
 		/// a_PureVtuMthds：Object，纯虚方法，默认null
+		/// a_StacPptys：Object，静态属性，各个字段将作为静态属性处理，默认null
 		/// 返回：a_tItfcHead
-		nWse.fItfcBody = function (a_tItfcHead, a_PureVtuMthds)
+		nWse.fItfcBody = function (a_tItfcHead, a_PureVtuMthds, a_StacPptys)
 		{
+			// 添加静态属性至类头（构造函数）
+			if (a_StacPptys)
+			{
+				fShlwAsn(a_tItfcHead, a_StacPptys);
+			}
+
 			// 添加纯虚方法至接口头（构造函数）
 			var l_PN;
 			if (a_PureVtuMthds)
@@ -894,10 +909,11 @@ function fOnIcld(a_Errs)
 		/// a_itBase$BaseAry：接口$Array，继承基接口的全部纯虚函数
 		/// a_tItfcHead：接口头，必须是nWse.fItfcHead函数的返回值
 		/// a_PureVtuMthds：Object，纯虚方法，默认null
+		/// a_StacPptys：Object，静态属性，各个字段将作为静态属性处理，默认null
 		/// 返回：新定义的接口
-		nWse.fItfc = function (a_nHost$tHost, a_fCtor, a_itBase$BaseAry, a_PureVtuMthds)
+		nWse.fItfc = function (a_nHost$tHost, a_fCtor, a_itBase$BaseAry, a_PureVtuMthds, a_StacPptys)
 		{
-			return nWse.fItfcBody(nWse.fItfcHead(a_nHost$tHost, a_fCtor, a_itBase$BaseAry), a_PureVtuMthds);
+			return nWse.fItfcBody(nWse.fItfcHead(a_nHost$tHost, a_fCtor, a_itBase$BaseAry), a_PureVtuMthds, a_StacPptys);
 		};
 
 		/// 是否为接口？

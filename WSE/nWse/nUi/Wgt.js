@@ -2,7 +2,7 @@
 *
 * 部分常用特殊字符：
 * ▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅
-*
+* 表单验证：http://m.w3cschool.cc/jquery/jquery-plugin-validate.html
 */
 
 
@@ -616,7 +616,7 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 获取序列化的键，依次选：data-Wse_Name，name，id
+			/// 获取序列化的键，依次选：data-Wse_Name，name，id，空串
 			dGetKeyOfSrlz : function ()
 			{
 				return this.d_PutSrc ? (this.d_PutSrc.getAttribute("data-Wse_Name") || this.d_PutSrc.name || this.d_PutSrc.id) : "";
@@ -1083,7 +1083,29 @@ function fOnIcld(a_Errs)
 				return a_Kvo;
 			}
 			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			cDsrlz : function (a_Kvo)
+			{
+				if (! a_Kvo)
+				{ return this; }
+
+				// 对每个控件
+				var l_This = this;
+				if (! l_This.d_SubWgtSet)
+				{ return this; }
+
+				stAryUtil.cFor(l_This.d_SubWgtSet.cAcsWgts(),
+					function (a_Ary, a_Idx, a_Wgt)
+					{
+						nUi.itForm.ocBindUbnd(a_Wgt, function (a_Istn) { a_Istn.vcDsrlz(a_Kvo); });
+					});
+				return this;
+			}
+			,
 			/// 输入焦点
+			/// a_PutSrcId：String，放置来源ID
+			/// a_YesNo：Boolean，是否？
 			cIptFoc : function (a_PutSrcId, a_YesNo)
 			{
 				var l_This = this;
@@ -1111,17 +1133,31 @@ function fOnIcld(a_Errs)
 		,
 		{
 			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
+			/// a_Kvo：Object，键值对象
 			vcSrlz : function f(a_Kvo)
 			{
-				return a_Kvo;
+				return this;
+			}
+			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			vcDsrlz : function f(a_Kvo)
+			{
+				return this;
 			}
 			,
 			/// 输入焦点
 			vcIptFoc : function f(a_YesNo)
 			{
 				return this;
+			}
+		}
+		,
+		{
+			/// 生成内部键
+			scGnrtInrKey : function (a_Key)
+			{
+				return "Wse_" + a_Key;
 			}
 		});
 	})();

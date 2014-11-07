@@ -648,17 +648,13 @@ function fOnIcld(a_Errs)
 		nUi.itForm,
 		{
 			/// 序列化
-			/// a_Kvo：Object，若为null则新建一个对象
-			/// 返回：a_Kvo
+			/// a_Kvo：Object，键值对象
 			vcSrlz : function f(a_Kvo)
 			{
-				if (! a_Kvo)
-				{ a_Kvo = {}; }
-
-				var l_This = this;
-
 				// 收集每个选中项的值
-				var l_Val = "", l_Sprt = l_This.d_Cfg.c_Sprt || ",";
+				var l_This = this;
+				var l_Val = "", l_SlcdItemStrs = [];
+				var l_Sprt = l_This.d_Cfg.c_Sprt || ","; // 分隔符
 				stAryUtil.cFor(l_This.d_LiAry,
 					function (a_Ary, a_Idx, a_Li)
 					{
@@ -673,6 +669,9 @@ function fOnIcld(a_Errs)
 						if (l_Val)
 						{ l_Val += l_Sprt; }
 						l_Val += l_Str.toString();
+
+						// 把选中项的值也保存起来
+						l_SlcdItemStrs.push(l_Str);
 					});
 
 				if (! l_Val)
@@ -680,7 +679,42 @@ function fOnIcld(a_Errs)
 
 				var l_Key = l_This.dChkKeyOnSrlz(a_Kvo);
 				a_Kvo[l_Key] = l_Val;
-				return a_Kvo;
+
+				// 也保存选中的选项索引
+				nWse.stObjUtil.cDfnDataPpty(a_Kvo, nUi.itForm.scGnrtInrKey(l_Key),
+					false, false, false, l_SlcdItemStrs);
+
+				return this;
+			}
+			,
+			/// 反序列化
+			/// a_Kvo：Object，键值对象
+			vcDsrlz : function f(a_Kvo)
+			{
+				var l_This = this;
+				var l_Key = l_This.dGetKeyOfSrlz();
+				if (! l_Key)
+				{ return this; }
+
+				// 载入各个选项
+				var l_SlcdItemStrs = a_Kvo[nUi.itForm.scGnrtInrKey(l_Key)];
+				stAryUtil.cFor(l_SlcdItemStrs,
+				function (a_StrAry, a_StrIdx, a_Str)
+				{
+					// 找到值相同的<li>
+					var l_ItemIdx = stAryUtil.cFind(l_This.d_LiAry,
+					function (a_LiAry, a_LiIdx, a_Li)
+					{
+						var l_Str = (a_Li.getAttribute("value") || a_Li.textContent || a_Li.text);
+						return l_Str == a_Str;
+					});
+					if (l_ItemIdx >= 0) // 若有效，选中
+					{
+						l_This.cSlcItem(l_ItemIdx)
+					}
+				});
+
+				return this;
 			}
 			,
 			/// 输入焦点
