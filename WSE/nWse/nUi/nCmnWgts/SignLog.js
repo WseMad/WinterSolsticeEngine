@@ -19,7 +19,7 @@
 	//@ 包含
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nUi/nCmnWgts",
 		[
-//			"nWse:nUi/Wgt.js"
+			"nWse:nUi/Form.js",
 			"Btn.js",
 			"Edit.js"
 		]
@@ -48,6 +48,7 @@ function fOnIcld(a_Errs)
 
 	var nUi = nWse.nUi;
 	var tWgt = nUi.tWgt;
+	var tForm = nUi.tForm;
 	var stFrmwk = nUi.stFrmwk || null;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +68,7 @@ function fOnIcld(a_Errs)
 	function fRset(a_This)
 	{
 		a_This.d_Show = 0;					// 0=隐藏；1=注册；2=登录
-		a_This.d_Form = new nUi.tForm();	// 表单
+	//	a_This.d_Form = new nUi.tForm();	// 表单
 
 		// 当窗口调整大小时，校准位置尺寸
 		if (stFrmwk)
@@ -75,116 +76,143 @@ function fOnIcld(a_Errs)
 			stFrmwk.cRegEvtHdlr("WndRszBefLot",
 				function()
 				{
-					a_This.d_Form.cRfsh();	// 刷新表单
+				//	a_This.d_Form.cRfsh();	// 刷新表单
+					a_This.cRfsh();
 				});
 		}
 	}
 
-	function fNewWgt_Mail(a_This)
+	function fInitWgt_Mail(a_This)
 	{
 		var l_Plchd = a_This.d_Cfg.c_MailPlchd || "邮箱：";
-		var l_Wgt = new nCmnWgts.tEdit();
-		l_Wgt.vcBind({
-			c_PutTgt: a_This.d_PutTgtId_Mail,
-			c_PutSrc: a_This.d_PutSrcId_Mail,
-		//	c_Plchd: l_Plchd,	//【不用了，不好看】
-			c_fOnOk: function (a_Wgt, a_Text)
-			{
-				// 下一个得到输入焦点
-			//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, true);
-			}
-		});
-		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(a_This.d_PutSrcId_Mail);
+		if (! l_Wgt)
+		{
+			l_Wgt = new nCmnWgts.tEdit();
+			l_Wgt.vcBind({
+				c_PutTgt: a_This.d_PutTgtId_Mail,
+				c_PutSrc: a_This.d_PutSrcId_Mail,
+				//	c_Plchd: l_Plchd,	//【不用了，不好看】
+				c_fOnOk: function (a_Wgt, a_Text)
+				{
+					// 下一个得到输入焦点
+					//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, true);
+				}
+			});
+			//	a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			a_This.cAcsWgtSet().cAdd(l_Wgt);
+		}
+
 		a_This.d_PutTgt.appendChild(document.createTextNode(l_Plchd));
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
 		return l_Wgt;
 	}
 
-	function fNewWgt_Pswd(a_This, a_Cfm)
+	function fInitWgt_Pswd(a_This, a_Cfm)
 	{
 		var l_Plchd = a_Cfm ? "确认密码：" : (a_This.d_Cfg.c_PswdPlchd || "密码（6-20个字符）：");
-		var l_Wgt = new nCmnWgts.tEdit();
-		l_Wgt.vcBind({
-			c_PutTgt: a_Cfm ? a_This.d_PutTgtId_CfmPswd : a_This.d_PutTgtId_Pswd,
-			c_PutSrc: a_Cfm ? a_This.d_PutSrcId_CfmPswd : a_This.d_PutSrcId_Pswd,
-		//	c_Plchd: l_Plchd,	//【不用了，不好看】
-			c_Kind: 0,
-			c_fOnOk: function (a_Wgt, a_Text)
-			{
-				if (1 == a_This.d_Show) // 注册时把焦点转交下一个
+		var l_PutSrcId = a_Cfm ? a_This.d_PutSrcId_CfmPswd : a_This.d_PutSrcId_Pswd;
+		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(l_PutSrcId);
+		if (! l_Wgt)
+		{
+			l_Wgt = new nCmnWgts.tEdit();
+			l_Wgt.vcBind({
+				c_PutTgt: a_Cfm ? a_This.d_PutTgtId_CfmPswd : a_This.d_PutTgtId_Pswd,
+				c_PutSrc: l_PutSrcId,
+				//	c_Plchd: l_Plchd,	//【不用了，不好看】
+				c_Kind: 0,
+				c_fOnOk: function (a_Wgt, a_Text)
 				{
-					if (a_Cfm)
+					if (1 == a_This.d_Show) // 注册时把焦点转交下一个
+					{
+						if (a_Cfm)
+						{
+							// 撤销自己的输入焦点
+							//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, false);
+
+							// 提交
+							//	fSbmt(a_This);	//【会连续提交两次？！】
+						}
+						else
+						{
+							// 下一个得到输入焦点
+							//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, true);
+						}
+					}
+					else // 登录时
 					{
 						// 撤销自己的输入焦点
-					//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, false);
+						//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, false);
 
 						// 提交
-					//	fSbmt(a_This);	//【会连续提交两次？！】
-					}
-					else
-					{
-						// 下一个得到输入焦点
-					//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_CfmPswd, true);
+						//	fSbmt(a_This);		//【会连续提交两次？！】
 					}
 				}
-				else // 登录时
-				{
-					// 撤销自己的输入焦点
-				//	a_This.d_Form.cIptFoc(a_This.d_PutSrcId_Pswd, false);
+			});
+			//	a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			a_This.cAcsWgtSet().cAdd(l_Wgt);
+		}
 
-					// 提交
-				//	fSbmt(a_This);		//【会连续提交两次？！】
-				}
-			}
-		});
-		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
 		a_This.d_PutTgt.appendChild(document.createTextNode(l_Plchd));
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
 		return l_Wgt;
 	}
 
-	function fNewWgt_Cls(a_This)
+	function fInitWgt_Cls(a_This)
 	{
-		a_This.d_Dom_Cls.textContent = "关 闭";
+		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(a_This.d_PutSrcId_Cls);
+		if (! l_Wgt)
+		{
+			a_This.d_Dom_Cls.textContent = "关 闭";
 
-		var l_Wgt = new nCmnWgts.tBtn();
-		l_Wgt.vcBind({
-			c_PutTgt: a_This.d_PutTgtId_Cls,
-			c_PutSrc: a_This.d_PutSrcId_Cls,
-			c_fOnClk: function (a_Wgt, a_Text)
-			{
-				a_This.cHideDlgBox();
-			}
-		});
-		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			l_Wgt = new nCmnWgts.tBtn();
+			l_Wgt.vcBind({
+				c_PutTgt: a_This.d_PutTgtId_Cls,
+				c_PutSrc: a_This.d_PutSrcId_Cls,
+				c_fOnClk: function (a_Wgt, a_Text)
+				{
+					a_This.cHideDlgBox();
+				}
+			});
+			stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Cls");
+		//	a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			a_This.cAcsWgtSet().cAdd(l_Wgt);
+		}
+
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
-		stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Cls");
 		return l_Wgt;
 	}
 
-	function fNewWgt_Sbmt(a_This)
+	function fInitWgt_Sbmt(a_This)
 	{
-		a_This.d_Dom_Sbmt.textContent = "提 交";
+		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(a_This.d_PutSrcId_Sbmt);
+		if (! l_Wgt)
+		{
+			a_This.d_Dom_Sbmt.textContent = "提 交";
 
-		var l_Wgt = new nCmnWgts.tBtn();
-		l_Wgt.vcBind({
-			c_PutTgt: a_This.d_PutTgtId_Sbmt,
-			c_PutSrc: a_This.d_PutSrcId_Sbmt,
-			c_fOnClk: function (a_Wgt, a_Text)
-			{
-				fSbmt(a_This);
-			}
-		});
-		a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			l_Wgt = new nCmnWgts.tBtn();
+			l_Wgt.vcBind({
+				c_PutTgt: a_This.d_PutTgtId_Sbmt,
+				c_PutSrc: a_This.d_PutSrcId_Sbmt,
+				c_fOnClk: function (a_Wgt, a_Text)
+				{
+					fSbmt(a_This);
+				}
+			});
+			stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Sbmt");
+		//	a_This.d_Form.cAcsWgtSet().cAdd(l_Wgt);
+			a_This.cAcsWgtSet().cAdd(l_Wgt);
+		}
+
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
-		stCssUtil.cAddCssc(l_Wgt.cAcsPutTgt(), "cnWse_tSignLog_Sbmt");
 		return l_Wgt;
 	}
 
 	// 提交
 	function fSbmt(a_This)
 	{
-		var l_Kvo = a_This.d_Form.cSrlz(null);
+	//	var l_Kvo = a_This.d_Form.cSrlz(null);
+		var l_Kvo = a_This.cSrlz(null);
 		var l_Ueq = nWse.tAjax.scUrlEcdQry(null, l_Kvo);
 		console.log("表单序列化：");
 		console.log("<UEQ> = " + l_Ueq);
@@ -204,10 +232,10 @@ function fOnIcld(a_Errs)
 		stCssUtil.cAddCssc(a_This.d_Dom_Sbmt, "cnWse_tSignLog_Sbmt");
 
 		// 新建子控件
-		fNewWgt_Mail(a_This);
-		fNewWgt_Pswd(a_This);
-		fNewWgt_Cls(a_This);
-		fNewWgt_Sbmt(a_This);
+		fInitWgt_Mail(a_This);
+		fInitWgt_Pswd(a_This);
+		fInitWgt_Cls(a_This);
+		fInitWgt_Sbmt(a_This);
 	}
 
 	// 初始化 - 注册
@@ -223,11 +251,11 @@ function fOnIcld(a_Errs)
 		stCssUtil.cAddCssc(a_This.d_Dom_Sbmt, "cnWse_tSignLog_Sbmt");
 
 		// 新建子控件
-		fNewWgt_Mail(a_This);
-		fNewWgt_Pswd(a_This);
-		fNewWgt_Pswd(a_This, true);
-		fNewWgt_Cls(a_This);
-		fNewWgt_Sbmt(a_This);
+		fInitWgt_Mail(a_This);
+		fInitWgt_Pswd(a_This);
+		fInitWgt_Pswd(a_This, true);
+		fInitWgt_Cls(a_This);
+		fInitWgt_Sbmt(a_This);
 	}
 
 	function fObtnDom(a_This, a_Key, a_Name)
@@ -267,14 +295,16 @@ function fOnIcld(a_Errs)
 		? fInit_SignIn(l_This)
 		: fInit_LogIn(l_This);
 
-		l_This.d_Form.cRfsh();					// 3.刷新表单
+	//	l_This.d_Form.cRfsh();					// 3.刷新表单
+		l_This.cRfsh();
 
 		stCssUtil.cSetPos(l_This.d_PutTgt,				// 4.放置目标摆放到屏幕中间
 				(window.innerWidth - l_This.d_PutTgt.offsetWidth) / 2,
 				(window.innerHeight - l_This.d_PutTgt.offsetHeight) / 2);
 
 		// 输入焦点
-		l_This.d_Form.cIptFoc(a_This.d_PutSrcId_Mail, true);
+	//	l_This.d_Form.cIptFoc(a_This.d_PutSrcId_Mail, true);
+		l_This.cIptFoc(a_This.d_PutSrcId_Mail, true);
 
 		// 记录
 		l_This.d_Show = a_Kind;
@@ -295,7 +325,7 @@ function fOnIcld(a_Errs)
 			fRset(this);
 		}
 		,
-		tWgt
+		tForm		// 从表单派生
 		,
 		{
 			/// 绑定
@@ -371,27 +401,27 @@ function fOnIcld(a_Errs)
 
 				return this;
 			}
-			,
-			/// 拾取
-			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
-			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
-			vcPick : function f(a_Bbox, a_Picker)
-			{
-				if (a_Bbox)
-				{
-					return this;
-				}
-
-				// 转交表单
-				var l_This = this;
-				l_This.d_Form.vcPick(a_Bbox, a_Picker);
-				if (a_Picker.cIsOver())
-				{ return this; }
-
-				// 拾取放置目标
-				l_This.dPickPutTgtByPathPnt(a_Picker, l_This.d_PutTgt);
-				return this;
-			}
+//			,
+//			/// 拾取
+//			/// a_Bbox：tSara，包围盒，若非null则初始为放置目标的包围盒，可以更新，此时a_Picker为null
+//			/// a_Picker：tPicker，拾取器，当a_Bbox为null时才有效
+//			vcPick : function f(a_Bbox, a_Picker)
+//			{
+//				if (a_Bbox)
+//				{
+//					return this;
+//				}
+//
+//				// 转交表单
+//				var l_This = this;
+//				l_This.d_Form.vcPick(a_Bbox, a_Picker);
+//				if (a_Picker.cIsOver())
+//				{ return this; }
+//
+//				// 拾取放置目标
+//				l_This.dPickPutTgtByPathPnt(a_Picker, l_This.d_PutTgt);
+//				return this;
+//			}
 			,
 			/// 处理来自支配触点的输入
 			/// a_DmntTchIdx：Number，支配触点索引
@@ -459,8 +489,10 @@ function fOnIcld(a_Errs)
 				l_This.d_PutTgt.style.display = "";		// 隐藏放置目标
 				l_This.cClnPutTgt();					// 清空放置目标
 				stDomUtil.cRmvAllChds(l_This.d_PutTgt);	// 移除剩余（文本）节点
-				l_This.d_Form.cAcsWgtSet().cClnPutTgt();
-				l_This.d_Form.cClr();					// 表单清空
+//				l_This.d_Form.cAcsWgtSet().cClnPutTgt();
+//				l_This.d_Form.cClr();					// 表单清空
+			//	l_This.cClnPutTgt();
+			//	l_This.cClr();	// 不要调用！
 
 
 				l_This.d_Show = 0;						// 隐藏

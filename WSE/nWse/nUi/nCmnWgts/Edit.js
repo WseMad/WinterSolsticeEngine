@@ -139,6 +139,7 @@ function fOnIcld(a_Errs)
 
 				// 输入框及其外壳
 				var l_Kind = l_This.cGetKind();
+				var l_Type = (0 == l_Kind) ? "password" : "text";
 				if (2 == l_Kind)
 				{
 					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " textarea",
@@ -146,9 +147,9 @@ function fOnIcld(a_Errs)
 				}
 				else
 				{
-					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " input[type=text]",
+					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " input[type=" + l_Type + "]",
 						"input", null, null, null);
-					l_This.d_DomIpt.type = (0 == l_Kind) ? "password" : "text";
+					l_This.d_DomIpt.type = l_Type;
 				}
 
 				l_This.d_DomIpt.value = "";	// 清空文本

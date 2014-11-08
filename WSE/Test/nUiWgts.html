@@ -375,6 +375,7 @@
 
 						"nUi/PcdrLot.js",
 						"nUi/EfcMgr.js",
+						"nUi/Form.js",
 						"nUi/Frmwk.js",
 						
 						"nUi/nCmnWgts/Btn.js",
@@ -534,7 +535,6 @@
 
 
 					var l_Form = new nUi.tForm();			// 表单
-					l_This.e_Form = l_Form;
 					l_This.e_StaWgtSet.cAdd(l_Form);
 
 					l_Wgt = new nCmnWgts.tBtn();	// Btn1st
@@ -617,7 +617,7 @@
 							console.log("<c_fOnOk>文本框的内容是：" + a_NewText + ", Old =" + a_OldText);
 						}
 					});
-				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tEdit();	// Edit
@@ -631,7 +631,7 @@
 						//	console.log("文本框的内容是：" + a_NewText);
 						}
 					});
-				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tList();	// List1
@@ -645,7 +645,7 @@
 //							//	console.log("文本框的内容是：" + a_Text);
 //						}
 					});
-				//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tList();	// List2
@@ -658,7 +658,7 @@
 //							//	console.log("文本框的内容是：" + a_Text);
 //						}
 					});
-					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tSwch();	// Swch
@@ -672,7 +672,7 @@
 //						}
 					});
 				//	l_Wgt.cOnOff(true);
-					//	l_This.e_StaWgtSet.cAdd(l_Wgt);
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tCmb();	// Cmb1
@@ -685,6 +685,7 @@
 						//	console.log(a_Text);
 						}
 					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tCmb();	// Cmb2
@@ -699,6 +700,7 @@
 						//	console.log(a_Text);
 						}
 					});
+					l_This.e_StaWgtSet.cAdd(l_Wgt);
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
 					l_Wgt = new nCmnWgts.tBtn();	// FormSbmt
@@ -707,7 +709,7 @@
 						c_PutSrc: "k_FormSbmt",
 						c_fOnClk: function (a_Wgt)
 						{
-//							var l_Kvo = l_This.e_Form.cSrlz(null);
+//							var l_Kvo = l_Form.cSrlz(null);
 //							var l_Ueq = nWse.tAjax.scUrlEcdQry(null, l_Kvo);
 //							console.log("表单序列化：");
 //							console.log("<UEQ> = " + l_Ueq);
@@ -905,8 +907,8 @@
 						// 测试cClnPutTgt和vcUbnd
 						var l_PutSrcId = "k_Cmb1";
 						var l_KWgt;
-					//	var l_WgtSet = stFrmwk.cAcsStaWgtSet();
-						var l_WgtSet = l_Form.cAcsWgtSet();
+						var l_WgtSet = stFrmwk.cAcsStaWgtSet();
+					//	var l_WgtSet = l_Form.cAcsWgtSet();
 //						if ("K".charCodeAt(0) == a_Evt.keyCode)
 //						{
 //							l_KWgt = l_WgtSet.cAcsByPutSrcId(l_PutSrcId);
@@ -994,7 +996,49 @@
 					});
 
 					// 表单
-					l_This.eBpc_FormSbmt(a_Lot);
+					l_Lot
+							.cPut({
+								c_NewRow : true,
+								c_Id: "k_PutTgt_Edit1",
+								c_HrztAln: -1,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id: "k_PutTgt_Edit2",
+								c_GridOfst: +2,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_NewRow: true,
+								c_Id : "k_PutTgt_List1",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id : "k_PutTgt_List2",
+								c_GridOfst: +2,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_NewRow: true,
+								c_Id : "k_PutTgt_Swch",
+								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
+							})
+							.cPut({
+								c_Id : "k_PutTgt_Cmb1",
+								c_GridOfst: +1,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_Id : "k_PutTgt_Cmb2",
+								c_GridOfst: +1,
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+							.cPut({
+								c_NewRow: true,
+								c_Id: "k_PutTgt_FormSbmt",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+							})
+					;
 
 					l_Lot.cPut({
 						c_Id: "k_PutTgt_LogIn",
@@ -1036,49 +1080,7 @@
 					var l_Lot = a_Lot;
 					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
 
-					l_Lot
-					.cPut({
-						c_NewRow : true,
-						c_Id: "k_PutTgt_Edit1",
-						c_HrztAln: -1,
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_Id: "k_PutTgt_Edit2",
-						c_GridOfst: +2,
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_NewRow: true,
-						c_Id : "k_PutTgt_List1",
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_Id : "k_PutTgt_List2",
-						c_GridOfst: +2,
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_NewRow: true,
-						c_Id : "k_PutTgt_Swch",
-						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-					})
-					.cPut({
-						c_Id : "k_PutTgt_Cmb1",
-						c_GridOfst: +1,
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_Id : "k_PutTgt_Cmb2",
-						c_GridOfst: +1,
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					.cPut({
-						c_NewRow: true,
-						c_Id: "k_PutTgt_FormSbmt",
-						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-					})
-					;
+
 				}
 			});
 
