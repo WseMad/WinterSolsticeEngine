@@ -95,6 +95,7 @@ function fOnIcld(a_Errs)
 			/// c_Plchd：String，占位符
 			/// c_SlcOnly：Boolean，只选？
 			/// c_InitSlc：Number$String，初始选项索引或文本
+			/// c_SlcAllOnActv：Boolean，当激活时全选？
 			/// c_fOnType：void f(a_Edit, a_NewText, a_OldText)，当键入时
 			/// c_fOnOk：void f(a_Edit, a_NewText, a_OldText)，当确定时
 			/// }
@@ -117,6 +118,7 @@ function fOnIcld(a_Errs)
 					c_PutSrc: l_This.d_PutSrcId_Edit,
 					c_ReadOnly: a_Cfg.c_SlcOnly,
 					c_Plchd: a_Cfg.c_SlcOnly ? (a_Cfg.c_Plchd || "—— 未选择 ——") : a_Cfg.c_Plchd,
+					c_SlcAllOnActv : a_Cfg.c_SlcAllOnActv,
 					c_fOnType : function (a_Edit, a_NewText, a_OldText)
 					{
 						l_This.dSetVal(a_NewText);	// 设置值

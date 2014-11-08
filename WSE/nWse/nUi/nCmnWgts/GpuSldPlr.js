@@ -492,6 +492,7 @@ function fOnIcld(a_Errs)
 				l_Wgt.vcBind({
 					c_PutTgt: tWgt.sd_SubWgtPutTgtId,
 					c_PutSrc: tWgt.sd_SubWgtPutSrcId
+					,c_SlcAllOnActv : true	// 当激活时全选
 					,c_fOnOk: function (a_Wgt, a_NewText, a_OldText)
 					{
 						// 如果图像为空
@@ -1297,9 +1298,9 @@ function fOnIcld(a_Errs)
 		s_PostAry.push(new tGpuSldPlr.tPost_扩大());
 
 		nWse.fClass(tGpuSldPlr,
-		function tPost_流淌()
+		function tPost_淌下()
 		{
-			this.odBase(tPost_流淌).odCall("流淌");	// 基类版本
+			this.odBase(tPost_淌下).odCall("淌下");	// 基类版本
 
 			this.d_ClipPath = new tPath();
 		},
@@ -1364,7 +1365,7 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 		});
-		s_PostAry.push(new tGpuSldPlr.tPost_流淌());
+		s_PostAry.push(new tGpuSldPlr.tPost_淌下());
 
 //		nWse.fClass(tGpuSldPlr,
 //		function tPost_()

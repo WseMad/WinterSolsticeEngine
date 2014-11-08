@@ -126,6 +126,7 @@ function fOnIcld(a_Errs)
 			/// c_Kind：Number，种类，-1=未知（尚未绑定），0=密码，1=单行（默认），2=多行
 			/// c_Plchd：String，占位符
 			/// c_ReadOnly：Boolean，只读？
+			/// c_SlcAllOnActv：Boolean，当激活时全选？
 			/// c_fOnType：void f(a_Edit, a_NewText, a_OldText)，当键入时
 			/// c_fOnOk：void f(a_Edit, a_NewText, a_OldText)，当确定时
 			/// }
@@ -160,6 +161,9 @@ function fOnIcld(a_Errs)
 				l_This.d_DomIpt.addEventListener("focus", // 得到焦点事件
 					function ()
 					{
+						if (! l_This.cHasBnd())
+						{ return; }
+
 						if (a_Cfg.c_ReadOnly)	// 只读？在这里再次处理一下更好，IE里即使只读光标也会闪烁！
 						{
 							l_This.d_DomIpt.blur();	// 若得到焦点，立即放弃焦点
@@ -174,6 +178,17 @@ function fOnIcld(a_Errs)
 					function ()
 					{
 						l_This.d_PsesIptFoc = false;	// 没有输入焦点
+					});
+
+				l_This.d_DomIpt.addEventListener("click", // 单击事件
+					function (a_Evt)
+					{
+						if (! l_This.cHasBnd())
+						{ return; }
+
+						//【浏览器BUG】不要在focus里处理，Chrome和火狐都有问题
+						if (l_This.d_Cfg.c_SlcAllOnActv) // 当激活时全选？
+						{ l_This.d_DomIpt.select(); }
 					});
 
 				if (a_Cfg.c_Plchd)	// 占位符

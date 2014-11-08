@@ -94,7 +94,7 @@
 			z-index: 10;
 		}
 
-		#k_PutTgt_Srlz, #k_PutTgt_LogIn, #k_PutTgt_SignIn
+		#k_PutTgt_FormSbmt, #k_PutTgt_LogIn, #k_PutTgt_SignIn
 		{
 			margin: 0px 10px 50px 10px;
 		}
@@ -150,8 +150,8 @@
 			<span data-Wse_Tit>囊形按钮</span>
 		</div>
 
-		<div id="k_Srlz" class="cnWse_PutSrc">
-			<span data-Wse_Tit>表单序列化</span>
+		<div id="k_FormSbmt" class="cnWse_PutSrc">
+			<span data-Wse_Tit>表单提交</span>
 		</div>
 		<div id="k_LogIn" class="cnWse_PutSrc">
 			<span data-Wse_Tit>登录</span>
@@ -472,6 +472,8 @@
 				l_This.e_WidPct = 100;				// 宽度百分比
 				l_This.e_PcdrLot = new tPcdrLot();	// 程序化布局
 				stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
+
+				l_This.e_Sta = 0;		// 状态：0=控件展示；1=表单提交
 			},
 			null,
 			{
@@ -699,18 +701,31 @@
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
 
-					l_Wgt = new nCmnWgts.tBtn();	// Srlz
+					l_Wgt = new nCmnWgts.tBtn();	// FormSbmt
 					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_Srlz",
-						c_PutSrc: "k_Srlz",
+						c_PutTgt: "k_PutTgt_FormSbmt",
+						c_PutSrc: "k_FormSbmt",
 						c_fOnClk: function (a_Wgt)
 						{
-							var l_Kvo = l_This.e_Form.cSrlz(null);
-							var l_Ueq = nWse.tAjax.scUrlEcdQry(null, l_Kvo);
-							console.log("表单序列化：");
-							console.log("<UEQ> = " + l_Ueq);
-							console.log("<JSON> = " + JSON.stringify(l_Kvo));
-							console.log();
+//							var l_Kvo = l_This.e_Form.cSrlz(null);
+//							var l_Ueq = nWse.tAjax.scUrlEcdQry(null, l_Kvo);
+//							console.log("表单序列化：");
+//							console.log("<UEQ> = " + l_Ueq);
+//							console.log("<JSON> = " + JSON.stringify(l_Kvo));
+//							console.log();
+
+							// 转换状态
+							if (1 == l_This.e_Sta)
+							{
+								l_This.e_Sta = 0;
+								a_Wgt.cAcsTit().textContent = "表单提交";
+							}
+							else
+							{
+								l_This.e_Sta = 1;
+								a_Wgt.cAcsTit().textContent = "控件展示";
+							}
+							stFrmwk.cRunLot();	// 运行布局
 						}
 					});
 					l_This.e_StaWgtSet.cAdd(l_Wgt);
@@ -892,27 +907,27 @@
 						var l_KWgt;
 					//	var l_WgtSet = stFrmwk.cAcsStaWgtSet();
 						var l_WgtSet = l_Form.cAcsWgtSet();
-						if ("K".charCodeAt(0) == a_Evt.keyCode)
-						{
-							l_KWgt = l_WgtSet.cAcsByPutSrcId(l_PutSrcId);
-							if (l_KWgt && l_KWgt.cHasBnd())
-							{
-								l_KWgt.cClnPutTgt();
-								l_KWgt.vcUbnd();
-								l_WgtSet.cRmvByPutSrcId(l_PutSrcId);
-							}
-							else
-							{
-								l_KWgt = new nCmnWgts.tCmb();
-								l_KWgt.vcBind({
-									c_PutTgt: l_PutSrcId.replace("k_", "k_PutTgt_"),
-									c_PutSrc: l_PutSrcId
-									,c_Plchd: "可编辑"
-								});
-								l_WgtSet.cAdd(l_KWgt);
-								l_KWgt.cRfsh();
-							}
-						}
+//						if ("K".charCodeAt(0) == a_Evt.keyCode)
+//						{
+//							l_KWgt = l_WgtSet.cAcsByPutSrcId(l_PutSrcId);
+//							if (l_KWgt && l_KWgt.cHasBnd())
+//							{
+//								l_KWgt.cClnPutTgt();
+//								l_KWgt.vcUbnd();
+//								l_WgtSet.cRmvByPutSrcId(l_PutSrcId);
+//							}
+//							else
+//							{
+//								l_KWgt = new nCmnWgts.tCmb();
+//								l_KWgt.vcBind({
+//									c_PutTgt: l_PutSrcId.replace("k_", "k_PutTgt_"),
+//									c_PutSrc: l_PutSrcId
+//									,c_Plchd: "可编辑"
+//								});
+//								l_WgtSet.cAdd(l_KWgt);
+//								l_KWgt.cRfsh();
+//							}
+//						}
 
 					});
 				}
@@ -930,112 +945,139 @@
 					stFrmwk.cRunLot();			// 运行布局
 				}
 				,
+				eBpc_Base : function (a_Lot)
+				{
+					var l_This = this;
+					var l_Lot = a_Lot;
+					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
+					l_Lot
+							.cBoa({
+								c_Id: "k_TestBoa"
+							})
+							.cCol({
+								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+							});
+				}
+				,
 				cBpc : function (a_Lot)
 				{
 					var l_This = this;
 					var l_Lot = a_Lot;
 					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
-					
-					l_Lot
-					.cBoa({
-						c_Id: "k_TestBoa"
+
+					l_This.eBpc_Base(a_Lot);
+
+					// 状态机 - 表单提交
+					if (1 == l_This.e_Sta)
+					{
+						return this.eBpc_FormSbmt(a_Lot);
+					}
+
+					// 状态机 - 控件展示
+					l_Lot.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_Btn1st",
+						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
 					})
-						.cCol({
-							c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
-						})
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Btn1st",
-								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-							})
-							.cPut({
-								c_Id: "k_PutTgt_Btn2nd",
-								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-							})
-							.cPut({
-								c_NewRow : (0 == l_BrkPntIdx),
-								c_Id: "k_PutTgt_Btn3rd",
-								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-							})
-							.cPut({
-								c_Id: "k_PutTgt_Btn4th",
-								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-							})
+					.cPut({
+						c_Id: "k_PutTgt_Btn2nd",
+						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
+					})
+					.cPut({
+						c_NewRow : (0 == l_BrkPntIdx),
+						c_Id: "k_PutTgt_Btn3rd",
+						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
+					})
+					.cPut({
+						c_Id: "k_PutTgt_Btn4th",
+						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
+					});
 
-							// 表单
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Edit1",
-								c_HrztAln: -1,
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_Id: "k_PutTgt_Edit2",
-								c_GridOfst: +2,
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_NewRow: true,
-								c_Id : "k_PutTgt_List1",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_Id : "k_PutTgt_List2",
-								c_GridOfst: +2,
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_NewRow: true,
-								c_Id : "k_PutTgt_Swch",
-								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-							})
-							.cPut({
-								c_Id : "k_PutTgt_Cmb1",
-								c_GridOfst: +1,
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_Id : "k_PutTgt_Cmb2",
-								c_GridOfst: +1,
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_NewRow: true,
-								c_Id: "k_PutTgt_Srlz",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_Id: "k_PutTgt_LogIn",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
-							.cPut({
-								c_Id: "k_PutTgt_SignIn",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
+					// 表单
+					l_This.eBpc_FormSbmt(a_Lot);
 
+					l_Lot.cPut({
+						c_Id: "k_PutTgt_LogIn",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_Id: "k_PutTgt_SignIn",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					});
 
-							// 其他
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Menu1",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 10 : 10
-							})
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_SetMode",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
+					// 其他
+					l_Lot.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_Menu1",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 10 : 10
+					})
+					.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_SetMode",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
 
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Acod1",
-								c_GridCnt: 10
-							})
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_BtnSkin",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-							})
+					.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_Acod1",
+						c_GridCnt: 10
+					})
+					.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_BtnSkin",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					;
+				}
+				,
+				eBpc_FormSbmt : function (a_Lot)
+				{
+					var l_This = this;
+					var l_Lot = a_Lot;
+					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
+
+					l_Lot
+					.cPut({
+						c_NewRow : true,
+						c_Id: "k_PutTgt_Edit1",
+						c_HrztAln: -1,
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_Id: "k_PutTgt_Edit2",
+						c_GridOfst: +2,
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_NewRow: true,
+						c_Id : "k_PutTgt_List1",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_Id : "k_PutTgt_List2",
+						c_GridOfst: +2,
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_NewRow: true,
+						c_Id : "k_PutTgt_Swch",
+						c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
+					})
+					.cPut({
+						c_Id : "k_PutTgt_Cmb1",
+						c_GridOfst: +1,
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_Id : "k_PutTgt_Cmb2",
+						c_GridOfst: +1,
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
+					.cPut({
+						c_NewRow: true,
+						c_Id: "k_PutTgt_FormSbmt",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
+					})
 					;
 				}
 			});
