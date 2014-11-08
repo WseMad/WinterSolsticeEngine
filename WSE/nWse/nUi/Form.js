@@ -240,20 +240,6 @@ function fOnIcld(a_Errs)
 					});
 				return this;
 			}
-			,
-			/// 输入焦点
-			/// a_PutSrcId：String，放置来源ID
-			/// a_YesNo：Boolean，是否？
-			cIptFoc : function (a_PutSrcId, a_YesNo)
-			{
-				var l_This = this;
-				var l_Wgt = l_This.d_SubWgtSet && l_This.d_SubWgtSet.cAcsByPutSrcId(a_PutSrcId);
-				if (! l_Wgt)
-				{ return this; }
-
-				nUi.itForm.ocBindUbnd(l_Wgt, function (a_Istn) { a_Istn.vcIptFoc(a_YesNo); });
-				return this;
-			}
 		}
 		,
 		{
@@ -280,12 +266,6 @@ function fOnIcld(a_Errs)
 			/// 反序列化
 			/// a_Kvo：Object，键值对象
 			vcDsrlz : function f(a_Kvo)
-			{
-				return this;
-			}
-			,
-			/// 输入焦点
-			vcIptFoc : function f(a_YesNo)
 			{
 				return this;
 			}

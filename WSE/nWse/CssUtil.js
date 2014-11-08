@@ -113,8 +113,8 @@ function fOnIcld(a_Errs)
 			if ("mozTransform" in l_Stl)
 			{ e_BrsPfx_Tsfm = "mozTransform"; }
 			else
-			if ("oTransform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "oTransform"; }
+			if ("OTransform" in l_Stl)
+			{ e_BrsPfx_Tsfm = "OTransform"; }
 			else
 			if ("msTransform" in l_Stl)
 			{ e_BrsPfx_Tsfm = "msTransform"; }

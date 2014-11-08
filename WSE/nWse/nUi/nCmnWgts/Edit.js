@@ -415,6 +415,10 @@ function fOnIcld(a_Errs)
 				{
 					a_DmntTch.c_Hdld = false;
 				}
+//				else
+//				{
+//					a_DmntTch.c_Hdld = stDomUtil.cIsSelfOrAcst(l_This.d_PutTgt, a_DmntTch.cAcsEvtTgt());
+//				}
 
 				return this;
 			}
@@ -425,6 +429,10 @@ function fOnIcld(a_Errs)
 				this.odBase(f).odCall();	// 基类版本
 
 				var l_This = this;
+
+				if (l_This.d_DomIpt)			// 得到焦点
+				{ l_This.d_DomIpt.focus(); }
+
 				return this;
 			}
 			,
@@ -438,7 +446,6 @@ function fOnIcld(a_Errs)
 				if (l_This.d_DomIpt)			// 清除焦点
 				{ l_This.d_DomIpt.blur(); }
 
-			//	l_This.d_PsesIptFoc = false;	// 没有输入焦点，【onblur会进行】
 				return this;
 			}
 			,
@@ -663,17 +670,6 @@ function fOnIcld(a_Errs)
 
 				// 载入文本
 				l_This.cSetText(a_Kvo[l_Key]);
-				return this;
-			}
-			,
-			/// 输入焦点
-			vcIptFoc : function f(a_YesNo)
-			{
-				var l_This = this;
-				if (l_This.d_DomIpt)
-				{
-					a_YesNo ? l_This.d_DomIpt.focus() : l_This.d_DomIpt.blur();
-				}
 				return this;
 			}
 		});

@@ -160,7 +160,7 @@ function fOnIcld(a_Errs)
 			e_Focs.push(a_Foc);
 
 			// 然后通知，注意控件的选择
-			fObtnTopWgt(a_Foc).vcGainFoc();
+			(a_Foc).vcGainFoc();
 		}
 
 		function fRmvFoc(a_Foc)
@@ -170,7 +170,7 @@ function fOnIcld(a_Errs)
 			{ return; }
 
 			// 首先通知，注意控件的选择
-			fObtnTopWgt(a_Foc).vcLoseFoc();
+			(a_Foc).vcLoseFoc();
 
 			// 然后擦除
 			e_Focs.splice(l_Idx, 1);
@@ -179,7 +179,7 @@ function fOnIcld(a_Errs)
 		function fClrFocs()
 		{
 			// 首先通知，注意控件的选择
-			stAryUtil.cFor(e_Focs, function (a_Ary, a_Idx, a_Foc) { fObtnTopWgt(a_Foc).vcLoseFoc(); });
+			stAryUtil.cFor(e_Focs, function (a_Ary, a_Idx, a_Foc) { (a_Foc).vcLoseFoc(); });
 
 			// 然后清空
 			e_Focs.length = 0;
@@ -531,6 +531,8 @@ function fOnIcld(a_Errs)
 					l_Foc = l_Focs[i];
 					if (l_HdldWgts.indexOf(l_Foc) >= 0)
 					{ continue; }
+
+					console.log("stFrmwk Foc: " + l_Foc.cAcsPutSrc().id);
 
 					l_Loop = true;				// 发现一个尚未处理过的控件，设置循环标志，因为接下来的处理可能引入新的焦点
 					l_Foc.vcHdlIpt(a_Ipt);

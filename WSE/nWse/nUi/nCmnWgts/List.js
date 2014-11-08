@@ -716,12 +716,6 @@ function fOnIcld(a_Errs)
 
 				return this;
 			}
-			,
-			/// 输入焦点
-			vcIptFoc : function f(a_YesNo)
-			{
-				return this;
-			}
 		});
 	})();
 

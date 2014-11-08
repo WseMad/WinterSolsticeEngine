@@ -809,21 +809,6 @@ function fOnIcld(a_Errs)
 				l_This.cSetText(a_Kvo[nUi.itForm.scGnrtInrKey(l_Key)]);
 				return this;
 			}
-			,
-			/// 输入焦点
-			vcIptFoc : function f(a_YesNo)
-			{
-				var l_This = this;
-				if (l_This.d_Edit)
-				{
-					nUi.itForm.ocBindUbnd(l_This.d_Edit,
-						function (a_Istn)
-						{
-							a_Istn.vcIptFoc(a_YesNo);
-						});
-				}
-				return this;
-			}
 		});
 	})();
 

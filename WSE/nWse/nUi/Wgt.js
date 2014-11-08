@@ -239,7 +239,11 @@ function fOnIcld(a_Errs)
 			vcIptRset : function f()
 			{
 				// 清除支配触点
-				fSetDmntTchId(this, null);
+				var l_This = this;
+				fSetDmntTchId(l_This, null);
+
+				// CSS类
+				l_This.dRplcCsscForPutTgt("cnWse_tWgt_Tch", "cnWse_tWgt_Nml", true);
 				return this;
 			}
 			,
@@ -266,7 +270,7 @@ function fOnIcld(a_Errs)
 						fSetDmntTchId(l_This, null);
 
 						// 对输入不作处理
-						return;
+						return this;
 					}
 				}
 				else // 尚无支配触点
@@ -289,7 +293,7 @@ function fOnIcld(a_Errs)
 						}
 
 						// 对输入不作处理
-						return;
+						return this;
 					}
 
 					// 如果找到，将这个触点选作自己的支配触点

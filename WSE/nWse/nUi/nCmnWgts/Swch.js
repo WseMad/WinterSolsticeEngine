@@ -421,12 +421,6 @@ function fOnIcld(a_Errs)
 				l_This.cOnOff(("1" == a_Kvo[l_Key]));
 				return this;
 			}
-			,
-			/// 输入焦点
-			vcIptFoc : function f(a_YesNo)
-			{
-				return this;
-			}
 		});
 	})();
 
