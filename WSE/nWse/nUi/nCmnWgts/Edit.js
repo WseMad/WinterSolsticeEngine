@@ -173,6 +173,8 @@ function fOnIcld(a_Errs)
 							l_This.d_PsesIptFoc = true;	// 拥有输入焦点
 							stCssUtil.cAddCssc(l_This.d_DomIptHull, "cnWse_tEdit_Glow");	// 辉光类
 						}
+
+					//	console.log("focus");
 					});
 
 				l_This.d_DomIpt.addEventListener("blur", // 失去焦点事件
@@ -180,6 +182,8 @@ function fOnIcld(a_Errs)
 					{
 						l_This.d_PsesIptFoc = false;	// 没有输入焦点
 						stCssUtil.cRmvCssc(l_This.d_DomIptHull, "cnWse_tEdit_Glow");	// 辉光类
+
+					//	console.log("blur");
 					});
 
 				l_This.d_DomIpt.addEventListener("click", // 单击事件
@@ -372,6 +376,12 @@ function fOnIcld(a_Errs)
 
 				if (l_This.dIsTchBgn(a_DmntTch))
 				{
+					//【浏览器BUG】若之前焦点是另一个输入框，则IE只会触发之前焦点的blur，不会触发当前焦点的focus，强制触发
+					if (l_This.d_DomIpt === a_DmntTch.cAcsEvtTgt())
+					{
+						l_This.d_DomIpt.focus();
+					}
+
 					a_DmntTch.c_Hdld = true;		// 已处理
 				}
 				else
@@ -597,7 +607,9 @@ function fOnIcld(a_Errs)
 			dTrgrTypeEvt : function ()
 			{
 				var l_This = this;
-				if ((! l_This.d_Cfg.c_fOnType))
+
+				//【浏览器BUG】加入第二个条件比较保险，IE一开始就会触发一次input事件
+				if ((! l_This.d_Cfg.c_fOnType) || (l_This.cGetText() == l_This.d_OldTypeText))
 				{ return this; }
 
 				l_This.d_Cfg.c_fOnType(l_This, l_This.cGetText(), l_This.d_OldTypeText);
