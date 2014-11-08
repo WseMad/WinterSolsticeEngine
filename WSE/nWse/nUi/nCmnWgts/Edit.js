@@ -137,16 +137,16 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tEdit");	// CSS类
 
-				// 输入框
+				// 输入框及其外壳
 				var l_Kind = l_This.cGetKind();
 				if (2 == l_Kind)
 				{
-					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">textarea",
+					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " textarea",
 						"textarea", null, null, null);
 				}
 				else
 				{
-					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + ">input[type=text]",
+					l_This.d_DomIpt = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " input[type=text]",
 						"input", null, null, null);
 					l_This.d_DomIpt.type = (0 == l_Kind) ? "password" : "text";
 				}
@@ -171,6 +171,7 @@ function fOnIcld(a_Errs)
 						else
 						{
 							l_This.d_PsesIptFoc = true;	// 拥有输入焦点
+							stCssUtil.cAddCssc(l_This.d_DomIptHull, "cnWse_tEdit_Glow");	// 辉光类
 						}
 					});
 
@@ -178,6 +179,7 @@ function fOnIcld(a_Errs)
 					function ()
 					{
 						l_This.d_PsesIptFoc = false;	// 没有输入焦点
+						stCssUtil.cRmvCssc(l_This.d_DomIptHull, "cnWse_tEdit_Glow");	// 辉光类
 					});
 
 				l_This.d_DomIpt.addEventListener("click", // 单击事件
@@ -222,7 +224,19 @@ function fOnIcld(a_Errs)
 						l_This.dUpdOldOkText();		// 更新旧文本，在触发事件后
 					}
 				});
-				l_This.d_PutSrc.appendChild(l_This.d_DomIpt);	// 添加到放置来源
+			//	l_This.d_PutSrc.appendChild(l_This.d_DomIpt);	// 添加到放置来源，【放到外壳里，为了支持Safari，见下】
+
+				if (l_This.d_DomIpt.parentNode && stCssUtil.cHasCssc("cnWse_tEdit_IptHull")) // 如果已有外壳
+				{
+					l_This.d_DomIptHull = l_This.d_DomIpt.parentNode;
+				}
+				else // 需要新建外壳
+				{
+					l_This.d_DomIptHull = stDomUtil.cObtnOne(l_This.dGnrtQrySlc_PutSrc() + " .cnWse_tEdit_IptHull",
+						"div", null, "cnWse_tEdit_IptHull", l_This.d_PutSrc);
+					l_This.d_DomIptHull.appendChild(l_This.d_DomIpt);
+				}
+
 
 				// 尝试取得前缀
 				l_This.d_DomPfx = l_This.dAcsDomNodeByAttr("Wse_Pfx");
@@ -313,9 +327,13 @@ function fOnIcld(a_Errs)
 					l_This.dPutToTgt(l_This.d_DomPfx);
 				}
 
-				if (l_This.d_DomIpt) // 输入
+//				if (l_This.d_DomIpt) // 输入，【改成外壳】
+//				{
+//					l_This.dPutToTgt(l_This.d_DomIpt);
+//				}
+				if (l_This.d_DomIptHull)
 				{
-					l_This.dPutToTgt(l_This.d_DomIpt);
+					l_This.dPutToTgt(l_This.d_DomIptHull);
 				}
 
 				if (l_This.d_DomOk) // OK
@@ -526,10 +544,18 @@ function fOnIcld(a_Errs)
 
 				if (2 == l_This.cGetKind())
 				{
-
+					//【浏览器BUG】Chrome下外壳的高度会多出几个像素，强制他俩相等
+					stCssUtil.cSetDimHgt(l_This.d_DomIptHull, l_This.d_DomIpt.offsetHeight);
 				}
 				else
 				{
+					// 外壳显示改为“inline-block”
+					if (l_This.d_DomIptHull)
+					{
+						if ("inline-block" != l_This.d_DomIptHull.style.display)
+						{ l_This.d_DomIptHull.style.display = "inline-block"; }
+					}
+
 					// 文本框的宽度恰好让出前缀、确定按钮或后缀
 					if (l_This.d_DomPfx)
 					{
@@ -543,7 +569,8 @@ function fOnIcld(a_Errs)
 
 					l_CtntW = Math.floor(l_This.dGetPutTgtCtntWid());
 					l_IptW = Math.floor(Math.max(l_CtntW - l_PfxW - l_OkW, 16));
-					stCssUtil.cSetDimWid(l_This.d_DomIpt, l_IptW);	// 利用放置目标内容宽度
+				//	stCssUtil.cSetDimWid(l_This.d_DomIpt, l_IptW);	// 利用放置目标内容宽度【改成外壳了】
+					stCssUtil.cSetDimWid(l_This.d_DomIptHull, l_IptW);
 
 					//【不用了，但是OK或后缀可能在动画中掉落到下一行】
 					// 确定按钮或文本垂直居中，高度同文本框

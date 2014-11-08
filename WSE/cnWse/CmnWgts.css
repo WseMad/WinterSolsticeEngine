@@ -164,16 +164,9 @@
 	cursor: default;
 }
 
-.cnWse_PutTgt.cnWse_tEdit>input[type=text],
-.cnWse_PutTgt.cnWse_tEdit>input[type=password],
-.cnWse_PutTgt.cnWse_tEdit>textarea
+/* 输入外壳 */
+.cnWse_PutTgt.cnWse_tEdit .cnWse_tEdit_IptHull
 {
-	box-sizing: border-box;
-	margin: 0;
-	/*border: 1px solid rgb(0, 0, 0);*/
-	border: none;
-	padding: 0.5em;
-
 	background-color: rgba(255, 255, 255, 0.7);
 
 	/* 辉光效果 */
@@ -190,17 +183,21 @@
 	transition-duration: 0.6s;
 }
 
-.cnWse_PutTgt.cnWse_tEdit>textarea
+.cnWse_PutTgt.cnWse_tEdit input[type=text],
+.cnWse_PutTgt.cnWse_tEdit input[type=password],
+.cnWse_PutTgt.cnWse_tEdit textarea
 {
 	width: 100%;
+	padding: 0.5em;
+	background-color: transparent;
 }
 
 /* 辉光效果 */
-.cnWse_PutTgt.cnWse_tEdit>input[type=text]:focus,
-.cnWse_PutTgt.cnWse_tEdit>input[type=password]:focus,
-.cnWse_PutTgt.cnWse_tEdit>textarea:focus
+/*.cnWse_PutTgt.cnWse_tEdit input[type=text]:focus,*/
+/*.cnWse_PutTgt.cnWse_tEdit input[type=password]:focus,*/
+/*.cnWse_PutTgt.cnWse_tEdit textarea:focus*/
+.cnWse_PutTgt.cnWse_tEdit .cnWse_tEdit_IptHull.cnWse_tEdit_Glow
 {
-	/*border: 1px solid rgb(0, 255, 0);*/		/* 会改变高度 */
 	box-shadow: inset 0px 0px 10px rgb(0, 255, 0),
 				0px 0px 10px rgb(0, 255, 0);
 }
@@ -789,7 +786,7 @@
 	color: rgb(0, 0, 0);
 }
 
-.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit>input[type="text"]
+.cnWse_PutTgt.cnWse_tGpuSldPlr>.cnWse_PutTgt.cnWse_tEdit input[type="text"]
 {
 	padding: 4px;	/* 他们俩的边距必须相同 */
 }
