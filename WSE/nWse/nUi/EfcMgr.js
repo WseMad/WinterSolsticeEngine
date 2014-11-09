@@ -282,7 +282,7 @@ function fOnIcld(a_Errs)
 				var l_PN_End = (1 == a_Which) ? "c_fOnEntEnd" : ((2 == a_Which) ? "c_fOnRflEnd" : "c_fOnLeaEnd");
 				fEfcOn(l_PN_End, a_PutEfc, a_DftEfc, [a_PutTgt, a_Put]);
 
-				// 触发摆放事件
+				// 触发摆放事件，参数？
 				nUi.fTrgrPutEvt(a_Put, "AnmtEnd", null);
 			}
 

@@ -116,19 +116,6 @@ function fOnIcld(a_Errs)
 				l_This.d_Gap = l_Gap;
 				l_This.d_PutSrc.appendChild(l_Gap);		// 放入来源
 
-				// 注册放置目标事件处理器
-
-				if (! l_This.d_fOnAnmtUpdEnd)
-				{
-					// 展开式时必须校准位置
-					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
-					{
-						// 校准滑块位置
-						l_This.dRgltBlkX();
-					};
-
-					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-				}
 				return this;
 			}
 			,
@@ -153,19 +140,6 @@ function fOnIcld(a_Errs)
 				if (l_This.d_Gap)
 				{
 					l_This.dUbndFld("d_Gap");
-				}
-
-				// 注销放置目标事件处理器
-				if (l_This.d_fOnWidDtmnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-					l_This.d_fOnWidDtmnd = null;
-				}
-
-				if (l_This.d_fOnAnmtUpdEnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-					l_This.d_fOnAnmtUpdEnd = null;
 				}
 
 				// 重置
@@ -255,6 +229,17 @@ function fOnIcld(a_Errs)
 				// 根据宽高比修正高度
 				if (l_This.d_Cfg.c_FxdAr)
 				{ l_This.dFixHgtByAr(l_This.dGetPutTgtOfstWid()); }
+				return this;
+			}
+			,
+			/// 当放置目标动画更新结束
+			vdOnPutTgtAnmtUpdEnd : function f(a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+
+				// 校准滑块位置
+				l_This.dRgltBlkX();
 				return this;
 			}
 			,

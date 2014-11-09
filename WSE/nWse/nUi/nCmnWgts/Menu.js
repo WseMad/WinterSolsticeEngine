@@ -127,22 +127,6 @@ function fOnIcld(a_Errs)
 
 				// 得到各个DOM节点
 				l_This.dObtnDomNodes();
-
-				// 注册放置目标事件处理器 - 当动画更新结束时
-				if (! l_This.d_fOnAnmtUpdEnd)
-				{
-					// 展开式时必须校准位置
-					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
-					{
-						// 校准各级列表位置
-						if (l_This.cIsExpdMode())	// Expd在布局后校准次级列表，注意现在只更新即可！
-						{ l_This.dRgltListsPos_ExpdMode(l_This.d_RootUl, null, true); }
-					};
-
-					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-				}
-
-			//	l_This.d_PutTgt
 				return this;
 			}
 			,
@@ -161,13 +145,6 @@ function fOnIcld(a_Errs)
 				l_This.dAddRmvExpdLiCsscOfRootUl(null);
 				l_This.dAddRmvCsscOfRoot(false);
 			//	l_This.dAddRmvCsscOfNexts(false);	//【不要了】
-
-				// 注销放置目标事件处理器 - 当动画更新结束时
-				if (l_This.d_fOnAnmtUpdEnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-					l_This.d_fOnAnmtUpdEnd = null;
-				}
 
 				// 重置
 				fRset(this);
@@ -326,6 +303,18 @@ function fOnIcld(a_Errs)
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
+				return this;
+			}
+			,
+			/// 当放置目标动画更新结束
+			vdOnPutTgtAnmtUpdEnd : function f(a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+
+				// 校准各级列表位置
+				if (l_This.cIsExpdMode())	// Expd在布局后校准次级列表，注意现在只更新即可！
+				{ l_This.dRgltListsPos_ExpdMode(l_This.d_RootUl, null, true); }
 				return this;
 			}
 			,

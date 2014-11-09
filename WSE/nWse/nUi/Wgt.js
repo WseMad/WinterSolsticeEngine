@@ -177,6 +177,18 @@ function fOnIcld(a_Errs)
 
 					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
 				}
+
+				if (! l_This.d_fOnAnmtUpdEnd)
+				{
+					// 展开式时必须校准位置
+					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+					{
+						// 通知派生类，注意实参可能为空（动画结束）
+						l_This.vdOnPutTgtAnmtUpdEnd.apply(l_This, arguments);
+					};
+
+					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
+				}
 				return this;
 			}
 			,
@@ -369,6 +381,14 @@ function fOnIcld(a_Errs)
 			,
 			/// 当放置目标宽度已决定
 			vdOnPutTgtWidDtmnd : function f()
+			{
+			//	this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+				return this;
+			}
+			,
+			/// 当放置目标动画更新结束
+			vdOnPutTgtAnmtUpdEnd : function f(a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 			{
 			//	this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
 				var l_This = this;
