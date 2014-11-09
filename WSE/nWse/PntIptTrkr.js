@@ -127,6 +127,11 @@ function fOnIcld(a_Errs)
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
 			ePushTchIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
+
+//			//【调试iPad】
+//			var l_TestOpt = document.getElementById("k_TestOpt");
+//			if (l_TestOpt)
+//			{ l_TestOpt.textContent = a_Evt.touches[0].identifier + ", " + a_Evt.touches[0].clientX + ", " + a_Evt.touches[0].clientY; }
 		};
 
 		var l_fOnTchDown = function (a_Evt)
@@ -311,23 +316,25 @@ function fOnIcld(a_Errs)
 				}
 				else
 				{
-					// 计算偏移量和累计偏移距离
-					//【浏览器BUG】注意这里的写法，为了兼容iOS，不要用“+=”；
-					// 似乎在iOS上，当拖动手指时的touchmove事件没能正确处理，时断时续
+					// 计算偏移量和累计偏移距离，并更新记录
 					l_TchInIpt = a_Ipt.c_Tchs[l_IdxInIpt];
 					l_TchInIpt.c_OfstX = l_TchInIpt.c_X - a_AT.c_X;
 					l_TchInIpt.c_OfstY = l_TchInIpt.c_Y - a_AT.c_Y;
-					l_TchInIpt.c_AccOfstDistX = (l_TchInIpt.c_AccOfstDistX || 0) + Math.abs(l_TchInIpt.c_OfstX);
-					l_TchInIpt.c_AccOfstDistY = (l_TchInIpt.c_AccOfstDistY || 0) + Math.abs(l_TchInIpt.c_OfstY);
+					a_AT.c_X = l_TchInIpt.c_X;
+					a_AT.c_Y = l_TchInIpt.c_Y;
+					a_AT.c_AccOfstDistX += Math.abs(l_TchInIpt.c_OfstX);
+					a_AT.c_AccOfstDistY += Math.abs(l_TchInIpt.c_OfstY);
+
+					// 复制记录
+					l_TchInIpt.c_BgnX = a_AT.c_BgnX;
+					l_TchInIpt.c_BgnY = a_AT.c_BgnY;
+					l_TchInIpt.c_AccOfstDistX = a_AT.c_AccOfstDistX;
+					l_TchInIpt.c_AccOfstDistY = a_AT.c_AccOfstDistY;
 
 //					//【调试iPad】
 //					var l_TestOpt = document.getElementById("k_TestOpt");
-//					if (l_TestOpt && (tPntIpt.tKind.i_TchMove == l_TchInIpt.c_Kind))
-//					{ l_TestOpt.textContent = l_TchInIpt.c_OfstX + ", " + l_TchInIpt.c_AccOfstDistY; }
-
-					// 更新记录
-					a_AT.c_X = l_TchInIpt.c_X;
-					a_AT.c_Y = l_TchInIpt.c_Y;
+//					if (l_TestOpt)// && (tPntIpt.tKind.i_TchMove == l_TchInIpt.c_Kind))
+//					{ l_TestOpt.textContent = l_TchInIpt.c_TchId + ", " + l_TchInIpt.c_AccOfstDistX + ", " + l_TchInIpt.c_AccOfstDistY; }
 				}
 			});
 
@@ -349,6 +356,10 @@ function fOnIcld(a_Errs)
 						c_TchId : a_Tch.c_TchId,	// 触点ID
 						c_X : a_Tch.c_X,			// 客户区坐标系位置
 						c_Y : a_Tch.c_Y,
+						c_BgnX : a_Tch.c_X,			// 追踪触摸屏的滑屏
+						c_BgnY : a_Tch.c_Y,
+						c_AccOfstDistX : 0,
+						c_AccOfstDistY : 0,
 						c_Evt : a_Tch.c_Evt			// 事件
 					});
 				}
@@ -560,7 +571,7 @@ function fOnIcld(a_Errs)
 			/// 根据ID查找触点
 			cFindTchById : function (a_TchId)
 			{
-				return a_TchId ? stAryUtil.cFind(this.c_Tchs, function (a_Ary, a_Idx, a_Tch) { return a_Tch.c_TchId == a_TchId; }) : -1;
+				return stAryUtil.cFind(this.c_Tchs, function (a_Ary, a_Idx, a_Tch) { return a_Tch.c_TchId == a_TchId; });
 			}
 			,
 			/// 根据拾取到的控件查找触点
@@ -741,7 +752,7 @@ function fOnIcld(a_Errs)
 			/// 发生滑动？
 			cHasSldn : function ()
 			{
-				return Math.max(this.c_AccOfstDistX, this.c_AccOfstDistY) > tTch.sc_DvtThrhd;
+				return this.cIsDvtFromBgn() || (Math.max(this.c_AccOfstDistX, this.c_AccOfstDistY) > tTch.sc_DvtThrhd);
 			}
 			,
 			eRspsByDomEvtFlag : function ()

@@ -181,14 +181,6 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 当放置目标宽度已决定
-			vdOnPutTgtWidDtmnd : function f()
-			{
-				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
-				var l_This = this;
-				return this;
-			}
-			,
 			/// 存取控件集
 			cAcsWgtSet : function ()
 			{

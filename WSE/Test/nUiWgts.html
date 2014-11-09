@@ -37,12 +37,7 @@
 			min-height: 2000px;		/* 为了收起折叠框时不缩短页面 */
 		}
 
-		div.cnWse_PutTgt
-		{
-			margin-bottom: 30px;
-		}
-
-		#k_TestBoa
+		#k_TestBoa, #k_FormBoa
 		{
 			min-height: 500px;
 			background-color: rgb(239, 228, 176);
@@ -121,21 +116,32 @@
 			border: 1px dotted black;
 		}
 
-		#k_PutTgt_Form
+		/* 表单提交状态 */
+		#k_FormBoa .cnWse_PutTgt
 		{
-			padding: 30px;
+			margin: 0px 0px 30px 0px;
 		}
 
-		#k_PutTgt_Form .cnWse_PutTgt
+		#k_PutTgt_Sbmt.cnWse_PutTgt
 		{
-			display: inline-block;
-			margin: 10px;
+			margin-top: 30px;
 		}
 
-		#k_PutTgt_Form .cnWse_tSwch
-		{
-			width: 200px;
-		}
+		/*#k_PutTgt_Form*/
+		/*{*/
+			/*padding: 30px;*/
+		/*}*/
+
+		/*#k_PutTgt_Form .cnWse_PutTgt*/
+		/*{*/
+			/*display: inline-block;*/
+			/*margin: 10px;*/
+		/*}*/
+
+		/*#k_PutTgt_Form .cnWse_tSwch*/
+		/*{*/
+			/*width: 150px;*/
+		/*}*/
 
 	</style>
 </head>
@@ -161,8 +167,29 @@
 		<!-- 表单 -->
 		<!---->
 
-		<form id="k_Form">
+		<form id="k_Form" class="cnWse_PutSrc">
 
+			<div id="k_Lab_Mail" class="">邮箱<span>（必填）</span>：</div>
+			<div id="k_Edit3" class="cnWse_PutSrc">
+				<!--<span data-Wse_Pfx style="padding: 0.25em;">Pfx</span>-->
+				<!--<span data-Wse_Sfx style="padding: 0.25em;">Sfx</span>-->
+			</div>
+
+			<div id="k_Lab_Age">年龄<span>（必填）</span>：</div>
+			<div id="k_Edit4" class="cnWse_PutSrc">
+			</div>
+
+			<div id="k_Lab_Gender">性别：</div>
+			<div id="k_List3" class="cnWse_PutSrc">
+				<ul>
+					<li>Male</li>
+					<li>Female</li>
+				</ul>
+			</div>
+
+			<div id="k_Lab_AcceptMail">接收邮件通知？</div>
+			<div id="k_Swch3" class="cnWse_PutSrc">
+			</div>
 		</form>
 
 		<!---->
@@ -220,15 +247,6 @@
 			<div data-Wse_Ok style="padding: 0.25em;">OK</div>
 		</div>
 
-		<div id="k_Edit3" class="cnWse_PutSrc">
-			<!--<span data-Wse_Pfx style="padding: 0.25em;">Pfx</span>-->
-			<!--<span data-Wse_Sfx style="padding: 0.25em;">Sfx</span>-->
-		</div>
-
-		<div id="k_Edit4" class="cnWse_PutSrc">
-
-		</div>
-
 		<!---->
 		<!-- 列表 -->
 		<!---->
@@ -257,21 +275,11 @@
 			</ul>
 		</div>
 
-		<div id="k_List3">
-			<ul>
-				<li>Male</li>
-				<li>Female</li>
-			</ul>
-		</div>
-
 		<!---->
 		<!-- 开关 -->
 		<!---->
 
 		<div id="k_Swch">
-		</div>
-
-		<div id="k_Swch3">
 		</div>
 
 		<!---->
@@ -995,27 +1003,12 @@
 					stFrmwk.cRunLot();			// 运行布局
 				}
 				,
-				eBpc_Base : function (a_Lot)
-				{
-					var l_This = this;
-					var l_Lot = a_Lot;
-					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
-					l_Lot
-							.cBoa({
-								c_Id: "k_TestBoa"
-							})
-							.cCol({
-								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
-							});
-				}
-				,
 				cBpc : function (a_Lot)
 				{
 					var l_This = this;
 					var l_Lot = a_Lot;
 					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
 
-					l_This.eBpc_Base(a_Lot);
 
 					// 状态机 - 表单提交
 					if (1 == l_This.e_Sta)
@@ -1024,6 +1017,14 @@
 					}
 
 					// 状态机 - 控件展示
+					l_Lot
+						.cBoa({
+							c_Id: "k_TestBoa"
+						})
+						.cCol({
+							c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+						});
+
 					l_Lot.cPut({
 						c_NewRow : true,
 						c_Id: "k_PutTgt_Btn1st",
@@ -1143,10 +1144,13 @@
 					{
 						l_This.e_StaWgtSet_FormSbmt = new nUi.tWgtSet();	// 状态控件集
 						l_Form = new nUi.tForm();
-						l_Form.vcBind({
-							c_PutTgt: "k_PutTgt_Form",
-							c_PutSrc: "k_Form"
-						});
+
+						//【不用绑定了，排版困难
+						// 同时注释掉下面的“l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());”】
+//						l_Form.vcBind({
+//							c_PutTgt: "k_PutTgt_Form",
+//							c_PutSrc: "k_Form"
+//						});
 						l_This.e_StaWgtSet_FormSbmt.cAdd(l_Form);	// 表单
 					}
 					stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet_FormSbmt);	// 框架
@@ -1162,7 +1166,6 @@
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Edit3",
 						c_PutSrc: "k_Edit3",
-						c_Plchd: "占位符",
 						c_fOnType: function (a_Wgt, a_NewText, a_OldText)
 						{
 							//
@@ -1173,21 +1176,20 @@
 						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
-					l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
+				//	l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
 
 					l_Wgt = new nCmnWgts.tEdit();	// Edit4
 					l_Wgt.vcBind({
 						c_PutTgt: "k_PutTgt_Edit4",
 						c_PutSrc: "k_Edit4",
 						c_Kind: 1,
-						c_Plchd: "占位符",
 						c_fOnOk: function (a_Wgt, a_NewText, a_OldText)
 						{
 							//
 						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
-					l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
+				//	l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
 
 					l_Wgt = new nCmnWgts.tList();	// List3
 					l_Wgt.vcBind({
@@ -1201,7 +1203,7 @@
 //						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
-					l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
+				//	l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
 
 					l_Wgt = new nCmnWgts.tSwch();	// Swch3
 					l_Wgt.vcBind({
@@ -1214,7 +1216,7 @@
 //						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
-					l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
+				//	l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
 
 					l_Wgt = new nCmnWgts.tBtn();	// Sbmt
 					l_Wgt.vcBind({
@@ -1231,7 +1233,7 @@
 						}
 					});
 					l_Form.cAcsWgtSet().cAdd(l_Wgt);
-					l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
+				//	l_Form.cAcsPutTgt().appendChild(l_Wgt.cAcsPutTgt());
 
 				//	l_Form.cRfsh();	//【不用】
 				}
@@ -1242,40 +1244,79 @@
 					var l_Lot = a_Lot;
 					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
 
+					l_Lot
+							.cBoa({
+								c_Id: "k_FormBoa"
+							})
+							.cCol({
+								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+							});
+
 					// 表单
 					l_Lot
+//							.cPut({
+//								c_Id: "k_PutTgt_Form"
+//							})
+
 							.cPut({
-								c_Id: "k_PutTgt_Form"
+								c_NewRow : true,
+								c_Id: "k_Lab_Mail",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+							.cPut({
+								c_NewRow : (2 != l_BrkPntIdx),
+								c_Id: "k_PutTgt_Edit3",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
 							})
 
-//							.cPut({
-//								c_NewRow : true,
-//								c_Id: "k_PutTgt_Edit3",
-//								c_HrztAln: -1,
-//								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-//							})
-//							.cPut({
-//								c_NewRow : true,
-//								c_Id: "k_PutTgt_Edit4",
-//								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-//							})
-//							.cPut({
-//								c_NewRow: true,
-//								c_Id : "k_PutTgt_List3",
-//								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-//							})
-//							.cPut({
-//								c_NewRow: true,
-//								c_Id : "k_PutTgt_Swch3",
-//								c_GridCnt: (1 == l_BrkPntIdx) ? 2 : 3
-//							})
-//							.cPut({
-//								c_NewRow: true,
-//								c_Id : "k_PutTgt_Sbmt",
-//								c_GridCnt: (2 == l_BrkPntIdx) ? 4 : 3
-//							})
-					;
+							.cPut({
+								c_NewRow : true,
+								c_Id: "k_Lab_Age",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+							.cPut({
+								c_NewRow : (2 != l_BrkPntIdx),
+								c_Id: "k_PutTgt_Edit4",
+								c_GridCnt: (0 == l_BrkPntIdx) ? 2 : 1,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
 
+							.cPut({
+								c_NewRow: true,
+								c_Id: "k_Lab_Gender",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+							.cPut({
+								c_NewRow: (2 != l_BrkPntIdx),
+								c_Id : "k_PutTgt_List3",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+
+							.cPut({
+								c_NewRow: true,
+								c_Id : "k_Lab_AcceptMail",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+							.cPut({
+								c_NewRow: (2 != l_BrkPntIdx),
+								c_Id : "k_PutTgt_Swch3",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 3,
+								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+							})
+
+							.cPut({
+								c_NewRow: true,
+								c_Id : "k_PutTgt_Sbmt",
+								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+								c_HrztAln: 0
+							})
+					;
 
 
 					// 状态转移按钮
