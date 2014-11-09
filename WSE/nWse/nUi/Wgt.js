@@ -2,7 +2,7 @@
 *
 * 部分常用特殊字符：
 * ▲△▴▵▶▷▸▹►▻▼▽▾▿◀◁◂◃◄◅
-* 表单验证：http://m.w3cschool.cc/jquery/jquery-plugin-validate.html
+*
 */
 
 

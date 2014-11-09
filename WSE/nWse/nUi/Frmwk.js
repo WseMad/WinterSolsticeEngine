@@ -532,7 +532,7 @@ function fOnIcld(a_Errs)
 					if (l_HdldWgts.indexOf(l_Foc) >= 0)
 					{ continue; }
 
-					console.log("stFrmwk Foc: " + l_Foc.cAcsPutSrc().id);
+				//	console.log("stFrmwk Foc: " + l_Foc.cAcsPutSrc().id);
 
 					l_Loop = true;				// 发现一个尚未处理过的控件，设置循环标志，因为接下来的处理可能引入新的焦点
 					l_Foc.vcHdlIpt(a_Ipt);
@@ -668,8 +668,13 @@ function fOnIcld(a_Errs)
 		/// 设置状态控件集
 		stFrmwk.cSetStaWgtSet = function (a_WgtSet)
 		{
-			fClrFocs();		// 清空焦点
+			if (e_StaWgtSet === a_WgtSet)
+			{ return stFrmwk; }
 
+			// 清空焦点
+			fClrFocs();
+
+			// 设置
 			e_StaWgtSet = a_WgtSet || null;
 			return stFrmwk;
 		};

@@ -82,7 +82,7 @@ function fOnIcld(a_Errs)
 
 	function fInitWgt_Mail(a_This)
 	{
-		var l_Plchd = a_This.d_Cfg.c_MailPlchd || "邮箱：";
+		var l_Lab = a_This.d_Cfg.c_MailLab || "邮箱：";
 		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(a_This.d_PutSrcId_Mail);
 		if (! l_Wgt)
 		{
@@ -90,7 +90,6 @@ function fOnIcld(a_Errs)
 			l_Wgt.vcBind({
 				c_PutTgt: a_This.d_PutTgtId_Mail,
 				c_PutSrc: a_This.d_PutSrcId_Mail,
-				//	c_Plchd: l_Plchd,	//【不用了，不好看】
 				c_fOnOk: function (a_Wgt, a_Text)
 				{
 					// 下一个得到输入焦点
@@ -100,14 +99,14 @@ function fOnIcld(a_Errs)
 			a_This.cAcsWgtSet().cAdd(l_Wgt);
 		}
 
-		a_This.d_PutTgt.appendChild(document.createTextNode(l_Plchd));
+		a_This.d_PutTgt.appendChild(document.createTextNode(l_Lab));
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
 		return l_Wgt;
 	}
 
 	function fInitWgt_Pswd(a_This, a_Cfm)
 	{
-		var l_Plchd = a_Cfm ? "确认密码：" : (a_This.d_Cfg.c_PswdPlchd || "密码（6-20个字符）：");
+		var l_Lab = a_Cfm ? "确认密码：" : (a_This.d_Cfg.c_PswdLab || "密码（6-20个字符）：");
 		var l_PutSrcId = a_Cfm ? a_This.d_PutSrcId_CfmPswd : a_This.d_PutSrcId_Pswd;
 		var l_Wgt = a_This.cAcsWgtSet().cAcsByPutSrcId(l_PutSrcId);
 		if (! l_Wgt)
@@ -116,7 +115,6 @@ function fOnIcld(a_Errs)
 			l_Wgt.vcBind({
 				c_PutTgt: a_Cfm ? a_This.d_PutTgtId_CfmPswd : a_This.d_PutTgtId_Pswd,
 				c_PutSrc: l_PutSrcId,
-				//	c_Plchd: l_Plchd,	//【不用了，不好看】
 				c_Kind: 0,
 				c_fOnOk: function (a_Wgt, a_Text)
 				{
@@ -149,7 +147,7 @@ function fOnIcld(a_Errs)
 			a_This.cAcsWgtSet().cAdd(l_Wgt);
 		}
 
-		a_This.d_PutTgt.appendChild(document.createTextNode(l_Plchd));
+		a_This.d_PutTgt.appendChild(document.createTextNode(l_Lab));
 		a_This.dPutToTgt(l_Wgt.cAcsPutTgt());
 		return l_Wgt;
 	}
@@ -326,8 +324,8 @@ function fOnIcld(a_Errs)
 			///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
 			/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
 			/// c_DomPrn：Node，父节点，默认<body>
-			/// c_MailPlchd：String，邮箱占位符，默认"邮箱："
-			/// c_PswdPlchd：String，密码占位符，默认"密码（6-20个字符）："
+			/// c_MailLab：String，邮箱标签，默认"邮箱："
+			/// c_PswdLab：String，密码标签，默认"密码（6-20个字符）："
 			/// }
 			vcBind : function f(a_Cfg)
 			{
