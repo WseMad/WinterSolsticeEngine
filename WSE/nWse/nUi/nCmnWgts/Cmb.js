@@ -170,33 +170,6 @@ function fOnIcld(a_Errs)
 					}
 				});
 
-				// 注册放置目标事件处理器
-				if (! l_This.d_fOnWidDtmnd)
-				{
-					l_This.d_fOnWidDtmnd = function ()
-					{
-						// 校准位置尺寸
-						l_This.dRgltPosDim(l_This.dGetPutTgtOfstWid());
-					};
-
-					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-				}
-
-//				if (! l_This.d_fOnAnmtUpdEnd)	//【不用了】
-//				{
-//					// 展开式时必须校准位置
-//					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
-//					{
-//						// 校准列表位置
-//						if (l_This.cIsListShow())
-//						{
-//						//	l_This.dAjsListPos();
-//						}
-//					};
-//
-//					l_This.dRegPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-//				}
-
 				// 当窗口滚动时，调整列表位置
 				if (stFrmwk)
 				{
@@ -232,19 +205,6 @@ function fOnIcld(a_Errs)
 
 				// 把<ul>还给来源
 				l_This.dRtnUlToSrc();
-
-				// 注销放置目标事件处理器
-				if (l_This.d_fOnWidDtmnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-					l_This.d_fOnWidDtmnd = null;
-				}
-
-//				if (l_This.d_fOnAnmtUpdEnd)	//【不用了】
-//				{
-//					l_This.dUrgPutTgtEvtHdlr_AnmtUpdEnd(l_This.d_fOnAnmtUpdEnd);
-//					l_This.d_fOnAnmtUpdEnd = null;
-//				}
 
 				// 重置
 				fRset(this);
@@ -368,6 +328,17 @@ function fOnIcld(a_Errs)
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+
+				// 校准位置尺寸
+				l_This.dRgltPosDim(l_This.dGetPutTgtOfstWid());
 				return this;
 			}
 			,

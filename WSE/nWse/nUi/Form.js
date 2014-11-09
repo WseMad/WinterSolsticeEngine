@@ -97,19 +97,6 @@ function fOnIcld(a_Errs)
 
 				var l_This = this;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tForm");	// CSS类
-
-				// 注册放置目标事件处理器
-				if (! l_This.d_fOnWidDtmnd)
-				{
-					l_This.d_fOnWidDtmnd = function ()
-					{
-						// 通知子控件
-						if (l_This.d_SubWgtSet)
-						{ l_This.d_SubWgtSet.cTrgrPutEvt_WidDtmnd(); }
-					};
-
-					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-				}
 				return this;
 			}
 			,
@@ -119,13 +106,6 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				if (! l_This.d_PutSrc)
 				{ return this; }
-
-				// 注销放置目标事件处理器
-				if (l_This.d_fOnWidDtmnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-					l_This.d_fOnWidDtmnd = null;
-				}
 
 				// 重置
 				fRset(this);
@@ -198,6 +178,14 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				if (l_This.d_SubWgtSet)
 				{ l_This.d_SubWgtSet.cIptRset(); }
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
 				return this;
 			}
 			,

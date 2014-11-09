@@ -136,22 +136,6 @@ function fOnIcld(a_Errs)
 				l_This.dNewPnl();
 				l_This.dNewWgtSet();
 
-				// 注册放置目标事件处理器
-				if (! l_This.d_fOnWidDtmnd)
-				{
-					l_This.d_fOnWidDtmnd = function ()
-					{
-						// 修正放置目标和画布尺寸
-						var l_OfstWid = l_This.dGetPutTgtOfstWid();
-						l_This.dFixPutTgtAndCvsDim(l_OfstWid);
-
-						// 修正控件位置尺寸
-						l_This.dFixWgtsPosDim(l_OfstWid);
-					};
-
-					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-				}
-
 				// 动画更新
 				if (! l_This.d_fAnmtUpd)
 				{
@@ -264,6 +248,21 @@ function fOnIcld(a_Errs)
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+
+				// 修正放置目标和画布尺寸
+				var l_OfstWid = l_This.dGetPutTgtOfstWid();
+				l_This.dFixPutTgtAndCvsDim(l_OfstWid);
+
+				// 修正控件位置尺寸
+				l_This.dFixWgtsPosDim(l_OfstWid);
 				return this;
 			}
 			,

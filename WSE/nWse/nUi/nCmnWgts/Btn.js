@@ -142,18 +142,6 @@ function fOnIcld(a_Errs)
 
 
 				// 注册放置目标事件处理器
-				if (! l_This.d_fOnWidDtmnd)
-				{
-					l_This.d_fOnWidDtmnd = function ()
-					{
-						// 修正高度和形状
-						if (("c_FxdAr" in l_This.d_Cfg) || ("c_Shp" in l_This.d_Cfg))
-						{ l_This.dFixHgtAndShp(l_This.dGetPutTgtOfstWid()); }
-					};
-
-					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-				}
-
 				if (l_This.d_Cfg.c_TitVcen && l_This.d_DomTit && (! l_This.d_fOnAnmtUpdEnd))
 				{
 					l_This.d_fOnAnmtUpdEnd = function (a_DomElmt, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
@@ -194,11 +182,6 @@ function fOnIcld(a_Errs)
 				}
 
 				// 事件处理器
-				if (l_This.d_fOnWidDtmnd)
-				{
-					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-					l_This.d_fOnWidDtmnd = null;
-				}
 
 				if (l_This.d_fOnAnmtUpdEnd)
 				{
@@ -304,6 +287,18 @@ function fOnIcld(a_Errs)
 						a_DmntTch.c_Hdld = true;		// 已处理
 					}
 				}
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+				this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
+
+				// 修正高度和形状
+				if (("c_FxdAr" in l_This.d_Cfg) || ("c_Shp" in l_This.d_Cfg))
+				{ l_This.dFixHgtAndShp(l_This.dGetPutTgtOfstWid()); }
 				return this;
 			}
 			,

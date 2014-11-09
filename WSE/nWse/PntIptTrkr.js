@@ -195,8 +195,12 @@ function fOnIcld(a_Errs)
 
 	function ePushTchIpt(a_This, a_Kind, a_Evt)
 	{
-		// 当前正在追踪的触点在touches，但是触摸结束时该数组就变空，此时应使用changedTouches
-	//	var l_EvtTchs = a_Evt.touches;
+		// 当前正在追踪的触点在touches，但是触摸结束时这些触点就从该数组删除，此时应使用changedTouches
+//		var l_EvtTchs = a_Evt.touches;
+//		if ((tPntIptKind.i_TchEnd == a_Kind))
+//		{
+//			l_EvtTchs = Array.prototype.concat.call(a_Evt.touches, a_Evt.changedTouches);
+//		}
 		var l_EvtTchs = (tPntIptKind.i_TchEnd == a_Kind) ? a_Evt.changedTouches : a_Evt.touches;
 
 		// 立即处理？
@@ -209,7 +213,7 @@ function fOnIcld(a_Errs)
 				stAryUtil.cFor(l_EvtTchs,
 					function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
 					{
-						l_PntIpt.eAddTch(null, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
+						l_PntIpt.eAddTch(a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
 					});
 				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
 				a_This.e_fImdtHdlr(l_PntIpt);				// 处理
@@ -307,11 +311,21 @@ function fOnIcld(a_Errs)
 				}
 				else
 				{
+					// 计算偏移量和累计偏移距离
+					//【浏览器BUG】注意这里的写法，为了兼容iOS，不要用“+=”；
+					// 似乎在iOS上，当拖动手指时的touchmove事件没能正确处理，时断时续
 					l_TchInIpt = a_Ipt.c_Tchs[l_IdxInIpt];
-					l_TchInIpt.c_OfstX = l_TchInIpt.c_X - a_AT.c_X;	// 计算偏移量
+					l_TchInIpt.c_OfstX = l_TchInIpt.c_X - a_AT.c_X;
 					l_TchInIpt.c_OfstY = l_TchInIpt.c_Y - a_AT.c_Y;
-					l_TchInIpt.c_AccOfstDistX += Math.abs(l_TchInIpt.c_OfstX);	// 计算累计偏移距离
-					l_TchInIpt.c_AccOfstDistY += Math.abs(l_TchInIpt.c_OfstY);
+					l_TchInIpt.c_AccOfstDistX = (l_TchInIpt.c_AccOfstDistX || 0) + Math.abs(l_TchInIpt.c_OfstX);
+					l_TchInIpt.c_AccOfstDistY = (l_TchInIpt.c_AccOfstDistY || 0) + Math.abs(l_TchInIpt.c_OfstY);
+
+//					//【调试iPad】
+//					var l_TestOpt = document.getElementById("k_TestOpt");
+//					if (l_TestOpt && (tPntIpt.tKind.i_TchMove == l_TchInIpt.c_Kind))
+//					{ l_TestOpt.textContent = l_TchInIpt.c_OfstX + ", " + l_TchInIpt.c_AccOfstDistY; }
+
+					// 更新记录
 					a_AT.c_X = l_TchInIpt.c_X;
 					a_AT.c_Y = l_TchInIpt.c_Y;
 				}

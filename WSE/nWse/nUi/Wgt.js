@@ -161,6 +161,22 @@ function fOnIcld(a_Errs)
 				l_This.d_PutSrc = l_PutSrc;
 				l_This.d_PutTgt = l_PutTgt;
 				stCssUtil.cAddCssc(l_This.d_PutTgt, "cnWse_tWgt_Nml");	// CSS类
+
+				// 注册放置目标事件处理器
+				if (! l_This.d_fOnWidDtmnd)
+				{
+					l_This.d_fOnWidDtmnd = function ()
+					{
+						// 通知派生类
+						l_This.vdOnPutTgtWidDtmnd();
+
+//						// 通知子控件？交给派生类自己决定吧
+//						if (l_This.d_SubWgtSet)
+//						{ l_This.d_SubWgtSet.cTrgrPutEvt_WidDtmnd(); }
+					};
+
+					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
+				}
 				return this;
 			}
 			,
@@ -168,6 +184,13 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
+
+				// 注销放置目标事件处理器
+				if (l_This.d_fOnWidDtmnd)
+				{
+					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
+					l_This.d_fOnWidDtmnd = null;
+				}
 
 				// 清理
 			//	l_This.cClnPutTgt();	//【不用了，由外界控制】
@@ -341,6 +364,14 @@ function fOnIcld(a_Errs)
 //						//
 //					}
 				}
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+			//	this.odBase(f).odCall();	// 基类版本，粘贴后取消注释！
+				var l_This = this;
 				return this;
 			}
 			,

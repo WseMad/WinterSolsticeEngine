@@ -269,17 +269,6 @@ function fOnIcld(a_Errs)
 //					}
 //				}
 
-				// 注册放置目标事件处理器
-				if (! l_This.d_fOnWidDtmnd)
-				{
-					l_This.d_fOnWidDtmnd = function ()
-					{
-						// 修正位置和尺寸
-						l_This.dRgltPosDim();
-					};
-
-					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-				}
 				return this;
 			}
 			,
@@ -420,6 +409,16 @@ function fOnIcld(a_Errs)
 //					a_DmntTch.c_Hdld = stDomUtil.cIsSelfOrAcst(l_This.d_PutTgt, a_DmntTch.cAcsEvtTgt());
 //				}
 
+				return this;
+			}
+			,
+			/// 当放置目标宽度已决定
+			vdOnPutTgtWidDtmnd : function f()
+			{
+				var l_This = this;
+
+				// 修正位置和尺寸
+				l_This.dRgltPosDim();
 				return this;
 			}
 			,

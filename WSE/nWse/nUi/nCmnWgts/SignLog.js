@@ -337,15 +337,6 @@ function fOnIcld(a_Errs)
 				var l_Prn = a_Cfg.c_DomPrn || stDomUtil.cAcsBody();		// 加入到文档
 				l_Prn.appendChild(l_This.d_PutTgt);
 
-				// 注册放置目标事件处理器
-//				if (! l_This.d_fOnWidDtmnd)
-//				{
-//					l_This.d_fOnWidDtmnd = function ()
-//					{
-//					};
-//
-//					l_This.dRegPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-//				}
 				return this;
 			}
 			,
@@ -353,13 +344,6 @@ function fOnIcld(a_Errs)
 			vcUbnd : function f()
 			{
 				var l_This = this;
-
-				// 事件处理器
-//				if (l_This.d_fOnWidDtmnd)
-//				{
-//					l_This.dUrgPutTgtEvtHdlr_WidDtmnd(l_This.d_fOnWidDtmnd);
-//					l_This.d_fOnWidDtmnd = null;
-//				}
 
 				// 重置
 				fRset(this);
