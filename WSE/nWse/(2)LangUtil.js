@@ -1567,10 +1567,10 @@ function fOnIcld(a_Errs)
 
 		/// 查找最小值
 		/// a_Tgt：Array，目标
-		/// a_Udfn$fEvlt：Function，Number f(数组, 索引, 元素)，求值函数，若不传则调用元素的valueOf
+		/// a_Udfn$fEvlt：Function，Number f(数组, 索引, 元素)，求值函数，若不传则强转成Number
 		/// a_Udfn$Bgn：undefined$Number，起始索引（默认0）
 		/// a_Udfn$Amt：undefined$Number，数量（默认a_Tgt.length）
-		/// 返回：索引，若未找到返回-1
+		/// 返回：索引，若为空则返回-1，否则≥0，此时值记录在函数的Wse_Val里
 		stAryUtil.cFindMin = function (a_Tgt, a_Udfn$fEvlt, a_Udfn$Bgn, a_Udfn$Amt)
 		{
 			if (stAryUtil.cIsEmt(a_Tgt) || (0 === a_Udfn$Amt))
@@ -1579,16 +1579,17 @@ function fOnIcld(a_Errs)
 			var l_Bgn = Math.max(a_Udfn$Bgn || 0, 0);
 			var l_Lmt = Math.min(l_Bgn + (a_Udfn$Amt || a_Tgt.length), a_Tgt.length);
 			var i;
-			var l_Idx = l_Bgn, l_Min = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, l_Bgn, a_Tgt[l_Bgn]) : a_Tgt[l_Bgn].valueOf(), l_Val;
+			var l_Idx = l_Bgn, l_Min = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, l_Bgn, a_Tgt[l_Bgn]) : Number(a_Tgt[l_Bgn]), l_Val;
 			for (i=l_Bgn+1; i<l_Lmt; ++i)
 			{
-				l_Val = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, i, a_Tgt[i]) : a_Tgt[i].valueOf();
+				l_Val = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, i, a_Tgt[i]) : Number(a_Tgt[i]);
 				if (l_Val < l_Min)
 				{
 					l_Idx = i;
 					l_Min = l_Val;
 				}
 			}
+			stAryUtil.cFindMin.Wse_Val = l_Min;
 			return l_Idx;
 		};
 
@@ -1597,7 +1598,7 @@ function fOnIcld(a_Errs)
 		/// a_Udfn$fEvlt：Function，Number f(数组, 索引, 元素)，求值函数，若不传则调用元素的valueOf
 		/// a_Udfn$Bgn：undefined$Number，起始索引（默认0）
 		/// a_Udfn$Amt：undefined$Number，数量（默认a_Tgt.length）
-		/// 返回：索引，若未找到返回-1
+		/// 返回：索引，若为空则返回-1，否则≥0，此时值记录在函数的Wse_Val里
 		stAryUtil.cFindMax = function (a_Tgt, a_Udfn$fEvlt, a_Udfn$Bgn, a_Udfn$Amt)
 		{
 			if (stAryUtil.cIsEmt(a_Tgt) || (0 === a_Udfn$Amt))
@@ -1606,16 +1607,17 @@ function fOnIcld(a_Errs)
 			var l_Bgn = Math.max(a_Udfn$Bgn || 0, 0);
 			var l_Lmt = Math.min(l_Bgn + (a_Udfn$Amt || a_Tgt.length), a_Tgt.length);
 			var i;
-			var l_Idx = l_Bgn, l_Max = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, l_Bgn, a_Tgt[l_Bgn]) : a_Tgt[l_Bgn].valueOf(), l_Val;
+			var l_Idx = l_Bgn, l_Max = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, l_Bgn, a_Tgt[l_Bgn]) : Number(a_Tgt[l_Bgn]), l_Val;
 			for (i=l_Bgn+1; i<l_Lmt; ++i)
 			{
-				l_Val = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, i, a_Tgt[i]) : a_Tgt[i].valueOf();
+				l_Val = a_Udfn$fEvlt ? a_Udfn$fEvlt(a_Tgt, i, a_Tgt[i]) : Number(a_Tgt[i]);
 				if (l_Val > l_Max)
 				{
 					l_Idx = i;
 					l_Max = l_Val;
 				}
 			}
+			stAryUtil.cFindMax.Wse_Val = l_Max;
 			return l_Idx;
 		};
 

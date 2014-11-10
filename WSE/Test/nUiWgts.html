@@ -37,11 +37,15 @@
 			min-height: 2000px;		/* 为了收起折叠框时不缩短页面 */
 		}
 
-		#k_TestBoa, #k_FormBoa
+		.cnWse_tPcdrLot_Boa
+		{
+			padding: 30px;
+		}
+
+		#k_TestBoa
 		{
 			min-height: 500px;
 			background-color: rgb(239, 228, 176);
-			padding: 30px;
 		}
 
 		#k_PutTgt_Menu1
@@ -127,6 +131,14 @@
 			margin-top: 30px;
 		}
 
+		.cnApp_FormCol
+		{
+			/*padding: 20px;*/
+			background-color: #94ff05;
+			border: 1px solid rgb(0, 0, 0);
+			padding: 10px;
+		}
+
 		/*#k_PutTgt_Form*/
 		/*{*/
 			/*padding: 30px;*/
@@ -170,25 +182,25 @@
 		<form id="k_Form" class="cnWse_PutSrc">
 
 			<div id="k_Lab_Mail" class="">邮箱<span>（必填）</span>：</div>
-			<div id="k_Edit3" class="cnWse_PutSrc">
+			<div id="k_Edit3" data-Wse_Name="Mail" class="cnWse_PutSrc">
 				<!--<span data-Wse_Pfx style="padding: 0.25em;">Pfx</span>-->
 				<!--<span data-Wse_Sfx style="padding: 0.25em;">Sfx</span>-->
 			</div>
 
-			<div id="k_Lab_Age">年龄<span>（必填）</span>：</div>
-			<div id="k_Edit4" class="cnWse_PutSrc">
+			<div id="k_Lab_Age" >年龄<span>（必填）</span>：</div>
+			<div id="k_Edit4" data-Wse_Name="Age" class="cnWse_PutSrc">
 			</div>
 
-			<div id="k_Lab_Gender">性别：</div>
-			<div id="k_List3" class="cnWse_PutSrc">
+			<div id="k_Lab_Gender" >性别：</div>
+			<div id="k_List3" data-Wse_Name="Gender" class="cnWse_PutSrc">
 				<ul>
 					<li>Male</li>
 					<li>Female</li>
 				</ul>
 			</div>
 
-			<div id="k_Lab_AcceptMail">接收邮件通知？</div>
-			<div id="k_Swch3" class="cnWse_PutSrc">
+			<div id="k_Lab_AcceptMail" >接收邮件通知？</div>
+			<div id="k_Swch3" data-Wse_Name="AcceptMail" class="cnWse_PutSrc">
 			</div>
 		</form>
 
@@ -1244,80 +1256,159 @@
 					var l_Lot = a_Lot;
 					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
 
-					l_Lot
-							.cBoa({
-								c_Id: "k_FormBoa"
-							})
+					if (2 == l_BrkPntIdx) // 两列布局
+					{
+						l_Lot
+						.cBoa({
+							c_Id: "k_FormBoa"
+							, c_ColDvd : [20, null]
+							, c_RowAln: true		// 格列各行对齐
+						});
+
+						// 标签
+						l_Lot
 							.cCol({
-								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+								c_GridTot: 1,
+								c_Cssc: "cnApp_FormCol"
+							})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_Lab_Mail"
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_Lab_Age"
+								})
+								.cPut({
+									c_NewRow: true,
+									c_Id: "k_Lab_Gender"
+								})
+								.cPut({
+									c_NewRow: true,
+									c_Id : "k_Lab_AcceptMail"
+								})
+						;
+
+						// 表单
+						l_Lot
+							.cCol({
+								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8),
+								c_Cssc: "cnApp_FormCol"
+							})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_PutTgt_Edit3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_PutTgt_Edit4",
+									c_GridCnt: (0 == l_BrkPntIdx) ? 3 : 2,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id : "k_PutTgt_List3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id : "k_PutTgt_Swch3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 3,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+						;
+					}
+					else // 一列布局
+					{
+						l_Lot
+						.cBoa({
+							c_Id: "k_FormBoa"
+						})
+							.cCol({
+								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8),
+								c_Cssc: "cnApp_FormCol"
 							});
 
-					// 表单
-					l_Lot
+						// 标签和表单
+						l_Lot
 //							.cPut({
 //								c_Id: "k_PutTgt_Form"
 //							})
 
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_Lab_Mail",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
-							.cPut({
-								c_NewRow : (2 != l_BrkPntIdx),
-								c_Id: "k_PutTgt_Edit3",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_Lab_Mail",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_PutTgt_Edit3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
 
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_Lab_Age",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
-							.cPut({
-								c_NewRow : (2 != l_BrkPntIdx),
-								c_Id: "k_PutTgt_Edit4",
-								c_GridCnt: (0 == l_BrkPntIdx) ? 2 : 1,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_Lab_Age",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id: "k_PutTgt_Edit4",
+									c_GridCnt: (0 == l_BrkPntIdx) ? 3 : 2,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
 
-							.cPut({
-								c_NewRow: true,
-								c_Id: "k_Lab_Gender",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
-							.cPut({
-								c_NewRow: (2 != l_BrkPntIdx),
-								c_Id : "k_PutTgt_List3",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
+								.cPut({
+									c_NewRow: true,
+									c_Id: "k_Lab_Gender",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id : "k_PutTgt_List3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
 
-							.cPut({
-								c_NewRow: true,
-								c_Id : "k_Lab_AcceptMail",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
-							.cPut({
-								c_NewRow: (2 != l_BrkPntIdx),
-								c_Id : "k_PutTgt_Swch3",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 3,
-								c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
-							})
+								.cPut({
+									c_NewRow: true,
+									c_Id : "k_Lab_AcceptMail",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 4,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+								.cPut({
+									c_NewRow : true,
+									c_Id : "k_PutTgt_Swch3",
+									c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 3,
+									c_HrztAln: (2 == l_BrkPntIdx) ? -1 : 0
+								})
+						;
+					}
 
-							.cPut({
-								c_NewRow: true,
-								c_Id : "k_PutTgt_Sbmt",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
-								c_HrztAln: 0
-							})
-					;
+					// 底部按钮板
+					l_Lot
+					.cBoa({
+						c_Id: "k_FormBtnsBoa"
+					})
+						.cCol({
+							c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8),
+							c_Cssc: "cnApp_FormCol"
+						});
 
+					// 提交按钮
+					l_Lot.cPut({
+						c_NewRow: true,
+						c_Id : "k_PutTgt_Sbmt",
+						c_GridCnt: (2 == l_BrkPntIdx) ? 5 : 4,
+						c_HrztAln: 0
+					});
 
 					// 状态转移按钮
 					l_Lot.cPut({

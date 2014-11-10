@@ -260,7 +260,6 @@ function fOnIcld(a_Errs)
 
 		l_MaxColH = Math.max(l_MaxColH, a_Boa.Wse_PcdrLot.c_CssDim.c_MinHgt);
 		a_Boa.Wse_PcdrLot.c_H = l_MaxColH + a_Boa.Wse_PcdrLot.c_CssDim.c_BpUpDn;	// 板高 = 最大列高 + 上下框内距
-		stCssUtil.cSetDimHgt(a_Boa, a_Boa.Wse_PcdrLot.c_H);
 		//	console.log("l_MaxColH = " + l_MaxColH)
 	}
 
@@ -825,24 +824,29 @@ function fOnIcld(a_Errs)
 						{ l_RowHgts.pop(); }
 					});
 
-				// 计算板的内容H
+				// 如果行对齐，修正
+				if (a_Boa.Wse_PcdrLot.c_Cfg.c_RowAln)
+				{ fFlow_RowAlnFix(a_This, a_Boa); }
+
+				// 计算板的H
 				fCalcBoaH(l_This, a_Boa);
-				var l_BoaH = a_Boa.Wse_PcdrLot.c_H - a_Boa.Wse_PcdrLot.c_CssDim.c_BpUpDn;
+				var l_BoaCtntH = a_Boa.Wse_PcdrLot.c_H - a_Boa.Wse_PcdrLot.c_CssDim.c_BpUpDn;
+				stCssUtil.cSetDimHgt(a_Boa, a_Boa.Wse_PcdrLot.c_H);	// 设置
 
 				// 对每个列，垂直对齐修正
 				stAryUtil.cFor(a_Boa.Wse_PcdrLot.c_ColAry,
 					function (a_ColAry, a_ColIdx, a_Col)
 					{
-						var l_ColH, l_BoaCenY, l_ColCenY, l_ColOfstY = 0;
+						var l_ColCtntH, l_BoaCenY, l_ColCenY, l_ColOfstY = 0;
 						var l_VticAln = a_Col.Wse_PcdrLot.c_Cfg.c_VticAln;
 						if (l_VticAln)
 						{
-							l_ColH = fCalcColCtntH(l_This, a_Boa, a_Col);
-							if (l_ColH < l_BoaH)
+							l_ColCtntH = fCalcColCtntH(l_This, a_Boa, a_Col);
+							if (l_ColCtntH < l_BoaCtntH)
 							{
 								// 计算垂直偏移量
-								l_BoaCenY = l_BoaH * l_VticAln / 100;
-								l_ColCenY = l_ColH * l_VticAln / 100;
+								l_BoaCenY = l_BoaCtntH * l_VticAln / 100;
+								l_ColCenY = l_ColCtntH * l_VticAln / 100;
 								l_ColOfstY = l_BoaCenY - l_ColCenY;
 							}
 						}
@@ -985,6 +989,45 @@ function fOnIcld(a_Errs)
 		{ l_RowHgts[l_RowHgts.length - 1] = l_TgtArea.c_H; }
 	}
 
+	function fFlow_RowAlnFix(a_This, a_Boa)
+	{
+		// 对每个列，修正行高数组
+		var l_ColAry = a_Boa.Wse_PcdrLot.c_ColAry;
+		if (l_ColAry.length <= 1)	// 只有一列，不用修正
+		{ return; }
+
+		stAryUtil.cFor(l_ColAry,
+			function (a_ColAry, a_ColIdx, a_Col)
+			{
+				// 对每一行，找出各列在这一行的最大行高
+				var l_RowHgts = a_Col.Wse_PcdrLot.c_RowHgts;
+				stAryUtil.cFor(l_RowHgts,
+					function (a_RH, a_RI, a_R)
+					{
+						var l_Idx = stAryUtil.cFindMax(l_ColAry,
+							function (a_CA, a_CI, a_C)
+							{
+								var l_RH = a_C.Wse_PcdrLot.c_RowHgts;
+								return (a_RI < l_RH.length) ? l_RH[a_RI] : 0;	// 没有这一行就返回0
+							});
+						if (l_Idx >= 0)
+						{ l_RowHgts[a_RI] = stAryUtil.cFindMax.Wse_Val; }		// 最值记录在函数的Wse_Val里
+					});
+
+				// 修正每个放的Y坐标
+				stAryUtil.cFor(a_Col.Wse_PcdrLot.c_PutAry,
+					function (a_PutAry, a_PutIdx, a_Put)
+					{
+						var l_RowIdx = a_Put.Wse_PcdrLot.c_RowIdx;
+						var l_TgtArea = a_Put.Wse_PcdrLot.c_TgtArea;
+						l_TgtArea.c_Y = 0 + fCalcColCtntY(a_This, a_Boa, a_Col);
+						var r;
+						for (r = 0; r<l_RowIdx; ++r)
+						{ l_TgtArea.c_Y += l_RowHgts[r]; }
+					});
+			});
+	}
+
 	function fFlow_VticAlnFix(a_This, a_Boa, a_Col, a_Put, a_PutIdx, a_ColOfstY)
 	{
 		// 不在排版流里？
@@ -1119,7 +1162,7 @@ function fOnIcld(a_Errs)
 
 		a_This.e_FlowGridNext = 0;								// 排版栅格下一个索引
 		a_This.e_FlowRelY = 0;									// 排版相对板Y坐标
-		if (a_Col.Wse_PcdrLot.c_RowHgts.length > 0)				// 行高清零
+		if (a_Col.Wse_PcdrLot.c_RowHgts.length > 0)				// 清空行高数组
 		{ a_Col.Wse_PcdrLot.c_RowHgts.length = 0; }
 	}
 
@@ -1128,7 +1171,7 @@ function fOnIcld(a_Errs)
 		var l_RowHgts = a_Col.Wse_PcdrLot.c_RowHgts;
 		a_This.e_FlowGridNext = 0;								// 索引复位
 		a_This.e_FlowRelY += l_RowHgts[l_RowHgts.length - 1];	// Y跳至下一行
-		l_RowHgts.push(0);										// 清零行高
+		l_RowHgts.push(0);										// 压入新行高
 	}
 
 	// 图像LOD系统
@@ -1500,6 +1543,7 @@ function fOnIcld(a_Errs)
 				/// c_Cssc：String，CSS类
 				/// c_FxdAr：Number，固定宽高比，默认undefined
 				/// c_ColDvd：Number[]，列划分，必须∈(0, 100]且总和≤100，所有null均分余下空间，默认[100]
+				/// c_RowAln：Boolean，行对齐，若为true则各列里的各行跨列对齐（类似表格），默认false
 				///	}
 				cBoa : function (a_Cfg)
 				{
