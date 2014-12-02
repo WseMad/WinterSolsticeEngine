@@ -1,9 +1,6 @@
-# 忽略
-# bin/
-# Debug/
-# Release/
+# 只保留源代码文件
 
-Egn/
+*.*
 !*.h
 !*.hpp
 !*.cpp
