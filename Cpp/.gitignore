@@ -1,2 +1,9 @@
-# ºöÂÔbin
-bin/
+# ºöÂÔ
+# bin/
+# Debug/
+# Release/
+
+Egn/
+!*.h
+!*.hpp
+!*.cpp
