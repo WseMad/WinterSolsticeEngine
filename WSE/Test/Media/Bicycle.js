@@ -20,7 +20,6 @@
 	window.addEventListener("load", function ()
 	{
 		console.log("window.onload");
-		nWse.stNowLoad.cEnd(null);	// 结束
 
 		nWse.stAsynIcld.cFromApp("nWse",
 			[
@@ -82,7 +81,7 @@ function fOnIcld(a_Errs)
 				c_WidPct: l_This.e_WidPct,
 				c_MinWid: 256,
 				c_MaxWid: 2000,
-				c_MinHgt: null,	// 同window.innerHeight
+				c_MinHgt: null,	// 同stDomUtil.cGetVwptHgt()
 				c_BrkPnts: [0, 480, 960],
 				c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
 			});
@@ -183,7 +182,7 @@ function fOnIcld(a_Errs)
 			nWse.stCssUtil.cAnmt(l_PutTgt_Lot,
 				{
 					"width": l_This.e_WidPct.toString() + "%",		// 百分比
-					"height": (window.innerHeight - 10) + "px=",	// 像素，EndStr=""
+					"height": (nWse.stDomUtil.cGetVwptHgt() - 10) + "px=",	// 像素，EndStr=""
 					"backgroundColor": "rgba(63, 64, 59, 1)="		// 颜色，EndStr=""
 				},
 				{
@@ -332,7 +331,7 @@ function fOnIcld(a_Errs)
 							a_Efc.c_fEntDplc = function (a_Rst, a_DomElmt, a_Bgn, a_End,
 														 a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
 							{
-								var l_C1x = window.innerWidth / 2, l_C1y = Math.abs(a_End.y - a_Bgn.y) / 2;
+								var l_C1x = nWse.stDomUtil.cGetVwptWid() / 2, l_C1y = Math.abs(a_End.y - a_Bgn.y) / 2;
 								var l_C2x = l_C1x, l_C2y = l_C1y;
 								nWse.stNumUtil.c2dBzr(a_Rst, [a_Bgn, {x:l_C1x, y:l_C1y}, {x:l_C2x, y:l_C2y}, a_End], a_NmlScl);
 							};

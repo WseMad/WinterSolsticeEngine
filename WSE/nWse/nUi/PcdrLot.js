@@ -651,8 +651,8 @@ function fOnIcld(a_Errs)
 //			//
 //		}
 
-		// 更新最小高度，如果使用innerHeight则可能会变
-		a_This.e_PutTgt.style.minHeight = (a_This.e_MinHgt || window.innerHeight).toString() + "px";
+		// 更新最小高度，如果使用stDomUtil.cGetVwptHgt()则可能会变
+		a_This.e_PutTgt.style.minHeight = (a_This.e_MinHgt || stDomUtil.cGetVwptHgt()).toString() + "px";
 	}
 
 	// 运行或重排
@@ -1455,7 +1455,7 @@ function fOnIcld(a_Errs)
 				/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
 				/// c_WidPct：Number，宽度百分比，若不指定则使用放置目标当前像素宽度
 				/// c_MinWid，c_MaxWid：Number，最小最大宽度，默认128，Number.MAX_VALUE
-				/// c_MinHgt：Number，最小高度，默认null表示window.innerHeight
+				/// c_MinHgt：Number，最小高度，默认null表示stDomUtil.cGetVwptHgt()
 				/// c_BrkPnts：Array，断点数组，示例：[0, 480, 960]，必须从0开始，且从小到大排列
 				///	c_fBpc：void f(a_Lot)，断点回调函数
 				cPlan : function (a_Cfg)

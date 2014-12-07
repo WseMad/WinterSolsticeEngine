@@ -85,11 +85,11 @@ function fOnIcld(a_Errs)
 			a_tD.prototype = l_Link;
 		}
 
-		// 虚函数？
+		// 虚函数？注意，Object.prototype里的函数都被认为是虚函数，而“constructor”不是！
 		function fIsVtuFctn(a_FctnName)
 		{
 			var i_Rgx = /^[ou]?v/;
-			return i_Rgx.test(a_FctnName) || Object.prototype[a_FctnName];	// 注意，Object.prototype里的函数都被认为是虚函数！
+			return ("constructor" != a_FctnName) && (i_Rgx.test(a_FctnName) || nWse.fIsFctn(Object.prototype[a_FctnName]));
 		}
 
 		/// 类头
@@ -753,7 +753,7 @@ function fOnIcld(a_Errs)
 							fObjFor(a_itItfc,
 								function (a_Tgt, a_PN, a_PV)
 								{
-									if (! fIsVtuFctn(a_PN))	// 跳过非需函数
+									if (! fIsVtuFctn(a_PN))	// 跳过非虚函数
 									{
 										return;
 									}
@@ -767,7 +767,7 @@ function fOnIcld(a_Errs)
 					fObjFor(a_itBase$BaseAry,
 						function (a_Tgt, a_PN, a_PV)
 						{
-							if (! fIsVtuFctn(a_PN))	// 跳过非需函数
+							if (! fIsVtuFctn(a_PN))	// 跳过非虚函数
 							{
 								return;
 							}
@@ -806,7 +806,7 @@ function fOnIcld(a_Errs)
 				var l_PN;
 				for (l_PN in l_itItfc)	// 列举接口，不要列举实现！为了检查是否有未实现的纯虚
 				{
-					if (! fIsVtuFctn(l_PN))	// 跳过非需函数
+					if (! fIsVtuFctn(l_PN))	// 跳过非虚函数
 					{
 						continue;
 					}

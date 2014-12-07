@@ -117,7 +117,7 @@ function fOnIcld(a_Errs)
 				l_This.e_Xhr = new XMLHttpRequest();
 				l_This.e_fOnCplt = function () { fOnCplt(l_This); };
 				if (! l_Sync)
-				{ l_This.e_Xhr.addEventListener("readystatechange", l_This.e_fOnCplt); }
+				{ stDomUtil.cAddEvtHdlr(l_This.e_Xhr, "readystatechange", l_This.e_fOnCplt); }
 
 				// 打开
 				l_This.e_Xhr.open(l_Mthd, l_Url, ! l_Sync);

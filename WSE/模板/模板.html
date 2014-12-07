@@ -71,8 +71,6 @@ window.addEventListener("load", function ()
 {
 	console.log("window.onload");
 
-	nWse.stNowLoad.cEnd(null);	// 结束
-
 	nWse.stAsynIcld.cFromApp("nWse",
 			[
 				"Ajax",
@@ -146,7 +144,7 @@ function fOnIcld(a_Errs)
 						c_WidPct: l_This.e_WidPct,
 						c_MinWid: 256,
 						c_MaxWid: 2000,
-						c_MinHgt: null,	// 同window.innerHeight
+						c_MinHgt: null,	// 同stDomUtil.cGetVwptHgt()
 						c_BrkPnts: [0, 480, 960],
 						c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
 					});

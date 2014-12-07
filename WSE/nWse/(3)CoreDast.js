@@ -1068,7 +1068,9 @@ function fOnIcld(a_Errs)
 				{
 					var l_R, l_G, l_B;
 					l_R = tClo.scToCssRgbCpnt(a_Tgt.r);	l_G = tClo.scToCssRgbCpnt(a_Tgt.g);	l_B = tClo.scToCssRgbCpnt(a_Tgt.b);
-					return "rgba(" + l_R + ", " + l_G + ", " + l_B + ", " + a_Tgt.a + ")";
+					return (1 == a_Tgt.a)
+						? "rgb(" + l_R + ", " + l_G + ", " + l_B + ")"
+						: "rgba(" + l_R + ", " + l_G + ", " + l_B + ", " + a_Tgt.a + ")";
 				}
 				,
 				/// 转自CSS颜色字符串

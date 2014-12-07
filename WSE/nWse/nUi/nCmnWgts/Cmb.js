@@ -604,7 +604,7 @@ function fOnIcld(a_Errs)
 				// 计算客户区和列表的包围盒
 				tSara.scEnsrTemps(3);
 				var l_CltSara = tSara.sc_Temps[0], l_UlSara = tSara.sc_Temps[1];
-				l_CltSara.cCrt$Wh(window.innerWidth, document.documentElement.scrollHeight);	// 使用文档元素的垂直空间
+				l_CltSara.cCrt$Wh(stDomUtil.cGetVwptWid(), document.documentElement.scrollHeight);	// 使用文档元素的垂直空间
 				tSara.scCrt$DomBcr(l_UlSara, l_This.d_Ul);
 
 				// 若下方能放开则放在下方，否则放在空间更大的地方

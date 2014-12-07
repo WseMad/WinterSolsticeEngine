@@ -9,6 +9,7 @@
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
+	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 	<!--<script type="text/javascript" src="./WSE_nWse.js"></script>-->
 
 	<style type="text/css">
@@ -164,8 +165,6 @@
 		{
 			console.log("window.onload");
 
-			nWse.stNowLoad.cEnd();
-
 			nWse.stAsynIcld.cFromApp("nWse",
 			[
 				"nUi/EfcMgr.js",
@@ -232,8 +231,8 @@
 				nWse.stCssUtil.cAnmt(l_PutTgt_Lot,
 				{
 					"width": l_This.e_WidPct.toString() + "%",					// 百分比
-					"height": (window.innerHeight - 100) + "px",		// 像素
-					"backgroundColor": "rgba(0, 230, 230, 1)"			// 颜色
+					"height": (nWse.stDomUtil.cGetVwptHgt() - 100) + "px",		// 像素
+					"backgroundColor": "rgb(0, 230, 230)"			// 颜色
 				},
 				{
 					c_Dly: 0,

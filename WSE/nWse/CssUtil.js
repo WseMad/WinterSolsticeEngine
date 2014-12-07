@@ -158,7 +158,8 @@ function fOnIcld(a_Errs)
 
 		function eGetCmptStl(a_DomElmt)
 		{
-			return document.defaultView.getComputedStyle(a_DomElmt, null);
+			var l_DftView = document.defaultView;
+			return (l_DftView && l_DftView.getComputedStyle && l_DftView.getComputedStyle(a_DomElmt, null)) || a_DomElmt.currentStyle;
 		}
 
 		function eGetMgn(a_Rst, a_CmptStl, a_AlnPxl)
@@ -176,12 +177,21 @@ function fOnIcld(a_Errs)
 			}
 		}
 
+		function eCalcBdrThk(a_Val)
+		{
+			if ("thin" == a_Val) { return 1; }
+			if ("medium" == a_Val) { return 3; }
+			if ("thick" == a_Val) { return 5; }
+
+			return parseFloat(a_Val);
+		}
+
 		function eGetBdrThk(a_Rst, a_CmptStl, a_AlnPxl)
 		{
-			a_Rst.c_BdrThkLt = parseFloat(a_CmptStl.borderLeftWidth);
-			a_Rst.c_BdrThkRt = parseFloat(a_CmptStl.borderRightWidth);
-			a_Rst.c_BdrThkUp = parseFloat(a_CmptStl.borderTopWidth);
-			a_Rst.c_BdrThkDn = parseFloat(a_CmptStl.borderBottomWidth);
+			a_Rst.c_BdrThkLt = eCalcBdrThk(a_CmptStl.borderLeftWidth);
+			a_Rst.c_BdrThkRt = eCalcBdrThk(a_CmptStl.borderRightWidth);
+			a_Rst.c_BdrThkUp = eCalcBdrThk(a_CmptStl.borderTopWidth);
+			a_Rst.c_BdrThkDn = eCalcBdrThk(a_CmptStl.borderBottomWidth);
 			if (a_AlnPxl)
 			{
 				a_Rst.c_BdrThkLt = Math.round(a_Rst.c_BdrThkLt);
@@ -915,7 +925,7 @@ function fOnIcld(a_Errs)
 		/// 返回：stCssUtil
 		stCssUtil.cSetClo = function (a_DomElmt, a_Which, a_R, a_G, a_B, a_A)
 		{
-			a_DomElmt.style[a_Which] = (undefined === a_A)
+			a_DomElmt.style[a_Which] = ((undefined === a_A) || (1 == a_A))
 				? ("rgb(" + a_R + "," + a_G + "," + a_B)
 				: ("rgba(" + a_R + "," + a_G + "," + a_B + "," + a_A);
 			return stCssUtil;
@@ -1286,7 +1296,11 @@ function fOnIcld(a_Errs)
 						}
 
 						l_Item.c_TypeIdx = 3;
-						l_Item.c_End = parseFloat(e_PrnStl[l_PN]) * (parseFloat(l_PV) / 100);
+						l_Item.c_End = parseFloat(e_PrnStl[l_PN]);
+						if (isNaN(l_Item.c_End))
+						{ l_Item.c_End = e_DomPrn.offsetWidth; }
+
+						l_Item.c_End *= (parseFloat(l_PV) / 100);
 					}
 //					else
 //					if ((l_PV.length - 2 >= 0) && (l_PV.indexOf("em") == l_PV.length - 2)) // [4]em

@@ -38,29 +38,6 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
-	function fAddEvtHdlr(a_Evt, a_fCabk, a_Dly)
-	{
-		var l_STID = null;
-		a_fCabk.Wse_fOn = function()
-		{
-			if (! l_STID)
-			{
-				l_STID = setTimeout(function ()
-				{
-					a_fCabk();
-					l_STID = null;
-				}, a_Dly * 1000);
-			}
-		};
-
-		window.addEventListener(a_Evt, a_fCabk.Wse_fOn);
-	}
-
-	function fRmvEvtHdlr(a_Evt, a_fCabk)
-	{
-		window.removeEventListener(a_Evt, a_fCabk.Wse_fOn);
-	}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // DOM实用静态类
 
@@ -96,6 +73,29 @@ function fOnIcld(a_Errs)
 
 		//======== 私有函数
 
+		function fAddWndEvtHdlr(a_Evt, a_fCabk, a_Dly)
+		{
+			var l_STID = null;
+			a_fCabk.Wse_fOn = function()
+			{
+				if (! l_STID)
+				{
+					l_STID = setTimeout(function ()
+					{
+						a_fCabk();
+						l_STID = null;
+					}, a_Dly * 1000);
+				}
+			};
+
+			stDomUtil.cAddEvtHdlr(window, a_Evt, a_fCabk.Wse_fOn);
+		}
+
+		function fRmvWndEvtHdlr(a_Evt, a_fCabk)
+		{
+			stDomUtil.cRmvEvtHdlr(window, a_Evt, a_fCabk.Wse_fOn);
+		}
+
 		function eGetTimeNow()
 		{
 			return Date.now() / 1000;
@@ -128,6 +128,19 @@ function fOnIcld(a_Errs)
 
 		//======== 公有函数
 
+		/// 获取视口宽度
+		stDomUtil.cGetVwptWid = function ()
+		{
+			return window.innerWidth || document.documentElement.clientWidth;
+		};
+
+		/// 获取视口高度
+		stDomUtil.cGetVwptHgt = function ()
+		{
+			return window.innerHeight || document.documentElement.clientHeight;
+		};
+
+
 		/// 存取<body>
 		stDomUtil.cAcsBody = function ()
 		{
@@ -159,7 +172,7 @@ function fOnIcld(a_Errs)
 		/// 返回：Array
 		stDomUtil.cGetElmtsByCssc = function (a_Cssc)
 		{
-			return Array.prototype.slice.call(l_Glb.document.getElementsByClassName(a_Cssc), 0);
+			return Array.prototype.slice.call(document.getElementsByClassName(a_Cssc), 0);
 		};
 
 //		/// 根据CSS类存取第一个子节点	【无用】
@@ -203,7 +216,12 @@ function fOnIcld(a_Errs)
 		/// 返回：Node，不存在时返回null
 		stDomUtil.cQryOne = function (a_Slc, a_Root)
 		{
-			var l_Rst = l_Glb.document.querySelector(a_Slc);
+			if (nWse.fMaybeNonHtml5Brsr())
+			{
+				return null;
+			}
+
+			var l_Rst = document.querySelector(a_Slc);
 			return a_Root ? (stDomUtil.cIsAcst(a_Root, l_Rst) ? l_Rst : null) : l_Rst;
 		};
 
@@ -213,7 +231,12 @@ function fOnIcld(a_Errs)
 		/// 返回：Node[]，不存在时返回空数组
 		stDomUtil.cQryAll = function (a_Slc, a_Root)
 		{
-			var l_Rst = Array.prototype.slice.call(l_Glb.document.querySelectorAll(a_Slc));
+			if (nWse.fMaybeNonHtml5Brsr())
+			{
+				return [];
+			}
+
+			var l_Rst = Array.prototype.slice.call(document.querySelectorAll(a_Slc));
 			if (a_Root)
 			{
 				stAryUtil.cErsAll(l_Rst,
@@ -495,18 +518,32 @@ function fOnIcld(a_Errs)
 		};
 
 
+		/// 添加事件处理器
+		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
+		{
+			nWse.unKnl.fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			return stDomUtil;
+		};
+
+		/// 移除事件处理器
+		stDomUtil.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
+		{
+			nWse.unKnl.fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			return stDomUtil;
+		};
+
 		/// 添加事件处理器 - 窗口调整大小
 		/// a_Dly：Number，延迟（秒），推荐0.1
 		stDomUtil.cAddEvtHdlr_WndRsz = function (a_fCabk, a_Dly)
 		{
-			fAddEvtHdlr("resize", a_fCabk, a_Dly);
+			fAddWndEvtHdlr("resize", a_fCabk, a_Dly);
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器 - 窗口调整大小
 		stDomUtil.cRmvEvtHdlr_WndRsz = function (a_fCabk)
 		{
-			fRmvEvtHdlr("resize", a_fCabk);
+			fRmvWndEvtHdlr("resize", a_fCabk);
 			return stDomUtil;
 		};
 
@@ -514,14 +551,14 @@ function fOnIcld(a_Errs)
 		/// a_Dly：Number，延迟（秒），推荐0.1
 		stDomUtil.cAddEvtHdlr_WndScrl = function (a_fCabk, a_Dly)
 		{
-			fAddEvtHdlr("scroll", a_fCabk, a_Dly);
+			fAddWndEvtHdlr("scroll", a_fCabk, a_Dly);
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器 - 窗口滚动
 		stDomUtil.cRmvEvtHdlr_WndScrl = function (a_fCabk)
 		{
-			fRmvEvtHdlr("scroll", a_fCabk);
+			fRmvWndEvtHdlr("scroll", a_fCabk);
 			return stDomUtil;
 		};
 

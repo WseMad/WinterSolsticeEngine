@@ -117,9 +117,9 @@ function fOnIcld(a_Errs)
 		a_This.e_fOnMosMove = stFctnUtil.cBindThis(a_This, l_fOnMosMove);
 		a_This.e_fOnMosBtnDown = stFctnUtil.cBindThis(a_This, l_fOnMosBtnDown);
 		a_This.e_fOnMosBtnUp = stFctnUtil.cBindThis(a_This, l_fOnMosBtnUp);
-		window.addEventListener("mousemove", a_This.e_fOnMosMove, false);
-		window.addEventListener("mousedown", a_This.e_fOnMosBtnDown, false);
-		window.addEventListener("mouseup", a_This.e_fOnMosBtnUp, false);
+		stDomUtil.cAddEvtHdlr(window, "mousemove", a_This.e_fOnMosMove, false);
+		stDomUtil.cAddEvtHdlr(window, "mousedown", a_This.e_fOnMosBtnDown, false);
+		stDomUtil.cAddEvtHdlr(window, "mouseup", a_This.e_fOnMosBtnUp, false);
 
 
 		var l_fOnTchMove = function (a_Evt)
@@ -151,9 +151,9 @@ function fOnIcld(a_Errs)
 		a_This.e_fOnTchMove = stFctnUtil.cBindThis(a_This, l_fOnTchMove);
 		a_This.e_fOnTchDown = stFctnUtil.cBindThis(a_This, l_fOnTchDown);
 		a_This.e_fOnTchUp = stFctnUtil.cBindThis(a_This, l_fOnTchUp);
-		window.addEventListener("touchmove", a_This.e_fOnTchMove, false);
-		window.addEventListener("touchstart", a_This.e_fOnTchDown, false);
-		window.addEventListener("touchend", a_This.e_fOnTchUp, false);
+		stDomUtil.cAddEvtHdlr(window, "touchmove", a_This.e_fOnTchMove, false);
+		stDomUtil.cAddEvtHdlr(window, "touchstart", a_This.e_fOnTchDown, false);
+		stDomUtil.cAddEvtHdlr(window, "touchend", a_This.e_fOnTchUp, false);
 	}
 
 	function eUrgPageEvtHdlr(a_This)
@@ -161,16 +161,16 @@ function fOnIcld(a_Errs)
 		if (! a_This.e_fOnMosMove)
 		{ return; }
 
-		window.removeEventListener("mousemove", a_This.e_fOnMosMove, false);
-		window.removeEventListener("mousedown", a_This.e_fOnMosBtnDown, false);
-		window.removeEventListener("mouseup", a_This.e_fOnMosBtnUp, false);
+		stDomUtil.cRmvEvtHdlr(window, "mousemove", a_This.e_fOnMosMove, false);
+		stDomUtil.cRmvEvtHdlr(window, "mousedown", a_This.e_fOnMosBtnDown, false);
+		stDomUtil.cRmvEvtHdlr(window, "mouseup", a_This.e_fOnMosBtnUp, false);
 		a_This.e_fOnMosMove = null;
 		a_This.e_fOnMosBtnDown = null;
 		a_This.e_fOnMosBtnUp = null;
 
-		window.removeEventListener("touchmove", a_This.e_fOnTchMove, false);
-		window.removeEventListener("touchstart", a_This.e_fOnTchDown, false);
-		window.removeEventListener("touchend", a_This.e_fOnTchUp, false);
+		stDomUtil.cRmvEvtHdlr(window, "touchmove", a_This.e_fOnTchMove, false);
+		stDomUtil.cRmvEvtHdlr(window, "touchstart", a_This.e_fOnTchDown, false);
+		stDomUtil.cRmvEvtHdlr(window, "touchend", a_This.e_fOnTchUp, false);
 		a_This.e_fOnTchMove = null;
 		a_This.e_fOnTchDown = null;
 		a_This.e_fOnTchUp = null;

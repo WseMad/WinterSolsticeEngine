@@ -159,7 +159,7 @@ function fOnIcld(a_Errs)
 					l_This.d_DomIpt.readOnly = true;
 				}
 
-				l_This.d_DomIpt.addEventListener("focus", // 得到焦点事件
+				stDomUtil.cAddEvtHdlr(l_This.d_DomIpt, "focus", // 得到焦点事件
 					function ()
 					{
 						if (! l_This.cHasBnd())
@@ -178,7 +178,7 @@ function fOnIcld(a_Errs)
 					//	console.log("focus");
 					});
 
-				l_This.d_DomIpt.addEventListener("blur", // 失去焦点事件
+				stDomUtil.cAddEvtHdlr(l_This.d_DomIpt, "blur", // 失去焦点事件
 					function ()
 					{
 						l_This.d_PsesIptFoc = false;	// 没有输入焦点
@@ -187,7 +187,7 @@ function fOnIcld(a_Errs)
 					//	console.log("blur");
 					});
 
-				l_This.d_DomIpt.addEventListener("click", // 单击事件
+				stDomUtil.cAddEvtHdlr(l_This.d_DomIpt, "click", // 单击事件
 					function (a_Evt)
 					{
 						if (! l_This.cHasBnd())
@@ -211,7 +211,7 @@ function fOnIcld(a_Errs)
 //					fAddRmvPlchd(l_This, true);
 //				});
 
-				l_This.d_DomIpt.addEventListener("input",
+				stDomUtil.cAddEvtHdlr(l_This.d_DomIpt, "input",
 				function ()
 				{
 				//	console.log("oninput");
@@ -219,7 +219,7 @@ function fOnIcld(a_Errs)
 					l_This.dUpdOldTypeText();	// 更新旧文本，在触发事件后
 				});
 
-				l_This.d_DomIpt.addEventListener("change",
+				stDomUtil.cAddEvtHdlr(l_This.d_DomIpt, "change",
 				function ()
 				{
 				//	l_This.dUpdTypedText();			// 更新键入过文本，【不用了，使用浏览器的占位符功能】

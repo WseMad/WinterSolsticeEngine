@@ -217,7 +217,7 @@ function fOnIcld(a_Errs)
 				c_WidPct: l_This.e_WidPct,
 				c_MinWid: 256,
 				c_MaxWid: 2000,
-				c_MinHgt: null,	// 同window.innerHeight
+				c_MinHgt: null,	// 同stDomUtil.cGetVwptHgt()
 				c_BrkPnts: [0, 480, 960],
 				c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
 			});
@@ -244,7 +244,7 @@ function fOnIcld(a_Errs)
 			//======================== 其他
 
 			var l_RotRad = Math.PI / 2;	// 从轴端向原点看，顺时针为正，逆时针为负
-			var l_DsplDom = nWse.stNowLoad.cAcsDsplDom();
+		//	var l_DsplDom = nWse.stNowLoad.cAcsDsplDom();
 		//	var l_DsplDom = document.getElementById("ok_3dBody");
 			nWse.stCssUtil.cAnmt(l_DsplDom,
 					{
@@ -269,7 +269,7 @@ function fOnIcld(a_Errs)
 						c_fOnEnd: function ()
 						{
 						//	return;
-							nWse.stNowLoad.cEnd();
+						//	nWse.stNowLoad.cEnd();
 
 							// 初始布局？
 							stFrmwk.cRunLot();			// 运行布局

@@ -87,14 +87,14 @@ function fOnIcld(a_Errs)
 		// 首先计算宽度，确定目标区域
 //		tSara.scEnsrTemps(1);
 //		var l_WndArea = tSara.sc_Temps[0], l_TgtArea = a_This.d_TgtArea;
-//		l_WndArea.cCrt(0, 0, window.innerWidth, window.innerHeight);
+//		l_WndArea.cCrt(0, 0, stDomUtil.cGetVwptWid(), stDomUtil.cGetVwptHgt());
 
 		var l_IsLvesVsb = a_This.cIsLvesVsb();
 
 		var i_2Pi = 2 * Math.PI;
 		var i_RadRge = i_2Pi;
 		var i_MinR0 = 32, i_MaxR0 = 64;
-		var l_R0 = Math.round(stNumUtil.cClmOnNum(window.innerWidth / 8, i_MinR0, i_MaxR0));
+		var l_R0 = Math.round(stNumUtil.cClmOnNum(stDomUtil.cGetVwptWid() / 8, i_MinR0, i_MaxR0));
 		var l_Dist = l_R0 * 3;
 		var l_L = a_This.d_LiAry.length;
 
@@ -123,9 +123,9 @@ function fOnIcld(a_Errs)
 		a_This.d_LeafRad = 2 * l_Tht;
 		a_This.d_LeafDist = l_Dist;
 
-		var l_Cx = window.innerWidth / 2, l_Cy = window.innerHeight / 2;
+		var l_Cx = stDomUtil.cGetVwptWid() / 2, l_Cy = stDomUtil.cGetVwptHgt() / 2;
 		a_This.d_RootX = l_Cx - a_This.d_RootRds;
-		a_This.d_RootY0 = window.innerHeight - a_This.d_RootRds * 2;
+		a_This.d_RootY0 = stDomUtil.cGetVwptHgt() - a_This.d_RootRds * 2;
 		a_This.d_RootY1 = l_Cy - a_This.d_RootRds;
 		stCssUtil.cSetPosDim(a_This.d_PutTgt, a_This.d_RootX, a_This.d_RootY0,
 				a_This.d_RootRds * 2, a_This.d_RootRds * 2);

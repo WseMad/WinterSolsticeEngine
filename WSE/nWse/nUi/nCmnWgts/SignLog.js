@@ -289,8 +289,8 @@ function fOnIcld(a_Errs)
 		l_This.cRfsh();							// 3.刷新表单
 
 		stCssUtil.cSetPos(l_This.d_PutTgt,				// 4.放置目标摆放到屏幕中间
-				(window.innerWidth - l_This.d_PutTgt.offsetWidth) / 2,
-				(window.innerHeight - l_This.d_PutTgt.offsetHeight) / 2);
+				(stDomUtil.cGetVwptWid() - l_This.d_PutTgt.offsetWidth) / 2,
+				(stDomUtil.cGetVwptHgt() - l_This.d_PutTgt.offsetHeight) / 2);
 
 		// 邮箱成为焦点
 	//	l_This.cIptFoc(a_This.d_PutSrcId_Mail, true);

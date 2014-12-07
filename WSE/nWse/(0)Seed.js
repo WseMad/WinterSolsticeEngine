@@ -114,7 +114,10 @@
 	/// a_Val：任意类型，属性值
 	function fDfnDataPpty(a_Tgt, a_PptyName, a_Cfgbl, a_Enmbl, a_Wrtbl, a_Val)
 	{
-		Object.defineProperty(a_Tgt, a_PptyName, { configurable : a_Cfgbl, enumerable : a_Enmbl, writable : a_Wrtbl, value : a_Val });
+		try
+		{ Object.defineProperty(a_Tgt, a_PptyName, { configurable : a_Cfgbl, enumerable : a_Enmbl, writable : a_Wrtbl, value : a_Val }); }
+		catch (a_Exc) // IE8
+		{ a_Tgt[a_PptyName] = a_Val; }
 	}
 
 	/// 浅赋值
@@ -168,6 +171,50 @@
 	{
 		var i_Rgx = /\.js$/i;
 		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".js")) : null;
+	}
+
+	/// 添加事件处理器
+	function fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.addEventListener)
+		{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.attachEvent)
+		{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = a_fHdl; }
+	}
+
+	/// 移除事件处理器
+	function fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.removeEventListener)
+		{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.detachEvent)
+		{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = null; }
+	}
+
+	// 为IE8添加Array.prototype.indexOf
+	if (! Array.prototype.indexOf)
+	{
+		Array.prototype.indexOf = function(a_Elmt, a_Bgn)
+		{
+			var l_Len = this.length || 0;
+			var l_Idx = Number(arguments[1]) || 0;
+			l_Idx = (l_Idx < 0) ? Math.ceil(l_Idx) : Math.floor(l_Idx);
+			if (l_Idx < 0)
+			{ l_Idx += l_Len; }
+
+			for (; l_Idx < l_Len; ++l_Idx)
+			{
+				if ((l_Idx in this) && (this[l_Idx] === a_Elmt))
+				{ return l_Idx; }
+			}
+			return -1;
+		};
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -273,6 +320,8 @@
 	unKnl.fCcat = fCcat;
 	unKnl.fEnsrDiry = fEnsrDiry;
 	unKnl.fEnsrJs = fEnsrJs;
+	unKnl.fAddEvtHdlr = fAddEvtHdlr;
+	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 
 	/// 断言
 	/// a_Expr：Boolean，表达式
@@ -281,6 +330,12 @@
 	{
 		if (! a_Expr)
 		{ throw new Error(a_Info || "断言失败！"); }
+	};
+
+	/// 可能是非Html5浏览器
+	nWse.fMaybeNonHtml5Brsr = function ()
+	{
+		return (! document.getElementsByClassName);	// IE8以前都没有这个函数
 	};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -305,7 +360,7 @@
 		eInitLibDiryMap();
 
 		var e_CpltRgtr = {};							// 注册表
-		var e_FromLibQue = [];							// 调用队列
+		var e_FromLibQue = null;						// 调用队列
 		var e_Dom_Head = i_InNodeJs ? null : l_Glb.document.documentElement.firstChild;	// <head>
 
 		//======== 私有函数
@@ -317,8 +372,8 @@
 			{ return; }
 
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
-			var l_Src = l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
-			var l_Idx = l_Src.toLowerCase().indexOf("/nwse/(0)seed.js");
+			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
+			var l_Idx = l_Src ? l_Src.toLowerCase().indexOf("/nwse/(0)seed.js") : -1;
 			if (l_Idx >= 0)
 			{ e_LibDiryMap["nWse"] = l_Src.slice(0, l_Idx + 6); }
 		}
@@ -418,7 +473,7 @@
 						l_Dom_Script = l_Glb.document.createElement("script");
 						l_Dom_Script.type = "text/javascript";
 						l_Dom_Script.onerror = fOnErr;
-						l_Dom_Script.onload = fOnLoad;
+						("onload" in l_Dom_Script) ? (l_Dom_Script.onload = fOnLoad) : (l_Dom_Script.onreadystatechange = fOnLoad);
 						l_Dom_Script.src = a_Path;
 						a_RegItem = eNewCpltEtr(a_LwrPath, 1, l_Dom_Script, null);	// 待定
 						a_RegItem.c_OnCplt = [fOnCplt];								// 当完成时
@@ -438,6 +493,14 @@
 
 					function fOnLoad()
 					{
+						// IE8
+						if (nWse.fMaybeNonHtml5Brsr())
+						{
+							// 继续等待
+							if (("loaded" != this.readyState) && ("complete" != this.readyState))
+							{ return; }
+						}
+
 						a_RegItem.c_Sta = 2;		// 就绪
 
 						// 将缓存的实参转储到注册项里，
@@ -445,9 +508,6 @@
 						var l_Agms = null;
 						if (e_FromLibQue.length > 0)
 						{
-							if (e_FromLibQue.length >= 2)
-							{ console.log("【警告】e_FromLibQue.length >= 2"); }
-
 							l_Agms = e_FromLibQue.shift();
 							a_RegItem.c_fCabk = l_Agms.c_fCabk;
 							a_RegItem.c_AsynAry = l_Agms.c_AsynAry;
@@ -490,8 +550,8 @@
 		// 构建依赖树，返回true表示回调完成
 		function eBldDpdtTree(a_fRoot, a_DftDiry, a_Paths, a_fCabk)
 		{
-			// 早期逻辑
-			if (eElyLgc(a_fRoot, a_Paths, a_fCabk))
+			// 空回调函数？
+			if ((! a_fCabk))
 			{ return true; }
 
 			// 需要异步加载的文件名存入这里
@@ -510,42 +570,6 @@
 			{
 				return eCabkTree(a_fRoot, a_fCabk);
 			}
-		}
-
-		// 早期逻辑，返回true表示已处理完
-		function eElyLgc(a_fRoot, a_Paths, a_fCabk)
-		{
-			// 空回调函数？
-			if ((! a_fCabk))
-			{ return true; }
-
-			// 空路径数组？
-			var i, l_Len, l_ImdtCabk = ! a_Paths;
-			if ((! l_ImdtCabk) && ("length" in a_Paths))
-			{
-				if (0 == a_Paths.length)
-				{
-					l_ImdtCabk = true;
-				}
-				else
-				{
-					l_Len = a_Paths.length;
-					for (i=0; i<l_Len; ++i)
-					{
-						if (null != a_Paths[i])
-						{ break; }
-					}
-
-					if (i == l_Len)
-					{ l_ImdtCabk = true; }
-				}
-			}
-
-			// 立即回调？
-			if (l_ImdtCabk)
-			{ eCabkTree(a_fRoot, a_fCabk); }
-
-			return l_ImdtCabk;
 		}
 
 		// 回调树，返回bool，表示子树是否已回调完
@@ -580,6 +604,8 @@
 					if ((-1 == l_RegItem.c_Sta) || (3 == l_RegItem.c_Sta) || (! l_RegItem.c_fCabk))
 					{ continue; }
 
+					nWse.fAst((a_fCabk !== l_RegItem.c_fCabk), "逻辑保证不应相等！");
+
 					// 递归，然后检查子树是否已回调完
 					l_RtnVal = eCabkTree(a_fRoot, l_RegItem.c_fCabk);
 					if (l_RtnVal)
@@ -604,7 +630,7 @@
 		{
 			a_RegItem.c_Sta = 3;		// 完成
 			a_RegItem.c_Dom_Script.onerror = null;
-			a_RegItem.c_Dom_Script.onload = null;
+			("onload" in a_RegItem.c_Dom_Script) ? (a_RegItem.c_Dom_Script.onload = null) : (a_RegItem.c_Dom_Script.onreadystatechange = null);
 			delete a_RegItem.c_Dom_Script;
 			delete a_RegItem.c_fCabk;
 			delete a_RegItem.c_OnCplt;
@@ -638,6 +664,10 @@
 		/// 来自App
 		stAsynIcld.cFromApp = function (a_DftLibDiry, a_LibPaths, a_fCabk)
 		{
+			// 首次调用，创建队列
+			if (! e_FromLibQue)
+			{ e_FromLibQue = []; }
+
 			// 构建依赖树
 			eBldDpdtTree(a_fCabk, eGnrtDftDiry(a_DftLibDiry), a_LibPaths, a_fCabk);
 			return stAsynIcld;
@@ -653,9 +683,10 @@
 			var l_AsynAry = [];
 			eIcldByAry(l_AsynAry, l_DftDiry, a_LibPaths);
 
-			if (l_AsynAry.length > 0) // 压入实参至队列
-			{ e_FromLibQue.push({ c_fCabk : a_fCabk, c_AsynAry : l_AsynAry }); }
-			else // 立即回调
+			// 如果调用过cFromApp则压入实参至队列，否则立即回调
+			if (e_FromLibQue)
+			{ e_FromLibQue.push({ c_fCabk : a_fCabk, c_AsynAry : (l_AsynAry.length > 0) ? l_AsynAry : null }); }
+			else
 			{ eCabkTree(null, a_fCabk); }
 
 			return stAsynIcld;
@@ -683,208 +714,6 @@
 			return stAsynIcld;
 		};
 	})();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 正在加载
-
-	var stNowLoad;
-	(function ()
-	{
-		/// 正在加载
-		stNowLoad = function () { };
-		nWse.stNowLoad = stNowLoad;
-		stNowLoad.oc_nHost = nWse;
-		stNowLoad.oc_FullName = nWse.ocBldFullName("stNowLoad");
-
-		/// 构建全名
-		stNowLoad.ocBldFullName = function (a_Name)
-		{ return stNowLoad.oc_FullName + "." + a_Name; };
-
-		//======== 私有字段
-
-		var e_LastTime = 0, e_FrmTime = 0;
-		var e_SphTot = 7, e_SphFnlRds = 16, e_SphAry = [];
-		var e_Dom_body = null, e_WndInrHgt = 0, e_DomAll = null;
-		var e_End = false, e_fCabk = null;
-		var e_fRAF = l_Glb.requestAnimationFrame ||
-			l_Glb.webkitRequestAnimationFrame ||
-			l_Glb.mozRequestAnimationFrame ||
-			l_Glb.oRequestAnimationFrame ||
-			l_Glb.msRequestAnimationFrame ||
-			function (a_fCabk) { l_Glb.setTimeout(a_fCabk, 15); };
-
-		//======== 私有函数
-
-		// 一帧
-		function eOneFrm()
-		{
-			// 结束？
-			if (e_End)
-			{
-				// 不显示
-				if (e_DomAll && ("none" != e_DomAll.style.display))
-				{ e_DomAll.style.display = "none"; }
-
-				// 回调
-				if (e_fCabk)
-				{ e_fCabk(); }
-
-				return;
-			}
-
-			// 更新高度
-			if (e_WndInrHgt != window.innerHeight)
-			{
-				e_WndInrHgt = window.innerHeight;
-				e_DomAll.style.height = e_WndInrHgt.toString() + "px";
-			}
-
-			var l_Now = Date.now() / 1000;
-			var l_FrmItvl = Math.min(l_Now - e_LastTime, 1);	// 限制每秒1帧
-			e_LastTime = l_Now;
-			e_FrmTime += l_FrmItvl;
-
-			var l_Cx = window.innerWidth / 2, l_Cy = window.innerHeight / 2;
-			var l_Spd = 3.0;
-			var l_GrowTime = 3;
-			var l_MinRdsScl = 0.3;
-			var l_OvalAr = 2.0 / 1.00;
-			var l_A = Math.min(200, window.innerWidth / 4);
-			var l_B = l_A / l_OvalAr;
-			e_SphFnlRds = Math.floor(l_A / e_SphTot);
-			var l_X, l_Y, l_S, l_R;
-			var l_RadPerCir = 2 * Math.PI / e_SphTot;
-
-			var i, l_Rad, l_Sin, l_Sph, l_Stl;
-			for (i = 0; i<e_SphTot; ++i)
-			{
-				l_Sph = e_SphAry[i];
-				l_Stl = l_Sph.c_Dom.style;
-
-			//	e_FrmTime = l_GrowTime;
-				l_Rad = i * l_RadPerCir + e_FrmTime * l_Spd;
-				l_X = l_A * Math.cos(l_Rad);
-				l_Sin = Math.sin(l_Rad);
-				l_Y = l_B * l_Sin;
-				l_S = Math.max((l_Y + l_B) / (l_B + l_B), l_MinRdsScl);
-				l_Y *= (1.00 * Math.cos(e_FrmTime));
-				l_Sph.c_Rds = e_SphFnlRds * Math.min(e_FrmTime / l_GrowTime, 1);	// 成长
-				l_R = l_Sph.c_Rds * l_S;
-
-				l_Stl.left = Math.round(l_X - l_Sph.c_Rds + l_Cx).toString() + "px";
-				l_Stl.top  = Math.round(l_Y - l_Sph.c_Rds + l_Cy).toString() + "px";
-				l_Stl.width = Math.round(l_R * 2).toString() + "px";
-				l_Stl.height = l_Stl.width;
-				l_Stl.borderRadius = Math.floor(l_R).toString() + "px";
-				l_Stl.zIndex = Math.floor((l_Sin * 0.5 + 0.50001) * e_SphTot).toString();	// 把l_Sin规整到[0.00001, 1.00001]
-
-				if (l_R >= 1)
-				{ l_Stl.boxShadow = "0px 0px " + Math.floor(l_R * 2).toString() + "px " + l_Stl.backgroundColor; }
-				else
-				if (l_Stl.boxShadow)
-				{ l_Stl.boxShadow = ""; }
-			}
-
-			// 下一帧
-			eNextFrm();
-		}
-
-		function eNextFrm()
-		{
-			e_fRAF(eOneFrm);
-		}
-
-		function eSttAnmt()
-		{
-			if (! e_Dom_body)
-		//	{ e_Dom_body = document.getElementsByTagName("body")[0]; }
-			{
-				// 用3D页体
-				e_Dom_body = document.getElementById("ok_3dBody");
-				if (! e_Dom_body)
-				{
-					e_Dom_body = document.createElement("div");
-					e_Dom_body.id = "ok_3dBody";
-					document.getElementsByTagName("body")[0].appendChild(e_Dom_body);
-				}
-			}
-
-			if (! e_DomAll)
-			{
-				e_DomAll = document.createElement("div");
-				e_DomAll.id = "ok_NowLoad";
-				e_WndInrHgt = window.innerHeight;
-				e_DomAll.style.height = e_WndInrHgt.toString() + "px";
-				e_DomAll.style.backgroundColor = "black";	// 黑色背景彰显夜空
-				e_Dom_body.appendChild(e_DomAll);	// 加入<3d body>
-			}
-
-			var i, l_Sph;
-			for (i = 0; i<e_SphTot; ++i)
-			{
-				l_Sph = {};
-				l_Sph.c_Dom = document.createElement("div");
-				l_Sph.c_Dom.style.position = "absolute";	// 绝对定位
-				e_SphAry.push(l_Sph);
-				e_DomAll.appendChild(l_Sph.c_Dom);	// 加入<div id="ok_NowLoad">
-			}
-
-			e_SphAry[0].c_Dom.style.backgroundColor = "rgba(255, 0, 0, 1)";
-			e_SphAry[6].c_Dom.style.backgroundColor = "rgba(255, 128, 0, 1)";
-			e_SphAry[5].c_Dom.style.backgroundColor = "rgba(255, 255, 0, 1)";
-			e_SphAry[4].c_Dom.style.backgroundColor = "rgba(0, 255, 0, 1)";
-			e_SphAry[3].c_Dom.style.backgroundColor = "rgba(0, 255, 255, 1)";
-			e_SphAry[2].c_Dom.style.backgroundColor = "rgba(0, 0, 255, 1)";
-			e_SphAry[1].c_Dom.style.backgroundColor = "rgba(255, 0, 255, 1)";
-
-			// 开始
-			stNowLoad.cBgn();
-		}
-
-		// DOM就绪时立即开始动画
-		document.addEventListener("DOMContentLoaded", eSttAnmt);
-
-		//======== 公有函数
-
-		/// 存取显示DOM元素
-		stNowLoad.cAcsDsplDom = function ()
-		{
-			return e_DomAll;
-		};
-
-		/// 开始
-		stNowLoad.cBgn = function ()
-		{
-			// 复位变量
-			e_End = false;
-			e_FrmTime = 0;
-			e_LastTime = Date.now() / 1000;
-
-			// 显示
-			if (e_DomAll && e_DomAll.style.display)
-			{ e_DomAll.style.display = ""; }
-
-			// 第一帧
-			eNextFrm();
-			return stNowLoad;
-		};
-
-		/// 结束，【注意】异步执行
-		/// a_fCabk：void f()，回调
-		stNowLoad.cEnd = function (a_fCabk)
-		{
-			e_End = true;
-			e_fCabk = a_fCabk;
-			return stNowLoad;
-		};
-
-		/// 获取帧时间（自上次cBgn()调用以来经过的时间）
-		stNowLoad.cGetFrmTime = function ()
-		{
-			return e_FrmTime;
-		};
-	})();
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over

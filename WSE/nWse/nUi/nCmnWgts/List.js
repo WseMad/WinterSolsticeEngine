@@ -476,7 +476,7 @@ function fOnIcld(a_Errs)
 				var l_SlcAll = document.createElement("div");
 				stCssUtil.cSetCssc(l_SlcAll, "cnWse_tList_SlcAll");
 				l_SlcAll.textContent = "全选";
-				l_SlcAll.addEventListener("click",
+				stDomUtil.cAddEvtHdlr(l_SlcAll, "click",
 					function ()
 					{
 						if (l_This.cHasUslcItem())	// 有未选中的时，全选
@@ -497,7 +497,7 @@ function fOnIcld(a_Errs)
 				var l_SlcRvs = document.createElement("div");
 				stCssUtil.cSetCssc(l_SlcRvs, "cnWse_tList_SlcRvs");
 				l_SlcRvs.textContent = "反选";
-				l_SlcRvs.addEventListener("click",
+				stDomUtil.cAddEvtHdlr(l_SlcRvs, "click",
 					function ()
 					{
 						l_This.cRvsSlcAllItems();	// 反选

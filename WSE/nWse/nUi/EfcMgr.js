@@ -187,6 +187,7 @@ function fOnIcld(a_Errs)
 		,
 		false);
 	})();
+	tEfc = nUi.tEfc;	// IE8，不说什么了……
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 特效管理器
@@ -225,12 +226,12 @@ function fOnIcld(a_Errs)
 
 		function eGetPutTgtWid(a_PutTgt)
 		{
-			return Math.min(window.innerWidth, a_PutTgt.offsetWidth);
+			return Math.min(stDomUtil.cGetVwptWid(), a_PutTgt.offsetWidth);
 		}
 
 		function eGetPutTgtHgt(a_PutTgt)
 		{
-			return Math.min(window.innerHeight, a_PutTgt.offsetHeight);
+			return Math.min(stDomUtil.cGetVwptHgt(), a_PutTgt.offsetHeight);
 		}
 
 		function eMake_Aph(a_Aph, a_Dft)
@@ -565,11 +566,12 @@ function fOnIcld(a_Errs)
 		/// 返回：a_Sara
 		stEfcMgr.cPushToScrnEdge = function (a_Sara, a_ROx, a_ROy, a_RDx, a_RDy, a_Isd)
 		{
+			var l_VW = stDomUtil.cGetVwptWid(), l_VH = stDomUtil.cGetVwptHgt();
 			var l_t, l_t1, l_t2, l_t3, l_t4, l_X, l_Y;
-			l_t1 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, 0, window.innerHeight);	// ←
-			l_t2 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, window.innerWidth, 0, window.innerWidth, window.innerHeight);	// →
-			l_t3 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, window.innerWidth, 0);	// ↑
-			l_t4 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, window.innerHeight, window.innerWidth, window.innerHeight);// ↓
+			l_t1 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, 0, l_VH);	// ←
+			l_t2 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, l_VW, 0, l_VW, l_VH);	// →
+			l_t3 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, 0, l_VW, 0);	// ↑
+			l_t4 = fItsc_Ray_Line(a_ROx, a_ROy, a_RDx, a_RDy, 0, l_VH, l_VW, l_VH);// ↓
 			if (l_t1 || l_t2 || l_t3 || l_t4)
 			{
 				l_t = (l_t1 > 0) ? l_t1 : Math.max(l_t1, l_t2, l_t3, l_t4);

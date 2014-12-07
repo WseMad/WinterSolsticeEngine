@@ -468,11 +468,11 @@ function fOnIcld(a_Errs)
 			if (! e_PickCvs)
 			{ return; }
 
-			if (e_PickCvs.width != window.innerWidth)
-			{ e_PickCvs.width = window.innerWidth; }
+			if (e_PickCvs.width != stDomUtil.cGetVwptWid())
+			{ e_PickCvs.width = stDomUtil.cGetVwptWid(); }
 
-			if (e_PickCvs.height != window.innerHeight)
-			{ e_PickCvs.height = window.innerHeight; }
+			if (e_PickCvs.height != stDomUtil.cGetVwptHgt())
+			{ e_PickCvs.height = stDomUtil.cGetVwptHgt(); }
 		}
 
 		// 输入处理器

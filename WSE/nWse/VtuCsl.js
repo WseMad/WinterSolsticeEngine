@@ -576,7 +576,7 @@ function fOnIcld(a_Errs)
 				if (eOnHashChg.Wse_On)
 				{ return; }
 
-				window.addEventListener("hashchange", eOnHashChg);
+				stDomUtil.cAddEvtHdlr(window, "hashchange", eOnHashChg);
 				eOnHashChg.Wse_On = true;
 				e_UrlHashChg.length = 0;	// 清零
 			}
@@ -586,7 +586,7 @@ function fOnIcld(a_Errs)
 				if (! eOnHashChg.Wse_On)
 				{ return; }
 
-				window.removeEventListener("hashchange", eOnHashChg);
+				stDomUtil.cRmvEvtHdlr(window, "hashchange", eOnHashChg);
 				eOnHashChg.Wse_On = false;
 				e_UrlHashChg.length = 0;	// 清零
 			}
@@ -632,11 +632,19 @@ function fOnIcld(a_Errs)
 			if (l_Ctnt.indexOf("/") >= 0)
 			{ l_Cmd = l_Ctnt.split("/").join(" "); }
 
-			var l_Istr = eExtrIstrFromCmd(l_Cmd);	// 指令无效时取默认命令
-			if (! stVtuCsl.cGetHdlr(l_Istr))
-			{ return stVtuCsl.cIpt(e_DftCmd); }
-
-			stVtuCsl.cIpt(l_Cmd);	// 处理这条命令
+			var l_Istr = eExtrIstrFromCmd(l_Cmd);
+			if (! stVtuCsl.cGetHdlr(l_Istr)) // 指令若无效则可能是元素ID
+			{
+				var l_Elmt = document.getElementById(l_Istr);
+				if (l_Elmt)
+				{ l_Elmt.scrollIntoView(true); }
+				else
+				{ stVtuCsl.cIpt(e_DftCmd); }
+			}
+			else
+			{
+				stVtuCsl.cIpt(l_Cmd);	// 处理这条命令
+			}
 			return stVtuCsl;
 		};
 
@@ -722,20 +730,20 @@ function fOnIcld(a_Errs)
 			{ return; }
 
 			var l_TotBdrWid = e_BdrWid * 2;
-			if (e_PaneWid + l_TotBdrWid < window.innerWidth)
+			if (e_PaneWid + l_TotBdrWid < stDomUtil.cGetVwptWid())
 			{
 				if (nWse.fIsUdfnOrNull(a_X)) { a_X = parseFloat(e_DomPane.style.left); }
-				a_X = stNumUtil.cClmOnNum(a_X, 0, window.innerWidth - e_PaneWid - l_TotBdrWid);
+				a_X = stNumUtil.cClmOnNum(a_X, 0, stDomUtil.cGetVwptWid() - e_PaneWid - l_TotBdrWid);
 			}
 			else
 			{
 				a_X = 0;
 			}
 
-			if (e_TibHgt + l_TotBdrWid < window.innerHeight)
+			if (e_TibHgt + l_TotBdrWid < stDomUtil.cGetVwptHgt())
 			{
 				if (nWse.fIsUdfnOrNull(a_Y)) { a_Y = parseFloat(e_DomPane.style.top); }
-				a_Y = stNumUtil.cClmOnNum(a_Y, 0, window.innerHeight - e_TibHgt - e_BdrWid);
+				a_Y = stNumUtil.cClmOnNum(a_Y, 0, stDomUtil.cGetVwptHgt() - e_TibHgt - e_BdrWid);
 			}
 			else
 			{
@@ -849,8 +857,8 @@ function fOnIcld(a_Errs)
 			stCssUtil.cSetBdrWid(e_DomPane, e_BdrWid);
 
 			var l_BbWid = e_BdrWid + e_BtnPad;
-			fSetPanePos(window.innerWidth - e_PaneWid - l_BbWid,
-					window.innerHeight - e_PaneHgt - l_BbWid);	// 右下角
+			fSetPanePos(stDomUtil.cGetVwptWid() - e_PaneWid - l_BbWid,
+				stDomUtil.cGetVwptHgt() - e_PaneHgt - l_BbWid);	// 右下角
 
 			//-------- 标题栏
 
@@ -861,7 +869,7 @@ function fOnIcld(a_Errs)
 
 			// 当拖动标题栏时追踪鼠标
 			// 注意鼠标移动消息注册到文档上，为了及时追踪
-			e_DomTib.addEventListener("mousedown",
+			stDomUtil.cAddEvtHdlr(e_DomTib, "mousedown",
 				function (a_Evt)
 				{
 					if ((e_DomTib !== a_Evt.target) && (e_DomCptn !== a_Evt.target))
@@ -873,11 +881,11 @@ function fOnIcld(a_Errs)
 					//	console.log("true");
 				});
 
-			e_DomTib.addEventListener("mouseup", fStopDrag);
-			e_DomTib.addEventListener("focus", fStopDrag);
-			e_DomTib.addEventListener("blur", fStopDrag);
+			stDomUtil.cAddEvtHdlr(e_DomTib, "mouseup", fStopDrag);
+			stDomUtil.cAddEvtHdlr(e_DomTib, "focus", fStopDrag);
+			stDomUtil.cAddEvtHdlr(e_DomTib, "blur", fStopDrag);
 
-			document.addEventListener("mousemove",
+			stDomUtil.cAddEvtHdlr(document, "mousemove",
 				function (a_Evt)
 				{
 					if (e_Dragging)
@@ -909,7 +917,7 @@ function fOnIcld(a_Errs)
 			e_DomClsBtn.style.fontSize = "20px";
 			e_DomClsBtn.textContent = e_ClsBtnText;
 
-			e_DomClsBtn.addEventListener("click", function (a_Evt) { stVtuCsl.cShowHideUi(false); });
+			stDomUtil.cAddEvtHdlr(e_DomClsBtn, "click", function (a_Evt) { stVtuCsl.cShowHideUi(false); });
 
 			e_DomTib.appendChild(e_DomClsBtn);
 
@@ -984,9 +992,9 @@ function fOnIcld(a_Errs)
 		/// 用户界面快捷键
 		stVtuCsl.cHotKeyUi = function (a_Enab)
 		{
-			document.removeEventListener("keydown", fOnKeyDown);	// 先尝试移除
+			stDomUtil.cRmvEvtHdlr(document, "keydown", fOnKeyDown);	// 先尝试移除
 			if (a_Enab)	// 如果需要，再添加
-			{ document.addEventListener("keydown", fOnKeyDown); }
+			{ stDomUtil.cAddEvtHdlr(document, "keydown", fOnKeyDown); }
 		};
 
 		function fOnKeyDown(a_Evt)
