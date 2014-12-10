@@ -216,12 +216,16 @@ function fOnIcld(a_Errs)
 		/// 返回：Node，不存在时返回null
 		stDomUtil.cQryOne = function (a_Slc, a_Root)
 		{
+			var l_Rst;
 			if (nWse.fMaybeNonHtml5Brsr())
 			{
-				return null;
+				if (l_Glb.jQuery)
+				{ l_Rst = l_Glb.jQuery(a_Slc); }
+
+				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get(0) : null;
 			}
 
-			var l_Rst = document.querySelector(a_Slc);
+			l_Rst = document.querySelector(a_Slc);
 			return a_Root ? (stDomUtil.cIsAcst(a_Root, l_Rst) ? l_Rst : null) : l_Rst;
 		};
 
@@ -231,12 +235,16 @@ function fOnIcld(a_Errs)
 		/// 返回：Node[]，不存在时返回空数组
 		stDomUtil.cQryAll = function (a_Slc, a_Root)
 		{
+			var l_Rst;
 			if (nWse.fMaybeNonHtml5Brsr())
 			{
-				return [];
+				if (l_Glb.jQuery)
+				{ l_Rst = l_Glb.jQuery(a_Slc); }
+
+				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
 			}
 
-			var l_Rst = Array.prototype.slice.call(document.querySelectorAll(a_Slc));
+			l_Rst = Array.prototype.slice.call(document.querySelectorAll(a_Slc));
 			if (a_Root)
 			{
 				stAryUtil.cErsAll(l_Rst,
@@ -521,14 +529,28 @@ function fOnIcld(a_Errs)
 		/// 添加事件处理器
 		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			nWse.unKnl.fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			if (a_Elmt.addEventListener)
+			{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
+			else
+			if (a_Elmt.attachEvent)
+			{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
+			else
+			{ a_Elmt["on" + a_EvtName] = a_fHdl; }
+
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器
 		stDomUtil.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			nWse.unKnl.fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			if (a_Elmt.removeEventListener)
+			{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
+			else
+			if (a_Elmt.detachEvent)
+			{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
+			else
+			{ a_Elmt["on" + a_EvtName] = null; }
+
 			return stDomUtil;
 		};
 

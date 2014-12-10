@@ -173,30 +173,6 @@
 		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".js")) : null;
 	}
 
-	/// 添加事件处理器
-	function fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
-	{
-		if (a_Elmt.addEventListener)
-		{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
-		else
-		if (a_Elmt.attachEvent)
-		{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
-		else
-		{ a_Elmt["on" + a_EvtName] = a_fHdl; }
-	}
-
-	/// 移除事件处理器
-	function fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
-	{
-		if (a_Elmt.removeEventListener)
-		{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
-		else
-		if (a_Elmt.detachEvent)
-		{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
-		else
-		{ a_Elmt["on" + a_EvtName] = null; }
-	}
-
 	// 为IE8添加Array.prototype.indexOf
 	if (! Array.prototype.indexOf)
 	{
@@ -320,8 +296,6 @@
 	unKnl.fCcat = fCcat;
 	unKnl.fEnsrDiry = fEnsrDiry;
 	unKnl.fEnsrJs = fEnsrJs;
-	unKnl.fAddEvtHdlr = fAddEvtHdlr;
-	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 
 	/// 断言
 	/// a_Expr：Boolean，表达式
