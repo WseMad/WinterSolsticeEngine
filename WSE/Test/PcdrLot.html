@@ -165,13 +165,33 @@
 		{
 			console.log("window.onload");
 
-			nWse.stAsynIcld.cFromApp("nWse",
-			[
-				"nUi/EfcMgr.js",
-				"nUi/PcdrLot.js"
-			]
-			,
-			fOnIcld);
+//			nWse.stAsynIcld.cFromApp("nWse",
+//			[
+//				"nUi/EfcMgr.js",
+//				"nUi/PcdrLot.js"
+//			]
+//			,
+//			fOnIcld);
+
+			if (nWse.fIsOnlineBrs()) // 在线
+			{
+				nWse.stAsynLoad.cSqnc(
+						[ // 合并后的文件写在下面：
+//							nWse.stAsynIcld.cPsePath("nWse:nUi/EfcMgr.js"),
+//							nWse.stAsynIcld.cPsePath("nWse:nUi/PcdrLot.js")
+						],
+						fOnIcld);
+			}
+			else // 开发
+			{
+				nWse.stAsynIcld.cFromApp("nWse",
+						[
+							"nUi/EfcMgr.js",
+							"nUi/PcdrLot.js"
+						]
+						,
+						fOnIcld);
+			}
 		};
 
 		function fOnIcld(a_Errs)

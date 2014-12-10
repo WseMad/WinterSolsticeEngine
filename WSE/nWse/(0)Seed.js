@@ -248,11 +248,14 @@
 		/// 应用程序
 		function nApp(){ return nApp; });
 
-	/// Boolean，是否在Node.js里
-	nWse.i_InNodeJs = i_InNodeJs;
+	/// Boolean，是否在浏览器里
+	nWse.i_InBrsr = ! i_InNodeJs;
 
-	/// String，生成模式，∈{ "Dbg"（默认），"Rls" }
-	nWse.g_BldMode = "Dbg";
+	/// 是否在线浏览？
+	nWse.fIsOnlineBrs = function ()
+	{
+		return nWse.i_InBrsr && (80 == l_Glb.location.port);
+	};
 
 	/// Number，异步延迟（秒），用于模拟异步请求时的网络延迟，应仅用于开发时！
 	nWse.g_AsynDly = 0;
@@ -260,7 +263,7 @@
 	/// 是否异步延迟？
 	nWse.fIsAsynDly = function ()
 	{
-		return ("Dbg" == nWse.g_BldMode) && (nWse.g_AsynDly > 0);
+		return (! nWse.fIsOnlineBrs()) && (nWse.g_AsynDly > 0);
 	};
 
 	/// 名字空间
@@ -344,7 +347,7 @@
 			if (! l_Len)
 			{ return stAsynLoad; }
 
-			var l_Paths = Array.prototype.slice(a_Paths);
+			var l_Paths = Array.prototype.slice.call(a_Paths);
 			var l_Idx = 0;
 			function fLoadOne()
 			{

@@ -78,23 +78,28 @@
 		{
 			console.log("window.onload");
 
-			nWse.stAsynIcld.cFromApp("nWse",
-			[
-				"(1)ObjOrtd.js",
-				"(2)LangUtil.js",
-				"nWse:(3)CoreDast.js",
-				"DomUtil.js",
-				"CssUtil.js"
-
-//				"Abc",
-//				"CssUtil.js",
-//				"DomUtil.js",
-//				"(3)CoreDtst.js",
-//				"(2)LangUtil.js",
-//				"(1)ObjOrtd.js"
-			]
-			,
-			fOnIcld);
+			if (nWse.fIsOnlineBrs()) // 在线
+			{
+				nWse.stAsynLoad.cSqnc(
+						[
+							"NodeLib.js",
+							"NodeLib2.js"
+						],
+				fOnIcld);
+			}
+			else // 开发
+			{
+				nWse.stAsynIcld.cFromApp("nWse",
+						[
+							"(1)ObjOrtd.js",
+							"(2)LangUtil.js",
+							"nWse:(3)CoreDast.js",
+							"DomUtil.js",
+							"CssUtil.js"
+						]
+						,
+						fOnIcld);
+			}
 		};
 
 		function fOnIcld(a_Errs)
@@ -103,192 +108,7 @@
 
 			///////////////////////////////////////////////// 接口
 
-//			function f(){}
-//			f.prototype = { c : 0 };
-//			var o = new f();
-//			o.c ++;
-//			console.log(o.c);
-//			console.log(f.prototype.c);
 
-			nWse.fItfc(window.nApp,
-			function itLoad() { },
-			null,
-			{
-				vcWhich : function ()
-				{
-					//
-				}
-			});
-
-			nWse.fItfc(window.nApp,
-			function itLoadFromSvr() { },
-					window.nApp.itLoad,
-			{
-				vcLoad : function ()
-				{
-					//
-				}
-			});
-
-			nWse.fItfc(window.nApp,
-			function itLoadFromUrl() { },
-					window.nApp.itLoad,
-			{
-				vcLoad : function ()
-				{
-					//
-				}
-			});
-
-			for (var l_PN in window.nApp.itLoadFromUrl)
-			{
-				console.log(l_PN);
-			}
-
-			nWse.fClass(window.nApp,
-			function tAbc()
-			{
-
-			},
-			null,
-			{
-
-			});
-
-			nWse.fClassItfcImp(window.nApp.tAbc,
-				[window.nApp.itLoad, window.nApp.itLoadFromSvr, window.nApp.itLoadFromUrl],
-				[{
-					vcWhich : function ()
-					{
-						console.log("itLoad.vcWhich");
-					}
-				},
-				{
-					vcLoad : function()
-					{
-						console.log("itLoadFromSvr.vcLoad");
-					}
-				},
-				{
-					vcLoad : function()
-					{
-						console.log("itLoadFromUrl.vcLoad");
-					}
-				}]);
-
-			var l_o = new window.nApp.tAbc();
-			function fCallItfc_Svr(a_Istn)
-			{
-				window.nApp.itLoadFromSvr.ocBindUbnd(a_Istn,
-				function (a_Istn)
-				{
-					a_Istn.vcLoad();
-				});
-			}
-			function fCallItfc_Url(a_Istn)
-			{
-				window.nApp.itLoadFromUrl.ocBindUbnd(a_Istn,
-				function (a_Istn)
-				{
-					a_Istn.vcLoad();
-				});
-			}
-			function fCallItfc_Which(a_Istn)
-			{
-				window.nApp.itLoad.ocBindUbnd(a_Istn,
-				function (a_Istn)
-				{
-					a_Istn.vcWhich();
-				});
-			}
-			fCallItfc_Svr(l_o);
-			fCallItfc_Url(l_o);
-			fCallItfc_Which(l_o);
-
-			/////////////////////////////////////////////////
-
-//			window.onhashchange = function ()
-//			{
-//				console.log("onhashchange")
-//			}
-//
-//			location.hash = "#abc";
-//			console.log("#abc")
-//			location.hash = "#def";
-//			console.log("#def")
-//			location.hash = "#def";
-//			console.log("#def")
-//			location.hash = "#xyz";
-//			console.log("#xyz")
-
-
-//			nWse.stDomUtil.cRegAnmt(function (a_FrmTime, a_FrmItvl, a_FrmNum)
-//			{
-//				var l_Dom = document.getElementById("k_Dspl");
-//				l_Dom.textContent = a_FrmTime + ", " + a_FrmItvl + ", " + a_FrmNum;
-//			});
-
-//            for (var ppp in nWse.tSara.tBdrNum)
-//            {
-//				console.log(ppp + ": " + nWse.tSara.tBdrNum[ppp]);
-//            }
-//
-//			console.log(nWse.tSara.toString());
-
-
-
-			/*
-			console.log("Html.fOnIcld");
-			console.log("Wse Diry : " + nWse.fAsynIcld.c_WseDiry);
-
-			if (a_Errs)
-				{
-					console.log(a_Errs);
-				}
-				return;
-
-			console.log(a_Rmn);
-
-			// 继续
-			var tAbc = nWse.fClass(window.nApp,
-			function tAbc(a_Name, a_Age, a_Gen)
-			{
-				this.c_Name = a_Name;
-				console.log(Array.prototype.slice.call(arguments).toString());
-			}
-			,
-			null
-			,
-			{
-				//
-			}
-			,
-			{
-				//
-			}
-			,
-			true);
-
-			nWse.fEnum(nApp,
-				function tDef() { }, null,
-				"i_0", "i_1", ["i_5", 5], "i_6");
-
-			nWse.fEnum(nApp,
-				function tGhi() { }, null,
-				{
-					i_A: -1,
-					i_B: -2,
-					i_C: -3
-				});
-
-			console.log(nApp.tDef.i_.i_0.toString() + " = " + nApp.tDef.i_.i_0.valueOf());
-			console.log(nApp.tDef.i_.i_6.toString() + " = " + nApp.tDef.i_.i_6.valueOf());
-
-			console.log(nApp.tGhi.i_.i_A.toString() + " = " + nApp.tGhi.i_.i_A.valueOf());
-			console.log(nApp.tGhi.i_.i_C.toString() + " = " + nApp.tGhi.i_.i_C.valueOf());
-
-			console.log(stNumUtil.cRandInt(0, 10));
-			//*/
 		}
 
 		
