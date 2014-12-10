@@ -313,6 +313,87 @@
 	};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 异步加载
+
+	var stAsynLoad;
+	(function ()
+	{
+		/// 异步加载
+		stAsynLoad = function () { };
+		nWse.stAsynLoad = stAsynLoad;
+		stAsynLoad.oc_nHost = nWse;
+		stAsynLoad.oc_FullName = nWse.ocBldFullName("stAsynLoad");
+
+		/// 构建全名
+		stAsynLoad.ocBldFullName = function (a_Name)
+		{
+			return stAsynLoad.oc_FullName + "." + a_Name;
+		};
+
+		//======== 私有字段
+
+		//======== 私有函数
+
+		//======== 公有函数
+
+		/// 顺序
+		stAsynLoad.cSqnc = function (a_Paths, a_fCabk)
+		{
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
+			var l_Len = a_Paths ? a_Paths.length : 0;
+			if (! l_Len)
+			{ return stAsynLoad; }
+
+			var l_Paths = Array.prototype.slice(a_Paths);
+			var l_Idx = 0;
+			function fLoadOne()
+			{
+				var l_Path = l_Paths[l_Idx];
+				var l_Dom_Script = l_Glb.document.createElement("script");
+				l_Dom_Script.type = "text/javascript";
+				l_Dom_Script.onerror = fOnErr;
+				("onload" in l_Dom_Script) ? (l_Dom_Script.onload = fOnLoad) : (l_Dom_Script.onreadystatechange = fOnLoad);
+				l_Dom_Script.src = l_Path;
+				l_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
+
+				function fOnErr()
+				{
+					// 回调
+					a_fCabk(l_Path);
+				}
+
+				function fOnLoad()
+				{
+					// IE8
+					if (nWse.fMaybeNonHtml5Brsr())
+					{
+						// 继续等待
+						if (("loaded" != this.readyState) && ("complete" != this.readyState))
+						{ return; }
+					}
+
+					// 下一个
+					++ l_Idx;
+					if (l_Idx < l_Len) // 还有
+					{
+						// 继续
+						fLoadOne();
+					}
+					else // 完成
+					{
+						// 回调
+						a_fCabk(null);
+					}
+				}
+			}
+
+			// 开始加载
+			fLoadOne();
+			return stAsynLoad;
+		};
+	})();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 异步包含
 
 	var stAsynIcld;
@@ -335,7 +416,6 @@
 
 		var e_CpltRgtr = {};							// 注册表
 		var e_FromLibQue = null;						// 调用队列
-		var e_Dom_Head = i_InNodeJs ? null : l_Glb.document.documentElement.firstChild;	// <head>
 
 		//======== 私有函数
 
@@ -424,6 +504,7 @@
 		// 异步
 		function fAsyn(a_fRoot, a_fCabk)
 		{
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
 			var i = 0, l_Len = a_fCabk.Wse_Dpdts.length;
 			var l_Path, l_LwrPath;
 			var l_Dom_Script = null;
@@ -451,7 +532,7 @@
 						l_Dom_Script.src = a_Path;
 						a_RegItem = eNewCpltEtr(a_LwrPath, 1, l_Dom_Script, null);	// 待定
 						a_RegItem.c_OnCplt = [fOnCplt];								// 当完成时
-						e_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
+						l_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
 					}
 
 					function fOnErr()
