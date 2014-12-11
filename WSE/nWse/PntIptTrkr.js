@@ -35,6 +35,7 @@ function fOnIcld(a_Errs)
 	var nWse = l_Glb.nWse;
 	var stAryUtil = nWse.stAryUtil;
 	var stFctnUtil = nWse.stFctnUtil;
+	var stDomUtil = nWse.stDomUtil;
 
 	var tPntIptTrkr, tPntIpt, tPntIptKind, tTch;
 

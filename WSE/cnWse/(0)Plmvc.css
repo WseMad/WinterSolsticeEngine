@@ -60,6 +60,11 @@ ul
 	list-style: square;
 }
 
+input, textarea
+{
+	outline: none;		/* Chrome <- 不用显示输入框的轮廓 */
+}
+
 textarea
 {
 	resize: none;		/* Chrome <- 禁止调整大小 */

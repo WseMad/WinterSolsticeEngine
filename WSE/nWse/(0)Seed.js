@@ -173,30 +173,6 @@
 		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".js")) : null;
 	}
 
-	/// 添加事件处理器
-	function fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
-	{
-		if (a_Elmt.addEventListener)
-		{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
-		else
-		if (a_Elmt.attachEvent)
-		{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
-		else
-		{ a_Elmt["on" + a_EvtName] = a_fHdl; }
-	}
-
-	/// 移除事件处理器
-	function fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
-	{
-		if (a_Elmt.removeEventListener)
-		{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
-		else
-		if (a_Elmt.detachEvent)
-		{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
-		else
-		{ a_Elmt["on" + a_EvtName] = null; }
-	}
-
 	// 为IE8添加Array.prototype.indexOf
 	if (! Array.prototype.indexOf)
 	{
@@ -272,11 +248,14 @@
 		/// 应用程序
 		function nApp(){ return nApp; });
 
-	/// Boolean，是否在Node.js里
-	nWse.i_InNodeJs = i_InNodeJs;
+	/// Boolean，是否在浏览器里
+	nWse.i_InBrsr = ! i_InNodeJs;
 
-	/// String，生成模式，∈{ "Dbg"（默认），"Rls" }
-	nWse.g_BldMode = "Dbg";
+	/// 是否在线浏览？
+	nWse.fIsOnlineBrs = function ()
+	{
+		return nWse.i_InBrsr && (80 == l_Glb.location.port);
+	};
 
 	/// Number，异步延迟（秒），用于模拟异步请求时的网络延迟，应仅用于开发时！
 	nWse.g_AsynDly = 0;
@@ -284,7 +263,7 @@
 	/// 是否异步延迟？
 	nWse.fIsAsynDly = function ()
 	{
-		return ("Dbg" == nWse.g_BldMode) && (nWse.g_AsynDly > 0);
+		return (! nWse.fIsOnlineBrs()) && (nWse.g_AsynDly > 0);
 	};
 
 	/// 名字空间
@@ -320,8 +299,6 @@
 	unKnl.fCcat = fCcat;
 	unKnl.fEnsrDiry = fEnsrDiry;
 	unKnl.fEnsrJs = fEnsrJs;
-	unKnl.fAddEvtHdlr = fAddEvtHdlr;
-	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 
 	/// 断言
 	/// a_Expr：Boolean，表达式
@@ -337,6 +314,114 @@
 	{
 		return (! document.getElementsByClassName);	// IE8以前都没有这个函数
 	};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 异步加载
+
+	var stAsynLoad;
+	(function ()
+	{
+		/// 异步加载
+		stAsynLoad = function () { };
+		nWse.stAsynLoad = stAsynLoad;
+		stAsynLoad.oc_nHost = nWse;
+		stAsynLoad.oc_FullName = nWse.ocBldFullName("stAsynLoad");
+
+		/// 构建全名
+		stAsynLoad.ocBldFullName = function (a_Name)
+		{
+			return stAsynLoad.oc_FullName + "." + a_Name;
+		};
+
+		//======== 私有字段
+
+		//======== 私有函数
+
+		//======== 公有函数
+
+		/// 顺序
+		stAsynLoad.cSqnc = function (a_Paths, a_fCabk)
+		{
+			var l_Len = a_Paths ? a_Paths.length : 0;
+			if (! l_Len) // 没有时立即回调
+			{
+				a_fCabk(null);
+				return stAsynLoad;
+			}
+
+			var i_Rgx = /\.css$/i;	// 用来区分样式表和脚本
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
+			var l_Paths = Array.prototype.slice.call(a_Paths);
+			var l_Idx = 0;
+			function fLoadOne()
+			{
+				var l_Path = l_Paths[l_Idx];
+				var l_Dom_CssJs, l_HrefSrc;
+				if (i_Rgx.test(l_Path))
+				{
+					l_Dom_CssJs = l_Glb.document.createElement("link");
+					l_Dom_CssJs.rel="stylesheet";
+					l_Dom_CssJs.type = "text/css";
+					l_HrefSrc = "href";
+
+				}
+				else
+				{
+					l_Dom_CssJs = l_Glb.document.createElement("script");
+					l_Dom_CssJs.type = "text/javascript";
+					l_HrefSrc = "src";
+				}
+
+				l_Dom_CssJs.onerror = fOnErr;
+				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
+				l_Dom_CssJs[l_HrefSrc] = l_Path;
+				l_Dom_Head.appendChild(l_Dom_CssJs);						// 加入文档
+
+				function fOnErr()
+				{
+					// 记录错误
+					a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(l_Path) : (a_fCabk.Wse_Errs = [l_Path]);
+
+					// 下一个
+					fNext();
+				}
+
+				function fOnLoad()
+				{
+					// IE8
+					if (nWse.fMaybeNonHtml5Brsr())
+					{
+						// 继续等待
+						if (("loaded" != this.readyState) && ("complete" != this.readyState))
+						{ return; }
+					}
+
+					// 下一个
+					fNext();
+				}
+
+				function fNext()
+				{
+					// 下一个
+					++ l_Idx;
+					if (l_Idx < l_Len) // 还有
+					{
+						// 继续
+						fLoadOne();
+					}
+					else // 完成
+					{
+						// 回调
+						a_fCabk(a_fCabk.Wse_Errs || null);
+					}
+				}
+			}
+
+			// 开始加载
+			fLoadOne();
+			return stAsynLoad;
+		};
+	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 异步包含
@@ -356,12 +441,12 @@
 
 		//======== 私有字段
 
-		var e_LibDiryMap = { "nWse": "../nWse/" };		// 库目录映射
+		// 库目录映射
+		var e_LibDiryMap = { "nWse": "../nWse/", "cnWse": "../cnWse/" };
 		eInitLibDiryMap();
 
 		var e_CpltRgtr = {};							// 注册表
 		var e_FromLibQue = null;						// 调用队列
-		var e_Dom_Head = i_InNodeJs ? null : l_Glb.document.documentElement.firstChild;	// <head>
 
 		//======== 私有函数
 
@@ -374,8 +459,13 @@
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
 			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
 			var l_Idx = l_Src ? l_Src.toLowerCase().indexOf("/nwse/(0)seed.js") : -1;
+			var l_Diry;
 			if (l_Idx >= 0)
-			{ e_LibDiryMap["nWse"] = l_Src.slice(0, l_Idx + 6); }
+			{
+				l_Diry = l_Src.slice(0, l_Idx);
+				e_LibDiryMap["nWse"] = l_Diry + "/nWse/";
+				e_LibDiryMap["cnWse"] = l_Diry + "/cnWse/";	// 假定这两个目录并列
+			}
 		}
 
 		// 新建完成条目
@@ -450,6 +540,7 @@
 		// 异步
 		function fAsyn(a_fRoot, a_fCabk)
 		{
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
 			var i = 0, l_Len = a_fCabk.Wse_Dpdts.length;
 			var l_Path, l_LwrPath;
 			var l_Dom_Script = null;
@@ -477,7 +568,7 @@
 						l_Dom_Script.src = a_Path;
 						a_RegItem = eNewCpltEtr(a_LwrPath, 1, l_Dom_Script, null);	// 待定
 						a_RegItem.c_OnCplt = [fOnCplt];								// 当完成时
-						e_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
+						l_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
 					}
 
 					function fOnErr()
@@ -588,14 +679,15 @@
 				l_Len = l_Dpdts.length;
 				for (i=0; i<l_Len; ++i)
 				{
-					// 取得注册项，一定存在，状态不可能为0
-					// 遇到状态为1的表示子树未就绪，暂且跳过
+					// 取得注册项
+					// 若不存在，可能暗示立即从缓存加载（fOnLoad()触发过快，以致还未生成后面的注册项），暂且跳过；
+					// 若存在，则状态不可能为0；
+					// 遇到状态为1的表示子树未就绪，暂且跳过；
 					// 跳过状态为-1、3的，或无回调的
 					l_LwrPath = l_Dpdts[i].toLowerCase();
 					l_RegItem = e_CpltRgtr[l_LwrPath];
-					nWse.fAst(l_RegItem && (0 != l_RegItem.c_Sta), "注册项一定存在，状态不可能为0");
 
-					if (1 == l_RegItem.c_Sta)
+					if ((! l_RegItem) || (1 == l_RegItem.c_Sta))
 					{
 						l_SubtreeRdy = false;
 						continue;
