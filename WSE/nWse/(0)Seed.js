@@ -679,14 +679,15 @@
 				l_Len = l_Dpdts.length;
 				for (i=0; i<l_Len; ++i)
 				{
-					// 取得注册项，一定存在，状态不可能为0
-					// 遇到状态为1的表示子树未就绪，暂且跳过
+					// 取得注册项
+					// 若不存在，可能暗示立即从缓存加载（fOnLoad()触发过快，以致还未生成后面的注册项），暂且跳过；
+					// 若存在，则状态不可能为0；
+					// 遇到状态为1的表示子树未就绪，暂且跳过；
 					// 跳过状态为-1、3的，或无回调的
 					l_LwrPath = l_Dpdts[i].toLowerCase();
 					l_RegItem = e_CpltRgtr[l_LwrPath];
-					nWse.fAst(l_RegItem && (0 != l_RegItem.c_Sta), "注册项一定存在，状态不可能为0");
 
-					if (1 == l_RegItem.c_Sta)
+					if ((! l_RegItem) || (1 == l_RegItem.c_Sta))
 					{
 						l_SubtreeRdy = false;
 						continue;
