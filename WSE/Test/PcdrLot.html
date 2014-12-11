@@ -9,7 +9,6 @@
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Plmvc.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
-	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 	<!--<script type="text/javascript" src="./WSE_nWse.js"></script>-->
 
 	<style type="text/css">
@@ -301,6 +300,11 @@
 				// 演示
 				document.onkeydown = function (a_Evt)
 				{
+					if (! a_Evt) // IE7&8
+					{
+						a_Evt = window.event;
+					}
+
 					if (65 == a_Evt.keyCode) // A
 					{
 						document.getElementById("k_1").style.height = "100px";

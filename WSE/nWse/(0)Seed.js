@@ -342,27 +342,48 @@
 		/// 顺序
 		stAsynLoad.cSqnc = function (a_Paths, a_fCabk)
 		{
-			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
 			var l_Len = a_Paths ? a_Paths.length : 0;
-			if (! l_Len)
-			{ return stAsynLoad; }
+			if (! l_Len) // 没有时立即回调
+			{
+				a_fCabk(null);
+				return stAsynLoad;
+			}
 
+			var i_Rgx = /\.css$/i;	// 用来区分样式表和脚本
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
 			var l_Paths = Array.prototype.slice.call(a_Paths);
 			var l_Idx = 0;
 			function fLoadOne()
 			{
 				var l_Path = l_Paths[l_Idx];
-				var l_Dom_Script = l_Glb.document.createElement("script");
-				l_Dom_Script.type = "text/javascript";
-				l_Dom_Script.onerror = fOnErr;
-				("onload" in l_Dom_Script) ? (l_Dom_Script.onload = fOnLoad) : (l_Dom_Script.onreadystatechange = fOnLoad);
-				l_Dom_Script.src = l_Path;
-				l_Dom_Head.appendChild(l_Dom_Script);						// 加入文档
+				var l_Dom_CssJs, l_HrefSrc;
+				if (i_Rgx.test(l_Path))
+				{
+					l_Dom_CssJs = l_Glb.document.createElement("link");
+					l_Dom_CssJs.rel="stylesheet";
+					l_Dom_CssJs.type = "text/css";
+					l_HrefSrc = "href";
+
+				}
+				else
+				{
+					l_Dom_CssJs = l_Glb.document.createElement("script");
+					l_Dom_CssJs.type = "text/javascript";
+					l_HrefSrc = "src";
+				}
+
+				l_Dom_CssJs.onerror = fOnErr;
+				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
+				l_Dom_CssJs[l_HrefSrc] = l_Path;
+				l_Dom_Head.appendChild(l_Dom_CssJs);						// 加入文档
 
 				function fOnErr()
 				{
-					// 回调
-					a_fCabk(l_Path);
+					// 记录错误
+					a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(l_Path) : (a_fCabk.Wse_Errs = [l_Path]);
+
+					// 下一个
+					fNext();
 				}
 
 				function fOnLoad()
@@ -376,6 +397,12 @@
 					}
 
 					// 下一个
+					fNext();
+				}
+
+				function fNext()
+				{
+					// 下一个
 					++ l_Idx;
 					if (l_Idx < l_Len) // 还有
 					{
@@ -385,7 +412,7 @@
 					else // 完成
 					{
 						// 回调
-						a_fCabk(null);
+						a_fCabk(a_fCabk.Wse_Errs || null);
 					}
 				}
 			}
@@ -414,7 +441,8 @@
 
 		//======== 私有字段
 
-		var e_LibDiryMap = { "nWse": "../nWse/" };		// 库目录映射
+		// 库目录映射
+		var e_LibDiryMap = { "nWse": "../nWse/", "cnWse": "../cnWse/" };
 		eInitLibDiryMap();
 
 		var e_CpltRgtr = {};							// 注册表
@@ -431,8 +459,13 @@
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
 			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
 			var l_Idx = l_Src ? l_Src.toLowerCase().indexOf("/nwse/(0)seed.js") : -1;
+			var l_Diry;
 			if (l_Idx >= 0)
-			{ e_LibDiryMap["nWse"] = l_Src.slice(0, l_Idx + 6); }
+			{
+				l_Diry = l_Src.slice(0, l_Idx);
+				e_LibDiryMap["nWse"] = l_Diry + "/nWse/";
+				e_LibDiryMap["cnWse"] = l_Diry + "/cnWse/";	// 假定这两个目录并列
+			}
 		}
 
 		// 新建完成条目

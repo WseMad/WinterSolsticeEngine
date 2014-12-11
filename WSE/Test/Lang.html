@@ -9,7 +9,10 @@
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 
     <script type="text/javascript">
-		nWse.stAsynIcld.cLibDiryMap({ "nWse": "../nWse" });
+		nWse.stAsynIcld.cLibDiryMap({
+			"nWse": "../nWse",
+			"cnWse": "../cnWse"
+		});
 	//	nWse.stAsynIcld.cPreLoad("nWse", ["Rls/WSE_All.js"]);
 	//	nWse.stAsynIcld.cPreLoad("nWse", ["(1)ObjOrtd", "(2)LangUtil"]);
     </script>
@@ -32,7 +35,7 @@
 		{
 			width:100%;
 			height:100%;
-			background-color: rgb(0, 0, 255);
+			background-color: rgb(0, 0, 128);
 		}
 
 		#k_Div2
@@ -78,10 +81,11 @@
 		{
 			console.log("window.onload");
 
-			if (nWse.fIsOnlineBrs()) // 在线
+			if (1)//nWse.fIsOnlineBrs()) // 在线
 			{
 				nWse.stAsynLoad.cSqnc(
 						[
+							nWse.stAsynIcld.cPsePath("cnWse:(0)Plmvc.css"),
 							"NodeLib.js",
 							"NodeLib2.js"
 						],

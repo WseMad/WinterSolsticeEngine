@@ -168,11 +168,33 @@ function fOnIcld(a_Errs)
 		};
 
 
+		/// 转储成数组
+		/// a_NodeList：NodeList，节点列表
+		stDomUtil.cDumpToAry = function (a_NodeList)
+		{
+			if ((! a_NodeList) || (0 == a_NodeList.length))
+			{ return []; }
+
+			var l_Rst, i, l_Len;
+			if (nWse.fMaybeNonHtml5Brsr())
+			{
+				l_Len = a_NodeList.length;
+				l_Rst = new Array(l_Len);
+				for (i = 0; i<l_Len; ++i)
+				{ l_Rst[i] = a_NodeList[i]; }
+			}
+			else
+			{
+				l_Rst = Array.prototype.slice.call(a_NodeList);
+			}
+			return l_Rst;
+		};
+
 		/// 根据CSS类获取元素
 		/// 返回：Array
 		stDomUtil.cGetElmtsByCssc = function (a_Cssc)
 		{
-			return Array.prototype.slice.call(document.getElementsByClassName(a_Cssc), 0);
+			return stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc));
 		};
 
 //		/// 根据CSS类存取第一个子节点	【无用】
@@ -244,7 +266,7 @@ function fOnIcld(a_Errs)
 				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
 			}
 
-			l_Rst = Array.prototype.slice.call(document.querySelectorAll(a_Slc));
+			l_Rst = stDomUtil.cDumpToAry(document.querySelectorAll(a_Slc));
 			if (a_Root)
 			{
 				stAryUtil.cErsAll(l_Rst,
@@ -257,7 +279,7 @@ function fOnIcld(a_Errs)
 		/// 获取全部子节点
 		stDomUtil.cGetAllChds = function (a_DomPrn)
 		{
-			return Array.prototype.slice.call(a_DomPrn.childNodes);
+			return stDomUtil.cDumpToAry(a_DomPrn.childNodes);
 		};
 
 		/// 获取全部元素子节点
