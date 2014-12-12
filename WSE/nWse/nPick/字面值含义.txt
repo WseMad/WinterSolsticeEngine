@@ -1,0 +1,16 @@
+
+d_Flag:
+
+14 = 已被收集
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function fLt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_ToLtUp ? (-l_CamAw + a_Area.c_X) : (a_Area.c_X + l_CamAw); }
+		function fCt_X(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_Area.c_X; }
+		function fRt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = l_CamAw - a_Area.c_X - a_Area.c_W; }
+
+		function fUp(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = l_CamAh - a_Area.c_Y - a_Area.c_H; }
+		function fCt_Y(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_Area.c_Y; }
+		function fDn(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_ToLtUp ? (-l_CamAh + a_Area.c_Y) : (a_Area.c_Y + l_CamAh); }
