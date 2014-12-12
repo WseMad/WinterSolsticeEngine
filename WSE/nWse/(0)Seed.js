@@ -169,7 +169,7 @@
 	/// 返回：String
 	function fEnsrJs(a_Path)
 	{
-		var i_Rgx = /\.js$/i;
+		var i_Rgx = /\.js$/i; 
 		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".js")) : null;
 	}
 
