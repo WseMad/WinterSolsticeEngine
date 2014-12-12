@@ -1,7 +1,6 @@
 # 只保留源代码文件
 
 *.*
-!.gitignore
 !*.h
 !*.hpp
 !*.cpp
