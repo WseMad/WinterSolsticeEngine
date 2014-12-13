@@ -195,7 +195,7 @@ function fOnIcld(a_Errs)
 		}
 		else // 把输入缓冲起来
 		{
-			eTrgrTch(a_This, i_TchId_Mos, a_Kind, a_Evt);
+			eTrgrTch(a_This, i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
 		}
 	}
 
@@ -236,7 +236,7 @@ function fOnIcld(a_Errs)
 			stAryUtil.cFor(l_EvtTchs,
 				function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
 				{
-					eTrgrTch(a_This, a_EvtTch.identifier, a_Kind, a_EvtTch);
+					eTrgrTch(a_This, a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
 				});
 		}
 	}
@@ -246,10 +246,10 @@ function fOnIcld(a_Errs)
 		return (a_This.e_PntIptQue.length > 0) ? a_This.e_PntIptQue[a_This.e_PntIptQue.length - 1] : null;
 	}
 
-	function eTrgrTch(a_This, a_TchId, a_Kind, a_Evt)
+	function eTrgrTch(a_This, a_TchId, a_Kind, a_X, a_Y, a_Evt)
 	{
-		var l_X = a_Evt.clientX, l_Y = a_Evt.clientY;
-	//	var l_FrmNum = stRltmAfx.cGetFrmNum();		// 这一帧编号（从1开始）
+		var l_X = a_X, l_Y = a_Y;
+		var l_FrmNum = a_This.e_RltmAfx ? a_This.e_RltmAfx.cGetFrmNum() : 0;	// 这一帧编号（从1开始）
 
 		// 压入空输入？
 		if (! a_TchId)
@@ -264,7 +264,7 @@ function fOnIcld(a_Errs)
 		// 帧编号与队尾的是否相同？
 		// 如果未启用帧编号，或两者不同，直接压入
 		var l_TailPntIpt, l_TchIdx, l_Tch;
-		if ((l_FrmNum <= 0) || (0 == a_This.e_PntIptQue.length) || (eAcsQueTail().c_FrmNum != l_FrmNum))
+		if ((l_FrmNum <= 0) || (0 == a_This.e_PntIptQue.length) || (eAcsQueTail(a_This).c_FrmNum != l_FrmNum))
 		{
 			l_PntIpt = new tPntIpt(l_FrmNum);
 			l_PntIpt.eAddTch(a_TchId, a_Kind, l_X, l_Y, a_Evt);
@@ -272,7 +272,7 @@ function fOnIcld(a_Errs)
 		}
 		else // 相同，根据触点ID增加、替换、丢弃
 		{
-			l_TailPntIpt = eAcsQueTail();
+			l_TailPntIpt = eAcsQueTail(a_This);
 			l_TchIdx = l_TailPntIpt.cFindTchById(a_TchId);
 			if (l_TchIdx < 0) // 未找到时增加
 			{
@@ -426,20 +426,31 @@ function fOnIcld(a_Errs)
 				l_This.e_ActTchs = [];			// 活动触点
 				l_This.e_MosDown = false;		// 鼠标按下？
 				l_This.e_IgnrMosEvt = false;	// 忽略鼠标事件？
-				l_This.e_ImdtHdl = true;		// 立即处理？
+				l_This.e_ImdtHdl = false;		// 立即处理？
 				l_This.e_fImdtHdlr = null;		// 立即处理函数
-
-				// 创建一个专用于立即处理的点输入，参数随意
-				l_This.e_ImdtPntIpt = new tPntIpt(0);
-				l_This.e_ImdtPntIpt.eAddTch(null, tPntIptKind.i_TchEnd, 0, 0, null);
 				return l_This;
 			}
 			,
 			/// 初始化
-			cInit : function (a_ImdtHdl)
+			/// a_Cfg：Object
+			/// {
+			/// c_ImdtHdl：Boolean，立即处理？默认false
+			/// c_RltmAfx：tRltmAfx，实时应用程序框架，默认null
+			/// }
+			cInit : function (a_Cfg)
 			{
+				var l_This = this;
 				this.cRset();
-				this.e_ImdtHdl = !! a_ImdtHdl;
+				this.e_Cfg = a_Cfg;
+				this.e_ImdtHdl = !! a_Cfg.c_ImdtHdl;
+				this.e_RltmAfx = a_Cfg.c_RltmAfx || null;
+
+				if (this.e_ImdtHdl)
+				{
+					// 创建一个专用于立即处理的点输入，参数随意
+					l_This.e_ImdtPntIpt = new tPntIpt(0);
+					l_This.e_ImdtPntIpt.eAddTch(null, tPntIptKind.i_TchEnd, 0, 0, null);
+				}
 
 				// 注册页面事件处理器
 				eRegPageEvtHdlr(this);
@@ -450,7 +461,7 @@ function fOnIcld(a_Errs)
 			cIptRset : function ()
 			{
 				// 清空活动触点
-				eActTchsClr(this);
+				this.cClrActTchs();
 				return this;
 			}
 			,
@@ -476,7 +487,7 @@ function fOnIcld(a_Errs)
 			/// 有活动触点？
 			cHasActTch : function ()
 			{
-				return tihs.e_ActTchs.length > 0;
+				return this.e_ActTchs.length > 0;
 			}
 			,
 			/// 存取活动触点
@@ -488,7 +499,7 @@ function fOnIcld(a_Errs)
 			/// 清空活动触点
 			cClrActTchs : function ()
 			{
-				this.e_ActTchs.length = 0;
+				eActTchsClr(this);
 				return this;
 			}
 			,
@@ -504,6 +515,19 @@ function fOnIcld(a_Errs)
 			{
 				eActTchsUrg(this, a_Ipt);
 				return this;
+			}
+			,
+			/// 触发触摸
+			cTrgrTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
+			{
+				eTrgrTch(this, a_TchId, a_Kind, a_X, a_Y, a_Evt);
+				return this;
+			}
+			,
+			/// 存取点输入队列
+			cAcsPntIptQue : function ()
+			{
+				return this.e_PntIptQue;
 			}
 		}
 		,
@@ -534,6 +558,12 @@ function fOnIcld(a_Errs)
 		null
 		,
 		{
+			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
+			{
+				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt));
+				return this;
+			}
+			,
 			/// 遍历触点
 			cForTchs : function (a_fCabk)
 			{
@@ -642,44 +672,29 @@ function fOnIcld(a_Errs)
 					{ return (a_Tch.c_Kind == tPntIptKind.i_TchBgn) || (a_Tch.c_Kind == tPntIptKind.i_TchEnd); }) >= 0);
 			}
 			,
-			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
+			/// 需要拾取？若含有i_TchBgn、i_TchEnd，需要
+			cNeedPick : function ()
 			{
-				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt));
+				return (stAryUtil.cFind(this.c_Tchs,
+					function (a_Ary, a_Idx, a_Tch)
+					{
+						return (tPntIpt.tKind.i_TchBgn == a_Tch.c_Kind) || (tPntIpt.tKind.i_TchEnd == a_Tch.c_Kind);
+					}) >= 0);
+			}
+			,
+			/// 准备处理
+			cRdyToHdl : function ()
+			{
+				var i, l_Len = this.c_Tchs.length, l_Tch;
+				for (i=0; i<l_Len; ++i)
+				{
+					// 尚未被处理，记录拾取到的面板
+					l_Tch = this.c_Tchs[i];
+					l_Tch.c_Hdld = false;
+					l_Tch.c_PkdPnl = l_Tch.c_PkdWgt ? l_Tch.c_PkdWgt.cAcsPnl() : null;
+				}
 				return this;
 			}
-//			,
-//			eNeedPick : function ()
-//			{
-//				// 若含有i_TchBgn、i_TchEnd，需要
-//				return (stAryUtil.cFind(this.c_Tchs,
-//					function (a_Ary, a_Idx, a_Tch)
-//					{
-//						return (tPntIpt.tKind.i_TchBgn == a_Tch.c_Kind) || (tPntIpt.tKind.i_TchEnd == a_Tch.c_Kind);
-//					}) >= 0);
-//			}
-//			,
-//			eRdyToHdl : function ()
-//			{
-//				var l_UnitScl = stGpuDvc.cAcsCam().cAcsUnitScl();
-//				var i, l_Len = this.c_Tchs.length, l_Tch;
-//				for (i=0; i<l_Len; ++i)
-//				{
-//					l_Tch = this.c_Tchs[i];
-//
-//					// 尚未被处理
-//					l_Tch.c_Hdld = false;
-//
-//					// 计算GUI坐标系下的触点位置和偏移量
-//					l_Tch.c_GuiX = l_Tch.c_CvsX * l_UnitScl.c_1ByX;	// 单位/像素
-//					l_Tch.c_GuiY = l_Tch.c_CvsY * l_UnitScl.c_1ByY;
-//					l_Tch.c_GuiOfstX = l_Tch.c_CvsOfstX * l_UnitScl.c_1ByX;
-//					l_Tch.c_GuiOfstY = l_Tch.c_CvsOfstY * l_UnitScl.c_1ByY;
-//
-//					// 拾取到的面板
-//					l_Tch.c_PkdPnl = l_Tch.c_PkdWgt ? l_Tch.c_PkdWgt.cAcsPnl() : null;
-//				}
-//				return this;
-//			}
 		});
 
 	tPntIptKind = nWse.fEnum(tPntIpt,

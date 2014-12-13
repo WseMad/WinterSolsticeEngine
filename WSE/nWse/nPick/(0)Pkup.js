@@ -19,7 +19,7 @@
 	//@ 包含
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nPick",
 		[
-			"nWse:(3)CoreDast.js"
+			"nWse:PntIptTrkr.js"
 		]
 		,
 		fOnIcld);
@@ -486,7 +486,7 @@ function fOnIcld(a_Errs)
 				this.e_PendTchs = [];			// 待定触点
 				this.e_Rsts = [];				// 结果 { c_TchId, c_PkdWgt }
 
-				this.eOnRbndMainCvs();
+				this.eOnPrstTgtLost();
 			}
 			,
 			null
@@ -494,29 +494,29 @@ function fOnIcld(a_Errs)
 			{
 				eOnPrstTgtLost : function ()
 				{
-					// 标识符画布
-					var l_MainCvs = stRltmAfx.cAcsMainCvs();
-					if (this.e_IdCvs && (this.e_IdCvs.width == l_MainCvs.width) && (this.e_IdCvs.height == l_MainCvs.height))
-					{
-						return;
-					}
-
-					this.e_IdCvs = document.createElement("canvas");
-					this.e_IdCvs.width = l_MainCvs.width;
-					this.e_IdCvs.height = l_MainCvs.height;
-
-					if (2 == nPick.stFrmwk.cGetGpuDvcDim())
-					{
-						this.e_IdCtxt = this.e_IdCvs.getContext("2d");
-					}
-
-					// 报告记录宽高
-					this.e_Rpt.e_CvsWid = l_MainCvs.width;
-					this.e_Rpt.e_CvsHgt = l_MainCvs.height;
+					//// 标识符画布
+					//var l_MainCvs = stRltmAfx.cAcsMainCvs();
+					//if (this.e_IdCvs && (this.e_IdCvs.width == l_MainCvs.width) && (this.e_IdCvs.height == l_MainCvs.height))
+					//{
+					//	return;
+					//}
+					//
+					//this.e_IdCvs = document.createElement("canvas");
+					//this.e_IdCvs.width = l_MainCvs.width;
+					//this.e_IdCvs.height = l_MainCvs.height;
+					//
+					//if (2 == nPick.stFrmwk.cGetGpuDvcDim())
+					//{
+					//	this.e_IdCtxt = this.e_IdCvs.getContext("2d");
+					//}
+					//
+					//// 报告记录宽高
+					//this.e_Rpt.e_CvsWid = l_MainCvs.width;
+					//this.e_Rpt.e_CvsHgt = l_MainCvs.height;
 				}
 				,
-				/// 获取帧索引
-				cGetFrmIdx : function ()
+				/// 获取帧号
+				cGetFrmNum : function ()
 				{
 					return this.e_Rpt.e_FrmIdx;
 				}

@@ -102,7 +102,9 @@ function fOnIcld(a_Errs)
 		function eInit()
 		{
 			e_PntIptTrkr = new tPntIptTrkr();
-			e_PntIptTrkr.cInit(true);
+			e_PntIptTrkr.cInit({
+				c_ImdtHdl : true
+			});
 			e_PntIptTrkr.cSetImdtHdlr(fIptHdlr);
 
 			// —— 窗口事件 ——

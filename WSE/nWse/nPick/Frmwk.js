@@ -19,8 +19,7 @@
 	//@ 包含
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nPick",
 		[
-			"nWse:PntIptTrkr.js"
-			,"nWse:RltmAfx.js"
+			"nWse:RltmAfx.js"
 
 			,"Pnl.js"
 		]
@@ -148,7 +147,6 @@ function fOnIcld(a_Errs)
 		var e_OpenPnls;			// 要打开的面板
 		var e_ClsPnls;			// 要关闭的面板
 
-		var e_FrmIptQue;		// 帧输入队列
 		var e_PcdrTrgrTch;		// 程序触发触摸
 		var e_PntIptTrkr;		// 点输入追踪器
 
@@ -170,52 +168,9 @@ function fOnIcld(a_Errs)
 			//document.addEventListener("mouseup", eOnMosBtnUp, false);
 		}
 
-		function eAcsQueTail()
+		function eTrgrTch(a_TchId, a_Kind, a_X, a_Y)
 		{
-			return (e_FrmIptQue.length > 0) ? e_FrmIptQue[e_FrmIptQue.length - 1] : null;
-		}
-
-		function eTrgrTch(a_TchId, a_Kind, a_CvsX, a_CvsY)
-		{
-			// 这一帧号
-			var l_FrmNum = e_RltmAfx.cGetFrmNum();
-
-			// 压入空输入？
-			if (! a_TchId)
-			{
-				e_FrmIptQue.push(new tFrmIpt(l_FrmNum));
-				return;
-			}
-
-			// 取得字符串表示
-			a_TchId = a_TchId.toString();
-
-			// 帧索引与队尾的是否相同？
-			// 如果不同，直接压入
-			var l_FrmIpt, l_TailFrmIpt, l_TchIdx, l_Tch;
-			if ((0 == e_FrmIptQue.length) || (eAcsQueTail().c_FrmIdx != l_FrmNum))
-			{
-				l_FrmIpt = new tFrmIpt(l_FrmNum);
-				l_FrmIpt.eAddTch(a_TchId, a_Kind, a_CvsX, a_CvsY);
-				e_FrmIptQue.push(l_FrmIpt);
-			}
-			else // 相同，根据触点ID增加、替换、丢弃
-			{
-				l_TailFrmIpt = eAcsQueTail();
-				l_TchIdx = l_TailFrmIpt.cFindTchById(a_TchId);
-				if (l_TchIdx < 0) // 未找到时增加
-				{
-					l_TailFrmIpt.eAddTch(a_TchId, a_Kind, a_CvsX, a_CvsY);
-				}
-				else // 找到时，i_TchBgn和i_TchEnd替换，其余丢弃
-				if ((tFrmIptKind.i_TchBgn == a_Kind) || (tFrmIptKind.i_TchEnd == a_Kind))
-				{
-					l_Tch = l_TailFrmIpt.c_Tchs[l_TchIdx];
-					l_Tch.c_Kind = a_Kind;
-					l_Tch.c_CvsX = a_CvsX;
-					l_Tch.c_CvsY = a_CvsY;
-				}
-			}
+			e_PntIptTrkr.cTrgrTch(a_TchId, a_Kind, a_X, a_Y, null);
 		}
 
 		// 初始化
@@ -227,10 +182,8 @@ function fOnIcld(a_Errs)
 			e_OpenPnls = [];
 			e_ClsPnls = [];
 
-			e_FrmIptQue = [];
 			e_PcdrTrgrTch = [];
 			e_PntIptTrkr = new nWse.tPntIptTrkr();
-			e_PntIptTrkr.cInit(true);
 
 			e_fOnRndPnlsOver = null;
 
@@ -390,7 +343,8 @@ function fOnIcld(a_Errs)
 			}
 
 			// 如果有活动触点，但队列为空，压入一个空输入，稍后的循环里会使用
-			if (e_PntIptTrkr.cHasActTch() && (0 == e_FrmIptQue.length))
+			var l_PntIptQue = e_PntIptTrkr.cAcsPntIptQue();
+			if (e_PntIptTrkr.cHasActTch() && (0 == l_PntIptQue.length))
 			{
 				eTrgrTch(null);
 			}
@@ -406,44 +360,44 @@ function fOnIcld(a_Errs)
 			//	if (2 == s_GpuDvcDim)
 
 			var l_PickBgn;
-			var l_FrmIpt;
-			while (e_FrmIptQue.length > 0)
+			var l_PntIpt;
+			while (l_PntIptQue.length > 0)
 			{
 				l_PickBgn = false;
 
 				// 取得并弹出队头帧输入
-				l_FrmIpt = e_FrmIptQue.shift();
+				l_PntIpt = l_PntIptQue.shift();
 
 				// 注册活动触点
-				eActTchsReg(l_FrmIpt);
+				e_PntIptTrkr.cRegActTchs(l_PntIpt);
 
 				// 需要拾取？
-				if ((l_FrmIpt.c_FrmIdx != stFrmwk.cAcsWgtPkr().cGetFrmIdx()) && l_FrmIpt.eNeedPick())
+				if ((l_PntIpt.c_FrmNum != stFrmwk.cAcsWgtPkr().cGetFrmNum()) && l_PntIpt.cNeedPick())
 				{
-					e_WgtPkr.ePickBgn(l_FrmIpt.c_FrmIdx, l_FrmIpt.c_Tchs);
+				//	e_WgtPkr.ePickBgn(l_PntIpt.c_FrmNum, l_PntIpt.c_Tchs);
 					l_PickBgn = true;
 				}
 
 				// 立即结束
 				if (l_PickBgn)
 				{
-					e_WgtPkr.ePickEnd(true);
+				//	e_WgtPkr.ePickEnd(true);
 				}
 
 				//#if
-				if (0 == l_FrmIpt.c_Tchs.length)
+				if (0 == l_PntIpt.c_Tchs.length)
 				{
 					console.log("stFrmwk：哪来的空输入？");
 				}//#endif
 
 				// 准备处理
-				l_FrmIpt.eRdyToHdl();
+				l_PntIpt.cRdyToHdl();
 
 				// 处理输入
-				eHdlIpt(l_FrmIpt);
+				eHdlIpt(l_PntIpt);
 
 				// 注销活动触点
-				eActTchsUrg(l_FrmIpt);
+				e_PntIptTrkr.cUrgActTchs(l_PntIpt);
 			}
 
 			// 解锁面板栈
@@ -467,6 +421,8 @@ function fOnIcld(a_Errs)
 				if (! l_HasUhdlTch)
 				{ break; }
 			}
+
+			console.log(a_Ipt.c_Tchs[0].c_Kind.toString());
 
 			// 如果还有未处理的触点，自己处理
 			if (l_HasUhdlTch)
@@ -569,6 +525,11 @@ function fOnIcld(a_Errs)
 			// 绑定新的，注册
 			e_RltmAfx = a_RltmAfx;
 			eRegOn();
+
+			// 初始化点输入追踪器
+			e_PntIptTrkr.cInit({
+				c_RltmAfx: e_RltmAfx	// 指定实时应用程序框架
+			});
 			return stFrmwk;
 		};
 
@@ -579,6 +540,9 @@ function fOnIcld(a_Errs)
 			{
 				return stFrmwk;
 			}
+
+			// 复位点输入追踪器
+			e_PntIptTrkr.cRset();
 
 			// 注销，解绑
 			eUrgOn();
@@ -826,7 +790,7 @@ function fOnIcld(a_Errs)
 
 		/// 触发触摸，【注意】如果触发拾取，将在下一帧进行
 		/// a_TchId：String，触点ID，键盘是“K”，鼠标是“M”，触摸点是“0……”
-		/// a_Kind：tFrmIpt.tKind，种类，触发拾取的是i_TchBgn和i_TchEnd
+		/// a_Kind：tPntIpt.tKind，种类，触发拾取的是i_TchBgn和i_TchEnd
 		/// a_CvsX：Number，触点相对于主画布的x坐标
 		/// a_CvsY：Number，触点相对于主画布的y坐标
 		stFrmwk.cTrgrTch = function (a_TchId, a_Kind, a_CvsX, a_CvsY)

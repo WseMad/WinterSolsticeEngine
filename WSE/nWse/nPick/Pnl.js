@@ -37,10 +37,11 @@ function fOnIcld(a_Errs)
 	var stNumUtil = nWse.stNumUtil;
 	var stAryUtil = nWse.stAryUtil;
 	var stStrUtil = nWse.stStrUtil;
+	var tPntIptTrkr = nWse.tPntIptTrkr;
+	var tPntIpt = tPntIptTrkr.tPntIpt;
 
 	var nPick = nWse.nPick;
 	var unKnl = nPick.unKnl;
-	var tFrmIpt = nPick.tFrmIpt;
 	var tInrName = nPick.tInrName;
 	var tMsg = nPick.tMsg;
 	var atPkup = nPick.atPkup;
@@ -48,7 +49,7 @@ function fOnIcld(a_Errs)
 	var tRefFrm = nPick.tRefFrm;
 	var tDockWay = nPick.tDockWay;
 	var tPrmrSta = nPick.tPrmrSta;
-	var stFrmwk = nPick.stFrmwk;
+//	var stFrmwk = nPick.stFrmwk;	// 尚未创建
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -262,7 +263,7 @@ function fOnIcld(a_Errs)
 								a_Msg.c_Rcvr = tInrName.i_Frmwk;
 								a_Msg.c_Sndr = this.e_Name;
 								a_Msg.c_Who = this;		// 自身
-								stFrmwk.cHdlMsg(a_Msg);
+								nPick.stFrmwk.cHdlMsg(a_Msg);
 							}
 							else // 还会有谁？
 							{
@@ -318,7 +319,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 处理输入
-				/// a_Ipt：tFrmIpt
+				/// a_Ipt：tPntIpt
 				vcHdlIpt : function f(a_Ipt)
 				{
 					//【注意】下面的算法即使在没有焦点的情况下也能正确处理！
@@ -368,7 +369,7 @@ function fOnIcld(a_Errs)
 					var l_FocsAded = false;		// 添加新焦点？
 
 					// 对于尚未处理的i_TchBgn，把焦点传给属于自己的、但还不是焦点的、拾取到的控件
-					a_Ipt.cForTchsByKind(tFrmIpt.tKind.i_TchBgn, true,	// 跳过已处理的触点
+					a_Ipt.cForTchsByKind(tPntIpt.tKind.i_TchBgn, true,	// 跳过已处理的触点
 						function (a_Tchs, a_Idx, a_Tch)
 						{
 							// 注意第二个比较对于正确设置l_FocsAded至关重要！
@@ -394,37 +395,37 @@ function fOnIcld(a_Errs)
 						this.e_Root.vcRnd();
 					}
 
-					//#if 追踪栈顶面板的焦点控件
-					var l_This = this;
-					(function ()
-					{
-						if (! stFrmwk.cIsPnlAtStkTop(l_This.e_Name))
-							return;
-
-						var l_WgtsTot = l_This.cAcsRoot().cGetSubWgtsTot(true);
-
-						var stGpuDvc = stFrmwk.cAcsGpuDvc();
-						var stGpuPrt = stGpuDvc.cAcsGpuPrt();
-						stGpuDvc.cCfgDrawStl(tClo.i_Magenta);
-						stGpuPrt.cUseFont();
-						var l_PrtDstSara = tSara.scCopy(stFrmwk.cAcsViewArea());
-						l_PrtDstSara.c_H -= 2;
-						if (l_This.e_Focs.length > 0)
-						{
-							var l_FocNames = [];
-							stAryUtil.cFor(l_This.e_Focs,
-								function (a_Ary, a_Idx, a_Foc) { l_FocNames.push(a_Foc.e_Name); });
-
-							//	stGpuPrt.cFillTextLine_CvsCs(l_FocNames.toString(), 0, -4, "C", "D");
-
-							stGpuPrt.cDrawTextLine_GuiCs(l_FocNames.toString() + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
-						}
-						else
-						{
-							//	stGpuPrt.cFillTextLine_CvsCs("无焦点", 0, -4, "C", "D");
-							stGpuPrt.cDrawTextLine_GuiCs("无焦点" + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
-						}
-					})();//#endif
+					////#if 追踪栈顶面板的焦点控件
+					//var l_This = this;
+					//(function ()
+					//{
+					//	if (! nPick.stFrmwk.cIsPnlAtStkTop(l_This.e_Name))
+					//		return;
+					//
+					//	var l_WgtsTot = l_This.cAcsRoot().cGetSubWgtsTot(true);
+					//
+					//	var stGpuDvc = nPick.stFrmwk.cAcsGpuDvc();
+					//	var stGpuPrt = stGpuDvc.cAcsGpuPrt();
+					//	stGpuDvc.cCfgDrawStl(tClo.i_Magenta);
+					//	stGpuPrt.cUseFont();
+					//	var l_PrtDstSara = tSara.scCopy(nPick.stFrmwk.cAcsPrstTgtArea());
+					//	l_PrtDstSara.c_H -= 2;
+					//	if (l_This.e_Focs.length > 0)
+					//	{
+					//		var l_FocNames = [];
+					//		stAryUtil.cFor(l_This.e_Focs,
+					//			function (a_Ary, a_Idx, a_Foc) { l_FocNames.push(a_Foc.e_Name); });
+					//
+					//		//	stGpuPrt.cFillTextLine_CvsCs(l_FocNames.toString(), 0, -4, "C", "D");
+					//
+					//		stGpuPrt.cDrawTextLine_GuiCs(l_FocNames.toString() + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
+					//	}
+					//	else
+					//	{
+					//		//	stGpuPrt.cFillTextLine_CvsCs("无焦点", 0, -4, "C", "D");
+					//		stGpuPrt.cDrawTextLine_GuiCs("无焦点" + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
+					//	}
+					//})();//#endif
 				}
 				,
 				/// 存取根

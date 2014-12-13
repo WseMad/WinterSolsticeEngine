@@ -37,10 +37,11 @@ function fOnIcld(a_Errs)
 	var stNumUtil = nWse.stNumUtil;
 	var stStrUtil = nWse.stStrUtil;
 	var stAryUtil = nWse.stAryUtil;
+	var tPntIptTrkr = nWse.tPntIptTrkr;
+	var tPntIpt = tPntIptTrkr.tPntIpt;
 
 	var nPick = nWse.nPick;
 	var unKnl = nPick.unKnl;
-	var tFrmIpt = nPick.tFrmIpt;
 	var tInrName = nPick.tInrName;
 	var tMsg = nPick.tMsg;
 	var atPkup = nPick.atPkup;
@@ -48,7 +49,7 @@ function fOnIcld(a_Errs)
 	var tRefFrm = nPick.tRefFrm;
 	var tDockWay = nPick.tDockWay;
 	var tPrmrSta = nPick.tPrmrSta;
-	var stFrmwk = nPick.stFrmwk;
+//	var stFrmwk = nPick.stFrmwk;	// 尚未创建
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -455,11 +456,11 @@ function fOnIcld(a_Errs)
 
 						case i_Code.i_InrWgtAdd:
 						{
-							if (tInrName.i_Hsb == a_Msg.c_Which)
-							{ l_InrWgt = new nPick.tHsb(this); }
-							else
-							if (tInrName.i_Vsb == a_Msg.c_Which)
-							{ l_InrWgt = new nPick.tVsb(this); }
+							//if (tInrName.i_Hsb == a_Msg.c_Which)
+							//{ l_InrWgt = new nPick.tHsb(this); }
+							//else
+							//if (tInrName.i_Vsb == a_Msg.c_Which)
+							//{ l_InrWgt = new nPick.tVsb(this); }
 
 							if (l_InrWgt)
 							{
@@ -548,7 +549,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 处理输入
-				/// a_Ipt：tFrmIpt
+				/// a_Ipt：tPntIpt
 				vcHdlIpt : function f(a_Ipt)
 				{
 					//【说明】这个函数之所以被调用，是因为this所指控件是所属面板的焦点
@@ -582,7 +583,7 @@ function fOnIcld(a_Errs)
 						if (l_TchIdx < 0)
 						{
 							// 如果输入里含有i_TchBgn，则通知面板把自己从焦点里移除
-							if (a_Ipt.cHasTchOfKind(tFrmIpt.tKind.i_TchBgn))
+							if (a_Ipt.cHasTchOfKind(tPntIpt.tKind.i_TchBgn))
 							{
 								this.cAcsPnl().cRmvFocs(this);
 							}
@@ -606,7 +607,7 @@ function fOnIcld(a_Errs)
 				vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
 				{
 					// 如果支配触点的输入种类是i_TchEnd，输入复位
-					if (tFrmIpt.tKind.i_TchEnd == a_DmntTch.c_Kind)
+					if (tPntIpt.tKind.i_TchEnd == a_DmntTch.c_Kind)
 					{
 						this.vcIptRset();
 
@@ -651,7 +652,7 @@ function fOnIcld(a_Errs)
 					if (tRefFrm.i_Dspl == this.e_RefFrm)
 					{
 						// 根据视区转换区域位置
-						fCvtArea(this.e_DsplArea, stFrmwk.cAcsViewArea(), true, this.e_DockWay.valueOf());
+						fCvtArea(this.e_DsplArea, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
 					}
 					else
 					if (tRefFrm.i_Vwpt == this.e_RefFrm)
@@ -709,21 +710,21 @@ function fOnIcld(a_Errs)
 					// 如果有渲染器
 					if (this.e_Rndr)
 					{
-						if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						{
-							// 压入画布上下文状态
-							stFrmwk.cAcsGpuDvc().cPushCvsCtxtSta();
-						}
-
-						// 裁剪，绘制
-						this.e_Rndr.vdOnWgtClip();
-						this.e_Rndr.vdOnWgtDraw();
-
-						if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						{
-							// 弹出画布上下文状态
-							stFrmwk.cAcsGpuDvc().cPopCvsCtxtSta();
-						}
+						//if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
+						//{
+						//	// 压入画布上下文状态
+						//	stFrmwk.cAcsGpuDvc().cPushCvsCtxtSta();
+						//}
+						//
+						//// 裁剪，绘制
+						//this.e_Rndr.vdOnWgtClip();
+						//this.e_Rndr.vdOnWgtDraw();
+						//
+						//if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
+						//{
+						//	// 弹出画布上下文状态
+						//	stFrmwk.cAcsGpuDvc().cPopCvsCtxtSta();
+						//}
 					}
 
 					// 如果有，渲染子控件
@@ -857,8 +858,8 @@ function fOnIcld(a_Errs)
 					}
 					else
 					{
-						var l_ViewArea = stFrmwk.cAcsViewArea();
-						return this.cSetArea$Xywh(l_ViewArea.c_X, l_ViewArea.c_Y, l_ViewArea.c_W, l_ViewArea.c_H);
+						var l_PTA = nPick.stFrmwk.cAcsPrstTgtArea();
+						return this.cSetArea$Xywh(l_PTA.c_X, l_PTA.c_Y, l_PTA.c_W, l_PTA.c_H);
 					}
 				}
 				,
@@ -900,7 +901,7 @@ function fOnIcld(a_Errs)
 				/// 获取视口
 				cGetVwpt : function ()
 				{
-					return this.e_Vwpt ? tSara.scCopy(this.e_Vwpt) : (new tSara()).cCrt$Wh(this.e_Area.c_W, this.e_Area.c_H);
+					return this.e_Vwpt ? tSara.scCopy(this.e_Vwpt) : new tSara(0, 0, this.e_Area.c_W, this.e_Area.c_H);
 				}
 				,
 				/// 获取视口X坐标
@@ -945,9 +946,9 @@ function fOnIcld(a_Errs)
 				/// 设置视口
 				cSetVwpt$Xywh : function (a_X, a_Y, a_W, a_H)
 				{
-					a_W = nWse.stClamp.cOnNum(a_W, 0, this.e_Area.c_W);
-					a_H = nWse.stClamp.cOnNum(a_H, 0, this.e_Area.c_H);
-					var l_NewVwpt = (new nWse.tSara()).cCrt(a_X, a_Y, a_W, a_H);
+					a_W = stNumUtil.cClmOnNum(a_W, 0, this.e_Area.c_W);
+					a_H = stNumUtil.cClmOnNum(a_H, 0, this.e_Area.c_H);
+					var l_NewVwpt = new tSara(a_X, a_Y, a_W, a_H);
 					tSara.scBndPut$Wh(l_NewVwpt, this.e_Area.c_W, this.e_Area.c_H);	// 视口不能超出区域
 
 					// 没有变化？

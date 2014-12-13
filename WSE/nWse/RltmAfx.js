@@ -36,6 +36,7 @@ function fOnIcld(a_Errs)
 	var stStrUtil = nWse.stStrUtil;
 	var stAryUtil = nWse.stAryUtil;
 	var stFctnUtil = nWse.stFctnUtil;
+	var stDomUtil = nWse.stDomUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -120,13 +121,13 @@ function fOnIcld(a_Errs)
 		{
 			//var l_Prn = l_PrstTgt.parentElement;
 			//e_AdpWid = l_Prn.offsetWidth;		e_AdpHgt = l_Prn.offsetHeight;
-			e_AdpWid = l_PrstTgt.offsetWidth;	e_AdpHgt = l_PrstTgt.offsetHeight;
+			a_This.e_AdpWid = l_PrstTgt.offsetWidth;	a_This.e_AdpHgt = l_PrstTgt.offsetHeight;
 		}
 		else
 		if (2 == l_AdpModeNum)
 		{
 			//	e_AdpWid = l_Glb.outerWidth;		e_AdpHgt = l_Glb.outerHeight;
-			e_AdpWid = stDomUtil.cGetVwptWid();		e_AdpHgt = stDomUtil.cGetVwptHgt();
+			a_This.e_AdpWid = stDomUtil.cGetVwptWid();		a_This.e_AdpHgt = stDomUtil.cGetVwptHgt();
 		}
 	}
 
@@ -164,8 +165,8 @@ function fOnIcld(a_Errs)
 			else // 没有记录，说明通过其他方式引发自适应
 			{
 				// 理想情况下，浏览器已经正确设置了主画布的宽高，所以直接用这个就行了！
-				l_W = Math.max(l_PrstTgt.clientWidth, 1);	// offsetWidth
-				l_H = Math.max(l_PrstTgt.clientHeight, 1);	// offsetHeight
+				l_W = Math.max(l_PrstTgt.offsetWidth, (l_Cfg.c_PrstTgtMinWid || 128));
+				l_H = Math.max(l_PrstTgt.offsetHeight, (l_Cfg.c_PrstTgtMinHgt || 128));
 			}
 		}
 
@@ -179,25 +180,25 @@ function fOnIcld(a_Errs)
 				l_PrstTgt.style.top = "0px";
 			}
 
-			// 然后，填充整个浏览器客户区
+			// 然后，填充整个浏览器客户区，因为使用固定定位，不会出现滚动条
 			var l_RefW = stDomUtil.cGetVwptWid(), l_RefH = stDomUtil.cGetVwptHgt();
-			l_W = l_RefW;	// 因为使用固定定位，不会出现滚动条
-			l_H = l_RefH;
+			l_W = Math.max(l_RefW, (l_Cfg.c_PrstTgtMinWid || 128));
+			l_H = Math.max(l_RefH, (l_Cfg.c_PrstTgtMinHgt || 128));
 		}
 
 		if (1 == l_AdpModeNum)
 		{
 			f1();
+			l_PrstTgt.style.width  = "";
+			l_PrstTgt.style.height = "";
 		}
 		else
 		if (2 == l_AdpModeNum)
 		{
 			f2();
+			l_PrstTgt.style.width  = (l_W).toString() + "px";
+			l_PrstTgt.style.height = (l_H).toString() + "px";
 		}
-
-		l_W = Math.max(l_W, (l_Cfg.c_PrstTgtMinWid || 128));
-		l_H = Math.max(l_H, (l_Cfg.c_PrstTgtMinHgt || 128));
-		stCssUtil.cSetDim(l_PrstTgt, l_W, l_H);
 
 		// 自适应完成回调
 		if ((0 != l_AdpModeNum) && l_Cfg.c_fOnAdpPrstTgtCplt)
@@ -230,10 +231,11 @@ function fOnIcld(a_Errs)
 		if (a_This.e_App)
 		{ a_This.e_App.vdOnInit(); }
 
-		// 如果要求，自适应
+		// 如果要求，自适应，更新
 		if (tRltmAfx.tAdpMode.i_None != a_This.e_AdpMode)
 		{
-			eAdpPrstTgt(a_This);
+			fAdpPrstTgt(a_This);
+			fUpdAdpDim(a_This);
 		}
 
 		// 当呈现目标复位时
@@ -374,11 +376,13 @@ function fOnIcld(a_Errs)
 			// 如果发生变化
 			if (l_AdpDimChg)
 			{
+				console.log("***************************** 自适应尺寸变化");
+
 				// 更新记录
 				fUpdAdpDim(l_This);
 
 				// 暂停更新
-				fPauUpd();
+				fPauUpd(l_This);
 
 				// 转换状态
 				l_This.e_AdpDimChgSta = 1;
@@ -414,26 +418,26 @@ function fOnIcld(a_Errs)
 			}
 
 			// 继续更新
-			fRsmUpd();
+			fRsmUpd(l_This);
 
 			// 转换状态
 			l_This.e_AdpDimChgSta = 0;
 		}
 
 		// 当更新时
-		fOn(a_This, tRltmAfx.tFlowStg.i_Upd, true);
-		if (a_This.e_App)
-		{ a_This.e_App.vdOnUpd(); }
+		fOn(l_This, tRltmAfx.tFlowStg.i_Upd, true);
+		if (l_This.e_App)
+		{ l_This.e_App.vdOnUpd(); }
 
 		// 当更新到渲染时
-		fOn(a_This, tRltmAfx.tFlowStg.i_UpdToRnd, true);
-		if (a_This.e_App)
-		{ a_This.e_App.vdOnUpdToRnd(); }
+		fOn(l_This, tRltmAfx.tFlowStg.i_UpdToRnd, true);
+		if (l_This.e_App)
+		{ l_This.e_App.vdOnUpdToRnd(); }
 
 		// 当渲染时
-		fOn(a_This, tRltmAfx.tFlowStg.i_Rnd, false); // 反向
-		if (a_This.e_App)
-		{ a_This.e_App.vdOnRnd(); }
+		fOn(l_This, tRltmAfx.tFlowStg.i_Rnd, false); // 反向
+		if (l_This.e_App)
+		{ l_This.e_App.vdOnRnd(); }
 	}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
