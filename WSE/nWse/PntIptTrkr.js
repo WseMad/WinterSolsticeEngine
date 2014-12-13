@@ -409,7 +409,8 @@ function fOnIcld(a_Errs)
 		/// 点输入追踪器
 		function tPntIptTrkr()
 		{
-		//	this.cRset();	// cInit()
+			//【不用了，由外界调用cInit()】
+		//	this.cRset();
 		}
 		,
 		null
@@ -469,6 +470,25 @@ function fOnIcld(a_Errs)
 			cSetImdtHdlr : function (a_fHdl)
 			{
 				this.e_fImdtHdlr = a_fHdl || null;
+				return this;
+			}
+			,
+			/// 有活动触点？
+			cHasActTch : function ()
+			{
+				return tihs.e_ActTchs.length > 0;
+			}
+			,
+			/// 存取活动触点
+			cAcsActTchs : function ()
+			{
+				return this.e_ActTchs;
+			}
+			,
+			/// 清空活动触点
+			cClrActTchs : function ()
+			{
+				this.e_ActTchs.length = 0;
 				return this;
 			}
 			,
