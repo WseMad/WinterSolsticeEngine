@@ -56,6 +56,7 @@ stFrmwk: -1000
 // 好文章
 http://www.cnblogs.com/kingwell/p/3181695.html
 http://www.cnblogs.com/kingwell/p/3181492.html
+http://tympanus.net/codrops/2012/11/20/learning-principles-for-improving-your-css/
 
 //	console.log("-webkit-transform" in a_Put.style);
 //	a_Put.style["webkitTransform"] = "rotate(30deg)";	// 顺时针正
