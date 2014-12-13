@@ -64,6 +64,10 @@
 		</div>
 	</div>
 
+	<div id="k_PrstTgt">
+		呈现目标
+	</div>
+
 	<!--<div style="position:relative; width:400px;height: 400px; clip:rect(0px, 400px, 400px, 0px); background-color: rgb(0, 0, 255);">-->
 		<!--<div style="position: absolute;clip:rect(0px, 70px, 50px, 0px); left:350px; top:350px; width:100px;height: 100px; background-color: rgb(255, 255, 0);">-->
 		<!--</div>-->
@@ -140,7 +144,12 @@
 						console.log(fUnit.Wse_Prio + " + 1");
 					}, 0);
 
-			l_RltmAfx.e_UnitGrp[tRltmAfx.tFlowStg.i_Upd.valueOf()].cFor(true);
+		//	l_RltmAfx.e_UnitGrp[tRltmAfx.tFlowStg.i_Upd.valueOf()].cFor(true);
+
+			l_RltmAfx.cInit({
+				c_PrstTgt: "k_PrstTgt",
+				c_AdpMode: tRltmAfx.tAdpMode.i_FillPrn
+			});
 		}
 
 		

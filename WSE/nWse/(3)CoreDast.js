@@ -211,9 +211,13 @@ function fOnIcld(a_Errs)
 				{
 					//---- 遍历
 
-					this.e_Lock = true;		// 锁定
-					this.e_fFor(this.e_Ary, arguments);
-					this.e_Lock = false;	// 解锁
+					if (this.e_Ary && (this.e_Ary.length > 0))
+					{
+						this.e_Lock = true;		// 锁定
+						this.e_fFor(this.e_Ary, arguments);
+						this.e_Lock = false;	// 解锁
+					}
+
 
 					//---- 更新动画数组
 

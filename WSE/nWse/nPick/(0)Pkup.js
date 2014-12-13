@@ -492,7 +492,7 @@ function fOnIcld(a_Errs)
 			null
 			,
 			{
-				eOnRbndMainCvs : function ()
+				eOnPrstTgtLost : function ()
 				{
 					// 标识符画布
 					var l_MainCvs = stRltmAfx.cAcsMainCvs();

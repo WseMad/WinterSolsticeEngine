@@ -89,14 +89,17 @@ function fOnIcld(a_Errs)
 //	var tFsm = nWse.tFsm;
 	var tPntIptTrkr = nWse.tPntIptTrkr;
 
-	var nUi = nWse.nUi;
-	var tEfc = nUi.tEfc;
-	var stEfcMgr = nUi.stEfcMgr;
-	var tPcdrLot = nUi.tPcdrLot;
-	var stFrmwk = nUi.stFrmwk;
-	var nCmnWgts = nUi.nCmnWgts;
+//	var nUi = nWse.nUi;
+//	var tEfc = nUi.tEfc;
+//	var stEfcMgr = nUi.stEfcMgr;
+//	var tPcdrLot = nUi.tPcdrLot;
+//	var stFrmwk = nUi.stFrmwk;
+//	var nCmnWgts = nUi.nCmnWgts;
 
-	var nGpu = nWse.nGpu;
+	var nPick = nWse.nPick;
+	var stFrmwk = nPick.stFrmwk;
+
+//	var nGpu = nWse.nGpu;
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 静态变量
@@ -108,59 +111,15 @@ function fOnIcld(a_Errs)
 			function tExmApp()
 			{
 				var l_This = this;
-				l_This.e_WidPct = 100;						// 宽度百分比
-				l_This.e_PcdrLot = new tPcdrLot();			// 程序化布局
-				stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
+//				l_This.e_WidPct = 100;						// 宽度百分比
+//				l_This.e_PcdrLot = new tPcdrLot();			// 程序化布局
+//				stFrmwk.cSetLot(l_This.e_PcdrLot);			// 框架
 			},
 			null,
 			{
 				eInit: function ()
 				{
-					var l_This = this;
-					l_This.e_PcdrLot.cPlan({
-						c_PutTgt: "k_PutTgt_Lot",
-						c_PutSrc: "k_PutSrc_Lot",
-						c_WidPct: l_This.e_WidPct,
-						c_MinWid: 256,
-						c_MaxWid: 2000,
-						c_MinHgt: null,	// 同stDomUtil.cGetVwptHgt()
-						c_BrkPnts: [0, 480, 960],
-						c_fBpc : nWse.stFctnUtil.cBindThis(l_This, l_This.cBpc)
-					});
 
-					l_This.e_PcdrLot.cShowHideGridUi(true);
-
-					// 自定义默认进离动画
-					var l_DftEfc = l_This.e_PcdrLot.cAcsDftEfc();
-					l_DftEfc.cSetUniDur(0.6);
-					l_DftEfc.cSetUniEsn(function (a_Scl)
-					{
-						//	return a_Scl;
-						return nWse.stNumUtil.cPrbItp$Ovfl(0, 1, 1.2, a_Scl, false);
-					});
-
-					stEfcMgr.cBind(l_This.e_PcdrLot.cAcsDftEfc())
-							.cCssEntBgn_FromRt()
-							.cCssLeaEnd_ToRt()
-							.cCssEntLea_Fade();
-
-					// 虚拟控制台
-					stVtuCsl.cHotKeyUi(true);	// F2快捷键
-
-					//======================== 其他
-
-					//【控件】
-					var l_Wgt = null;
-					l_This.e_StaWgtSet = new nUi.tWgtSet();		// 状态控件集
-					stFrmwk.cSetStaWgtSet(l_This.e_StaWgtSet);	// 框架
-
-					l_Wgt = new nCmnWgts.tBtn();	// Btn3rd
-					l_Wgt.vcBind({
-						c_PutTgt: "k_PutTgt_Btn",
-						c_PutSrc: "k_Btn",
-						c_Shp : nCmnWgts.tBtn.tShp.i_Rect
-					});
-					l_This.e_StaWgtSet.cAdd(l_Wgt);
 				}
 				,
 				// 运行
@@ -172,28 +131,28 @@ function fOnIcld(a_Errs)
 					l_This.eInit();
 
 					// 初始布局？
-					stFrmwk.cRunLot();			// 运行布局
+				//	stFrmwk.cRunLot();			// 运行布局
 				}
 				,
 				cBpc : function (a_Lot)
 				{
-					var l_This = this;
-					var l_Lot = a_Lot;
-					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
-
-					l_Lot
-							.cBoa({
-								c_Id: "k_TestBoa"
-							})
-							.cCol({
-								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
-							})
-							.cPut({
-								c_NewRow : true,
-								c_Id: "k_PutTgt_Btn",
-								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
-							})
-					;
+//					var l_This = this;
+//					var l_Lot = a_Lot;
+//					var l_BrkPntIdx = l_Lot.cGetBrkPntIdx();
+//
+//					l_Lot
+//							.cBoa({
+//								c_Id: "k_TestBoa"
+//							})
+//							.cCol({
+//								c_GridTot: (2 == l_BrkPntIdx) ? 20 : ((1 == l_BrkPntIdx) ? 10 : 8)
+//							})
+//							.cPut({
+//								c_NewRow : true,
+//								c_Id: "k_PutTgt_Btn",
+//								c_GridCnt: (2 == l_BrkPntIdx) ? 3 : 2
+//							})
+//					;
 				}
 			});
 

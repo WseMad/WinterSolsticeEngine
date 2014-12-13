@@ -20,6 +20,7 @@
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nPick",
 		[
 			"nWse:PntIptTrkr.js"
+			,"nWse:RltmAfx.js"
 
 			,"Pnl.js"
 		]
@@ -38,6 +39,8 @@ function fOnIcld(a_Errs)
 	var stAryUtil = nWse.stAryUtil;
 	var tClo = nWse.tClo;
 	var tSara = nWse.tSara;
+	var tRltmAfx = nWse.tRltmAfx;
+	var tPntIptTrkr = nWse.tPntIptTrkr;
 
 	var nPick = nWse.nPick;
 	var unKnl = nPick.unKnl;
@@ -48,10 +51,9 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var i_UnitPrio = -1000;				// 单元优先级
 	var stFrmwk;						// 框架
 	var stGpuDvc = null;				// 图形设备
-	var s_GpuDvcDim = 0;				// 图形设备维度
-	var atCam = null;					// 相机类型
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 动画管理器
@@ -134,7 +136,8 @@ function fOnIcld(a_Errs)
 
 		//======== 私有字段
 
-		var e_ViewArea = new tSara();		// 视区
+		var e_RltmAfx = null;				// 实时应用程序框架
+		var e_PrstTgtArea = new tSara();		// 视区
 
 		var e_WgtPkr = null;				// 控件拾取器
 		var e_AnmtMgr = null;				// 动画管理器
@@ -152,36 +155,6 @@ function fOnIcld(a_Errs)
 		var e_fOnRndPnlsOver;		// 当渲染面板结束
 
 		//======== 私有函数
-
-		/// 绑定图形设备
-		stFrmwk.cBindGpuDvc = function (a_GpuDvc)
-		{
-			// 如果切换，需要通知所有已注册的面板及其控件
-			if (null != stGpuDvc)
-			{
-				//【TODO】 通知……
-
-				// 解绑
-				stFrmwk.cUbndGpuDvc();
-			}
-
-			// 绑定新的
-			stGpuDvc = a_GpuDvc;
-			s_GpuDvcDim = (nWse.n2d === a_GpuDvc.onHost) ? 2 : 3;
-			atCam = (2 == s_GpuDvcDim) ? nWse.n2d.tOvfCam : null;
-
-			//if (2 == s_GpuDvcDim) // 2d
-			//{
-			//	//
-			//}
-			//else
-			//if (3 == s_GpuDvcDim) // 3d
-			//{
-			//	//
-			//}
-
-			return stFrmwk;
-		};
 
 		//-------- 输入处理
 
@@ -204,13 +177,13 @@ function fOnIcld(a_Errs)
 
 		function eTrgrTch(a_TchId, a_Kind, a_CvsX, a_CvsY)
 		{
-			// 这一帧索引
-			var l_FrmIdx = stRltmAfx.cGetFrmIdx();
+			// 这一帧号
+			var l_FrmNum = e_RltmAfx.cGetFrmNum();
 
 			// 压入空输入？
 			if (! a_TchId)
 			{
-				e_FrmIptQue.push(new tFrmIpt(l_FrmIdx));
+				e_FrmIptQue.push(new tFrmIpt(l_FrmNum));
 				return;
 			}
 
@@ -220,9 +193,9 @@ function fOnIcld(a_Errs)
 			// 帧索引与队尾的是否相同？
 			// 如果不同，直接压入
 			var l_FrmIpt, l_TailFrmIpt, l_TchIdx, l_Tch;
-			if ((0 == e_FrmIptQue.length) || (eAcsQueTail().c_FrmIdx != l_FrmIdx))
+			if ((0 == e_FrmIptQue.length) || (eAcsQueTail().c_FrmIdx != l_FrmNum))
 			{
-				l_FrmIpt = new tFrmIpt(l_FrmIdx);
+				l_FrmIpt = new tFrmIpt(l_FrmNum);
 				l_FrmIpt.eAddTch(a_TchId, a_Kind, a_CvsX, a_CvsY);
 				e_FrmIptQue.push(l_FrmIpt);
 			}
@@ -248,12 +221,6 @@ function fOnIcld(a_Errs)
 		// 初始化
 		function eInit()
 		{
-			// 默认绑定二维图形设备？
-			if (nWse.n2d)
-			{
-				stFrmwk.cBindGpuDvc(nWse.n2d.stGpuDvc);
-			}
-
 			e_PnlReg = [];
 			e_PnlStk = [];
 			e_LockPnlStk = false;
@@ -359,34 +326,17 @@ function fOnIcld(a_Errs)
 
 		function eUpdAnmtMgr()
 		{
-			var l_FrmTime = 0, l_FrmItvl = 0, l_FrmIdx = 0;
-			l_FrmTime = stRltmAfx.cGetFrmTime();
-			l_FrmItvl = stRltmAfx.cGetFrmItvl();
-			l_FrmIdx = stRltmAfx.cGetFrmIdx();
-			e_AnmtMgr.eUpd(l_FrmTime, l_FrmItvl, l_FrmIdx);
+			var l_FrmTime = 0, l_FrmItvl = 0, l_FrmNum = 0;
+			l_FrmTime = e_RltmAfx.cGetFrmTime();
+			l_FrmItvl = e_RltmAfx.cGetFrmItvl();
+			l_FrmNum = e_RltmAfx.cGetFrmIdx();
+			e_AnmtMgr.eUpd(l_FrmTime, l_FrmItvl, l_FrmNum);
 		}
 
 		function eRndPnls()
 		{
-			// 如果尚未绑定图形设备
-			if (0 == s_GpuDvcDim)
-			{
-				return;
-			}
-
 			// 锁定面板栈
 			e_LockPnlStk = true;
-
-			// 复位世界变换
-			if (2 == s_GpuDvcDim) // 2d
-			{
-				stGpuDvc.cUseWldCsm();
-			}
-			//	else
-			//	if (3 == s_GpuDvcDim) // 3d
-			//	{
-			//
-			//	}
 
 			// 栈底→栈顶
 			var i, l_Len = e_PnlStk.length;
@@ -394,17 +344,6 @@ function fOnIcld(a_Errs)
 			{
 				e_PnlStk[i].vcRnd();
 			}
-
-			// 复位世界变换
-			if (2 == s_GpuDvcDim) // 2d
-			{
-				stGpuDvc.cUseWldCsm();
-			}
-			//	else
-			//	if (3 == s_GpuDvcDim) // 3d
-			//	{
-			//
-			//	}
 
 			// 解锁面板栈
 			e_LockPnlStk = false;
@@ -543,15 +482,12 @@ function fOnIcld(a_Errs)
 
 		//-------- 活动触点相关
 
-
-		function eOnRbndMainCvs()
+		function eOnPrstTgtLost()
 		{
-			//	console.log("stFrmwk.eOnRbndMainCvs()");
-
 			// 通知控件拾取器
 			if (e_WgtPkr)
 			{
-				e_WgtPkr.eOnRbndMainCvs();
+				e_WgtPkr.eOnPrstTgtLost();
 			}
 
 			// 输入复位
@@ -604,62 +540,65 @@ function fOnIcld(a_Errs)
 
 		function eRegOn()
 		{
-			//	if (nWse.stRltmAfx)
-			{
-				stRltmAfx.eRegOn(2, eOnRbndMainCvs);
-				stRltmAfx.eRegOn(5, eOnFrmBgn);
-				//	stRltmAfx.eRegOn(6, eOnUpdToRnd);
-				stRltmAfx.eRegOn(7, eOnFrmEnd);
-			}
+			e_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_PrstTgtLost, eOnPrstTgtLost, i_UnitPrio);
+			e_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Upd, eOnFrmBgn, i_UnitPrio);
+			e_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Rnd, eOnFrmEnd, i_UnitPrio);
 		}
 
 		function eUrgOn()
 		{
-			//	if (nWse.stRltmAfx)
-			{
-				stRltmAfx.eUrgOn(2, eOnRbndMainCvs);
-				stRltmAfx.eUrgOn(5, eOnFrmBgn);
-				//	stRltmAfx.eUrgOn(6, eOnUpdToRnd);
-				stRltmAfx.eUrgOn(7, eOnFrmEnd);
-			}
+			e_RltmAfx.cUrgUnit(tRltmAfx.tFlowStg.i_PrstTgtLost, eOnPrstTgtLost);
+			e_RltmAfx.cUrgUnit(tRltmAfx.tFlowStg.i_Upd, eOnFrmBgn);
+			e_RltmAfx.cUrgUnit(tRltmAfx.tFlowStg.i_Rnd, eOnFrmEnd);
 		}
-
-		// 注册
-		eRegOn();
 
 		//======== 公有函数
 
-		/// 解绑图形设备
-		stFrmwk.cUbndGpuDvc = function ()
+		/// 绑定实时应用程序框架
+		stFrmwk.cBindRltmAfx = function (a_RltmAfx)
 		{
-			stGpuDvc = null;
-			atCam = null;
-			s_GpuDvcDim = 0;
+			// 如果切换，需要通知所有已注册的面板及其控件
+			if (null != e_RltmAfx)
+			{
+				//【TODO】 通知……
+
+				// 解绑
+				stFrmwk.cUbndRltmAfx();
+			}
+
+			// 绑定新的，注册
+			e_RltmAfx = a_RltmAfx;
+			eRegOn();
 			return stFrmwk;
 		};
 
-		/// 获取图形设备维度
-		/// 返回值：Number，2=2d，3=3d
-		stFrmwk.cGetGpuDvcDim = function ()
+		/// 解绑实时应用程序框架
+		stFrmwk.cUbndRltmAfx = function ()
 		{
-			return s_GpuDvcDim;
+			if (! e_RltmAfx)
+			{
+				return stFrmwk;
+			}
+
+			// 注销，解绑
+			eUrgOn();
+			e_RltmAfx = null;
+			return stFrmwk;
 		};
 
-		/// 存取图形设备
-		stFrmwk.cAcsGpuDvc = function ()
+		/// 存取实时应用程序框架
+		stFrmwk.cAcsRltmAfx = function ()
 		{
-			return stGpuDvc;
+			return e_RltmAfx;
 		};
 
-		// 存取视区
-		stFrmwk.cAcsViewArea = function ()
+		// 存取呈现目标区
+		stFrmwk.cAcsPrstTgtArea = function ()
 		{
-			//	var l_MainCvs = stRltmAfx.cAcsMainCvs();
-			//	var l_UnitScl = stGpuDvc.cAcsCam().cAcsUnitScl();
-			var l_Cam = stGpuDvc.cAcsCam();
-			e_ViewArea.c_W = l_Cam.cGetFovWid();
-			e_ViewArea.c_H = l_Cam.cGetFovHgt();
-			return e_ViewArea;
+			var l_PrstTgt = e_RltmAfx.cAcsPrstTgt();
+			e_PrstTgtArea.c_W = (l_PrstTgt ? l_PrstTgt.offsetWidth : 0);
+			e_PrstTgtArea.c_H = (l_PrstTgt ? l_PrstTgt.offsetHeight : 0);
+			return e_PrstTgtArea;
 		};
 
 
@@ -883,18 +822,6 @@ function fOnIcld(a_Errs)
 			// 通知准备离栈
 			eSendMsg_PrprLea(l_Pnl);
 			return stFrmwk;
-		};
-
-		/// 画布坐标系从GUI坐标系
-		stFrmwk.cDoCvsFromGui = function (a_Tgt, a_Udfn$Round45)
-		{
-			return atCam.scDoCvsFromGui(a_Tgt, stGpuDvc.cAcsCam(), a_Udfn$Round45);
-		};
-
-		/// GUI坐标系从画布坐标系
-		stFrmwk.cDoGuiFromCvs = function (a_Tgt)
-		{
-			return atCam.scDoGuiFromCvs(a_Tgt, stGpuDvc.cAcsCam());
 		};
 
 		/// 触发触摸，【注意】如果触发拾取，将在下一帧进行
