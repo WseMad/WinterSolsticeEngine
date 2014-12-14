@@ -242,7 +242,7 @@ function fOnIcld(a_Errs)
 			{
 				/// 处理消息
 				/// a_Msg：tMsg
-				vcHdlMsg : function f(a_Msg)
+				vcHdlMsg : function (a_Msg)
 				{
 					var l_NtfRoot = false, l_NtfFocs = false;
 					var l_RootFoc = false, l_ClrFocs = false;
@@ -279,6 +279,7 @@ function fOnIcld(a_Errs)
 						} break;
 
 						case i_Code.i_PrprLea:
+						case i_Code.i_Lea:
 						{
 							l_NtfRoot = true;
 							l_ClrFocs = true;		// 清空焦点
@@ -308,7 +309,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
 					// 所有焦点输入复位
 					stAryUtil.cFor(this.e_Focs,
@@ -320,7 +321,7 @@ function fOnIcld(a_Errs)
 				,
 				/// 处理输入
 				/// a_Ipt：tPntIpt
-				vcHdlIpt : function f(a_Ipt)
+				vcHdlIpt : function (a_Ipt)
 				{
 					//【注意】下面的算法即使在没有焦点的情况下也能正确处理！
 
@@ -387,7 +388,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 渲染
-				vcRnd : function f()
+				vcRnd : function ()
 				{
 					// 渲染控件树
 					if (this.e_Root)

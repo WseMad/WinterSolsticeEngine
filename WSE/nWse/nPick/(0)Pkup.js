@@ -319,29 +319,29 @@ function fOnIcld(a_Errs)
 				/// 处理消息
 				/// a_Msg：tMsg
 				/// 返回：Number，0=完成；1=继续
-				vcHdlMsg : function f(a_Msg)
+				vcHdlMsg : function (a_Msg)
 				{
 					return 0;
 				}
 				,
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
-					//
+					return this;
 				}
 				,
 				/// 处理输入
 				/// a_Ipt：tIpt
 				/// 返回：Number，0=完成；1=继续
-				vcHdlIpt : function f(a_Ipt)
+				vcHdlIpt : function (a_Ipt)
 				{
 					return 0;
 				}
 				,
 				/// 渲染
-				vcRnd : function f()
+				vcRnd : function ()
 				{
-					//
+					return this;
 				}
 				,
 				/// 获取名称
@@ -454,11 +454,8 @@ function fOnIcld(a_Errs)
 					// 可能被拾取到，记录
 					//	this.e_Wgts.push(a_Wgt);
 					this.e_Wgt = a_Wgt;
+					return this.e_IdClo;
 
-					if (2 == nPick.stFrmwk.cGetGpuDvcDim())
-					{
-						return this.e_IdClo;
-					}
 				}
 			}
 			,

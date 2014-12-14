@@ -37,6 +37,8 @@ function fOnIcld(a_Errs)
 	var stNumUtil = nWse.stNumUtil;
 	var stAryUtil = nWse.stAryUtil;
 	var stStrUtil = nWse.stStrUtil;
+	var stDomUtil = nWse.stDomUtil;
+	var stCssUtil = nWse.stCssUtil;
 
 	var nPick = nWse.nPick;
 	var unKnl = nPick.unKnl;
@@ -54,18 +56,173 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
-	function fMapAphEnd(a_Rndr, a_New)
+	unKnl.fObtnPutSrc = function (a_PutSrc)
 	{
-		var l_Wgt = a_Rndr.e_Wgt;
-		var l_RootRndr = l_Wgt.cAcsRoot().cAcsRndr();
+		// 获取，若不存在则返回
+		var l_Rst = nWse.fIsStr(a_PutSrc) ? document.getElementById(a_PutSrc) : a_PutSrc;
+		if (! l_Rst)
+		{ return null; }
 
-		if ((tPrmrSta.i_Exit <= a_New) && (a_New <= tPrmrSta.i_Hide)) { return 0; }
-		else if (tPrmrSta.i_Dsab == a_New) { return l_RootRndr.cGetPsa_AphOnWait(); }	// Dsab和Wait的不透明度相同
-		else if (tPrmrSta.i_Wait == a_New) { return l_RootRndr.cGetPsa_AphOnWait(); }
-		else if (tPrmrSta.i_Rdy == a_New) { return l_RootRndr.cGetPsa_AphOnRdy(); }
-		else if (tPrmrSta.i_Semi == a_New) { return l_RootRndr.cGetPsa_AphOnSemi(); }
-		else //if (tPrmrSta.i_Foc == a_New)
-		{ return l_RootRndr.cGetPsa_AphOnFoc(); }
+		// 簿记
+		if (! l_Rst.Wse_PutSrc)
+		{ l_Rst.Wse_PutSrc = {}; }
+
+		// 记录原始CSS类，添加cnWse_PutSrc
+		l_Rst.Wse_PutSrc.c_OrigCssc = l_Rst.className;
+		stCssUtil.cAddCssc(l_Rst, "cnWse_PutSrc");
+		return l_Rst;
+	};
+
+	unKnl.fAbdnPutSrc = function (a_PutSrc)
+	{
+		if ((! a_PutSrc) || (! a_PutSrc.Wse_PutSrc))
+		{ return; }
+
+		a_PutSrc.className = a_PutSrc.Wse_PutSrc.c_OrigCssc;	// CSS类
+		a_PutSrc.Wse_PutSrc = null;								// 簿记
+	};
+
+	unKnl.fObtnPutTgt = function (a_PutTgt, a_PutSrc, a_PutTgtSlc)
+	{
+		// 获取，若不存在则新建
+		var l_IsId = nWse.fIsStr(a_PutTgt);
+		var l_Rst = l_IsId ? document.getElementById(a_PutTgt) : a_PutTgt;
+		if ((! l_Rst) && a_PutTgtSlc)
+		{
+			l_Rst = a_PutSrc.id && stDomUtil.cQryOne("#" + a_PutSrc.id + a_PutTgtSlc);
+			if (l_IsId)	// 记录ID
+			{ l_Rst.id = a_PutTgt; }
+		}
+
+		if ((! l_Rst))
+		{
+			l_Rst = document.createElement("div");
+			if (l_IsId)	// 记录ID
+			{ l_Rst.id = a_PutTgt; }
+
+			a_PutSrc.parentNode.insertBefore(l_Rst, a_PutSrc);	// 作为前一个兄弟节点
+		}
+
+		// 簿记
+		if (! l_Rst.Wse_PutTgt)
+		{ l_Rst.Wse_PutTgt = {}; }
+
+		// 记录原始CSS类，添加cnWse_PutTgt
+		l_Rst.Wse_PutTgt.c_OrigCssc = l_Rst.className;		// 记录原始CSS类
+		stCssUtil.cAddCssc(l_Rst, "cnWse_PutTgt");
+		return l_Rst;
+	};
+
+	unKnl.fAbdnPutTgt = function (a_PutTgt)
+	{
+		if ((! a_PutTgt) || (! a_PutTgt.Wse_PutTgt))
+		{ return; }
+
+		a_PutTgt.className = a_PutTgt.Wse_PutTgt.c_OrigCssc;	// CSS类
+		a_PutTgt.Wse_PutTgt = null;								// 簿记
+	};
+
+	unKnl.fIsPutInTgt = function (a_PutTgt, a_Put)
+	{
+		return a_PutTgt && a_Put && (a_PutTgt === a_Put.parentNode);
+	};
+
+	unKnl.fPutToTgt = function (a_PutTgt, a_PutSrc, a_PutInSrc, a_Bef, a_Vrf)
+	{
+		// 无效，或已经在了？
+		if ((! a_PutTgt) || (! a_PutSrc) || (! a_PutInSrc) || (a_PutTgt === a_PutInSrc.parentNode))
+		{ return; }
+
+		// 验证
+		if (a_Vrf && (! stDomUtil.cIsAcst(a_PutSrc, a_PutInSrc)))
+		{ throw new Error("“" + a_PutInSrc.id + "”不是“" + a_PutSrc.id + "”的后代节点！"); }
+
+		// 簿记原始父节点
+		if (! a_PutInSrc.Wse_Put)
+		{ a_PutInSrc.Wse_Put = {}; }
+
+		a_PutInSrc.Wse_Put.c_OrigPrn = a_PutInSrc.parentNode;
+
+		// 插入或追加
+		a_Bef
+			? a_PutTgt.insertBefore(a_PutInSrc, a_Bef)
+			: a_PutTgt.appendChild(a_PutInSrc);
+	};
+
+	function fObtnOrigPrnOfPut(a_PutSrc, a_Put)
+	{
+		return (a_Put.Wse_Put && a_Put.Wse_Put.c_OrigPrn) || a_PutSrc;
+	}
+
+	unKnl.fIsPutInSrc = function (a_PutSrc, a_Put)
+	{
+		return a_PutSrc && a_Put && (fObtnOrigPrnOfPut(a_PutSrc, a_Put) === a_Put.parentNode);
+	};
+
+	unKnl.fApdToSrc = function (a_PutSrc, a_Put)
+	{
+		if ((! a_PutSrc) || (! a_Put))
+		{ return; }
+
+		a_PutSrc.appendChild(a_Put);
+	};
+
+	unKnl.fRtnToSrc = function (a_PutTgt, a_PutSrc, a_PutInTgt, a_Bef, a_Vrf)
+	{
+		// 无效，或已经在了？
+		var l_Prn = a_PutSrc && a_PutInTgt && fObtnOrigPrnOfPut(a_PutSrc, a_PutInTgt);
+		if ((! a_PutTgt) || (! l_Prn) || (l_Prn === a_PutInTgt.parentNode))
+		{ return; }
+
+		// 验证
+		if (a_Vrf && (! stDomUtil.cIsAcst(a_PutTgt, a_PutInTgt)))
+		{ throw new Error("“" + a_PutInTgt.id + "”不是“" + a_PutTgt.id + "”的后代节点！"); }
+
+		// 插入或追加
+		a_Bef
+			? l_Prn.insertBefore(a_PutInTgt, a_Bef)
+			: l_Prn.appendChild(a_PutInTgt);
+	};
+
+	unKnl.fClnPutTgt = function (a_PutTgt, a_PutSrc)
+	{
+		var l_PutTgt = a_PutTgt;
+		var l_Nl = l_PutTgt.childNodes, n = 0, l_Len = l_Nl.length;
+		for (; n<l_Len; ++n)
+		{
+			// 如果是摆放过来的，归还回去
+			if (l_Nl[n].Wse_Put && l_Nl[n].Wse_Put.c_OrigPrn)
+			{
+				unKnl.fRtnToSrc(a_PutTgt, a_PutSrc, l_Nl[n], null, false);
+				-- n;
+				-- l_Len;
+			}
+		}
+	};
+
+	function fObtnPutSrc(a_This, a_Cfg)
+	{
+		var l_Rst = unKnl.fObtnPutSrc(a_Cfg.c_PutSrc);
+
+		// 簿记
+		if (! l_Rst.Wse_Wgt)
+		{ l_Rst.Wse_Wgt = {}; }
+
+		l_Rst.Wse_Wgt.c_Wgt = a_This;	// 记录关联的控件
+		return l_Rst;
+	}
+
+	function fObtnPutTgt(a_This, a_Cfg, a_PutSrc)
+	{
+		var l_Rst = unKnl.fObtnPutTgt(a_Cfg.c_PutTgt, a_PutSrc, tWgt.sd_PutTgtSlc);
+		tWgt.sd_PutTgtSlc = "";	// 复位
+
+		// 簿记
+		if (! l_Rst.Wse_Wgt)
+		{ l_Rst.Wse_Wgt = {}; }
+
+		l_Rst.Wse_Wgt.c_Wgt = a_This;	// 记录关联的控件
+		return l_Rst;
 	}
 
 	// 主状态动画函数，确保只有一个实例
@@ -103,6 +260,43 @@ function fOnIcld(a_Errs)
 		return l_Rst;
 	}
 
+	/*
+	 /// 当控件裁剪时
+	 vdOnWgtClip : function ()
+	 {
+	 var l_Wgt = this.e_Wgt;
+	 var l_Host, l_HostRndr;
+
+	 // 不用裁剪
+	 if (tRefFrm.i_Dspl == l_Wgt.e_RefFrm)
+	 {
+	 //
+	 }
+	 else // 同宿主的裁剪路径
+	 if (tRefFrm.i_Vwpt == l_Wgt.e_RefFrm)
+	 {
+	 l_Host = l_Wgt.e_Host;
+	 if (l_Host && l_Host.cHasRndr())
+	 {
+	 l_HostRndr = l_Host.cAcsRndr();
+	 l_HostRndr.vdOnWgtClip();
+	 }
+	 }
+	 else // 宿主的裁剪路径∩宿主的身体路径
+	 //	if (tRefFrm.i_Host == l_Wgt.e_RefFrm)
+	 {
+	 l_Host = l_Wgt.e_Host;
+	 if (l_Host && l_Host.cHasRndr())
+	 {
+	 l_HostRndr = l_Host.cAcsRndr();
+	 l_HostRndr.vdOnWgtClip();
+	 }
+	 }
+
+	 return this;
+	 }
+	 */
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 控件渲染器
 
@@ -112,14 +306,10 @@ function fOnIcld(a_Errs)
 			/// 渲染器
 			function tRndr(a_Wgt)
 			{
-				// 记录控件
-				this.e_Wgt = a_Wgt || null;
-
-				// 主状态动画相关字段
-				this.e_Psa_Aph = 0;
-				this.e_Psa_AphBgn = 0;
-				this.e_Psa_AphEnd = 0;
-				this.e_Psa_AphTimer = 0;
+				this.e_Wgt = a_Wgt || null;		// 记录控件
+				this.e_BindHtmlCfg = null;
+				this.e_PutSrc = null;
+				this.e_PutTgt = null;
 			}
 			,
 			null
@@ -132,369 +322,161 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 当控件主状态改变时
-				vdOnWgtPrmrStaChgd : function f(a_Old, a_New)
+				vdOnWgtPrmrStaChgd : function (a_Old, a_New)
 				{
-					// 主状态动画
-					this.dPrmrStaAnmt(a_Old, a_New);
-				}
-				,
-				/// 主状态动画
-				dPrmrStaAnmt : function (a_Old, a_New)
-				{
-					this.e_Psa_AphBgn = this.e_Psa_Aph;
-					this.e_Psa_AphEnd = fMapAphEnd(this, a_New);
-					this.e_Psa_AphTimer = 0;
-
-					// 对于主状态动画，确保只有一个实例
-					stFrmwk.cAcsAnmtMgr().cAdd(this, fPrmrStaAnmt, true);
-					unKnl.fSetWgtFlag(this.e_Wgt, 1, true);		// 主状态动画中
+					// 结束主状态动画
+					this.cAcsWgt().cFnshPrmrStaAnmt();
+					return this;
 				}
 				,
 				/// 当控件刷新时
-				vdOnWgtRfsh : function f()
+				vdOnWgtRfsh : function ()
 				{
-					// 重建身体路径
-					if (this.e_BodyPath)
-					{
-						this.vdRcrtBodyPath();
-					}
-
-					// 重建身体渐变，或更新身体图案变换阵
-					if (this.e_BodyDrawStl)
-					{
-						if (this.e_BodyDrawStl instanceof nWse.n2d.tGrad)
-						{
-							this.dCrtBodyGrad();
-						}
-						else
-						if (this.e_BodyDrawStl instanceof nWse.n2d.tPten)
-						{
-							this.dUpdBodyPtenCsm();
-						}
-					}
-				}
-				,
-				/// 重建身体路径
-				vdRcrtBodyPath : function f()
-				{
-					var l_Wgt = this.e_Wgt;
-					var l_DA = l_Wgt.cAcsDsplArea();
-					var l_RcRds = this.cGetRcRds();
-
-					if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-					{
-						this.e_BodyPath.cRset().cRcRect(false, l_DA.c_X, l_DA.c_Y, l_DA.c_W, l_DA.c_H, l_RcRds);
-					}
-				}
-				,
-				/// 当控件裁剪时
-				vdOnWgtClip : function ()
-				{
-					var stGpuDvc = stFrmwk.cAcsGpuDvc();
-					var l_Wgt = this.e_Wgt;
-					var l_Host, l_HostRndr;
-
-					// 不用裁剪
-					if (tRefFrm.i_Dspl == l_Wgt.e_RefFrm)
-					{
-						//
-					}
-					else // 同宿主的裁剪路径
-					if (tRefFrm.i_Vwpt == l_Wgt.e_RefFrm)
-					{
-						l_Host = l_Wgt.e_Host;
-						if (l_Host && l_Host.cHasRndr())
-						{
-							l_HostRndr = l_Host.cAcsRndr();
-							l_HostRndr.vdOnWgtClip();
-						}
-					}
-					else // 宿主的裁剪路径∩宿主的身体路径
-					//	if (tRefFrm.i_Host == l_Wgt.e_RefFrm)
-					{
-						l_Host = l_Wgt.e_Host;
-						if (l_Host && l_Host.cHasRndr())
-						{
-							l_HostRndr = l_Host.cAcsRndr();
-							l_HostRndr.vdOnWgtClip();
-
-							if (l_HostRndr.cHasBodyPath())
-							{
-								if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-								{
-									stGpuDvc.cClipPath_GuiCs(l_HostRndr.cAcsBodyPath());
-								}
-							}
-						}
-					}
-
+					//// 如果已绑定Html
+					//if (this.cHasBndHtml())
+					//{
+					//	// 使放置目标的匹配显示区
+					//}
 					return this;
 				}
 				,
 				/// 当控件绘制时
-				vdOnWgtDraw : function f()
+				vdOnWgtDraw : function ()
 				{
-					// 如果需要，绘制身体
-					if (this.e_BodyPath)
-					{
-						this.dDrawBody();
-					}
-				}
-				,
-				/// 绘制身体
-				dDrawBody : function ()
-				{
-					var stGpuDvc = stFrmwk.cAcsGpuDvc();
-					var sc_;
-
-					var l_Wgt = this.e_Wgt;
-					var l_DA = l_Wgt.cAcsDsplArea();
-
-					if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-					{
-						// 身体路径？
-						if (this.e_BodyPath)
-						{
-							stGpuDvc.cCfgDrawStl(this.e_BodyDrawStl);
-
-							// 阴影？
-							if (this.e_CastShdw)
-							{
-								sc_ = tWgt.tRndr.sc_;
-								stGpuDvc.cSetShdwClo(sc_.sc_ShdwClo);
-								stGpuDvc.cSetShdwBlur(sc_.sc_ShdwBlur);
-								stGpuDvc.cSetShdwOfst(sc_.sc_ShdwOfstX, sc_.sc_ShdwOfstY);
-							}
-
-							stGpuDvc.cSetGlbAph(this.e_Psa_Aph);
-							stGpuDvc.cDrawPath_GuiCs(this.e_BodyPath);
-
-							// 复位
-							stGpuDvc.cSetGlbAph();
-							if (this.e_CastShdw)
-							{
-								stGpuDvc.cClrShdw();
-							}
-						}
-					}
+					//
+					return this;
 				}
 				,
 				/// 当控件拾取时
 				/// a_IdClo：tClo，标识符颜色
-				vdOnWgtPick : function f(a_IdClo)
+				vdOnWgtPick : function (a_IdClo)
 				{
-					var stGpuDvc = stFrmwk.cAcsGpuDvc();
-
-					if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-					{
-						stGpuDvc.cCfgDrawStl(a_IdClo);
-
-						if (this.e_BodyPath)
-						{
-							stGpuDvc.cDrawPath_GuiCs(this.e_BodyPath);
-						}
-						else
-						{
-							//	console.log("**********************************************cDrawSara_GuiCs");
-							stGpuDvc.cDrawSara_GuiCs(this.e_Wgt.cAcsDsplArea());
-						}
-
-						//	console.log("vdOnWgtPick : " + this.e_Wgt.e_Name);
-					}
-				}
-				,
-				/// 存取身体绘制风格
-				cAcsBodyDrawStl : function ()
-				{
-					return this.e_BodyDrawStl;
-				}
-				,
-				/// 设置身体色，注意身体渐变和身体图案将被停用
-				cSetBodyClo : function (a_Clo)
-				{
-					this.e_BodyDrawStl = a_Clo ? tClo.scCopy(a_Clo) : null;
 					return this;
 				}
 				,
-				/// 创建身体渐变
-				dCrtBodyGrad : function (a_Dir)
+				/// 绑定Html
+				/// a_Cfg：Object，配置
+				/// {
+				///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
+				/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+				/// }
+				vcBindHtml : function (a_Cfg)
 				{
-					// 重建？
-					if (this.e_BodyDrawStl && this.e_BodyDrawStl.ue_Dir)
-					{
-						a_Dir = this.e_BodyDrawStl.ue_Dir;
-					}
-					else // 新建
-					{
-						this.e_BodyDrawStl = new nWse.n2d.tGrad();
-						this.e_BodyDrawStl.ue_Dir = a_Dir || 7;		// 记录方向，默认7
-					}
+					var l_This = this;
 
-					var l_Wgt = this.e_Wgt;
+					//【不再提供解绑功能】
+					//if (l_This.e_PutSrc)	// 先解绑以前的
+					//{ l_This.vcUbnd(); }
+
+					if (! a_Cfg)			// 配置无效立即返回
+					{ return this; }
+
+					l_This.e_BindHtmlCfg = a_Cfg;	// 记录配置
+
+					// 取得目标和来源
+					var l_PutSrc = fObtnPutSrc(l_This, a_Cfg);	if (! l_PutSrc) { throw new Error("c_PutSrc无效！"); }
+					var l_PutTgt = fObtnPutTgt(l_This, a_Cfg, l_PutSrc);
+					l_This.e_PutSrc = l_PutSrc;
+					l_This.e_PutTgt = l_PutTgt;
+					return this;
+				}
+				,
+				/// 已绑定Html？
+				cHasBndHtml : function ()
+				{
+					return !! this.e_PutSrc;
+				}
+				,
+				/// 存取放置来源
+				cAcsPutSrc : function ()
+				{
+					return this.e_PutSrc;
+				}
+				,
+				/// 存取放置目标
+				cAcsPutTgt : function ()
+				{
+					return this.e_PutTgt;
+				}
+				,
+				/// 校准放置目标
+				cRgltPutTgt : function ()
+				{
+					if (! this.cHasBndHtml())
+					{ return this; }
+
+					var l_Wgt = this.cAcsWgt();
 					var l_DA = l_Wgt.cAcsDsplArea();
+					stCssUtil.cSetPosDim(this.e_PutTgt, l_DA.c_X, l_DA.c_Y, l_DA.c_W, l_DA.c_H);
+				}
+				,
+				/// 把来源里的全部内容放入目标
+				cPutAllToTgt : function ()
+				{
+					var l_This = this;
+					if (! l_This.e_PutSrc)
+					{ return this; }
 
-					var l_Sx, l_Sy, l_Tx, l_Ty;
-					var l_DirVal = a_Dir.valueOf();
-					switch (l_DirVal)
-					{
-						case 1: { l_Sx = l_DA.c_X; l_Sy = l_DA.c_Y; l_Tx = l_DA.c_X + l_DA.c_W; l_Ty = l_DA.c_Y; } break;
-						case 2: { l_Sx = l_DA.c_X; l_Sy = l_DA.c_Y + l_DA.c_H; l_Tx = l_DA.c_X + l_DA.c_W; l_Ty = l_DA.c_Y; } break;
-						case 3: { l_Sx = l_DA.c_X; l_Sy = l_DA.c_Y + l_DA.c_H; l_Tx = l_DA.c_X; l_Ty = l_DA.c_Y; } break;
-						case 4: { l_Sx = l_DA.c_X + l_DA.c_W; l_Sy = l_DA.c_Y + l_DA.c_H; l_Tx = l_DA.c_X; l_Ty = l_DA.c_Y; } break;
-						case 5: { l_Sx = l_DA.c_X + l_DA.c_W; l_Sy = l_DA.c_Y; l_Tx = l_DA.c_X; l_Ty = l_DA.c_Y; } break;
-						case 6: { l_Sx = l_DA.c_X + l_DA.c_W; l_Sy = l_DA.c_Y; l_Tx = l_DA.c_X; l_Ty = l_DA.c_Y + l_DA.c_H; } break;
-						default: { l_Sx = l_DA.c_X; l_Sy = l_DA.c_Y; l_Tx = l_DA.c_X; l_Ty = l_DA.c_Y + l_DA.c_H; } break;
-						case 8: { l_Sx = l_DA.c_X; l_Sy = l_DA.c_Y; l_Tx = l_DA.c_X + l_DA.c_W; l_Ty = l_DA.c_Y + l_DA.c_H; } break;
-					}
-
-					this.e_BodyDrawStl.cCrtLnr(l_Sx, l_Sy, l_Tx, l_Ty, true);
+					var l_Chds = stDomUtil.cGetAllChds(l_This.e_PutSrc);
+					stAryUtil.cFor(l_Chds, function (a_Ary, a_Idc, a_Chd) { l_This.cPutToTgt(a_Chd); });
 					return this;
 				}
 				,
-				/// 设置身体渐变，注意身体色和身体图案将被停用
-				/// a_Dir：Number，取值同tSara.tBdrNum，非1到8的值表示停用
-				cSetBodyGrad : function (a_Dir)
+				/// 放置元素是否在目标里
+				cIsPutInTgt : function (a_Put)
 				{
-					if (! a_Dir)
-					{
-						this.e_BodyDrawStl = null;	// 停用
-					}
-					else
-					{
-						if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						{
-							this.dCrtBodyGrad(a_Dir);
-						}
-					}
+					return unKnl.fIsPutInTgt(this.e_PutTgt, a_Put);
+				}
+				,
+				/// 放置元素是否在来源里
+				cIsPutInSrc : function (a_Put)
+				{
+					return unKnl.fIsPutInSrc(this.e_PutSrc, a_Put);
+				}
+				,
+				/// 摆放至目标
+				/// a_Bef：Node，在该节点之前，默认null表最后
+				cPutToTgt : function (a_PutInSrc, a_Bef)
+				{
+					unKnl.fPutToTgt(this.e_PutTgt, this.e_PutSrc, a_PutInSrc, a_Bef, true);
 					return this;
 				}
 				,
-				/// 更新身体图案变换阵
-				dUpdBodyPtenCsm : function ()
+				/// 追加到放置来源
+				cApdToSrc : function (a_Put)
 				{
-					var l_Wgt = this.e_Wgt;
-					var l_DA = l_Wgt.cAcsDsplArea();
-					var l_PtenCsm = this.e_BodyDrawStl.cAcsCsm();
-					l_PtenCsm.cIdty();
-					if (! this.e_BodyDrawStl.cGetMchPxl()) // 不匹配像素时，拉伸以覆盖整个显示区域
-					{
-						l_PtenCsm.cScl(l_DA.c_W, l_DA.c_H)
-					}
-					l_PtenCsm.cTslt(l_DA.c_X, l_DA.c_Y); // 移至显示区域左上角
-				}
-				,
-				/// 设置身体图案，注意身体色和身体渐变将被停用
-				/// a_Udfn$Rpt：若a_Udfn$MchPxl为true则为n2d.tPtenRpt.i_XY，否则为n2d.tPtenRpt.i_No
-				cSetBodyPten : function (a_Img$Cvs$Vid$Uri, a_Udfn$Rpt, a_Udfn$MchPxl)
-				{
-					if (! a_Img$Cvs$Vid$Uri)
-					{
-						this.e_BodyDrawStl = null;	// 停用
-					}
-					else
-					{
-						if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						{
-							this.e_BodyDrawStl = new nWse.n2d.tPten();
-							this.e_BodyDrawStl.cCrt(a_Img$Cvs$Vid$Uri,
-								a_Udfn$MchPxl ? nWse.n2d.tPtenRpt.i_XY : nWse.n2d.tPtenRpt.i_No, a_Udfn$MchPxl);
-						}
-					}
+					unKnl.fApdToSrc(this.e_PutSrc, a_Put);
 					return this;
 				}
 				,
-				/// 获取投射阴影
-				cGetCastShdw : function ()
+				/// 归还至来源
+				/// a_Bef：Node，在该节点之前，默认null表最后
+				cRtnToSrc : function (a_PutInTgt, a_Bef)
 				{
-					return this.e_CastShdw;
-				}
-				,
-				/// 设置投射阴影
-				/// a_Rcur：Boolean，递归？
-				cSetCastShdw : function (a_YesNo, a_Rcur)
-				{
-					a_YesNo = !! a_YesNo;
-					this.e_CastShdw = a_YesNo;
-
-					if (a_Rcur)
-					{
-						unKnl.fTrvsWgtSubtree(this.cAcsWgt(),
-							function (a_Wgt)
-							{
-								if (a_Wgt.cAcsRndr())
-								{
-									a_Wgt.cAcsRndr().cSetCastShdw(a_YesNo, a_Rcur);
-								}
-							});
-					}
+					unKnl.fRtnToSrc(this.e_PutTgt, this.e_PutSrc, a_PutInTgt, a_Bef, true);
 					return this;
-				}
-				,
-				/// 有身体路径？
-				cHasBodyPath : function ()
-				{
-					return (null != this.e_BodyPath);
-				}
-				,
-				/// 存取身体路径
-				cAcsBodyPath : function ()
-				{
-					if (! this.e_BodyPath)
-					{
-						if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						{
-							this.cUseBodyPath(new nWse.n2d.tPath());
-						}
-					}
-					return this.e_BodyPath;
-				}
-				,
-				/// 使用身体路径
-				cUseBodyPath : function (a_Path)
-				{
-					this.e_BodyPath = a_Path || null;
-					return this;
-				}
-				,
-				/// 获取圆角半径
-				cGetRcRds : function ()
-				{
-					return this.e_RcRds || 0;
-				}
-				,
-				/// 设置圆角半径
-				cSetRcRds : function (a_Rds)
-				{
-					this.e_RcRds = a_Rds || 0;
-					return this;
-				}
-				,
-				/// 获取主状态动画 -- 不透明度
-				cGetPsa_Aph : function ()
-				{
-					return this.e_Psa_Aph;
 				}
 			}
 			,
 			{
-				/// 公有静态字段
-				sc_ :
-				{
-					/// 阴影色，默认rgba(0, 0, 0, 0.7)
-					sc_ShdwClo : tClo.scNew$Rgba(0, 0, 0, 0.7)
-					,
-					/// 阴影偏移量X，默认0
-					sc_ShdwOfstX : 0
-					,
-					/// 阴影偏移量Y，默认4
-					sc_ShdwOfstY : 4
-					,
-					/// 阴影模糊因子，默认8
-					sc_ShdwBlur : 8
-					,
-					/// 身体掩膜色
-					sc_MaskClo : tClo.scNew$Rgba(0.3, 0.3, 0.3, 0.7)
-				}
+				///// 公有静态字段
+				//sc_ :
+				//{
+				//	/// 阴影色，默认rgba(0, 0, 0, 0.7)
+				//	sc_ShdwClo : tClo.scNew$Rgba(0, 0, 0, 0.7)
+				//	,
+				//	/// 阴影偏移量X，默认0
+				//	sc_ShdwOfstX : 0
+				//	,
+				//	/// 阴影偏移量Y，默认4
+				//	sc_ShdwOfstY : 4
+				//	,
+				//	/// 阴影模糊因子，默认8
+				//	sc_ShdwBlur : 8
+				//	,
+				//	/// 身体掩膜色
+				//	sc_MaskClo : tClo.scNew$Rgba(0.3, 0.3, 0.3, 0.7)
+				//}
 			}
 			,
 			false);
@@ -509,55 +491,29 @@ function fOnIcld(a_Errs)
 			/// 渲染器
 			function tRndr(a_Wgt)
 			{
-				this.odBase(tRndr).odCall(a_Wgt);
-
-				// 主状态动画
-				this.e_PsaDur = 0.4;
-				this.e_Psa_GrayOnDsab = 0.3;
-				this.e_Psa_AphOnWait = 0.7;
-				this.e_Psa_AphOnRdy = 1;
-				this.e_Psa_AphOnSemi = 1;
-				this.e_Psa_AphOnFoc = 1
+				//【为了支持IE8，用后一种写法】
+			//	this.odBase(tRndr).odCall(a_Wgt);
+				tWgt.tRndr.call(this, a_Wgt);
 			}
 			,
 			tWgt.tRndr
 			,
 			{
-				/// 获取主状态动画时长
-				cGetPsaDur : function () { return this.e_PsaDur; }
+				/// 当面板进栈时
+				vdOnPnlEnt : function ()
+				{
+					// 把自己的放置目标摆放到框架的呈现目标！
+					unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					return this;
+				}
 				,
-				/// 设置主状态动画时长
-				cSetPsaDur : function (a_Dur) { this.e_PsaDur = a_Dur; return this; }
-				,
-				/// 获取禁用时灰度
-				cGetPsa_GrayOnDsab : function () { return this.e_Psa_GrayOnDsab; }
-				,
-				/// 设置主状态动画时长
-				cSetPsa_GrayOnDsab : function (a_Gray) { this.e_Psa_GrayOnDsab = a_Gray; return this; }
-				,
-				/// 获取等待时不透明度
-				cGetPsa_AphOnWait : function () { return this.e_Psa_AphOnWait; }
-				,
-				/// 设置等待时不透明度
-				cSetPsa_AphOnWait : function (a_Aph) { this.e_Psa_AphOnWait = a_Aph; return this; }
-				,
-				/// 获取就绪时不透明度
-				cGetPsa_AphOnRdy : function () { return this.e_Psa_AphOnRdy; }
-				,
-				/// 设置就绪时不透明度
-				cSetPsa_AphOnRdy : function (a_Aph) { this.e_Psa_AphOnRdy = a_Aph; return this; }
-				,
-				/// 获取半焦点时不透明度
-				cGetPsa_AphOnSemi : function () { return this.e_Psa_AphOnSemi; }
-				,
-				/// 设置半焦点时不透明度
-				cSetPsa_AphOnSemi : function (a_Aph) { this.e_Psa_AphOnSemi = a_Aph; return this; }
-				,
-				/// 获取焦点时不透明度
-				cGetPsa_AphOnFoc : function () { return this.e_Psa_AphOnFoc; }
-				,
-				/// 设置焦点时不透明度
-				cSetPsa_AphOnFoc : function (a_Aph) { this.e_Psa_AphOnFoc = a_Aph; return this; }
+				/// 当面板离栈时
+				vdOnPnlLea : function ()
+				{
+					// 把自己的放置目标归还到框架的呈现来源！
+					unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					return this;
+				}
 			}
 			,
 			{

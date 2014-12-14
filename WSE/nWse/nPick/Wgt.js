@@ -105,17 +105,6 @@ function fOnIcld(a_Errs)
 		a_Wgt.e_Host.vcHdlMsg(l_Msg);
 	}
 
-	function fOnPrmrStaAnmtFnsh(a_Wgt)
-	{
-		unKnl.fSetWgtFlag(a_Wgt, 1, false);		// 主状态动画中
-
-		// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
-		if (tPrmrSta.i_Exit == a_Wgt.e_PrmrSta)
-		{
-			fSendMsg_PrmrOver(a_Wgt);
-		}
-	}
-
 	function fSendMsg_AdedRmvd(a_Host, a_Wgt, a_Code)
 	{
 		if (stAryUtil.cIsEmt(a_Host.e_SubWgts))
@@ -242,6 +231,12 @@ function fOnIcld(a_Errs)
 	{
 		return stAryUtil.cIsEmt(a_This.e_SubWgts) ? -1 : a_This.e_SubWgts.indexOf(a_Wgt);
 	}
+
+	function fGetWgtFlag(a_Wgt, a_Bit)
+	{
+		a_Wgt.e_Flag = stNumUtil.cGetBit(a_Wgt.e_Flag, a_Bit);
+	}
+	unKnl.fGetWgtFlag = fGetWgtFlag;
 
 	function fSetWgtFlag(a_Wgt, a_Bit, a_Val)
 	{
@@ -378,7 +373,7 @@ function fOnIcld(a_Errs)
 			{
 				/// 处理消息
 				/// a_Msg：tMsg
-				vcHdlMsg : function f(a_Msg)
+				vcHdlMsg : function (a_Msg)
 				{
 					// 验证消息接收者
 					this.cVrfMsgRcvr(a_Msg);
@@ -429,11 +424,16 @@ function fOnIcld(a_Errs)
 						} break;
 
 						case i_Code.i_PrprLea:
+						case i_Code.i_Lea:
 						{
 							l_NtfSubWgts = true;
 
-							l_AdnlHdlr = this;
-							l_AdnlMsg = fNewMsg_ChgPrmrSta(this, this.e_Name, tPrmrSta.i_Exit);
+							// 准备离开时，所有控件需要改变主状态
+							if (i_Code.i_PrprLea == a_Msg.c_Code)
+							{
+								l_AdnlHdlr = this;
+								l_AdnlMsg = fNewMsg_ChgPrmrSta(this, this.e_Name, tPrmrSta.i_Exit);
+							}
 						} break;
 
 						case i_Code.i_AreaChgd :
@@ -523,6 +523,7 @@ function fOnIcld(a_Errs)
 
 							// 改变主状态
 							this.e_PrmrSta = l_NewPS;
+							fSetWgtFlag(this, 1, true);		// 主状态动画中
 
 							// 回调
 							this.vdPrmrStaChgd(l_OldPS, l_NewPS);
@@ -546,6 +547,7 @@ function fOnIcld(a_Errs)
 					{
 						this.dNtfSubWgts(a_Msg);
 					}
+					return this;
 				}
 				,
 				/// 通告子控件，【注意】this.e_SubWgts对象必须存在（可以为空数组，但不能为null）
@@ -558,18 +560,20 @@ function fOnIcld(a_Errs)
 						a_Msg.c_Rcvr = l_Ary[i].e_Name;
 						l_Ary[i].vcHdlMsg(a_Msg);
 					}
+					return this;
 				}
 				,
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
 					// 清除支配触点
 					fSetDmntTchId(this, null);
+					return this;
 				}
 				,
 				/// 处理输入
 				/// a_Ipt：tPntIpt
-				vcHdlIpt : function f(a_Ipt)
+				vcHdlIpt : function (a_Ipt)
 				{
 					//【说明】这个函数之所以被调用，是因为this所指控件是所属面板的焦点
 
@@ -590,7 +594,7 @@ function fOnIcld(a_Errs)
 							fSetDmntTchId(this, null);
 
 							// 对输入不作处理
-							return;
+							return this;
 						}
 					}
 					else // 尚无支配触点
@@ -608,7 +612,7 @@ function fOnIcld(a_Errs)
 							}
 
 							// 对输入不作处理
-							return;
+							return this;
 						}
 
 						// 如果找到，将这个触点选作自己的支配触点
@@ -618,12 +622,13 @@ function fOnIcld(a_Errs)
 					// 现在l_TchIdx一定表示自己的支配触点索引
 					// 通过虚函数转发输入处理
 					this.vdHdlIptFromDmntTch(a_Ipt, l_TchIdx, a_Ipt.c_Tchs[l_TchIdx]);
+					return this;
 				}
 				,
 				/// 处理来自支配触点的输入
 				/// a_DmntTchIdx：Number，支配触点索引
 				/// a_DmntTch：Object，支配触点
-				vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
+				vdHdlIptFromDmntTch : function (a_Ipt, a_DmntTchIdx, a_DmntTch)
 				{
 					// 如果支配触点的输入种类是i_TchEnd，输入复位
 					if (tPntIpt.tKind.i_TchEnd == a_DmntTch.c_Kind)
@@ -632,8 +637,10 @@ function fOnIcld(a_Errs)
 
 						// 已处理
 						a_DmntTch.c_Hdld = true;
-					//	return;
+						return this;
 					}
+
+					return this;
 				}
 				,
 				/// 刷新
@@ -650,7 +657,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 刷新
-				vdRfsh : function f()
+				vdRfsh : function ()
 				{
 					// 尺寸不变，位置平移
 					tSara.scAsn(this.e_DsplArea, this.e_Area);
@@ -715,30 +722,16 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 渲染
-				vcRnd : function f()
+				vcRnd : function ()
 				{
 					// 如果不能展示，不绘制
 					if (! this.cCanShow())
-					{ return; }
+					{ return this; }
 
 					// 如果有渲染器
 					if (this.e_Rndr)
 					{
-						//if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						//{
-						//	// 压入画布上下文状态
-						//	stFrmwk.cAcsGpuDvc().cPushCvsCtxtSta();
-						//}
-						//
-						//// 裁剪，绘制
-						//this.e_Rndr.vdOnWgtClip();
-						//this.e_Rndr.vdOnWgtDraw();
-						//
-						//if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
-						//{
-						//	// 弹出画布上下文状态
-						//	stFrmwk.cAcsGpuDvc().cPopCvsCtxtSta();
-						//}
+						this.e_Rndr.vdOnWgtDraw();
 					}
 
 					// 如果有，渲染子控件
@@ -746,6 +739,8 @@ function fOnIcld(a_Errs)
 					{
 						this.dRndSubWgts();
 					}
+
+					return this;
 				}
 				,
 				/// 拾取
@@ -777,10 +772,10 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 存取渲染器
+				/// 如果还没有渲染器，在类里搜寻名为“tRndr”的类，若找到则新建一个实例
+				/// 若未找到，则使用tWgt.tRndr新建一个实例
 				cAcsRndr : function ()
 				{
-					// 如果还没有渲染器，在类里搜寻名为“tRndr”的类
-					// 若未找到，则使用tWgt.tRndr
 					if (! this.e_Rndr)
 					{
 						var l_tRndr = this.constructor["tRndr"];
@@ -813,12 +808,30 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 主状态改变
-				vdPrmrStaChgd : function f(a_Old, a_New)
+				vdPrmrStaChgd : function (a_Old, a_New)
 				{
 					// 如果有渲染器
 					if (this.e_Rndr)
 					{
 						this.e_Rndr.vdOnWgtPrmrStaChgd(a_Old, a_New);
+					}
+
+				//	console.log(this.cGetName() + ": " + a_New.toString() + " <- " + a_Old.toString());
+					return this;
+				}
+				,
+				/// 结束主状态动画，【警告】动画完成后必须调用！否则控件可能不会隐藏、移除……
+				cFnshPrmrStaAnmt : function ()
+				{
+					if (! fGetWgtFlag(this, 1)) // 无效调用？
+					{ return this; }
+
+					fSetWgtFlag(this, 1, false);	// 主状态动画完
+
+					// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
+					if (tPrmrSta.i_Exit == this.e_PrmrSta)
+					{
+						fSendMsg_PrmrOver(this);
 					}
 					return this;
 				}
@@ -1178,9 +1191,32 @@ function fOnIcld(a_Errs)
 			{
 				/// 处理消息
 				/// a_Msg：tMsg
-				vcHdlMsg : function f(a_Msg)
+				vcHdlMsg : function (a_Msg)
 				{
-					this.odBase(f).odCall(a_Msg);
+				//	this.odBase(f).odCall(a_Msg);
+					tWgt.prototype.vcHdlMsg.call(this, a_Msg);
+
+					var i_Code = tMsg.tInrCode;
+					switch (a_Msg.c_Code)
+					{
+						// 进离栈时，需要通知根渲染器，因为这会影响到呈现目标
+						case i_Code.i_Ent:
+						{
+							if (this.e_Rndr)
+							{
+								this.e_Rndr.vdOnPnlEnt();
+							}
+						} break;
+
+						case i_Code.i_Lea:
+						{
+							if (this.e_Rndr)
+							{
+								this.e_Rndr.vdOnPnlLea();
+							}
+						} break;
+					}
+					return this;
 				}
 				//,
 				///// 处理输入

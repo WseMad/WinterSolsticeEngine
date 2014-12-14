@@ -55,68 +55,6 @@ function fOnIcld(a_Errs)
 	var stFrmwk;						// 框架
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 动画管理器
-
-	var tAnmtMgr;
-	(function ()
-	{
-		tAnmtMgr = nWse.fClass(unKnl,
-			/// 动画管理器
-			function tAnmtMgr()
-			{
-				this.e_ThisCabks = []; // 回调数组
-			}
-			,
-			null
-			,
-			{
-				/// 查找
-				cFind : function (a_This, a_fCabk)
-				{
-					return stAryUtil.cFind(this.e_ThisCabks,
-						function (a_Ary, a_Idx, a_ThisCabk)
-						{ return a_ThisCabk && (a_ThisCabk.c_This === a_This) && (a_ThisCabk.c_fCabk === a_fCabk); });
-				}
-				,
-				/// 添加
-				/// a_This：this
-				/// a_fCabk：Function，Boolean f(a_FrmTime, a_FrmItvl, a_FrmIdx)，返回true=继续，false=完成，【警告】不要用匿名函数！
-				/// a_EnsrSgl：Boolean，确保唯一？当a_This和a_fCabk都绝对相等时才认为相同
-				/// 返回：Number，索引
-				cAdd : function (a_This, a_fCabk, a_EnsrSgl)
-				{
-					var l_Idx = a_EnsrSgl ? this.cFind(a_This, a_fCabk) : -1;
-					if (l_Idx >= 0)
-					{
-						return l_Idx;
-					}
-
-					l_Idx = stAryUtil.cGetEmtIdx(this.e_ThisCabks);
-					this.e_ThisCabks[l_Idx] = { c_This : a_This, c_fCabk : a_fCabk };
-					return l_Idx;
-				}
-				,
-				/// 更新
-				eUpd : function (a_FrmTime, a_FrmItvl, a_FrmIdx)
-				{
-					stAryUtil.cFor(this.e_ThisCabks,
-						function (a_Ary, a_Idx, a_ThisCabk)
-						{
-							// 若已完成则清null
-							if (a_ThisCabk && (! a_ThisCabk.c_fCabk.call(a_ThisCabk.c_This, a_FrmTime, a_FrmItvl, a_FrmIdx)))
-							{ a_Ary[a_Idx] = null; }
-						});
-				}
-			}
-			,
-			{
-				//
-			}
-			,
-			false);
-	})();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 框架
 
 	(function ()
@@ -139,7 +77,6 @@ function fOnIcld(a_Errs)
 		var e_PrstTgtArea = new tSara();		// 视区
 
 		var e_WgtPkr = null;				// 控件拾取器
-		var e_AnmtMgr = null;				// 动画管理器
 
 		var e_PnlReg;			// 面板注册
 		var e_PnlStk;			// 面板栈
@@ -277,17 +214,11 @@ function fOnIcld(a_Errs)
 			//e_LockPnlStk = false;
 		}
 
-		function eUpdAnmtMgr()
-		{
-			var l_FrmTime = 0, l_FrmItvl = 0, l_FrmNum = 0;
-			l_FrmTime = e_RltmAfx.cGetFrmTime();
-			l_FrmItvl = e_RltmAfx.cGetFrmItvl();
-			l_FrmNum = e_RltmAfx.cGetFrmIdx();
-			e_AnmtMgr.eUpd(l_FrmTime, l_FrmItvl, l_FrmNum);
-		}
-
 		function eRndPnls()
 		{
+			if (0 == e_PnlStk.length)
+			{ return; }
+
 			// 锁定面板栈
 			e_LockPnlStk = true;
 
@@ -558,7 +489,19 @@ function fOnIcld(a_Errs)
 			return e_RltmAfx;
 		};
 
-		// 存取呈现目标区
+		/// 存取呈现来源
+		stFrmwk.cAcsPrstSrc = function ()
+		{
+			return e_RltmAfx ? e_RltmAfx.cAcsPrstSrc() : null;
+		};
+
+		/// 存取呈现目标
+		stFrmwk.cAcsPrstTgt = function ()
+		{
+			return e_RltmAfx ? e_RltmAfx.cAcsPrstTgt() : null;
+		};
+
+		/// 存取呈现目标区
 		stFrmwk.cAcsPrstTgtArea = function ()
 		{
 			var l_PrstTgt = e_RltmAfx.cAcsPrstTgt();
@@ -578,21 +521,13 @@ function fOnIcld(a_Errs)
 			return e_WgtPkr;
 		};
 
-		/// 存取动画管理器
-		stFrmwk.cAcsAnmtMgr = function ()
-		{
-			if (! e_AnmtMgr)
-			{
-				e_AnmtMgr = new tAnmtMgr();
-			}
-			return e_AnmtMgr;
-		};
-
 
 
 		/// 处理消息
 		stFrmwk.cHdlMsg = function (a_Msg)
 		{
+			var l_Pnl = null;
+
 			var i_Code = tMsg.tInrCode;
 			switch (a_Msg.c_Code)
 			{
@@ -610,7 +545,11 @@ function fOnIcld(a_Errs)
 						}
 
 						// 擦除
+						l_Pnl = e_PnlStk[l_Idx];
 						e_PnlStk.splice(l_Idx, 1);
+
+						// 通知面板离栈
+						eSendMsg_Lea(l_Pnl);
 					}
 					else
 					{
@@ -787,6 +726,13 @@ function fOnIcld(a_Errs)
 
 			// 通知准备离栈
 			eSendMsg_PrprLea(l_Pnl);
+			return stFrmwk;
+		};
+
+		/// 渲染面板
+		stFrmwk.cRndPnls = function ()
+		{
+			eRndPnls();
 			return stFrmwk;
 		};
 

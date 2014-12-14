@@ -20,6 +20,7 @@
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse",
 		[
 			"DomUtil.js"
+			,"CssUtil.js"
 		]
 		,
 		fOnIcld);
@@ -37,6 +38,7 @@ function fOnIcld(a_Errs)
 	var stAryUtil = nWse.stAryUtil;
 	var stFctnUtil = nWse.stFctnUtil;
 	var stDomUtil = nWse.stDomUtil;
+	var stCssUtil = nWse.stCssUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -218,13 +220,17 @@ function fOnIcld(a_Errs)
 		if (a_This.e_InLoop)
 		{ throw new Error("初始化失败，必须首先停止"); }
 
-		// 记录呈现目标，自适应模式
+		// 记录呈现来源和目标
 		var l_Cfg = a_This.e_Cfg;
+		a_This.e_PrstSrc = nWse.fIsStr(l_Cfg.c_PrstSrc) ? document.getElementById(l_Cfg.c_PrstSrc) : l_Cfg.c_PrstSrc;
 		a_This.e_PrstTgt = nWse.fIsStr(l_Cfg.c_PrstTgt) ? document.getElementById(l_Cfg.c_PrstTgt) : l_Cfg.c_PrstTgt;
-		if (! a_This.e_PrstTgt)
-		{ throw new Error("初始化失败，呈现目标无效"); }
+		if ((! a_This.e_PrstSrc) || (! a_This.e_PrstTgt))
+		{ throw new Error("初始化失败，呈现来源或目标无效"); }
 
-		a_This.e_AdpMode = l_Cfg.c_AdpMode || tRltmAfx.tAdpMode.i_None;
+		stCssUtil.cAddCssc(a_This.e_PrstSrc, "cnWse_PrstSrc");	// 应用样式
+		stCssUtil.cAddCssc(a_This.e_PrstTgt, "cnWse_PrstTgt");
+
+		a_This.e_AdpMode = l_Cfg.c_AdpMode || tRltmAfx.tAdpMode.i_None;	// 自适应模式
 
 		// 当初始化时
 		fOn(a_This, tRltmAfx.tFlowStg.i_Init, true);
@@ -514,6 +520,7 @@ function fOnIcld(a_Errs)
 				/// 初始化
 				/// a_Cfg：Object，
 				/// {
+				/// c_PrstSrc：HTMLElement$String，呈现来源或元素ID，必须是块级元素
 				/// c_PrstTgt：HTMLElement$String，呈现目标或元素ID，必须是块级元素
 				/// c_AdpMode：tAdpMode，自适应模式，默认i_None
 				/// c_PrstTgtMinWid，c_PrstTgtMinHgt：Number，呈现目标最小尺寸，自适应时使用
@@ -542,6 +549,12 @@ function fOnIcld(a_Errs)
 					var l_This = this;
 					fStop(l_This);
 					return this;
+				}
+				,
+				/// 存取呈现来源
+				cAcsPrstSrc : function ()
+				{
+					return this.e_PrstSrc;
 				}
 				,
 				/// 存取呈现目标

@@ -81,7 +81,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 输入复位
-				cIptRset : function f()
+				cIptRset : function ()
 				{
 					this.cRset();
 				}
@@ -301,18 +301,20 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vcIptRset.call(this);
 
 					// 输入复位
 					this.e_Gsb.cIptRset();
 				}
 				,
 				/// 刷新
-				vdRfsh : function f()
+				vdRfsh : function ()
 				{
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vdRfsh.call(this);
 
 					this.eUpdArea(this.cAcsHost());
 				}
@@ -333,9 +335,10 @@ function fOnIcld(a_Errs)
 				/// 处理来自支配触点的输入
 				/// a_DmntTchIdx：Number，支配触点索引
 				/// a_DmntTch：Object，支配触点
-				vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
+				vdHdlIptFromDmntTch : function (a_Ipt, a_DmntTchIdx, a_DmntTch)
 				{
-					this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+				//	this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+					tWgt.prototype.vdHdlIptFromDmntTch.call(this, a_Ipt, a_DmntTchIdx, a_DmntTch);
 					if (a_DmntTch.c_Hdld)
 					{ return; }
 
@@ -373,7 +376,7 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 重建身体路径
-				vdRcrtBodyPath : function f()
+				vdRcrtBodyPath : function ()
 				{
 					var l_Wgt = this.e_Wgt;
 					var l_DA = l_Wgt.cAcsDsplArea();
@@ -391,7 +394,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 当控件绘制时
-				vdOnWgtDraw : function f()
+				vdOnWgtDraw : function ()
 				{
 					var stGpuDvc = stFrmwk.cAcsGpuDvc();
 					var stGpuPrt = stGpuDvc.cAcsGpuPrt();
@@ -401,7 +404,8 @@ function fOnIcld(a_Errs)
 					//	var l_Host = l_Wgt.cAcsHost();
 
 					// 基类版本
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vdOnWgtDraw.call(this);
 
 					// 绘制滑块
 					if (2 == stFrmwk.cGetGpuDvcDim()) // 2d
@@ -449,18 +453,20 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vcIptRset.call(this);
 
 					// 输入复位
 					this.e_Gsb.cIptRset();
 				}
 				,
 				/// 刷新
-				vdRfsh : function f()
+				vdRfsh : function ()
 				{
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vdRfsh.call(this);
 
 					this.eUpdArea(this.cAcsHost());
 				}
@@ -481,9 +487,10 @@ function fOnIcld(a_Errs)
 				/// 处理来自支配触点的输入
 				/// a_DmntTchIdx：Number，支配触点索引
 				/// a_DmntTch：Object，支配触点
-				vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
+				vdHdlIptFromDmntTch : function (a_Ipt, a_DmntTchIdx, a_DmntTch)
 				{
-					this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+				//	this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+					tWgt.prototype.vdHdlIptFromDmntTch.call(this, a_Ipt, a_DmntTchIdx, a_DmntTch);
 					if (a_DmntTch.c_Hdld)
 					{ return; }
 
@@ -521,7 +528,7 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 重建身体路径
-				vdRcrtBodyPath : function f()
+				vdRcrtBodyPath : function ()
 				{
 					var l_Wgt = this.e_Wgt;
 					var l_DA = l_Wgt.cAcsDsplArea();
@@ -539,7 +546,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 当控件绘制时
-				vdOnWgtDraw : function f()
+				vdOnWgtDraw : function ()
 				{
 					var stGpuDvc = stFrmwk.cAcsGpuDvc();
 					var stGpuPrt = stGpuDvc.cAcsGpuPrt();
@@ -549,7 +556,8 @@ function fOnIcld(a_Errs)
 					//	var l_Host = l_Wgt.cAcsHost();
 
 					// 基类版本
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					tWgt.prototype.vdOnWgtDraw.call(this);
 
 					// 绘制滑块
 					if (2 == stFrmwk.cGetGpuDvcDim()) // 2d

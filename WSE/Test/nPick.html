@@ -32,19 +32,37 @@
 			background-color: rgb(203, 233, 207);
 		}
 
+		#k_PutTgt_Pnl1_Root
+		{
+			background-color: rgb(255, 0, 255);
+		}
 	</style>
 </head>
 <body class="cnWse_Skin_Blue">
 
-<div id="k_PrstTgt" class="cnWse_PrstTgt">
+<div id="k_PrstTgt" class="cnWse_PrstTgt cnWse_PutTgt">
+
 
 </div>
 
 <!--<div id="k_PutTgt_Lot" class="cnWse_PutTgt"></div>-->
 
-<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
+<div id="k_PrstSrc" class="cnWse_PrstSrc cnWse_PutSrc">
 
+	<!---->
+	<!-- ======================================= 面板1 -->
+	<!---->
 
+	<!---->
+	<!-- 根 -->
+	<!---->
+
+	<!--<div id="k_PutTgt_Pnl1_Root" class="cnWse_PutTgt"></div>-->
+	<div id="k_Pnl1_Root" class="">
+		<span data-Wse_Tit>按钮</span>
+	</div>
+
+	<!-- ======================================= -->
 
 	<!---->
 	<!-- 按钮 -->
@@ -138,6 +156,13 @@ function fOnIcld(a_Errs)
 					console.log("Root A = " + l_Wgt.cAcsArea().toString());
 					console.log("Root DA = " + l_Wgt.cAcsDsplArea().toString());
 
+					l_Wgt.cAcsRndr().vcBindHtml({
+						c_PutSrc: "k_Pnl1_Root"
+						,c_PutTgt: "k_PutTgt_Pnl1_Root"
+					});
+					l_Wgt.cAcsRndr().cRgltPutTgt();
+					l_Wgt.cAcsRndr().cPutAllToTgt();
+
 					/*
 					l_Wgt.cAcsRndr().cSetBodyClo(tClo.scNew$Rgba(239 / 255, 228 / 255, 176 / 255, 1));
 					l_Wgt.cAcsRndr().cAcsBodyPath().cRect(false, l_Wgt.cAcsArea().c_X, l_Wgt.cAcsArea().c_Y, l_Wgt.cAcsArea().c_W, l_Wgt.cAcsArea().c_H);
@@ -181,6 +206,7 @@ function fOnIcld(a_Errs)
 				var tRltmAfx = nWse.tRltmAfx;
 				var l_RltmAfx = new tRltmAfx();
 				l_RltmAfx.cInit({
+					c_PrstSrc: "k_PrstSrc",	// 指定呈现来源
 					c_PrstTgt: "k_PrstTgt",	// 指定呈现目标
 					c_AdpMode: tRltmAfx.tAdpMode.i_CssDrv
 				});
@@ -190,7 +216,7 @@ function fOnIcld(a_Errs)
 				nPick.stFrmwk.cBindRltmAfx(l_RltmAfx);
 
 				// 3.面板
-				fInitGui("面板1", (new nWse.tSara(+20, +20, 120, 100)), (new nWse.tSara(0, 0, 120, 50)));
+				fInitGui("面板1", (new nWse.tSara(+20, +20, 400, 300)), (new nWse.tSara(0, 0, 400, 300)));
 				nPick.stFrmwk.cOpenPnl("面板1");
 			}
 			,

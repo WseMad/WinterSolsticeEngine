@@ -75,9 +75,11 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 输入复位
-				vcIptRset : function f()
+				vcIptRset : function ()
 				{
-					this.odBase(f).odCall();
+					//【为了支持IE8，用后一种的写法】
+				//	this.odBase(f).odCall();
+					this.constructor.oc_tBase.prototype.vcIptRset.call(this);
 
 					this.e_Prsn = false;
 				}
@@ -93,9 +95,10 @@ function fOnIcld(a_Errs)
 				/// 处理来自支配触点的输入
 				/// a_DmntTchIdx：Number，支配触点索引
 				/// a_DmntTch：Object，支配触点
-				vdHdlIptFromDmntTch : function f(a_Ipt, a_DmntTchIdx, a_DmntTch)
+				vdHdlIptFromDmntTch : function (a_Ipt, a_DmntTchIdx, a_DmntTch)
 				{
-					this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+				//	this.odBase(f).odCall(a_Ipt, a_DmntTchIdx, a_DmntTch);
+					this.constructor.oc_tBase.prototype.vdHdlIptFromDmntTch.call(this, a_Ipt, a_DmntTchIdx, a_DmntTch);
 					if (a_DmntTch.c_Hdld)
 					{ return; }
 
@@ -134,7 +137,7 @@ function fOnIcld(a_Errs)
 			,
 			{
 				/// 当控件绘制时
-				vdOnWgtDraw : function f()
+				vdOnWgtDraw : function ()
 				{
 					var stGpuDvc = stFrmwk.cAcsGpuDvc();
 					var stGpuPrt = stGpuDvc.cAcsGpuPrt();
@@ -150,7 +153,8 @@ function fOnIcld(a_Errs)
 					}
 
 					// 基类版本
-					this.odBase(f).odCall();
+				//	this.odBase(f).odCall();
+					this.constructor.oc_tBase.prototype.vdOnWgtDraw.call(this);
 
 					if (l_Wgt.cIsPrsn())
 					{
@@ -171,7 +175,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 重建身体路径
-				vdRcrtBodyPath : function f()
+				vdRcrtBodyPath : function ()
 				{
 					var l_Wgt = this.e_Wgt;
 					var l_DA = l_Wgt.cAcsDsplArea();

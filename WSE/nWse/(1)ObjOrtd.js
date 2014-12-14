@@ -123,7 +123,7 @@ function fOnIcld(a_Errs)
 
 			// 如果有非Object的基类，检查构造函数是否调用了基类的构造函数
 			var l_ChkRgx;
-			if (Object !== a_tBase)
+			if ((Object !== a_tBase) && (! nWse.fMaybeNonHtml5Brsr())) // 只在Html5浏览器里检查
 			{
 				l_ChkRgx = new RegExp("this\\.odBase\\(\\s*(?:.*?\\.)?" + l_ClassName + "\\s*\\)\\.odCall\\(");
 				if (! l_ChkRgx.test(a_fCtor.toString()))
