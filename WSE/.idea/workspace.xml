@@ -5,7 +5,7 @@
     <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="439" />
     <bookmark url="file://$PROJECT_DIR$/Test/CvsWgts.html" line="51" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Rndr.js" line="228" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="810" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="824" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4380cf6c-33ed-435a-ba83-807757ca52e3" name="Default" comment="" />
@@ -34,8 +34,8 @@
       <file leaf-file-name="nPick.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Test/nPick.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.321429" vertical-offset="726" max-vertical-offset="5301">
-              <caret line="49" column="40" selection-start-line="49" selection-start-column="27" selection-end-line="49" selection-end-column="40" />
+            <state vertical-scroll-proportion="-14.821428" vertical-offset="3005" max-vertical-offset="5700">
+              <caret line="180" column="53" selection-start-line="180" selection-start-column="53" selection-end-line="180" selection-end-column="53" />
               <folding />
             </state>
           </provider>
@@ -44,38 +44,28 @@
       <file leaf-file-name="Wgt.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Wgt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.4" vertical-offset="22673" max-vertical-offset="23674">
-              <caret line="1209" column="0" selection-start-line="1209" selection-start-column="0" selection-end-line="1209" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="9666" max-vertical-offset="23940">
+              <caret line="540" column="40" selection-start-line="540" selection-start-column="40" selection-end-line="540" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Rndr.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Rndr.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Rndr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.56" vertical-offset="1464" max-vertical-offset="10165">
-              <caret line="89" column="37" selection-start-line="89" selection-start-column="37" selection-end-line="89" selection-end-column="37" />
+            <state vertical-scroll-proportion="0.3550212" vertical-offset="6703" max-vertical-offset="10051">
+              <caret line="368" column="55" selection-start-line="368" selection-start-column="55" selection-end-line="368" selection-end-column="55" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RltmAfx.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="RltmAfx.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/RltmAfx.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.47214076" vertical-offset="10261" max-vertical-offset="12369">
+            <state vertical-scroll-proportion="0.0" vertical-offset="10261" max-vertical-offset="12369">
               <caret line="559" column="26" selection-start-line="559" selection-start-column="26" selection-end-line="559" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="(1)Plmvc.css" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cnWse/(1)Plmvc.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-24.28" vertical-offset="115" max-vertical-offset="931">
-              <caret line="38" column="14" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -84,7 +74,7 @@
       <file leaf-file-name="Wgt.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nUi/Wgt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.76" vertical-offset="9900" max-vertical-offset="19304">
+            <state vertical-scroll-proportion="0.0" vertical-offset="9900" max-vertical-offset="19304">
               <caret line="526" column="26" selection-start-line="526" selection-start-column="26" selection-end-line="526" selection-end-column="26" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
@@ -96,7 +86,7 @@
       <file leaf-file-name="Pnl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Pnl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.88" vertical-offset="5055" max-vertical-offset="11001">
+            <state vertical-scroll-proportion="0.0" vertical-offset="5055" max-vertical-offset="11001">
               <caret line="285" column="32" selection-start-line="285" selection-start-column="32" selection-end-line="285" selection-end-column="32" />
               <folding />
             </state>
@@ -106,8 +96,8 @@
       <file leaf-file-name="Frmwk.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Frmwk.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.6" vertical-offset="9121" max-vertical-offset="15219">
-              <caret line="494" column="52" selection-start-line="494" selection-start-column="41" selection-end-line="494" selection-end-column="52" />
+            <state vertical-scroll-proportion="-18.2" vertical-offset="3877" max-vertical-offset="15219">
+              <caret line="228" column="22" selection-start-line="228" selection-start-column="22" selection-end-line="228" selection-end-column="22" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -191,11 +181,11 @@
         <option value="$PROJECT_DIR$/nWse/nPick/InrWgt.js" />
         <option value="$PROJECT_DIR$/cnWse/(1)Plmvc.css" />
         <option value="$PROJECT_DIR$/nWse/nPick/Pnl.js" />
+        <option value="$PROJECT_DIR$/nWse/nPick/Frmwk.js" />
+        <option value="$PROJECT_DIR$/nWse/RltmAfx.js" />
         <option value="$PROJECT_DIR$/nWse/nPick/Wgt.js" />
         <option value="$PROJECT_DIR$/Test/nPick.html" />
-        <option value="$PROJECT_DIR$/nWse/nPick/Frmwk.js" />
         <option value="$PROJECT_DIR$/nWse/nPick/Rndr.js" />
-        <option value="$PROJECT_DIR$/nWse/RltmAfx.js" />
       </list>
     </option>
   </component>
@@ -404,10 +394,14 @@
       <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
       <method />
     </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <method />
     </configuration>
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -415,10 +409,6 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -485,12 +475,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931727" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33467203" sideWeight="0.49964765" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17124736" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
@@ -502,9 +491,10 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33467203" sideWeight="0.49964765" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -521,9 +511,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16560958" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -653,7 +643,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="29029" max-vertical-offset="91219">
           <caret line="1541" column="17" selection-start-line="1541" selection-start-column="9" selection-end-line="1541" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -665,13 +654,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Test/jQuery/jquery-1.10.2.min.map">
-      <provider editor-type-id="sourcemapFileViewerProvider">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="678">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
+      </provider>
+      <provider editor-type-id="sourcemapFileViewerProvider">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Test/jQuery/jquery-1.10.2.intellisense.js">
@@ -727,7 +716,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33256352" vertical-offset="33874" max-vertical-offset="35587">
           <caret line="1800" column="8" selection-start-line="1800" selection-start-column="8" selection-end-line="1800" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -756,7 +744,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="6052" max-vertical-offset="10222">
           <caret line="323" column="46" selection-start-line="323" selection-start-column="16" selection-end-line="323" selection-end-column="46" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -764,7 +751,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="7819" max-vertical-offset="22534">
           <caret line="479" column="25" selection-start-line="479" selection-start-column="20" selection-end-line="479" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -779,7 +765,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="456">
           <caret line="6" column="14" selection-start-line="6" selection-start-column="14" selection-end-line="6" selection-end-column="14" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -795,7 +780,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.5835777" vertical-offset="229" max-vertical-offset="2470">
           <caret line="33" column="1" selection-start-line="11" selection-start-column="0" selection-end-line="33" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -803,7 +787,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.78993434" vertical-offset="1862" max-vertical-offset="15618">
           <caret line="119" column="13" selection-start-line="119" selection-start-column="13" selection-end-line="119" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -811,9 +794,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3211" max-vertical-offset="4009">
           <caret line="177" column="42" selection-start-line="177" selection-start-column="42" selection-end-line="177" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -821,7 +801,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.86510265" vertical-offset="3153" max-vertical-offset="4978">
           <caret line="199" column="6" selection-start-line="58" selection-start-column="4" selection-end-line="199" selection-end-column="6" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -829,9 +808,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.72" vertical-offset="3580" max-vertical-offset="24548">
           <caret line="192" column="19" selection-start-line="192" selection-start-column="19" selection-end-line="192" selection-end-column="19" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -857,7 +833,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.37482318" vertical-offset="115" max-vertical-offset="15637">
           <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -865,13 +840,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33239037" vertical-offset="5028" max-vertical-offset="14592">
           <caret line="279" column="18" selection-start-line="279" selection-start-column="18" selection-end-line="279" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nPick/Pnl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.88" vertical-offset="5055" max-vertical-offset="11001">
+        <state vertical-scroll-proportion="0.0" vertical-offset="5055" max-vertical-offset="11001">
           <caret line="285" column="32" selection-start-line="285" selection-start-column="32" selection-end-line="285" selection-end-column="32" />
           <folding />
         </state>
@@ -879,8 +853,41 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nUi/Wgt.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.76" vertical-offset="9900" max-vertical-offset="19304">
+        <state vertical-scroll-proportion="0.0" vertical-offset="9900" max-vertical-offset="19304">
           <caret line="526" column="26" selection-start-line="526" selection-start-column="26" selection-end-line="526" selection-end-column="26" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4936351" vertical-offset="525" max-vertical-offset="36062">
+          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cnWse/(1)Plmvc.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="115" max-vertical-offset="931">
+          <caret line="38" column="14" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/RltmAfx.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="10261" max-vertical-offset="12369">
+          <caret line="559" column="26" selection-start-line="559" selection-start-column="26" selection-end-line="559" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nPick/Frmwk.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.2" vertical-offset="3877" max-vertical-offset="15219">
+          <caret line="228" column="22" selection-start-line="228" selection-start-column="22" selection-end-line="228" selection-end-column="22" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
@@ -889,58 +896,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nPick/Wgt.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.4" vertical-offset="22673" max-vertical-offset="23674">
-          <caret line="1209" column="0" selection-start-line="1209" selection-start-column="0" selection-end-line="1209" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="9666" max-vertical-offset="23940">
+          <caret line="540" column="40" selection-start-line="540" selection-start-column="40" selection-end-line="540" selection-end-column="40" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Test/nPick.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.321429" vertical-offset="726" max-vertical-offset="5301">
-          <caret line="49" column="40" selection-start-line="49" selection-start-column="27" selection-end-line="49" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4936351" vertical-offset="525" max-vertical-offset="36062">
-          <caret line="48" column="8" selection-start-line="48" selection-start-column="8" selection-end-line="48" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cnWse/(1)Plmvc.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-24.28" vertical-offset="115" max-vertical-offset="931">
-          <caret line="38" column="14" selection-start-line="38" selection-start-column="1" selection-end-line="38" selection-end-column="14" />
+        <state vertical-scroll-proportion="-14.821428" vertical-offset="3005" max-vertical-offset="5700">
+          <caret line="180" column="53" selection-start-line="180" selection-start-column="53" selection-end-line="180" selection-end-column="53" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nPick/Rndr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.56" vertical-offset="1464" max-vertical-offset="10165">
-          <caret line="89" column="37" selection-start-line="89" selection-start-column="37" selection-end-line="89" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nPick/Frmwk.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.6" vertical-offset="9121" max-vertical-offset="15219">
-          <caret line="494" column="52" selection-start-line="494" selection-start-column="41" selection-end-line="494" selection-end-column="52" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/RltmAfx.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.47214076" vertical-offset="10261" max-vertical-offset="12369">
-          <caret line="559" column="26" selection-start-line="559" selection-start-column="26" selection-end-line="559" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.3550212" vertical-offset="6703" max-vertical-offset="10051">
+          <caret line="368" column="55" selection-start-line="368" selection-start-column="55" selection-end-line="368" selection-end-column="55" />
           <folding />
         </state>
       </provider>

@@ -62,6 +62,13 @@
 		<span data-Wse_Tit>按钮</span>
 	</div>
 
+	<!---->
+	<!-- 按钮 -->
+	<!---->
+	<p id="k_Pnl1_Para1" class="">
+		<span>这是一个段落。</span>
+	</p>
+
 	<!-- ======================================= -->
 
 	<!---->
@@ -163,6 +170,18 @@ function fOnIcld(a_Errs)
 					l_Wgt.cAcsRndr().cRgltPutTgt();
 					l_Wgt.cAcsRndr().cPutAllToTgt();
 
+					{
+						l_Wgt = new nPick.tWgt("k_Pnl1_Para1");
+						l_Wgt.cAcsRndr().vcBindHtml({
+							c_PutSrc: "k_Pnl1_Para1"
+							,c_PutTgt: "k_PutTgt_Pnl1_Para1"
+						});
+					//	l_Wgt.cAcsRndr().cRgltPutTgt();	// 自动计算即可
+						l_Wgt.cAcsRndr().cPutAllToTgt();
+						l_Pnl.cAcsRoot().cAdd(l_Wgt);
+					//	l_Pnl.cAcsRoot().cAcsRndr().cPutToTgt(l_Wgt.cAcsPutTgt());	// 摆到根
+					}
+
 					/*
 					l_Wgt.cAcsRndr().cSetBodyClo(tClo.scNew$Rgba(239 / 255, 228 / 255, 176 / 255, 1));
 					l_Wgt.cAcsRndr().cAcsBodyPath().cRect(false, l_Wgt.cAcsArea().c_X, l_Wgt.cAcsArea().c_Y, l_Wgt.cAcsArea().c_W, l_Wgt.cAcsArea().c_H);
@@ -218,6 +237,8 @@ function fOnIcld(a_Errs)
 				// 3.面板
 				fInitGui("面板1", (new nWse.tSara(+20, +20, 400, 300)), (new nWse.tSara(0, 0, 400, 300)));
 				nPick.stFrmwk.cOpenPnl("面板1");
+
+
 			}
 			,
 			// 运行

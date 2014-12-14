@@ -530,6 +530,20 @@ function fOnIcld(a_Errs)
 						} break;
 					}
 
+					// 渲染器
+					if (this.e_Rndr)
+					{
+						if (i_Code.i_Ent == a_Msg.c_Code)
+						{
+							this.e_Rndr.vdOnWgtEnt();
+						}
+						else
+						if (i_Code.i_Lea == a_Msg.c_Code)
+						{
+							this.e_Rndr.vdOnWgtLea();
+						}
+					}
+
 					// 刷新？
 					if (l_Rfsh)
 					{
@@ -1196,26 +1210,26 @@ function fOnIcld(a_Errs)
 				//	this.odBase(f).odCall(a_Msg);
 					tWgt.prototype.vcHdlMsg.call(this, a_Msg);
 
-					var i_Code = tMsg.tInrCode;
-					switch (a_Msg.c_Code)
-					{
-						// 进离栈时，需要通知根渲染器，因为这会影响到呈现目标
-						case i_Code.i_Ent:
-						{
-							if (this.e_Rndr)
-							{
-								this.e_Rndr.vdOnPnlEnt();
-							}
-						} break;
-
-						case i_Code.i_Lea:
-						{
-							if (this.e_Rndr)
-							{
-								this.e_Rndr.vdOnPnlLea();
-							}
-						} break;
-					}
+					//var i_Code = tMsg.tInrCode;
+					//switch (a_Msg.c_Code)
+					//{
+					//	// 进离栈时，需要通知根渲染器，因为这会影响到呈现目标
+					//	case i_Code.i_Ent:
+					//	{
+					//		if (this.e_Rndr)
+					//		{
+					//			this.e_Rndr.vdOnPnlEnt();
+					//		}
+					//	} break;
+					//
+					//	case i_Code.i_Lea:
+					//	{
+					//		if (this.e_Rndr)
+					//		{
+					//			this.e_Rndr.vdOnPnlLea();
+					//		}
+					//	} break;
+					//}
 					return this;
 				}
 				//,

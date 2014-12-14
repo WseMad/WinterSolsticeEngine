@@ -354,6 +354,41 @@ function fOnIcld(a_Errs)
 					return this;
 				}
 				,
+				/// 当控件进栈时
+				vdOnWgtEnt : function ()
+				{
+					var l_Wgt = this.cAcsWgt();
+					if (l_Wgt.cIsRoot())
+					{
+						// 把自己的放置目标摆放到框架的呈现目标！
+						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					}
+					else
+					{
+						// 把自己的放置目标摆放到宿主的放置目标！
+						l_Wgt.cAcsHost().cAcsRndr().cApdToSrc(this.cAcsPutTgt()).cPutToTgt(this.cAcsPutTgt());
+					}
+					return this;
+				}
+				,
+				/// 当控件离栈时
+				vdOnWgtLea : function ()
+				{
+					var l_Wgt = this.cAcsWgt();
+					if (l_Wgt.cIsRoot())
+					{
+						// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
+						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					}
+					else
+					{
+						//【不用了，没必要】
+						// 把自己的放置目标归还到宿主的放置来源！
+					//	l_Wgt.cAcsHost().cAcsRndr().cRtnToSrc(this.cAcsPutTgt());
+					}
+					return this;
+				}
+				,
 				/// 绑定Html
 				/// a_Cfg：Object，配置
 				/// {
@@ -477,47 +512,6 @@ function fOnIcld(a_Errs)
 				//	/// 身体掩膜色
 				//	sc_MaskClo : tClo.scNew$Rgba(0.3, 0.3, 0.3, 0.7)
 				//}
-			}
-			,
-			false);
-	})();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 根渲染器
-
-	(function ()
-	{
-		nWse.fClass(tRoot,
-			/// 渲染器
-			function tRndr(a_Wgt)
-			{
-				//【为了支持IE8，用后一种写法】
-			//	this.odBase(tRndr).odCall(a_Wgt);
-				tWgt.tRndr.call(this, a_Wgt);
-			}
-			,
-			tWgt.tRndr
-			,
-			{
-				/// 当面板进栈时
-				vdOnPnlEnt : function ()
-				{
-					// 把自己的放置目标摆放到框架的呈现目标！
-					unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					return this;
-				}
-				,
-				/// 当面板离栈时
-				vdOnPnlLea : function ()
-				{
-					// 把自己的放置目标归还到框架的呈现来源！
-					unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					return this;
-				}
-			}
-			,
-			{
-				// 静态
 			}
 			,
 			false);
