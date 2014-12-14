@@ -17,3 +17,57 @@ function fLt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_ToLtUp ? (-l_CamAw + a_Ar
 		function fUp(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = l_CamAh - a_Area.c_Y - a_Area.c_H; }
 		function fCt_Y(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_Area.c_Y; }
 		function fDn(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_ToLtUp ? (-l_CamAh + a_Area.c_Y) : (a_Area.c_Y + l_CamAh); }
+
+
+
+// 尺寸不变，位置平移
+					tSara.scAsn(this.e_DsplArea, this.e_Area);
+
+					// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
+					if (this.e_Vwpt)
+					{
+						this.e_DsplArea.c_W = this.e_Vwpt.c_W;
+						this.e_DsplArea.c_H = this.e_Vwpt.c_H;
+					}
+
+					var l_Host, l_AccHost = false;
+					if (tRefFrm.i_Prst == this.e_RefFrm)
+					{
+						// 根据视区转换区域位置
+						fCvtArea(this.e_DsplArea, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
+					}
+					else
+					if (tRefFrm.i_Vwpt == this.e_RefFrm)
+					{
+						// 根据宿主视口转换区域位置，累加宿主显示区域位置
+						l_Host = this.e_Host;
+						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+						{
+							// 注意宿主的视口可能不存在，可使用区域代替（不会用到XY）
+							l_AccHost = true;
+							fCvtArea(this.e_DsplArea, l_Host.e_Vwpt || l_Host.e_Area, true, this.e_DockWay.valueOf());
+						}
+					}
+					else
+				//	if (tRefFrm.i_Host == this.e_RefFrm)
+					{
+						// 根据宿主区域转换区域位置，累加宿主显示区域位置
+						l_Host = this.e_Host;
+						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+						{
+							l_AccHost = true;
+							fCvtArea(this.e_DsplArea, l_Host.e_Area, true, this.e_DockWay.valueOf());
+
+							if (l_Host.e_Vwpt)
+							{
+								this.e_DsplArea.c_X -= l_Host.e_Vwpt.c_X;
+								this.e_DsplArea.c_Y -= l_Host.e_Vwpt.c_Y;
+							}
+						}
+					}
+
+					if (l_AccHost)
+					{
+						this.e_DsplArea.c_X += l_Host.e_DsplArea.c_X;
+						this.e_DsplArea.c_Y += l_Host.e_DsplArea.c_Y;
+					}

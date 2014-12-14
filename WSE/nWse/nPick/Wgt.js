@@ -54,7 +54,6 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
-
 	function fSetDmntTchId(a_This, a_TchId)
 	{
 		a_This.e_DmntTchId = a_TchId || null;
@@ -356,7 +355,6 @@ function fOnIcld(a_Errs)
 				this.e_Area = new tSara();			// 区域，必有
 			//	this.e_AreaMinWid = 0;				// 区域最小宽度，需要时才添加
 			//	this.e_AreaMinHgt = 0;				// 区域最小高度，需要时才添加
-				this.e_DsplArea = new tSara();		// 显示区域
 
 			//	this.e_Vwpt = new tSara();			// 视口，需要时才添加
 
@@ -673,58 +671,6 @@ function fOnIcld(a_Errs)
 				/// 刷新
 				vdRfsh : function ()
 				{
-					// 尺寸不变，位置平移
-					tSara.scAsn(this.e_DsplArea, this.e_Area);
-
-					// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
-					if (this.e_Vwpt)
-					{
-						this.e_DsplArea.c_W = this.e_Vwpt.c_W;
-						this.e_DsplArea.c_H = this.e_Vwpt.c_H;
-					}
-
-					var l_Host, l_AccHost = false;
-					if (tRefFrm.i_Dspl == this.e_RefFrm)
-					{
-						// 根据视区转换区域位置
-						fCvtArea(this.e_DsplArea, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
-					}
-					else
-					if (tRefFrm.i_Vwpt == this.e_RefFrm)
-					{
-						// 根据宿主视口转换区域位置，累加宿主显示区域位置
-						l_Host = this.e_Host;
-						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
-						{
-							// 注意宿主的视口可能不存在，可使用区域代替（不会用到XY）
-							l_AccHost = true;
-							fCvtArea(this.e_DsplArea, l_Host.e_Vwpt || l_Host.e_Area, true, this.e_DockWay.valueOf());
-						}
-					}
-					else
-				//	if (tRefFrm.i_Host == this.e_RefFrm)
-					{
-						// 根据宿主区域转换区域位置，累加宿主显示区域位置
-						l_Host = this.e_Host;
-						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
-						{
-							l_AccHost = true;
-							fCvtArea(this.e_DsplArea, l_Host.e_Area, true, this.e_DockWay.valueOf());
-
-							if (l_Host.e_Vwpt)
-							{
-								this.e_DsplArea.c_X -= l_Host.e_Vwpt.c_X;
-								this.e_DsplArea.c_Y -= l_Host.e_Vwpt.c_Y;
-							}
-						}
-					}
-
-					if (l_AccHost)
-					{
-						this.e_DsplArea.c_X += l_Host.e_DsplArea.c_X;
-						this.e_DsplArea.c_Y += l_Host.e_DsplArea.c_Y;
-					}
-
 					return this;
 				}
 				,
@@ -1076,10 +1022,72 @@ function fOnIcld(a_Errs)
 					return this.e_PrmrSta;
 				}
 				,
-				/// 存取显示区域
-				cAcsDsplArea : function ()
+				/// 计算CSS区域，总是相对于宿主的呈现区，主要用于CSS绝对定位
+				/// 返回：a_Rst
+				cCalcCssArea : function (a_Rst)
 				{
-					return this.e_DsplArea;
+					// 尺寸不变，位置平移
+					tSara.scAsn(a_Rst, this.e_Area);
+
+					// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
+					if (this.e_Vwpt)
+					{
+						a_Rst.c_W = this.e_Vwpt.c_W;
+						a_Rst.c_H = this.e_Vwpt.c_H;
+					}
+
+					var l_Host;
+					if (tRefFrm.i_Prst == this.e_RefFrm)
+					{
+						// 根据框架的呈现目标区转换区域位置
+						fCvtArea(a_Rst, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
+					}
+					else
+					if (tRefFrm.i_Vwpt == this.e_RefFrm)
+					{
+						// 不受宿主视口影响，因为视口坐标系与CSS绝对定位完全吻合
+						l_Host = this.e_Host;
+						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+						{
+							// 注意宿主的视口可能不存在，可使用区域代替（不会用到XY）
+							fCvtArea(a_Rst, l_Host.e_Vwpt || l_Host.e_Area, true, this.e_DockWay.valueOf());
+						}
+					}
+					else
+				//	if (tRefFrm.i_Host == this.e_RefFrm)
+					{
+						// 受宿主视口影响
+						l_Host = this.e_Host;
+						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+						{
+							// 根据宿主区域转换区域位置
+							fCvtArea(a_Rst, l_Host.e_Area, true, this.e_DockWay.valueOf());
+							if (l_Host.e_Vwpt)
+							{
+								a_Rst.c_X -= l_Host.e_Vwpt.c_X;
+								a_Rst.c_Y -= l_Host.e_Vwpt.c_Y;
+							}
+						}
+					}
+					return a_Rst;
+				}
+				,
+				/// 计算呈现区域，总是相对于框架的呈现目标，主要用于拾取
+				/// 返回：a_Rst
+				cCalcPrstArea : function (a_Rst)
+				{
+					// 先计算CSS区域，总是相对于宿主的呈现区
+					// 然后，非呈现坐标系时，累加宿主的呈现区
+					this.cCalcCssArea(a_Rst);
+					var l_HostPA;
+					if ((tRefFrm.i_Prst != this.e_RefFrm) && this.e_Host)
+					{
+						l_HostPA = tSara.scEnsrTemps(tSara.sc_Temps.c_Len + 1)[tSara.sc_Temps.c_Len - 1];
+						this.e_Host.cCalcPrstArea(l_HostPA);
+						a_Rst.c_X += l_HostPA.c_X;
+						a_Rst.c_Y += l_HostPA.c_Y;
+					}
+					return a_Rst;
 				}
 				,
 				/// 添加控件
@@ -1190,7 +1198,7 @@ function fOnIcld(a_Errs)
 			/// a_DockWay：tDockWay，停靠方式，默认tDockWay.i_LtUp
 			function tRoot(a_Pnl, a_DockWay)
 			{
-				this.odBase(tRoot).odCall(tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Dspl, a_DockWay);
+				this.odBase(tRoot).odCall(tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);
 
 				//---- 定义字段
 

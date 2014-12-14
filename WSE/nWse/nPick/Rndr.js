@@ -268,7 +268,7 @@ function fOnIcld(a_Errs)
 	 var l_Host, l_HostRndr;
 
 	 // 不用裁剪
-	 if (tRefFrm.i_Dspl == l_Wgt.e_RefFrm)
+	 if (tRefFrm.i_Prst == l_Wgt.e_RefFrm)
 	 {
 	 //
 	 }
@@ -357,35 +357,35 @@ function fOnIcld(a_Errs)
 				/// 当控件进栈时
 				vdOnWgtEnt : function ()
 				{
-					var l_Wgt = this.cAcsWgt();
-					if (l_Wgt.cIsRoot())
-					{
-						// 把自己的放置目标摆放到框架的呈现目标！
-						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					}
-					else
-					{
-						// 把自己的放置目标摆放到宿主的放置目标！
-						l_Wgt.cAcsHost().cAcsRndr().cApdToSrc(this.cAcsPutTgt()).cPutToTgt(this.cAcsPutTgt());
-					}
+					//var l_Wgt = this.cAcsWgt();
+					//if (l_Wgt.cIsRoot())
+					//{
+					//	// 把自己的放置目标摆放到框架的呈现目标！
+					//	unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					//}
+					//else
+					//{
+					//	// 把自己的放置目标摆放到宿主的放置目标！
+					//	l_Wgt.cAcsHost().cAcsRndr().cApdToSrc(this.cAcsPutTgt()).cPutToTgt(this.cAcsPutTgt());
+					//}
 					return this;
 				}
 				,
 				/// 当控件离栈时
 				vdOnWgtLea : function ()
 				{
-					var l_Wgt = this.cAcsWgt();
-					if (l_Wgt.cIsRoot())
-					{
-						// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
-						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					}
-					else
-					{
-						//【不用了，没必要】
-						// 把自己的放置目标归还到宿主的放置来源！
-					//	l_Wgt.cAcsHost().cAcsRndr().cRtnToSrc(this.cAcsPutTgt());
-					}
+					//var l_Wgt = this.cAcsWgt();
+					//if (l_Wgt.cIsRoot())
+					//{
+					//	// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
+					//	unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					//}
+					//else
+					//{
+					//	//【不用了，没必要】
+					//	// 把自己的放置目标归还到宿主的放置来源！
+					////	l_Wgt.cAcsHost().cAcsRndr().cRtnToSrc(this.cAcsPutTgt());
+					//}
 					return this;
 				}
 				,
@@ -441,15 +441,16 @@ function fOnIcld(a_Errs)
 					{ return this; }
 
 					var l_Wgt = this.cAcsWgt();
-					var l_DA = l_Wgt.cAcsDsplArea();
-					stCssUtil.cSetPosDim(this.e_PutTgt, l_DA.c_X, l_DA.c_Y, l_DA.c_W, l_DA.c_H);
+					var l_CSSA = tSara.scEnsrTemps(1)[0];
+					l_Wgt.cCalcCssArea(l_CSSA);
+					stCssUtil.cSetPosDim(this.e_PutTgt, l_CSSA.c_X, l_CSSA.c_Y, l_CSSA.c_W, l_CSSA.c_H);
 				}
 				,
 				/// 把来源里的全部内容放入目标
 				cPutAllToTgt : function ()
 				{
 					var l_This = this;
-					if (! l_This.e_PutSrc)
+					if (! this.cHasBndHtml())
 					{ return this; }
 
 					var l_Chds = stDomUtil.cGetAllChds(l_This.e_PutSrc);

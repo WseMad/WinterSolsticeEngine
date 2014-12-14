@@ -51,6 +51,8 @@ function fOnIcld(a_Errs)
 			for (i = 0; i < l_Len; ++i)
 			{ a_tClass.sc_Temps.push(new a_tClass()); }
 		}
+
+		a_tClass.sc_Temps.c_Len = a_Len;	// 记录这次预留的长度，进一步预留时可能会用到
 		return a_tClass.sc_Temps;
 	}
 	unKnl.fEnsrTemps = fEnsrTemps;

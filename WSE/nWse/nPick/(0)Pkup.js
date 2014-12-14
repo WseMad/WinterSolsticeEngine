@@ -200,8 +200,8 @@ function fOnIcld(a_Errs)
 			null
 			,
 			{
-				/// 显示坐标系
-				i_Dspl : 0
+				/// 呈现坐标系
+				i_Prst : 0
 				,
 				/// 视口坐标系
 				i_Vwpt : 1
@@ -391,7 +391,7 @@ function fOnIcld(a_Errs)
 				//	this.e_Wgts = [];	// 一次只拾取一个，不用数组
 				this.e_Wgt = null;
 
-				this.e_CvsDsplArea = new tSara();
+				this.e_CvsPrstArea = new tSara();
 			}
 			,
 			null
@@ -421,11 +421,11 @@ function fOnIcld(a_Errs)
 					return	(0 <= a_CvsX) && (a_CvsX < this.e_CvsWid) && (0 <= a_CvsY) && (a_CvsY < this.e_CvsHgt);
 				}
 				,
-				eCanPick : function (a_GuiDsplArea)
+				eCanPick : function (a_PrstArea)
 				{
-					var l_CvsDsplArea = this.e_CvsDsplArea;
-					tSara.scAsn(l_CvsDsplArea, a_GuiDsplArea);
-					nPick.stFrmwk.cDoCvsFromGui(l_CvsDsplArea, true);
+					//var l_CvsPrstArea = this.e_CvsPrstArea;
+					//tSara.scAsn(l_CvsPrstArea, a_GuiPrstArea);
+					//nPick.stFrmwk.cDoCvsFromGui(l_CvsPrstArea, true);
 
 					var l_Rst = false;
 					stAryUtil.cFor(this.e_Tchs,
@@ -433,7 +433,7 @@ function fOnIcld(a_Errs)
 						{
 							// 该触点必须在画布里，且当前尚未拾取到任何控件，且显示区包含该触点
 							a_Tch.e_CanPick = a_Tch.c_InCvs && (null == a_Tch.c_PkdWgt) &&
-							tSara.scCtan$Xy(l_CvsDsplArea, a_Tch.c_CvsX, a_Tch.c_CvsY);
+												tSara.scCtan$Xy(a_PrstArea, a_Tch.c_X, a_Tch.c_Y);
 							if (a_Tch.e_CanPick)
 							{
 								l_Rst = true;
@@ -446,7 +446,9 @@ function fOnIcld(a_Errs)
 				///【说明】若返回null表示不可能被拾取到，否则使用返回的颜色进行绘制
 				cGnrtIdClo : function (a_Wgt)
 				{
-					if (! this.eCanPick(a_Wgt.cAcsDsplArea()))
+					var l_PA = tSara.scEnsrTemps(1)[0];
+					a_Wgt.cCalcPrstArea(l_PA);
+					if (! this.eCanPick(l_PA))
 					{
 						return null;
 					}

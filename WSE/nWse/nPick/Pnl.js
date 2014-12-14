@@ -293,11 +293,25 @@ function fOnIcld(a_Errs)
 						this.cClrFocs();
 					}
 
+					// 如果是进入且根已绑定Html，把根的放置目标摆放到框架的呈现目标
+					if ((i_Code.i_Ent == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
+					{
+						// 把根的放置目标摆放到框架的呈现目标！
+						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
+					}
+
 					// 如果需要，通知根
 					if (l_NtfRoot && this.e_Root)
 					{
 						a_Msg.c_Rcvr = this.e_Root.e_Name;
 						this.e_Root.vcHdlMsg(a_Msg);
+					}
+
+					// 如果是离开且根已绑定Html，把根的放置目标摆放到框架的呈现目标
+					if ((i_Code.i_Lea == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
+					{
+						// 把根的放置目标归还到框架的呈现来源！【注意】这是必须的，否则该面板仍会出现在呈现目标里！
+						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
 					}
 
 					// 如果需要，根成为焦点
@@ -306,6 +320,8 @@ function fOnIcld(a_Errs)
 					{
 						this.cSetFocs(this.e_Root);
 					}
+
+					return this;
 				}
 				,
 				/// 输入复位
