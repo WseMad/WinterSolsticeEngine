@@ -17,16 +17,16 @@
 	}
 
 	//@ 包含
-	l_Glb.nWse.stAsynIcld.cFromLib("nWse",
+	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nPick",
 		[
-			"(3)CoreDast.js"
+			"Wgt.js"
 		]
 		,
 		fOnIcld);
 
 function fOnIcld(a_Errs)
 {
-	console.log(".fOnIcld：" + a_Errs);
+	console.log("Rndr.fOnIcld：" + a_Errs);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -47,9 +47,9 @@ function fOnIcld(a_Errs)
 	var tRefFrm = nPick.tRefFrm;
 	var tDockWay = nPick.tDockWay;
 	var tPrmrSta = nPick.tPrmrSta;
-	var stFrmwk = nPick.stFrmwk;
 	var tWgt = nPick.tWgt;
 	var tRoot = nPick.tRoot;
+//	var stFrmwk = nPick.stFrmwk;	// 尚未创建
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -66,13 +66,6 @@ function fOnIcld(a_Errs)
 		else if (tPrmrSta.i_Semi == a_New) { return l_RootRndr.cGetPsa_AphOnSemi(); }
 		else //if (tPrmrSta.i_Foc == a_New)
 		{ return l_RootRndr.cGetPsa_AphOnFoc(); }
-	}
-
-	function fSendMsg_PrmrOver(a_Wgt)
-	{
-		var l_Msg = new tMsg(tMsg.tInrCode.i_PrprOver, a_Wgt.e_Host.e_Name, a_Wgt.e_Name);
-		l_Msg.c_Who = a_Wgt;		// 自身
-		a_Wgt.e_Host.vcHdlMsg(l_Msg);
 	}
 
 	// 主状态动画函数，确保只有一个实例
@@ -94,13 +87,13 @@ function fOnIcld(a_Errs)
 			this.e_Psa_Aph = this.e_Psa_AphEnd;
 			l_Rst = false;
 
-			unKnl.fSetWgtFlag(l_Wgt, 1, false);		// 主状态动画中
-
-			// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
-			if (tPrmrSta.i_Exit == l_Wgt.e_PrmrSta)
-			{
-				fSendMsg_PrmrOver(l_Wgt);
-			}
+			//unKnl.fSetWgtFlag(l_Wgt, 1, false);		// 主状态动画中
+			//
+			//// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
+			//if (tPrmrSta.i_Exit == l_Wgt.e_PrmrSta)
+			//{
+			//	fSendMsg_PrmrOver(l_Wgt);
+			//}
 		}
 		else // 继续
 		{

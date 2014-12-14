@@ -8,6 +8,7 @@
 	<title>拾取库</title>
 
 	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Rset.css" />
+	<link rel="stylesheet" type="text/css" href="../cnWse/(1)Plmvc.css" />
 	<!--<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgts.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Blue.css" />-->
 	<!--<link rel="stylesheet" type="text/css" href="../cnWse/CmnWgtsSkin_Purple.css" />-->
@@ -26,20 +27,9 @@
 
 	<style type="text/css">
 
-		html
-		{
-			min-height: 100%;
-		}
-
 		body
 		{
 			background-color: rgb(203, 233, 207);
-		}
-		
-		.cnWse_PrstTgt
-		{
-			width: 100%;
-			height: 100%;
 		}
 
 	</style>
@@ -47,24 +37,26 @@
 <body class="cnWse_Skin_Blue">
 
 <div id="k_PrstTgt" class="cnWse_PrstTgt">
-	<div id="k_PutTgt_Lot" class="cnWse_PutTgt">
 
+</div>
+
+<!--<div id="k_PutTgt_Lot" class="cnWse_PutTgt"></div>-->
+
+<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
+
+
+
+	<!---->
+	<!-- 按钮 -->
+	<!---->
+	<div id="k_Btn" class="cnWse_PutSrc">
+		<span data-Wse_Tit>按钮</span>
 	</div>
 
-	<div id="k_PutSrc_Lot" class="cnWse_PutSrc">
+	<!---->
+	<!--  -->
+	<!---->
 
-		<!---->
-		<!-- 按钮 -->
-		<!---->
-		<div id="k_Btn" class="cnWse_PutSrc">
-			<span data-Wse_Tit>按钮</span>
-		</div>
-
-		<!---->
-		<!--  -->
-		<!---->
-
-	</div>
 </div>
 
 <script type="text/javascript">
@@ -142,8 +134,11 @@ function fOnIcld(a_Errs)
 					nPick.stFrmwk.cRegPnl(l_Pnl);
 					l_Pnl.cNewRoot(a_RootArea, a_RootVwpt);
 
-					/*
 					l_Wgt = l_Pnl.cAcsRoot();
+					console.log("Root A = " + l_Wgt.cAcsArea().toString());
+					console.log("Root DA = " + l_Wgt.cAcsDsplArea().toString());
+
+					/*
 					l_Wgt.cAcsRndr().cSetBodyClo(tClo.scNew$Rgba(239 / 255, 228 / 255, 176 / 255, 1));
 					l_Wgt.cAcsRndr().cAcsBodyPath().cRect(false, l_Wgt.cAcsArea().c_X, l_Wgt.cAcsArea().c_Y, l_Wgt.cAcsArea().c_W, l_Wgt.cAcsArea().c_H);
 

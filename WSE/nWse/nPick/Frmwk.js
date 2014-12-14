@@ -22,6 +22,7 @@
 			"nWse:RltmAfx.js"
 
 			,"Pnl.js"
+			,"Rndr.js"
 		]
 		,
 		fOnIcld);
@@ -52,7 +53,6 @@ function fOnIcld(a_Errs)
 
 	var i_UnitPrio = -1000;				// 单元优先级
 	var stFrmwk;						// 框架
-	var stGpuDvc = null;				// 图形设备
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 动画管理器
@@ -150,7 +150,7 @@ function fOnIcld(a_Errs)
 		var e_PcdrTrgrTch;		// 程序触发触摸
 		var e_PntIptTrkr;		// 点输入追踪器
 
-		var e_fOnRndPnlsOver;		// 当渲染面板结束
+	//	var e_fOnRndPnlsOver;		// 当渲染面板结束
 
 		//======== 私有函数
 
@@ -185,7 +185,7 @@ function fOnIcld(a_Errs)
 			e_PcdrTrgrTch = [];
 			e_PntIptTrkr = new nWse.tPntIptTrkr();
 
-			e_fOnRndPnlsOver = null;
+		//	e_fOnRndPnlsOver = null;
 
 			// 注册页面事件处理器
 			eRegPageEvtHdlr();
@@ -422,7 +422,7 @@ function fOnIcld(a_Errs)
 				{ break; }
 			}
 
-			console.log(a_Ipt.c_Tchs[0].c_Kind.toString());
+		//	console.log(a_Ipt.c_Tchs[0].c_Kind.toString());	//【调试】
 
 			// 如果还有未处理的触点，自己处理
 			if (l_HasUhdlTch)
@@ -473,6 +473,7 @@ function fOnIcld(a_Errs)
 				eDfrdOpenClsPnls();
 			}
 
+			/* 【不需要实时更新渲染，由各个控件自行决定】
 			// 更新动画管理器
 			// 这应该在渲染面板之前进行，因为希望动画过程在这一帧里立即可见
 			if (e_AnmtMgr)
@@ -485,12 +486,13 @@ function fOnIcld(a_Errs)
 			{
 				eRndPnls();
 			}
+			//*/
 
-			// 回调
-			if (e_fOnRndPnlsOver)
-			{
-				e_fOnRndPnlsOver();
-			}
+			//// 回调
+			//if (e_fOnRndPnlsOver)
+			//{
+			//	e_fOnRndPnlsOver();
+			//}
 
 		}
 
@@ -825,18 +827,18 @@ function fOnIcld(a_Errs)
 			e_PntIptTrkr.cClrActTchs();
 		};
 
-		/// 获取当渲染面板结束
-		stFrmwk.cGetOnRndPnlsOver = function ()
-		{
-			return e_fOnRndPnlsOver;
-		};
-
-		/// 设置当渲染面板结束
-		stFrmwk.cSetOnRndPnlsOver = function (a_fOn)
-		{
-			e_fOnRndPnlsOver = a_fOn;
-			return stFrmwk;
-		};
+		///// 获取当渲染面板结束
+		//stFrmwk.cGetOnRndPnlsOver = function ()
+		//{
+		//	return e_fOnRndPnlsOver;
+		//};
+		//
+		///// 设置当渲染面板结束
+		//stFrmwk.cSetOnRndPnlsOver = function (a_fOn)
+		//{
+		//	e_fOnRndPnlsOver = a_fOn;
+		//	return stFrmwk;
+		//};
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

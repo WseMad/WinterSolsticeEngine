@@ -1,0 +1,45 @@
+﻿/*	页面级MVC
+*
+*/
+
+
+/* 页面和浏览器窗口吻合 */
+html, body
+{
+	height: 100%;
+}
+
+/* 实时应用程序框架的呈现目标 */
+.cnWse_PrstTgt
+{
+	width: 100%;
+	height: 100%;
+}
+
+/* 这些已转移到(0)Rset.css */
+/*.cnWse_PutTgt, .cnWse_PutSrc*/
+/*{*/
+	/*box-sizing: border-box;*/
+	/*margin: 0;*/
+	/*border: none;*/
+	/*padding: 0;*/
+/*}*/
+
+/* 控件的放置目标 */
+.cnWse_PutTgt
+{
+	display: block;
+	position: relative;		/* 相对定位（为绝对定位建立新的参照点），可能会被覆盖成绝对定位 */
+	left: 0px;
+	top: 0px;
+	height: auto;			/* 高度根据内容自动计算 */
+	overflow: hidden;		/*【重点】正在动画的元素溢出时导致滚动条出现，隐藏就能避免*/
+}
+
+/* 控件的放置来源 */
+.cnWse_PutSrc
+{
+	display: none;			/*【重点】放置来源不显示 */
+}
+
+/*********************************************************************** Over ***********************************************************************/

@@ -54,6 +54,12 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+
+	function fSetDmntTchId(a_This, a_TchId)
+	{
+		a_This.e_DmntTchId = a_TchId || null;
+	}
+
 	function fLt(a_Tgt, a_Bss, a_ToLtUp)	{ }
 	function fCt_X(a_Tgt, a_Bss, a_ToLtUp)	{ a_Tgt.c_X = a_ToLtUp ? (a_Tgt.c_X + (a_Bss.c_W - a_Tgt.c_W) / 2) : (a_Tgt.c_X - (a_Bss.c_W - a_Tgt.c_W) / 2); }
 	function fRt(a_Tgt, a_Bss, a_ToLtUp)	{ a_Tgt.c_X = a_Bss.c_W - a_Tgt.c_X - a_Tgt.c_W; }
@@ -90,6 +96,24 @@ function fOnIcld(a_Errs)
 		var l_fCvt = fCvtArea.e_Tab[a_DockWayVal];
 		l_fCvt.c_fCvtX(a_Tgt, a_Bss, a_ToLtUp);
 		l_fCvt.c_fCvtY(a_Tgt, a_Bss, a_ToLtUp);
+	}
+
+	function fSendMsg_PrmrOver(a_Wgt)
+	{
+		var l_Msg = new tMsg(tMsg.tInrCode.i_PrprOver, a_Wgt.e_Host.e_Name, a_Wgt.e_Name);
+		l_Msg.c_Who = a_Wgt;		// 自身
+		a_Wgt.e_Host.vcHdlMsg(l_Msg);
+	}
+
+	function fOnPrmrStaAnmtFnsh(a_Wgt)
+	{
+		unKnl.fSetWgtFlag(a_Wgt, 1, false);		// 主状态动画中
+
+		// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
+		if (tPrmrSta.i_Exit == a_Wgt.e_PrmrSta)
+		{
+			fSendMsg_PrmrOver(a_Wgt);
+		}
 	}
 
 	function fSendMsg_AdedRmvd(a_Host, a_Wgt, a_Code)
@@ -332,26 +356,21 @@ function fOnIcld(a_Errs)
 
 				this.e_Host = null;					// 宿主，对于根为tPnl，其他为tWgt
 
-				// 标志
-				// [1] = 主状态动画中
-				// [9] = 锁定隐藏禁用主状态
-				// [14] = 已被从宿主删除
-				// [15] = 需要刷新
-				this.e_Flag = 0;
+				this.e_Flag = 0;					// 标志
 
 				this.e_Area = new tSara();			// 区域，必有
-				//	this.e_AreaMinWid = 0;				// 区域最小宽度，需要时才添加
-				//	this.e_AreaMinHgt = 0;				// 区域最小高度，需要时才添加
+			//	this.e_AreaMinWid = 0;				// 区域最小宽度，需要时才添加
+			//	this.e_AreaMinHgt = 0;				// 区域最小高度，需要时才添加
 				this.e_DsplArea = new tSara();		// 显示区域
 
-				//	this.e_Vwpt = new tSara();			// 视口，需要时才添加
+			//	this.e_Vwpt = new tSara();			// 视口，需要时才添加
 
 				this.e_RelLyr = (a_RelLyr || 0).valueOf();	// 注意可能是枚举值，必须显示转换成数字
 				this.e_RefFrm = a_RefFrm || tRefFrm.i_Host;
 				this.e_DockWay = a_DockWay || tDockWay.i_LtUp;
 				this.e_PrmrSta = tPrmrSta.i_Exit;
 
-				//	this.e_SubWgts = [];				// 子控件数组，需要时才添加
+			//	this.e_SubWgts = [];				// 子控件数组，需要时才添加
 			}
 			,
 			atPkup
@@ -545,7 +564,7 @@ function fOnIcld(a_Errs)
 				vcIptRset : function f()
 				{
 					// 清除支配触点
-					this.eSetDmntTchId(null);
+					fSetDmntTchId(this, null);
 				}
 				,
 				/// 处理输入
@@ -568,7 +587,7 @@ function fOnIcld(a_Errs)
 						if (l_TchIdx < 0)
 						{
 							// 目前这里的做法是，简单地清除支配触点
-							this.eSetDmntTchId(null);
+							fSetDmntTchId(this, null);
 
 							// 对输入不作处理
 							return;
@@ -593,7 +612,7 @@ function fOnIcld(a_Errs)
 						}
 
 						// 如果找到，将这个触点选作自己的支配触点
-						this.eSetDmntTchId(a_Ipt.c_Tchs[l_TchIdx].c_TchId);
+						fSetDmntTchId(this, a_Ipt.c_Tchs[l_TchIdx].c_TchId);
 					}
 
 					// 现在l_TchIdx一定表示自己的支配触点索引
@@ -613,13 +632,8 @@ function fOnIcld(a_Errs)
 
 						// 已处理
 						a_DmntTch.c_Hdld = true;
-						return;
+					//	return;
 					}
-				}
-				,
-				eSetDmntTchId : function (a_TchId)
-				{
-					this.e_DmntTchId = a_TchId || null;
 				}
 				,
 				/// 刷新
@@ -667,7 +681,7 @@ function fOnIcld(a_Errs)
 						}
 					}
 					else
-					//	if (tRefFrm.i_Host == this.e_RefFrm)
+				//	if (tRefFrm.i_Host == this.e_RefFrm)
 					{
 						// 根据宿主区域转换区域位置，累加宿主显示区域位置
 						l_Host = this.e_Host;
@@ -795,6 +809,7 @@ function fOnIcld(a_Errs)
 					{
 						l_Ary[i].vcRnd();
 					}
+					return this;
 				}
 				,
 				/// 主状态改变
@@ -805,6 +820,7 @@ function fOnIcld(a_Errs)
 					{
 						this.e_Rndr.vdOnWgtPrmrStaChgd(a_Old, a_New);
 					}
+					return this;
 				}
 				,
 				/// 存取面板
