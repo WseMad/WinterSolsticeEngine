@@ -332,16 +332,18 @@ function fOnIcld(a_Errs)
 				/// 当控件进入呈现目标
 				vdOnWgtEntPrstTgt : function ()
 				{
-					// 把自己的目标摆放到宿主的目标
-					this.cPutSelfTgtToHostTgt();
+					// 如果已绑定Html，把自己的目标摆放到宿主的目标
+					if (this.cHasBndHtml())
+					{ this.cPutSelfTgtToHostTgt(); }
 					return this;
 				}
 				,
-				/// 当控件离开呈现目标
+				/// 如果已绑定Html，当控件离开呈现目标
 				vdOnWgtLeaPrstTgt : function ()
 				{
 					// 从宿主的目标归还自己的目标
-					this.cRtnSelfTgtFromHostTgt();
+					if (this.cHasBndHtml())
+					{ this.cRtnSelfTgtFromHostTgt(); }
 					return this;
 				}
 				,
@@ -478,11 +480,14 @@ function fOnIcld(a_Errs)
 				/// a_Bef：Node，在该节点之前，默认null表最后
 				cPutSelfTgtToHostTgt : function (a_Bef)
 				{
-					// 不要检查，没必要先放到宿主来源里再放入宿主目标
+					if (! this.cHasBndHtml())	// 绑定Html后才有意义
+					{ return this; }
+
 					var l_Wgt = this.cAcsWgt();
 					if (l_Wgt.cIsRoot()) // 根，使用框架
 					{
 						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+						return this;
 					}
 
 					// 非根
@@ -491,6 +496,7 @@ function fOnIcld(a_Errs)
 					if (! l_HostRndr)
 					{ return this; }
 
+					// 不要检查，没必要先放到宿主来源里再放入宿主目标
 					unKnl.fPutToTgt(l_HostRndr.cAcsPutTgt(), l_HostRndr.cAcsPutSrc(), this.e_PutTgt, a_Bef, false);
 					return this;
 				}
@@ -498,11 +504,15 @@ function fOnIcld(a_Errs)
 				/// 从宿主的目标归还自己的目标
 				cRtnSelfTgtFromHostTgt : function ()
 				{
+					if (! this.cHasBndHtml())	// 绑定Html后才有意义
+					{ return this; }
+
 					var l_Wgt = this.cAcsWgt();
 					if (l_Wgt.cIsRoot()) // 根，使用框架
 					{
 						// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
 						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+						return this;
 					}
 
 					// 非根
