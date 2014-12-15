@@ -9,8 +9,34 @@ e_Flag:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+【关于this.cAcsPutTgt()何时插入到文档里】
 
-function fLt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_ToLtUp ? (-l_CamAw + a_Area.c_X) : (a_Area.c_X + l_CamAw); }
+对于Root控件
+当收到i_Ent时，说明所属面板入栈，此时应把this.cAcsPutTgt()加入到框架的呈现目标。
+当收到i_Lea时，说明所属面板离栈，此时应把this.cAcsPutTgt()从框架的呈现目标里移除。
+
+对于其他控件，情况稍有点复杂：
+当收到i_Aded时，说明已加入宿主，但主状态可能＝i_Exit，这时不应加入到Host.cAcsPutTgt()；
+当旧的主状态是i_Exit时（新的一定不是），把this.cAcsPutTgt()加入到Host.cAcsPutTgt()中。	①
+当收到i_Rmvd时，说明已从宿主中移除，此时应把this.cAcsPutTgt()从Host.cAcsPutTgt()中移除	②
+
+->关于主状态的几个要点：
+仅当控件的主状态＝i_Exit时，才能加入到宿主中（即刚加入到宿主中的控件其主状态一定是i_Exit），当控件没有宿主时，拒绝处理主状态变化消息！
+同时，才能从宿主中移除
+
+若主状态＝i_Hide，this.cAcsPutTgt()应该在Host.cAcsPutTgt()里，但把visibility设为hidden，也 参 与 布 局 ！！！
+
+->tRndr修改：
+cPutToHostTgt（添加），cPutToSelfTgt（改名）, cRtnToSelfSrc（改名）
+
+vdOnWgtEntPage：当控件进入页面，由①
+vdOnWgtLeaPage：当控件离开页面，由②
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		function fLt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_ToLtUp ? (-l_CamAw + a_Area.c_X) : (a_Area.c_X + l_CamAw); }
 		function fCt_X(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_Area.c_X; }
 		function fRt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = l_CamAw - a_Area.c_X - a_Area.c_W; }
 
@@ -18,56 +44,54 @@ function fLt(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_X = a_ToLtUp ? (-l_CamAw + a_Ar
 		function fCt_Y(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_Area.c_Y; }
 		function fDn(a_Rst, a_Area, a_ToLtUp)		{ a_Rst.c_Y = a_ToLtUp ? (-l_CamAh + a_Area.c_Y) : (a_Area.c_Y + l_CamAh); }
 
+		// 尺寸不变，位置平移
+		tSara.scAsn(this.e_DsplArea, this.e_Area);
 
+		// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
+		if (this.e_Vwpt)
+		{
+			this.e_DsplArea.c_W = this.e_Vwpt.c_W;
+			this.e_DsplArea.c_H = this.e_Vwpt.c_H;
+		}
 
-// 尺寸不变，位置平移
-					tSara.scAsn(this.e_DsplArea, this.e_Area);
+		var l_Host, l_AccHost = false;
+		if (tRefFrm.i_Prst == this.e_RefFrm)
+		{
+			// 根据视区转换区域位置
+			fCvtArea(this.e_DsplArea, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
+		}
+		else
+		if (tRefFrm.i_Vwpt == this.e_RefFrm)
+		{
+			// 根据宿主视口转换区域位置，累加宿主显示区域位置
+			l_Host = this.e_Host;
+			if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+			{
+				// 注意宿主的视口可能不存在，可使用区域代替（不会用到XY）
+				l_AccHost = true;
+				fCvtArea(this.e_DsplArea, l_Host.e_Vwpt || l_Host.e_Area, true, this.e_DockWay.valueOf());
+			}
+		}
+		else
+	//	if (tRefFrm.i_Host == this.e_RefFrm)
+		{
+			// 根据宿主区域转换区域位置，累加宿主显示区域位置
+			l_Host = this.e_Host;
+			if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
+			{
+				l_AccHost = true;
+				fCvtArea(this.e_DsplArea, l_Host.e_Area, true, this.e_DockWay.valueOf());
 
-					// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
-					if (this.e_Vwpt)
-					{
-						this.e_DsplArea.c_W = this.e_Vwpt.c_W;
-						this.e_DsplArea.c_H = this.e_Vwpt.c_H;
-					}
+				if (l_Host.e_Vwpt)
+				{
+					this.e_DsplArea.c_X -= l_Host.e_Vwpt.c_X;
+					this.e_DsplArea.c_Y -= l_Host.e_Vwpt.c_Y;
+				}
+			}
+		}
 
-					var l_Host, l_AccHost = false;
-					if (tRefFrm.i_Prst == this.e_RefFrm)
-					{
-						// 根据视区转换区域位置
-						fCvtArea(this.e_DsplArea, nPick.stFrmwk.cAcsPrstTgtArea(), true, this.e_DockWay.valueOf());
-					}
-					else
-					if (tRefFrm.i_Vwpt == this.e_RefFrm)
-					{
-						// 根据宿主视口转换区域位置，累加宿主显示区域位置
-						l_Host = this.e_Host;
-						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
-						{
-							// 注意宿主的视口可能不存在，可使用区域代替（不会用到XY）
-							l_AccHost = true;
-							fCvtArea(this.e_DsplArea, l_Host.e_Vwpt || l_Host.e_Area, true, this.e_DockWay.valueOf());
-						}
-					}
-					else
-				//	if (tRefFrm.i_Host == this.e_RefFrm)
-					{
-						// 根据宿主区域转换区域位置，累加宿主显示区域位置
-						l_Host = this.e_Host;
-						if (l_Host) // 注意宿主可能不存在！如控件尚未加入某个宿主或面板
-						{
-							l_AccHost = true;
-							fCvtArea(this.e_DsplArea, l_Host.e_Area, true, this.e_DockWay.valueOf());
-
-							if (l_Host.e_Vwpt)
-							{
-								this.e_DsplArea.c_X -= l_Host.e_Vwpt.c_X;
-								this.e_DsplArea.c_Y -= l_Host.e_Vwpt.c_Y;
-							}
-						}
-					}
-
-					if (l_AccHost)
-					{
-						this.e_DsplArea.c_X += l_Host.e_DsplArea.c_X;
-						this.e_DsplArea.c_Y += l_Host.e_DsplArea.c_Y;
-					}
+		if (l_AccHost)
+		{
+			this.e_DsplArea.c_X += l_Host.e_DsplArea.c_X;
+			this.e_DsplArea.c_Y += l_Host.e_DsplArea.c_Y;
+		}

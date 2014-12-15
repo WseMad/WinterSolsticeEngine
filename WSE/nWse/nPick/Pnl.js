@@ -293,12 +293,13 @@ function fOnIcld(a_Errs)
 						this.cClrFocs();
 					}
 
-					// 如果是进入且根已绑定Html，把根的放置目标摆放到框架的呈现目标
-					if ((i_Code.i_Ent == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
-					{
-						// 把根的放置目标摆放到框架的呈现目标！
-						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
-					}
+					//【移至渲染器】
+					//// 如果是进入且根已绑定Html，把根的放置目标摆放到框架的呈现目标
+					//if ((i_Code.i_Ent == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
+					//{
+					//	// 把根的放置目标摆放到框架的呈现目标！
+					//	unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
+					//}
 
 					// 如果需要，通知根
 					if (l_NtfRoot && this.e_Root)
@@ -307,12 +308,13 @@ function fOnIcld(a_Errs)
 						this.e_Root.vcHdlMsg(a_Msg);
 					}
 
-					// 如果是离开且根已绑定Html，把根的放置目标摆放到框架的呈现目标
-					if ((i_Code.i_Lea == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
-					{
-						// 把根的放置目标归还到框架的呈现来源！【注意】这是必须的，否则该面板仍会出现在呈现目标里！
-						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
-					}
+					//【移至渲染器】
+					//// 如果是离开且根已绑定Html，把根的放置目标摆放到框架的呈现目标
+					//if ((i_Code.i_Lea == a_Msg.c_Code) && this.e_Root.cAcsRndr().cHasBndHtml())
+					//{
+					//	// 把根的放置目标归还到框架的呈现来源！【注意】这是必须的，否则该面板仍会出现在呈现目标里！
+					//	unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.e_Root.cAcsRndr().cAcsPutTgt());
+					//}
 
 					// 如果需要，根成为焦点
 					// 注意这应在通知根后进行！
@@ -535,25 +537,36 @@ function fOnIcld(a_Errs)
 				/// 是否为焦点
 				cIsFoc : function (a_Wgt)
 				{
-					return (this === a_Wgt.cAcsPnl()) && fIsFoc(this, a_Wgt);
+					return !! (a_Wgt && (this === a_Wgt.cAcsPnl()) && fIsFoc(this, a_Wgt));
 				}
 				,
-				/// 存取控件
-				cAcsWgt : function (a_Name)
+				/// 包含控件？
+				cCtanWgt : function (a_Wgt)
 				{
+					return !! (a_Wgt && (this === a_Wgt.cAcsPnl()));
+				}
+				,
+				/// 根据名称存取控件
+				cAcsWgtByName : function (a_Name)
+				{
+					if (! a_Name)
+					{ return null; }
+
 					if (tInrName.i_Root == a_Name)
-					{
-						return this.e_Root;
-					}
-					return this.e_Root ? this.e_Root.cAcsSubWgt(a_Name, true) : null;
+					{ return this.e_Root; }
+
+					return this.e_Root ? this.e_Root.cAcsSubWgtByName(a_Name, true) : null;
 				}
 				,
 				/// 改变控件主状态
-				/// a_Wgt：tWgt，必须是本面板的控件，且不能为根
+				/// a_Wgt：tWgt，必须是本面板的控件，且不能是根，不能是已被收集（等待移除）的控件
 				/// a_New：tPrmrSta，新主状态，不能是i_Semi和i_Foc
 				cChgWgtPrmrSta : function (a_Wgt, a_New)
 				{
 					// 检查实参
+					if ((a_Wgt.e_PrmrSta == a_New)) // 没有变化，立即返回避免引发下面的异常
+					{ return; }
+
 					if (this !== a_Wgt.cAcsPnl())
 					{ throw new Error("a_Wgt所属面板必须是this！"); }
 
@@ -563,8 +576,8 @@ function fOnIcld(a_Errs)
 					if (tPrmrSta.i_Semi <= a_New)
 					{ throw new Error("a_New不能是i_Semi和i_Foc！"); }
 
-					if ((a_Wgt.e_PrmrSta == a_New) || stNumUtil.cGetBit(a_Wgt.e_Flag, 14))
-					{ return; }
+					if (stNumUtil.cGetBit(a_Wgt.e_Flag, 14))
+					{ throw new Error("a_New不能是已被收集（等待移除）的控件！"); }
 
 					// 如果是焦点，上传给可成为焦点的宿主
 					var l_FocHost = fAcsHostCanBeFoc(this, a_Wgt);

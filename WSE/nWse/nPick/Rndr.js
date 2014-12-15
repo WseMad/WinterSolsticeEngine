@@ -324,6 +324,17 @@ function fOnIcld(a_Errs)
 				/// 当控件主状态改变时
 				vdOnWgtPrmrStaChgd : function (a_Old, a_New)
 				{
+					// 进入呈现目标
+					if (tPrmrSta.i_Exit == a_Old)
+					{
+
+					}
+					else // 离开呈现目标
+					if (tPrmrSta.i_Exit == a_New)
+					{
+
+					}
+
 					// 结束主状态动画
 					this.cAcsWgt().cFnshPrmrStaAnmt();
 					return this;

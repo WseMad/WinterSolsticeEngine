@@ -273,8 +273,8 @@ function fOnIcld(a_Errs)
 		var l_Vwpt = a_This.e_Vwpt;
 
 		// 记录当前是否有滚动条
-		var l_Hsb = a_This.cAcsSubWgt(tInrName.i_Hsb, false);
-		var l_Vsb = a_This.cAcsSubWgt(tInrName.i_Vsb, false);
+		var l_Hsb = a_This.cAcsSubWgtByName(tInrName.i_Hsb, false);
+		var l_Vsb = a_This.cAcsSubWgtByName(tInrName.i_Vsb, false);
 
 		// 添加或删除滚动条
 		var l_AddHsb = false, l_AddVsb = false;
@@ -491,14 +491,14 @@ function fOnIcld(a_Errs)
 
 						case i_Code.i_InrWgtDlt:
 						{
-							l_InrWgt = this.cAcsSubWgt(a_Msg.c_Which);
+							l_InrWgt = this.cAcsSubWgtByName(a_Msg.c_Which);
 							if (l_InrWgt)
 							{ this.cAcsPnl().cChgWgtPrmrSta(l_InrWgt, tPrmrSta.i_Exit); }
 						} break;
 
 						case i_Code.i_ChgPrmrSta :
 						{
-							// 已被收集的控件不再更新主状态
+							// 不在面板里或已被收集的控件，不再更新主状态
 							if (stNumUtil.cGetBit(this.e_Flag, 14))
 							{
 								return;
@@ -805,7 +805,7 @@ function fOnIcld(a_Errs)
 					{
 						l_Pnl = l_Pnl.e_Host;
 					}
-					return l_Pnl;
+					return (l_Pnl instanceof nPick.tPnl) ? l_Pnl : null; // 注意，如果宿主尚未加入到面板中，其e_Host为null
 				}
 				,
 				/// 存取根
@@ -1109,8 +1109,9 @@ function fOnIcld(a_Errs)
 					return this;
 				}
 				,
-				/// 存取子控件
-				cAcsSubWgt : function (a_Name, a_Rcur)
+				/// 根据名称存取子控件
+				/// a_Rcur：Boolean，递归搜索子控件宿主？默认false
+				cAcsSubWgtByName : function (a_Name, a_Rcur)
 				{
 					if (! this.cIsHost())
 					{
@@ -1129,7 +1130,7 @@ function fOnIcld(a_Errs)
 						stAryUtil.cFind(this.e_SubWgts,
 							function (a_Ary, a_Idx, a_Wgt)
 							{
-								l_Rst = a_Wgt.cAcsSubWgt(a_Name, true);
+								l_Rst = a_Wgt.cAcsSubWgtByName(a_Name, true);
 								return (null != l_Rst);
 							});
 					}
@@ -1211,35 +1212,14 @@ function fOnIcld(a_Errs)
 			tWgt
 			,
 			{
-				/// 处理消息
-				/// a_Msg：tMsg
-				vcHdlMsg : function (a_Msg)
-				{
-				//	this.odBase(f).odCall(a_Msg);
-					tWgt.prototype.vcHdlMsg.call(this, a_Msg);
-
-					//var i_Code = tMsg.tInrCode;
-					//switch (a_Msg.c_Code)
-					//{
-					//	// 进离栈时，需要通知根渲染器，因为这会影响到呈现目标
-					//	case i_Code.i_Ent:
-					//	{
-					//		if (this.e_Rndr)
-					//		{
-					//			this.e_Rndr.vdOnPnlEnt();
-					//		}
-					//	} break;
-					//
-					//	case i_Code.i_Lea:
-					//	{
-					//		if (this.e_Rndr)
-					//		{
-					//			this.e_Rndr.vdOnPnlLea();
-					//		}
-					//	} break;
-					//}
-					return this;
-				}
+				///// 处理消息
+				///// a_Msg：tMsg
+				//vcHdlMsg : function (a_Msg)
+				//{
+				////	this.odBase(f).odCall(a_Msg);
+				//	tWgt.prototype.vcHdlMsg.call(this, a_Msg);
+				//	return this;
+				//}
 				//,
 				///// 处理输入
 				///// a_Ipt：tIpt
