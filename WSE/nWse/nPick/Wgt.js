@@ -399,6 +399,7 @@ function fOnIcld(a_Errs)
 							if (this === a_Msg.c_Who.e_Host)
 							{
 								// 如果自身主状态不是i_Exit，移除子控件
+								// 否则等待自己的宿主处理，若根为i_Exit表示离栈
 								if (tPrmrSta.i_Exit != this.e_PrmrSta)
 								{
 									fRmv(this, a_Msg.c_Who, true);
@@ -499,7 +500,7 @@ function fOnIcld(a_Errs)
 						case i_Code.i_ChgPrmrSta :
 						{
 							// 不在面板里或已被收集的控件，不再更新主状态
-							if (stNumUtil.cGetBit(this.e_Flag, 14))
+							if ((! this.cAcsPnl()) || stNumUtil.cGetBit(this.e_Flag, 14))
 							{
 								return;
 							}
@@ -528,19 +529,19 @@ function fOnIcld(a_Errs)
 						} break;
 					}
 
-					// 渲染器
-					if (this.e_Rndr)
-					{
-						if (i_Code.i_Ent == a_Msg.c_Code)
-						{
-							this.e_Rndr.vdOnWgtEnt();
-						}
-						else
-						if (i_Code.i_Lea == a_Msg.c_Code)
-						{
-							this.e_Rndr.vdOnWgtLea();
-						}
-					}
+					//// 渲染器
+					//if (this.e_Rndr)
+					//{
+					//	if (i_Code.i_Ent == a_Msg.c_Code)
+					//	{
+					//		this.e_Rndr.vdOnWgtEnt();
+					//	}
+					//	else
+					//	if (i_Code.i_Lea == a_Msg.c_Code)
+					//	{
+					//		this.e_Rndr.vdOnWgtLea();
+					//	}
+					//}
 
 					// 刷新？
 					if (l_Rfsh)
@@ -773,6 +774,12 @@ function fOnIcld(a_Errs)
 					// 如果有渲染器
 					if (this.e_Rndr)
 					{
+						// 进入呈现目标？
+						if (tPrmrSta.i_Exit == a_Old)
+						{
+							this.e_Rndr.vdOnWgtEntPrstTgt();
+						}
+
 						this.e_Rndr.vdOnWgtPrmrStaChgd(a_Old, a_New);
 					}
 
@@ -792,6 +799,13 @@ function fOnIcld(a_Errs)
 					if (tPrmrSta.i_Exit == this.e_PrmrSta)
 					{
 						fSendMsg_PrmrOver(this);
+
+						// 如果有渲染器
+						if (this.e_Rndr)
+						{
+							// 离开呈现目标
+							this.e_Rndr.vdOnWgtLeaPrstTgt();
+						}
 					}
 					return this;
 				}

@@ -324,19 +324,24 @@ function fOnIcld(a_Errs)
 				/// 当控件主状态改变时
 				vdOnWgtPrmrStaChgd : function (a_Old, a_New)
 				{
-					// 进入呈现目标
-					if (tPrmrSta.i_Exit == a_Old)
-					{
-
-					}
-					else // 离开呈现目标
-					if (tPrmrSta.i_Exit == a_New)
-					{
-
-					}
-
 					// 结束主状态动画
 					this.cAcsWgt().cFnshPrmrStaAnmt();
+					return this;
+				}
+				,
+				/// 当控件进入呈现目标
+				vdOnWgtEntPrstTgt : function ()
+				{
+					// 把自己的目标摆放到宿主的目标
+					this.cPutSelfTgtToHostTgt();
+					return this;
+				}
+				,
+				/// 当控件离开呈现目标
+				vdOnWgtLeaPrstTgt : function ()
+				{
+					// 从宿主的目标归还自己的目标
+					this.cRtnSelfTgtFromHostTgt();
 					return this;
 				}
 				,
@@ -362,41 +367,6 @@ function fOnIcld(a_Errs)
 				/// a_IdClo：tClo，标识符颜色
 				vdOnWgtPick : function (a_IdClo)
 				{
-					return this;
-				}
-				,
-				/// 当控件进栈时
-				vdOnWgtEnt : function ()
-				{
-					//var l_Wgt = this.cAcsWgt();
-					//if (l_Wgt.cIsRoot())
-					//{
-					//	// 把自己的放置目标摆放到框架的呈现目标！
-					//	unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					//}
-					//else
-					//{
-					//	// 把自己的放置目标摆放到宿主的放置目标！
-					//	l_Wgt.cAcsHost().cAcsRndr().cApdToSrc(this.cAcsPutTgt()).cPutToTgt(this.cAcsPutTgt());
-					//}
-					return this;
-				}
-				,
-				/// 当控件离栈时
-				vdOnWgtLea : function ()
-				{
-					//var l_Wgt = this.cAcsWgt();
-					//if (l_Wgt.cIsRoot())
-					//{
-					//	// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
-					//	unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
-					//}
-					//else
-					//{
-					//	//【不用了，没必要】
-					//	// 把自己的放置目标归还到宿主的放置来源！
-					////	l_Wgt.cAcsHost().cAcsRndr().cRtnToSrc(this.cAcsPutTgt());
-					//}
 					return this;
 				}
 				,
@@ -457,7 +427,7 @@ function fOnIcld(a_Errs)
 					stCssUtil.cSetPosDim(this.e_PutTgt, l_CSSA.c_X, l_CSSA.c_Y, l_CSSA.c_W, l_CSSA.c_H);
 				}
 				,
-				/// 把来源里的全部内容放入目标
+				/// 把来源里的全部内容放入自己的目标
 				cPutAllToTgt : function ()
 				{
 					var l_This = this;
@@ -469,19 +439,19 @@ function fOnIcld(a_Errs)
 					return this;
 				}
 				,
-				/// 放置元素是否在目标里
+				/// 放置元素是否在自己的目标里
 				cIsPutInTgt : function (a_Put)
 				{
 					return unKnl.fIsPutInTgt(this.e_PutTgt, a_Put);
 				}
 				,
-				/// 放置元素是否在来源里
+				/// 放置元素是否在自己的来源里
 				cIsPutInSrc : function (a_Put)
 				{
 					return unKnl.fIsPutInSrc(this.e_PutSrc, a_Put);
 				}
 				,
-				/// 摆放至目标
+				/// 摆放至自己的目标
 				/// a_Bef：Node，在该节点之前，默认null表最后
 				cPutToTgt : function (a_PutInSrc, a_Bef)
 				{
@@ -489,18 +459,59 @@ function fOnIcld(a_Errs)
 					return this;
 				}
 				,
-				/// 追加到放置来源
+				/// 追加到自己的放置来源
 				cApdToSrc : function (a_Put)
 				{
 					unKnl.fApdToSrc(this.e_PutSrc, a_Put);
 					return this;
 				}
 				,
-				/// 归还至来源
+				/// 归还至自己的来源
 				/// a_Bef：Node，在该节点之前，默认null表最后
 				cRtnToSrc : function (a_PutInTgt, a_Bef)
 				{
 					unKnl.fRtnToSrc(this.e_PutTgt, this.e_PutSrc, a_PutInTgt, a_Bef, true);
+					return this;
+				}
+				,
+				/// 把自己的目标摆放至宿主的目标
+				/// a_Bef：Node，在该节点之前，默认null表最后
+				cPutSelfTgtToHostTgt : function (a_Bef)
+				{
+					// 不要检查，没必要先放到宿主来源里再放入宿主目标
+					var l_Wgt = this.cAcsWgt();
+					if (l_Wgt.cIsRoot()) // 根，使用框架
+					{
+						unKnl.fPutToTgt(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					}
+
+					// 非根
+					var l_Host = l_Wgt.cAcsHost();
+					var l_HostRndr = l_Host && l_Host.cAcsRndr();
+					if (! l_HostRndr)
+					{ return this; }
+
+					unKnl.fPutToTgt(l_HostRndr.cAcsPutTgt(), l_HostRndr.cAcsPutSrc(), this.e_PutTgt, a_Bef, false);
+					return this;
+				}
+				,
+				/// 从宿主的目标归还自己的目标
+				cRtnSelfTgtFromHostTgt : function ()
+				{
+					var l_Wgt = this.cAcsWgt();
+					if (l_Wgt.cIsRoot()) // 根，使用框架
+					{
+						// 把自己的放置目标归还到框架的呈现来源！【注意】这是必须的，否则仍会出现在呈现目标里！
+						unKnl.fRtnToSrc(nPick.stFrmwk.cAcsPrstTgt(), nPick.stFrmwk.cAcsPrstSrc(), this.cAcsPutTgt());
+					}
+
+					// 非根
+					var l_Host = l_Wgt.cAcsHost();
+					var l_HostRndr = l_Host && l_Host.cAcsRndr();
+					if (! l_HostRndr)
+					{ return this; }
+
+					unKnl.fRtnToSrc(l_HostRndr.cAcsPutTgt(), l_HostRndr.cAcsPutSrc(), this.e_PutTgt, null, true);
 					return this;
 				}
 			}

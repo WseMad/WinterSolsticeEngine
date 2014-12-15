@@ -18,6 +18,8 @@ e_Flag:
 对于其他控件，情况稍有点复杂：
 当收到i_Aded时，说明已加入宿主，但主状态可能＝i_Exit，这时不应加入到Host.cAcsPutTgt()；
 当旧的主状态是i_Exit时（新的一定不是），把this.cAcsPutTgt()加入到Host.cAcsPutTgt()中。	①
+不对，这样仍然不行，因为面板可以离栈（所有控件回到i_Exit状态），然后又进栈
+
 当收到i_Rmvd时，说明已从宿主中移除，此时应把this.cAcsPutTgt()从Host.cAcsPutTgt()中移除	②
 
 ->关于主状态的几个要点：
@@ -27,10 +29,11 @@ e_Flag:
 若主状态＝i_Hide，this.cAcsPutTgt()应该在Host.cAcsPutTgt()里，但把visibility设为hidden，也 参 与 布 局 ！！！
 
 ->tRndr修改：
-cPutToHostTgt（添加），cPutToSelfTgt（改名）, cRtnToSelfSrc（改名）
+cPutSelfTgtToHostTgt（添加），cPutToSelfTgt（改名）, cRtnToSelfSrc（改名）
+这几个方法总是检查实参元素是否已经在目的地里了！
 
-vdOnWgtEntPage：当控件进入页面，由①
-vdOnWgtLeaPage：当控件离开页面，由②
+vdOnWgtEntPrstTgt：当控件进入呈现目标，PS：其他   ← i_Exit，不受动画影响	// ①收到i_Ent；②当面板已经呈现时，后加入的控件，只有当主状态从i_Exit变化时
+vdOnWgtLeaPrstTgt：当控件离开呈现目标，PS：i_Exit ← 其他，因动画延迟，收到i_PrprOver或i_Rmvd（收到后者前一定收到过前者）
 
 
 
