@@ -24,7 +24,7 @@ figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video
 {
-	/*box-sizing: border-box;*/		/* 由应用程序决定 */
+	/*box-sizing: border-box;*/
 
 	margin: 0;
 	border: none;

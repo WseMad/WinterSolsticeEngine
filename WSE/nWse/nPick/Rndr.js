@@ -300,6 +300,7 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 控件渲染器
 
+	var tRndr;
 	(function ()
 	{
 		nWse.fClass(tWgt,
@@ -440,36 +441,16 @@ function fOnIcld(a_Errs)
 					var l_CSSA = tSara.scEnsrTemps(1)[0];
 					l_Wgt.cCalcCssArea(l_CSSA);
 
-					// 设置位置，注意对于绝对定位的元素，其左上角从外边距开始算，而非边框，所以位置直接使用CssArea.c_XY就可以了！
-					stCssUtil.cSetPos(this.e_PutTgt, l_CSSA.c_X, l_CSSA.c_Y);
-
 					// 获取盒模型，对齐像素
 					stCssUtil.cGetBoxMdl(this.e_CssBoxMdl, this.cAcsPutTgt(), null, true);
 					stCssUtil.cFillHrztMbp(this.e_CssBoxMdl);
 					stCssUtil.cFillVticMbp(this.e_CssBoxMdl);
-					var l_CBM = this.e_CssBoxMdl;
 
-					// 根据盒模型计算内容宽度，先设置上
-					var l_CtntW = l_CSSA.c_W - l_CBM.c_HrztMbp;
-					var l_CtntH;
-					stCssUtil.cSetDimWid(this.e_PutTgt, l_CtntW);
-
-					// 设置高度
-					if (nWse.fIsNull(l_CSSA.c_H))	// 自动计算
-					{
-						l_CtntH = this.e_PutTgt.offsetHeight - (l_CBM.c_VticBdrThk + l_CBM.c_VticPad);
-					}
-					else
-					if (l_CSSA.c_H < 0)	// 保持宽高比
-					{
-						l_CtntH = (this.e_PutTgt.offsetWidth / -l_CSSA.c_H) - (l_CBM.c_VticBdrThk + l_CBM.c_VticPad);
-					}
-					else // 显示指定
-					{
-						l_CtntH = l_CSSA.c_H - l_CBM.c_VticMbp;
-					}
-
-					stCssUtil.cSetDimHgt(this.e_PutTgt, l_CtntH);
+					// 计算CSS位置尺寸，设置
+					var l_CssPosDim = tSara.scEnsrTemps(tSara.sc_Temps.c_Len + 1)[tSara.sc_Temps.c_Len - 1];
+					tRndr.scCalcCssPosDimByCssArea(l_CssPosDim, l_CSSA, this.e_PutTgt, this.e_CssBoxMdl);
+					stCssUtil.cSetPosDim(this.e_PutTgt, l_CssPosDim.c_X, l_CssPosDim.c_Y, l_CssPosDim.c_W, l_CssPosDim.c_H);
+					return this;
 				}
 				,
 				/// 把来源里的全部元素节点放入自己的目标
@@ -570,6 +551,39 @@ function fOnIcld(a_Errs)
 			}
 			,
 			{
+				/// 根据CSS区域计算CSS位置尺寸
+				/// a_Rst：tSara，可把四个字段直接传给stCssUtil.cSetPosDim
+				/// 返回：a_Rst
+				scCalcCssPosDimByCssArea : function (a_Rst, a_CssArea, a_DomElmt, a_CssBoxMdl)
+				{
+					// 对于绝对定位的元素，其左上角从外边距开始算，而非边框，所以直接使用a_CssArea.c_XY就可以了！
+					a_Rst.c_X = a_CssArea.c_X;
+					a_Rst.c_Y = a_CssArea.c_Y;
+
+					// 根据盒模型计算内容宽度，先设置
+					a_Rst.c_W = a_CssArea.c_W - a_CssBoxMdl.c_HrztMbp;
+
+					// 计算高度
+					var l_CrntWid;
+					if (nWse.fIsNull(a_CssArea.c_H))	// 自动计算
+					{
+						l_CrntWid = a_CssBoxMdl.c_CtntWid;				// 记录当前宽度
+						stCssUtil.cSetDimWid(a_DomElmt, a_Rst.c_W);		// 设置新宽度，box-sizing为border-box时：a_CssArea.c_W - a_CssBoxMdl.c_HrztMgn
+						a_Rst.c_H = a_DomElmt.offsetHeight - (a_CssBoxMdl.c_VticBdrThk + a_CssBoxMdl.c_VticPad);	// 记录高度
+						stCssUtil.cSetDimWid(a_DomElmt, l_CrntWid);		// 还原当前宽度
+					}
+					else
+					if (a_CssArea.c_H < 0)	// 保持宽高比，使offsetWidth / offsetHeight = -a_CssArea.c_H
+					{
+						a_Rst.c_H = (a_DomElmt.offsetWidth / -a_CssArea.c_H) - (a_CssBoxMdl.c_VticBdrThk + a_CssBoxMdl.c_VticPad);
+					}
+					else // 显示指定
+					{
+						a_Rst.c_H = a_CssArea.c_H - a_CssBoxMdl.c_VticMbp;
+					}
+					return a_Rst;
+				}
+
 				///// 公有静态字段
 				//sc_ :
 				//{
@@ -592,6 +606,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 	})();
+	tRndr = tWgt.tRndr;	// IE8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over
