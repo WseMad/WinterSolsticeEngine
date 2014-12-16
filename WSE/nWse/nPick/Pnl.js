@@ -229,7 +229,8 @@ function fOnIcld(a_Errs)
 			/// a_Name：String，名称
 			function tPnl(a_Name)
 			{
-				this.odBase(tPnl).odCall(a_Name);
+			//	this.odBase(tPnl).odCall(a_Name);
+				atPkup.call(this, a_Name);	// IE8
 
 				//---- 定义字段
 

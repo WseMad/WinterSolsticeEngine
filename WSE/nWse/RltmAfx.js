@@ -75,12 +75,12 @@ function fOnIcld(a_Errs)
 		if (l_Fwd) // 正向
 		{
 			for (i=0; i<l_Len; ++i)
-			{ a_Ary[i].apply(null, null); }
+			{ a_Ary[i].call(null); }
 		}
 		else // 反向
 		{
 			for (i = l_Len - 1; i>=0; --i)
-			{ a_Ary[i].apply(null, null); }
+			{ a_Ary[i].call(null); }
 		}
 	}
 
@@ -638,6 +638,7 @@ function fOnIcld(a_Errs)
 			//	,i_Cstm : 3	//【暂不支持】
 			});
 	})();
+	var tRltmAfx = nWse.tRltmAfx;	// IE8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over

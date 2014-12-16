@@ -344,7 +344,8 @@ function fOnIcld(a_Errs)
 			/// a_DockWay：tDockWay，停靠方式，默认tDockWay.i_LtUp
 			function tWgt(a_Name, a_RelLyr, a_RefFrm, a_DockWay)
 			{
-				this.odBase(tWgt).odCall(a_Name);
+			//	this.odBase(tWgt).odCall(a_Name);
+				atPkup.call(this, a_Name, a_RelLyr, a_RefFrm, a_DockWay);	// IE8
 
 				//---- 定义字段
 
@@ -1198,6 +1199,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 	})();
+	tWgt = nPick.tWgt;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 根
@@ -1211,7 +1213,8 @@ function fOnIcld(a_Errs)
 			/// a_DockWay：tDockWay，停靠方式，默认tDockWay.i_LtUp
 			function tRoot(a_Pnl, a_DockWay)
 			{
-				this.odBase(tRoot).odCall(tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);
+			//	this.odBase(tRoot).odCall(tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);
+				tWgt.call(this, tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);	// IE8
 
 				//---- 定义字段
 
@@ -1247,6 +1250,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 	})();
+	tRoot = nPick.tRoot;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over

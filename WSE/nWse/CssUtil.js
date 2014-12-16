@@ -800,6 +800,36 @@ function fOnIcld(a_Errs)
 			return a_Rst;
 		};
 
+		/// 填写水平外边距、边框、内边距
+		/// a_Rst：cGetBoxMdl()返回值，添加：c_HrztMgn，c_HrztBdrThk，c_HrztPad，c_HrztMbp
+		stCssUtil.cFillHrztMbp = function (a_Rst)
+		{
+			//a_Rst.c_MbpLt = a_Rst.c_MgnLt + a_Rst.c_BdrThkLt + a_Rst.c_PadLt;
+			//a_Rst.c_MbpRt = a_Rst.c_PadRt + a_Rst.c_BdrThkRt + a_Rst.c_MgnRt;
+			//a_Rst.c_HrztMbp = a_Rst.c_MbpLt + a_Rst.c_MbpRt;
+
+			a_Rst.c_HrztMgn = a_Rst.c_MgnLt + a_Rst.c_MgnRt;
+			a_Rst.c_HrztBdrThk = a_Rst.c_BdrThkLt + a_Rst.c_BdrThkRt;
+			a_Rst.c_HrztPad = a_Rst.c_PadLt + a_Rst.c_PadRt;
+			a_Rst.c_HrztMbp = a_Rst.c_HrztMgn + a_Rst.c_HrztBdrThk + a_Rst.c_HrztPad;
+			return a_Rst;
+		};
+
+		/// 填写垂直外边距、边框、内边距
+		/// a_Rst：cGetBoxMdl()返回值，添加：c_VticMgn，c_VticBdrThk，c_VticPad，c_VticMbp
+		stCssUtil.cFillVticMbp = function (a_Rst)
+		{
+			//a_Rst.c_MbpUp = a_Rst.c_MgnUp + a_Rst.c_BdrThkUp + a_Rst.c_PadUp;
+			//a_Rst.c_MbpDn = a_Rst.c_PadDn + a_Rst.c_BdrThkDn + a_Rst.c_MgnDn;
+			//a_Rst.c_VticMbp = a_Rst.c_MbpUp + a_Rst.c_MbpDn;
+
+			a_Rst.c_VticMgn = a_Rst.c_MgnUp + a_Rst.c_MgnDn;
+			a_Rst.c_VticBdrThk = a_Rst.c_BdrThkUp + a_Rst.c_BdrThkDn;
+			a_Rst.c_VticPad = a_Rst.c_PadUp + a_Rst.c_PadDn;
+			a_Rst.c_VticMbp = a_Rst.c_VticMgn + a_Rst.c_VticBdrThk + a_Rst.c_VticPad;
+			return a_Rst;
+		};
+
 		/// 获取位置
 		/// a_Rst：Object
 		/// {

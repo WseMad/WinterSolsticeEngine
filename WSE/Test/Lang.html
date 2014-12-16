@@ -118,38 +118,7 @@
 
 			///////////////////////////////////////////////// 接口
 
-			var tRltmAfx = nWse.tRltmAfx;
-			var l_RltmAfx = new tRltmAfx();
-			l_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Upd,
-					function fUnit()
-					{
-						console.log(fUnit.Wse_Prio);
-					}, 0);
 
-			l_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Upd,
-					function fUnit()
-					{
-						console.log(fUnit.Wse_Prio);
-					}, 99);
-
-			l_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Upd,
-					function fUnit()
-					{
-						console.log(fUnit.Wse_Prio);
-					}, -10);
-
-			l_RltmAfx.cRegUnit(tRltmAfx.tFlowStg.i_Upd,
-					function fUnit()
-					{
-						console.log(fUnit.Wse_Prio + " + 1");
-					}, 0);
-
-		//	l_RltmAfx.e_UnitGrp[tRltmAfx.tFlowStg.i_Upd.valueOf()].cFor(true);
-
-			l_RltmAfx.cInit({
-				c_PrstTgt: "k_PrstTgt",
-				c_AdpMode: tRltmAfx.tAdpMode.i_FillPrn
-			});
 		}
 
 		

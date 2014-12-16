@@ -121,16 +121,17 @@ function fOnIcld(a_Errs)
 				throw new Error("构造函数名即为类名，不能为空！");
 			}
 
-			// 如果有非Object的基类，检查构造函数是否调用了基类的构造函数
-			var l_ChkRgx;
-			if ((Object !== a_tBase) && (! nWse.fMaybeNonHtml5Brsr())) // 只在Html5浏览器里检查
-			{
-				l_ChkRgx = new RegExp("this\\.odBase\\(\\s*(?:.*?\\.)?" + l_ClassName + "\\s*\\)\\.odCall\\(");
-				if (! l_ChkRgx.test(a_fCtor.toString()))
-				{
-					nWse.stLog.cPutLine("◆【警告】类“" + a_nHost$tHost.ocBldFullName(l_ClassName) + "”的构造函数可能没有调用基类的构造函数！");
-				}
-			}
+			//【不检查了，为了支持IE8，写法不能统一】
+			//// 如果有非Object的基类，检查构造函数是否调用了基类的构造函数
+			//var l_ChkRgx;
+			//if ((Object !== a_tBase) && (! nWse.fMaybeNonHtml5Brsr())) // 只在Html5浏览器里检查
+			//{
+			//	l_ChkRgx = new RegExp("this\\.odBase\\(\\s*(?:.*?\\.)?" + l_ClassName + "\\s*\\)\\.odCall\\(");
+			//	if (! l_ChkRgx.test(a_fCtor.toString()))
+			//	{
+			//		nWse.stLog.cPutLine("◆【警告】类“" + a_nHost$tHost.ocBldFullName(l_ClassName) + "”的构造函数可能没有调用基类的构造函数！");
+			//	}
+			//}
 
 			// 在宿主名字空间还是宿主类型里？
 			var l_IsHostSpc = nWse.fIsNmspc(a_nHost$tHost);
