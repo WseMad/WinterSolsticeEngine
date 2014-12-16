@@ -333,10 +333,9 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 控件
 
-	var tWgt;
 	(function ()
 	{
-		tWgt = nWse.fClass(nPick,
+		nWse.fClass(nPick,
 			/// 控件
 			/// a_Name：String，名称
 			/// a_RelLyr：Number，相对层次
@@ -734,7 +733,7 @@ function fOnIcld(a_Errs)
 					if (! this.e_Rndr)
 					{
 						var l_tRndr = this.constructor["tRndr"];
-						this.e_Rndr = l_tRndr ? (new l_tRndr(this)) : (new tWgt.tRndr(this));
+						this.e_Rndr = l_tRndr ? (new l_tRndr(this)) : (new nPick.tWgt.tRndr(this));
 					}
 					return this.e_Rndr;
 				}
@@ -1199,22 +1198,20 @@ function fOnIcld(a_Errs)
 			,
 			false);
 	})();
-	tWgt = nPick.tWgt;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 根
 
-	var tRoot;
 	(function ()
 	{
-		tRoot = nWse.fClass(nPick,
+		nWse.fClass(nPick,
 			/// 根
 			/// a_Pnl：面板
 			/// a_DockWay：tDockWay，停靠方式，默认tDockWay.i_LtUp
 			function tRoot(a_Pnl, a_DockWay)
 			{
 			//	this.odBase(tRoot).odCall(tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);
-				tWgt.call(this, tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);	// IE8
+				nPick.tWgt.call(this, tInrName.i_Root, tRelLyr.i_InrUprLmt, tRefFrm.i_Prst, a_DockWay);	// IE8
 
 				//---- 定义字段
 
@@ -1224,7 +1221,7 @@ function fOnIcld(a_Errs)
 				this.e_Host = a_Pnl;
 			}
 			,
-			tWgt
+			nPick.tWgt
 			,
 			{
 				///// 处理消息
@@ -1232,7 +1229,7 @@ function fOnIcld(a_Errs)
 				//vcHdlMsg : function (a_Msg)
 				//{
 				////	this.odBase(f).odCall(a_Msg);
-				//	tWgt.prototype.vcHdlMsg.call(this, a_Msg);
+				//	nPick.tWgt.prototype.vcHdlMsg.call(this, a_Msg);
 				//	return this;
 				//}
 				//,
@@ -1250,7 +1247,6 @@ function fOnIcld(a_Errs)
 			,
 			false);
 	})();
-	tRoot = nPick.tRoot;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over

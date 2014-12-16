@@ -789,6 +789,8 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 获取盒模型
+		/// a_Rst：除了含有cGetCtntWid()和cGetCtntHgt()所含的一切外，
+		/// 还会追加：c_HrztMgn，c_HrztBdrThk，c_HrztPad，c_HrztMbp，c_VticMgn，c_VticBdrThk，c_VticPad，c_VticMbp
 		stCssUtil.cGetBoxMdl = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
@@ -797,31 +799,11 @@ function fOnIcld(a_Errs)
 			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			eGetCtntWid(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			eGetCtntHgt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
-			return a_Rst;
-		};
-
-		/// 填写水平外边距、边框、内边距
-		/// a_Rst：cGetBoxMdl()返回值，添加：c_HrztMgn，c_HrztBdrThk，c_HrztPad，c_HrztMbp
-		stCssUtil.cFillHrztMbp = function (a_Rst)
-		{
-			//a_Rst.c_MbpLt = a_Rst.c_MgnLt + a_Rst.c_BdrThkLt + a_Rst.c_PadLt;
-			//a_Rst.c_MbpRt = a_Rst.c_PadRt + a_Rst.c_BdrThkRt + a_Rst.c_MgnRt;
-			//a_Rst.c_HrztMbp = a_Rst.c_MbpLt + a_Rst.c_MbpRt;
 
 			a_Rst.c_HrztMgn = a_Rst.c_MgnLt + a_Rst.c_MgnRt;
 			a_Rst.c_HrztBdrThk = a_Rst.c_BdrThkLt + a_Rst.c_BdrThkRt;
 			a_Rst.c_HrztPad = a_Rst.c_PadLt + a_Rst.c_PadRt;
 			a_Rst.c_HrztMbp = a_Rst.c_HrztMgn + a_Rst.c_HrztBdrThk + a_Rst.c_HrztPad;
-			return a_Rst;
-		};
-
-		/// 填写垂直外边距、边框、内边距
-		/// a_Rst：cGetBoxMdl()返回值，添加：c_VticMgn，c_VticBdrThk，c_VticPad，c_VticMbp
-		stCssUtil.cFillVticMbp = function (a_Rst)
-		{
-			//a_Rst.c_MbpUp = a_Rst.c_MgnUp + a_Rst.c_BdrThkUp + a_Rst.c_PadUp;
-			//a_Rst.c_MbpDn = a_Rst.c_PadDn + a_Rst.c_BdrThkDn + a_Rst.c_MgnDn;
-			//a_Rst.c_VticMbp = a_Rst.c_MbpUp + a_Rst.c_MbpDn;
 
 			a_Rst.c_VticMgn = a_Rst.c_MgnUp + a_Rst.c_MgnDn;
 			a_Rst.c_VticBdrThk = a_Rst.c_BdrThkUp + a_Rst.c_BdrThkDn;
@@ -838,28 +820,15 @@ function fOnIcld(a_Errs)
 		stCssUtil.cGetPos = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			a_Rst.c_Lt = stCssUtil.cGetPosLt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
-			a_Rst.c_Up = stCssUtil.cGetPosUp(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			a_Rst.c_Lt = parseFloat(a_CmptStl.left);
+			a_Rst.c_Up = parseFloat(a_CmptStl.top);
+			if (a_AlnPxl)
+			{
+				a_Rst.c_Lt = Math.round(a_Rst.c_Lt);
+				a_Rst.c_Up = Math.round(a_Rst.c_Up);
+			}
 			return a_Rst;
 		};
-
-		/// 获取位置左
-		/// a_Rst：忽略（为了与相关API保持签名一致）
-		stCssUtil.cGetPosLt = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
-		{
-			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			var l_Rst = parseFloat(a_CmptStl.left);
-			return a_AlnPxl ? Math.round(l_Rst) : l_Rst;
-		};
-
-		/// 获取位置上
-		stCssUtil.cGetPosUp = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
-		{
-			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
-			var l_Rst = parseFloat(a_CmptStl.top);
-			return a_AlnPxl ? Math.round(l_Rst) : l_Rst;
-		};
-
 
 		/// 清零外边距、边框、内边距
 		/// a_DomElmt：HTMLElement

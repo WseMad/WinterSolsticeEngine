@@ -60,7 +60,6 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 带锁数组
 
-	var tLockAry;
 	(function ()
 	{
 		function fFindOnRegUrg(a_Ary, a_Agms)
@@ -90,7 +89,7 @@ function fOnIcld(a_Errs)
 			return a_This;
 		}
 
-		tLockAry = nWse.fClass(nWse,
+		nWse.fClass(nWse,
 			/// 带锁数组
 			function tLockAry(a_fFind, a_fReg, a_fFor)
 			{
@@ -262,14 +261,13 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 事件处理器数组
 
-	var tEvtHdlrAry;
 	(function ()
 	{
-		tEvtHdlrAry = nWse.fClass(nWse,
+		nWse.fClass(nWse,
 			/// 事件处理器数组
 			function tEvtHdlrAry()
 			{
-				this.e_Ary = new tLockAry(
+				this.e_Ary = new nWse.tLockAry(
 					function fFind(a_Ary, a_Agms)
 					{
 						return stAryUtil.cFind(a_Ary, function (a_Tgt, a_Idx, a_Elmt) { return (a_Elmt === a_Agms[0]); });
@@ -353,25 +351,24 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 对齐屏幕矩形区域
 
-	var tSara;
 	(function ()
 	{
 		function fBndPut(a_Tgt, a_X, a_Y, a_W, a_H, a_DockWhenOvfl)
 		{
-			a_DockWhenOvfl = nWse.fIsUdfnOrNull(a_DockWhenOvfl) ? tSara.tBdrNum.i_LtUp : a_DockWhenOvfl;
+			a_DockWhenOvfl = nWse.fIsUdfnOrNull(a_DockWhenOvfl) ? nWse.tSara.tBdrNum.i_LtUp : a_DockWhenOvfl;
 
 			if (a_Tgt.c_W > a_W) // 水平溢出
 			{
-				if ((tSara.tBdrNum.i_LtUp == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_LtCt == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_LtDn == a_DockWhenOvfl))
+				if ((nWse.tSara.tBdrNum.i_LtUp == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_LtCt == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_LtDn == a_DockWhenOvfl))
 				{
 					a_Tgt.c_X = a_X;
 				}
 				else
-				if ((tSara.tBdrNum.i_CtUp == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_CtCt == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_CtDn == a_DockWhenOvfl))
+				if ((nWse.tSara.tBdrNum.i_CtUp == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_CtCt == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_CtDn == a_DockWhenOvfl))
 				{
 					a_Tgt.c_X = a_X + (a_W - a_Tgt.c_W) / 2;
 				}
@@ -395,16 +392,16 @@ function fOnIcld(a_Errs)
 
 			if (a_Tgt.c_H > a_H) // 垂直溢出
 			{
-				if ((tSara.tBdrNum.i_LtUp == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_CtUp == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_RtUp == a_DockWhenOvfl))
+				if ((nWse.tSara.tBdrNum.i_LtUp == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_CtUp == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_RtUp == a_DockWhenOvfl))
 				{
 					a_Tgt.c_Y = a_Y;
 				}
 				else
-				if ((tSara.tBdrNum.i_LtCt == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_CtCt == a_DockWhenOvfl) ||
-					(tSara.tBdrNum.i_RtCt == a_DockWhenOvfl))
+				if ((nWse.tSara.tBdrNum.i_LtCt == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_CtCt == a_DockWhenOvfl) ||
+					(nWse.tSara.tBdrNum.i_RtCt == a_DockWhenOvfl))
 				{
 					a_Tgt.c_Y = a_Y + (a_H - a_Tgt.c_H) / 2;
 				}
@@ -429,7 +426,7 @@ function fOnIcld(a_Errs)
 			return a_Tgt;
 		}
 
-		tSara = nWse.fClass(nWse,
+		nWse.fClass(nWse,
 			/// 对齐屏幕矩形区域
 			/// 字段：
 			/// c_X：Number，X坐标
@@ -472,16 +469,16 @@ function fOnIcld(a_Errs)
 				,
 				/// 确保临时变量数
 				scEnsrTemps : function (a_Len)
-				{ return nWse.unKnl.fEnsrTemps(tSara, a_Len); }
+				{ return nWse.unKnl.fEnsrTemps(nWse.tSara, a_Len); }
 				,
 				/// 拷贝
 				/// a_Orig：原本
 				/// 返回：副本
 				scCopy : function (a_Orig)
 				{
-					tSara.oeVrfCopyOrig(a_Orig);
+					nWse.tSara.oeVrfCopyOrig(a_Orig);
 
-					var l_Rst = new tSara();
+					var l_Rst = new nWse.tSara();
 					l_Rst.c_X = a_Orig.c_X;		l_Rst.c_Y = a_Orig.c_Y;		l_Rst.c_W = a_Orig.c_W;		l_Rst.c_H = a_Orig.c_H;
 					return l_Rst;
 				}
@@ -492,7 +489,7 @@ function fOnIcld(a_Errs)
 				/// 返回：a_Dst
 				scAsn : function (a_Dst, a_Src)
 				{
-					tSara.oeVrfAsnDstAndSrc(a_Dst, a_Src);
+					nWse.tSara.oeVrfAsnDstAndSrc(a_Dst, a_Src);
 
 					a_Dst.c_X = a_Src.c_X;		a_Dst.c_Y = a_Src.c_Y;		a_Dst.c_W = a_Src.c_W;		a_Dst.c_H = a_Src.c_H;
 					return a_Dst;
@@ -628,14 +625,14 @@ function fOnIcld(a_Errs)
 				/// a_P$S：tPnt$tSara
 				scCtan : function (a_Tgt, a_P$S)
 				{
-					if (a_P$S instanceof tSara)
+					if (a_P$S instanceof nWse.tSara)
 					{
 						return	(a_Tgt.c_X <= a_P$S.c_X) && (a_P$S.c_X + a_P$S.c_W <= a_Tgt.c_X + a_Tgt.c_W) &&
 								(a_Tgt.c_Y <= a_P$S.c_Y) && (a_P$S.c_Y + a_P$S.c_H <= a_Tgt.c_Y + a_Tgt.c_H);
 					}
 					else
 					{
-						return tSara.scCtan$Xy(a_Tgt, a_P.x, a_P.y);
+						return nWse.tSara.scCtan$Xy(a_Tgt, a_P.x, a_P.y);
 					}
 				}
 				,
@@ -650,7 +647,7 @@ function fOnIcld(a_Errs)
 				/// a_Udfn$O：undefined$tSara，若有效则接收交叠区
 				scOvlp : function (a_S1, a_S2, a_Udfn$O)
 				{
-					var l_Rst =	(tSara.scIsEmt(a_S1) || tSara.scIsEmt(a_S2) ||
+					var l_Rst =	(nWse.tSara.scIsEmt(a_S1) || nWse.tSara.scIsEmt(a_S2) ||
 						(a_S1.c_X + a_S1.c_W <= a_S2.c_X) ||
 						(a_S1.c_Y + a_S1.c_H <= a_S2.c_Y) ||
 						(a_S1.c_X >= a_S2.c_X + a_S2.c_W) ||
@@ -789,7 +786,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 
-		nWse.fEnum(tSara,
+		nWse.fEnum(nWse.tSara,
 		/// 边框编号
 		function tBdrNum() {}, null,
 		{
@@ -829,10 +826,9 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 颜色
 
-	var tClo;
 	(function ()
 	{
-		tClo = nWse.fClass(nWse,
+		nWse.fClass(nWse,
 			/// 颜色
 			/// 字段：
 			/// r：Number，红色分量，浮点数
@@ -857,10 +853,10 @@ function fOnIcld(a_Errs)
 				/// 转成Number
 				valueOf : function valueOf()
 				{
-					var l_B0 = tClo.scToCssRgbCpnt(this.r);
-					var l_B1 = tClo.scToCssRgbCpnt(this.g);
-					var l_B2 = tClo.scToCssRgbCpnt(this.b);
-					var l_B3 = tClo.scToCssRgbCpnt(this.a);
+					var l_B0 = nWse.tClo.scToCssRgbCpnt(this.r);
+					var l_B1 = nWse.tClo.scToCssRgbCpnt(this.g);
+					var l_B2 = nWse.tClo.scToCssRgbCpnt(this.b);
+					var l_B3 = nWse.tClo.scToCssRgbCpnt(this.a);
 					return nWse.stNumUtil.cCmbn4Bytes(l_B0, l_B1, l_B2, l_B3);
 				}
 				,
@@ -878,7 +874,7 @@ function fOnIcld(a_Errs)
 				,
 				/// 确保临时变量数
 				scEnsrTemps : function (a_Len)
-				{ return nWse.unKnl.fEnsrTemps(tClo, a_Len); }
+				{ return nWse.unKnl.fEnsrTemps(nWse.tClo, a_Len); }
 				,
 				/// 从RGB新建，A初始化为1
 				/// a_R：Number，红色分量，浮点数
@@ -887,7 +883,7 @@ function fOnIcld(a_Errs)
 				/// 返回：tClo，新建的实例
 				scNew$Rgb : function (a_R, a_G, a_B)
 				{
-					return tClo.scCrt$Rgb(new tClo(), a_R, a_G, a_B);
+					return nWse.tClo.scCrt$Rgb(new nWse.tClo(), a_R, a_G, a_B);
 				}
 				,
 				/// 从RGBA新建
@@ -898,7 +894,7 @@ function fOnIcld(a_Errs)
 				/// 返回：tClo，新建的实例
 				scNew$Rgba : function (a_R, a_G, a_B, a_A)
 				{
-					return tClo.scCrt$Rgba(new tClo(), a_R, a_G, a_B, a_A);
+					return nWse.tClo.scCrt$Rgba(new nWse.tClo(), a_R, a_G, a_B, a_A);
 				}
 				,
 				/// 从RGB创建，A初始化为1
@@ -924,9 +920,9 @@ function fOnIcld(a_Errs)
 				/// 返回：副本
 				scCopy : function (a_Orig)
 				{
-					tClo.oeVrfCopyOrig(a_Orig);
+					nWse.tClo.oeVrfCopyOrig(a_Orig);
 
-					var l_Rst = new tClo();
+					var l_Rst = new nWse.tClo();
 					l_Rst.r = a_Orig.r;	l_Rst.g = a_Orig.g;	l_Rst.b = a_Orig.b;	l_Rst.a = a_Orig.a;
 					return l_Rst;
 				}
@@ -937,7 +933,7 @@ function fOnIcld(a_Errs)
 				/// 返回：a_Dst
 				scAsn : function (a_Dst, a_Src)
 				{
-					tClo.oeVrfAsnDstAndSrc(a_Dst, a_Src);
+					nWse.tClo.oeVrfAsnDstAndSrc(a_Dst, a_Src);
 
 					a_Dst.r = a_Src.r;	a_Dst.g = a_Src.g;	a_Dst.b = a_Src.b;	a_Dst.a = a_Src.a;
 					return a_Dst;
@@ -980,7 +976,7 @@ function fOnIcld(a_Errs)
 				/// 返回：a_Tgt
 				scMul : function (a_Tgt, a_Opd)
 				{
-					if (a_Opd instanceof tClo)	// 颜色 * 颜色
+					if (a_Opd instanceof nWse.tClo)	// 颜色 * 颜色
 					{
 						a_Tgt.r *= a_Opd.r;		a_Tgt.g *= a_Opd.g;		a_Tgt.b *= a_Opd.b;		a_Tgt.a *= a_Opd.a;
 					}
@@ -998,7 +994,7 @@ function fOnIcld(a_Errs)
 				/// 返回：a_Tgt
 				scDiv : function (a_Tgt, a_Opd)
 				{
-					if (a_Opd instanceof tClo)	// 颜色 * 颜色
+					if (a_Opd instanceof nWse.tClo)	// 颜色 * 颜色
 					{
 						a_Tgt.r /= a_Opd.r;		a_Tgt.g /= a_Opd.g;		a_Tgt.b /= a_Opd.b;		a_Tgt.a /= a_Opd.a;
 					}
@@ -1036,7 +1032,7 @@ function fOnIcld(a_Errs)
 					var l_f = stNumUtil.cRand;
 					var l_Lmt = 1.000011;	// 为了分量能达到纯色，稍微比1大一点，即1.00001 / 0.999999
 					a_Tgt.r = l_f(0, l_Lmt);	a_Tgt.g = l_f(0, l_Lmt);	a_Tgt.b = l_f(0, l_Lmt);	a_Tgt.a = l_f(0, l_Lmt);
-					return tClo.scStur(a_Tgt);
+					return nWse.tClo.scStur(a_Tgt);
 				}
 				,
 				/// 线性插值
@@ -1073,7 +1069,7 @@ function fOnIcld(a_Errs)
 				scToCssCloStr : function (a_Tgt)
 				{
 					var l_R, l_G, l_B;
-					l_R = tClo.scToCssRgbCpnt(a_Tgt.r);	l_G = tClo.scToCssRgbCpnt(a_Tgt.g);	l_B = tClo.scToCssRgbCpnt(a_Tgt.b);
+					l_R = nWse.tClo.scToCssRgbCpnt(a_Tgt.r);	l_G = nWse.tClo.scToCssRgbCpnt(a_Tgt.g);	l_B = nWse.tClo.scToCssRgbCpnt(a_Tgt.b);
 					return (1 == a_Tgt.a)
 						? "rgb(" + l_R + ", " + l_G + ", " + l_B + ")"
 						: "rgba(" + l_R + ", " + l_G + ", " + l_B + ", " + a_Tgt.a + ")";
@@ -1085,7 +1081,7 @@ function fOnIcld(a_Errs)
 				scFromCssCloStr : function (a_Tgt)
 				{
 					if ("transparent" == a_Tgt) // IE,FF
-					{ return new tClo(); }
+					{ return new nWse.tClo(); }
 
 					// 规则见《HTML Canvas 2D Context, Level 2》“serialization of a color”
 					// 在这里对标准进行扩展，以支持更随意的手写格式
@@ -1097,28 +1093,28 @@ function fOnIcld(a_Errs)
 					var l_Mch = i_RgxHash.exec(a_Tgt);
 					if (l_Mch)
 					{
-						l_Rst = new tClo();
-						l_Rst.r = tClo.scFromCssRgbCpnt(parseInt(l_Mch[1], 16));
-						l_Rst.g = tClo.scFromCssRgbCpnt(parseInt(l_Mch[2], 16));
-						l_Rst.b = tClo.scFromCssRgbCpnt(parseInt(l_Mch[3], 16));
+						l_Rst = new nWse.tClo();
+						l_Rst.r = nWse.tClo.scFromCssRgbCpnt(parseInt(l_Mch[1], 16));
+						l_Rst.g = nWse.tClo.scFromCssRgbCpnt(parseInt(l_Mch[2], 16));
+						l_Rst.b = nWse.tClo.scFromCssRgbCpnt(parseInt(l_Mch[3], 16));
 						l_Rst.a = 1;
 					}
 					else
 					if (l_Mch = i_RgxRgb.exec(a_Tgt))
 					{
-						l_Rst = new tClo();
-						l_Rst.r = (37 == l_Mch[1].charCodeAt(l_Mch[1].length - 1)) ? (parseFloat(l_Mch[1]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[1]));
-						l_Rst.g = (37 == l_Mch[2].charCodeAt(l_Mch[2].length - 1)) ? (parseFloat(l_Mch[2]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[2]));
-						l_Rst.b = (37 == l_Mch[3].charCodeAt(l_Mch[3].length - 1)) ? (parseFloat(l_Mch[3]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[3]));
+						l_Rst = new nWse.tClo();
+						l_Rst.r = (37 == l_Mch[1].charCodeAt(l_Mch[1].length - 1)) ? (parseFloat(l_Mch[1]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[1]));
+						l_Rst.g = (37 == l_Mch[2].charCodeAt(l_Mch[2].length - 1)) ? (parseFloat(l_Mch[2]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[2]));
+						l_Rst.b = (37 == l_Mch[3].charCodeAt(l_Mch[3].length - 1)) ? (parseFloat(l_Mch[3]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[3]));
 						l_Rst.a = 1;
 					}
 					else
 					if (l_Mch = i_RgxRgba.exec(a_Tgt))
 					{
-						l_Rst = new tClo();
-						l_Rst.r = (37 == l_Mch[1].charCodeAt(l_Mch[1].length - 1)) ? (parseFloat(l_Mch[1]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[1]));
-						l_Rst.g = (37 == l_Mch[2].charCodeAt(l_Mch[2].length - 1)) ? (parseFloat(l_Mch[2]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[2]));
-						l_Rst.b = (37 == l_Mch[3].charCodeAt(l_Mch[3].length - 1)) ? (parseFloat(l_Mch[3]) / 100) : tClo.scFromCssRgbCpnt(parseFloat(l_Mch[3]));
+						l_Rst = new nWse.tClo();
+						l_Rst.r = (37 == l_Mch[1].charCodeAt(l_Mch[1].length - 1)) ? (parseFloat(l_Mch[1]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[1]));
+						l_Rst.g = (37 == l_Mch[2].charCodeAt(l_Mch[2].length - 1)) ? (parseFloat(l_Mch[2]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[2]));
+						l_Rst.b = (37 == l_Mch[3].charCodeAt(l_Mch[3].length - 1)) ? (parseFloat(l_Mch[3]) / 100) : nWse.tClo.scFromCssRgbCpnt(parseFloat(l_Mch[3]));
 						l_Rst.a = (37 == l_Mch[4].charCodeAt(l_Mch[4].length - 1)) ? (parseFloat(l_Mch[4]) / 100) : parseFloat(l_Mch[4]);
 					}
 					return l_Rst;
@@ -1127,52 +1123,52 @@ function fOnIcld(a_Errs)
 			,
 			false);	// fClass提供的比较慢
 
-		nWse.fClassBody(tClo, null,
+		nWse.fClassBody(nWse.tClo, null,
 		{
 			/// 零
-			i_Zero : new tClo()
+			i_Zero : new nWse.tClo()
 			,
 			/// 黑色
-			i_Black : tClo.scNew$Rgba(0, 0, 0, 1)
+			i_Black : nWse.tClo.scNew$Rgba(0, 0, 0, 1)
 			,
 			/// 深灰色
-			i_DarkGray : tClo.scNew$Rgba(0.250981, 0.250981, 0.250981, 1)
+			i_DarkGray : nWse.tClo.scNew$Rgba(0.250981, 0.250981, 0.250981, 1)
 			,
 			/// 中灰色
-			i_MidGray : tClo.scNew$Rgba(0.501961, 0.501961, 0.501961, 1)
+			i_MidGray : nWse.tClo.scNew$Rgba(0.501961, 0.501961, 0.501961, 1)
 			,
 			/// 浅灰色
-			i_LgtGray : tClo.scNew$Rgba(0.752942, 0.752942, 0.752942, 1)
+			i_LgtGray : nWse.tClo.scNew$Rgba(0.752942, 0.752942, 0.752942, 1)
 			,
 			/// 白色
-			i_White : tClo.scNew$Rgba(1, 1, 1, 1)
+			i_White : nWse.tClo.scNew$Rgba(1, 1, 1, 1)
 			,
 			/// 红色
-			i_Red : tClo.scNew$Rgba(1, 0, 0, 1)
+			i_Red : nWse.tClo.scNew$Rgba(1, 0, 0, 1)
 			,
 			/// 橙色
-			i_Orange : tClo.scNew$Rgba(1, 0.501961, 0, 1)
+			i_Orange : nWse.tClo.scNew$Rgba(1, 0.501961, 0, 1)
 			,
 			/// 黄色
-			i_Yellow : tClo.scNew$Rgba(1, 1, 0, 1)
+			i_Yellow : nWse.tClo.scNew$Rgba(1, 1, 0, 1)
 			,
 			/// 绿色
-			i_Green : tClo.scNew$Rgba(0, 1, 0, 1)
+			i_Green : nWse.tClo.scNew$Rgba(0, 1, 0, 1)
 			,
 			/// 青色
-			i_Cyan : tClo.scNew$Rgba(0, 1, 1, 1)
+			i_Cyan : nWse.tClo.scNew$Rgba(0, 1, 1, 1)
 			,
 			/// 蓝色
-			i_Blue : tClo.scNew$Rgba(0, 0, 1, 1)
+			i_Blue : nWse.tClo.scNew$Rgba(0, 0, 1, 1)
 			,
 			/// 紫色
-			i_Purple : tClo.scNew$Rgba(0.501961, 0, 0.501961, 1)
+			i_Purple : nWse.tClo.scNew$Rgba(0.501961, 0, 0.501961, 1)
 			,
 			/// 品红色
-			i_Magenta : tClo.scNew$Rgba(1, 0, 1, 1)
+			i_Magenta : nWse.tClo.scNew$Rgba(1, 0, 1, 1)
 			,
 			/// 中蓝色
-			i_MidBlue : tClo.scNew$Rgba(0, 0, 0.501961, 1)
+			i_MidBlue : nWse.tClo.scNew$Rgba(0, 0, 0.501961, 1)
 		});
 	})();
 

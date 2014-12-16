@@ -55,41 +55,44 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 内部名称
 
-	var tInrName = nWse.fClass(nPick,
-		/// 内部名称
-		function tInrName() {},
-		null,
-		{},
-		{
-			i_Frmwk : "框架",
-			i_Root : "根",
-			i_AreaBdr : "区域边框",
-			i_VwptBdr : "视口边框",
-			i_Hsb : "水平滚动条",
-			i_Vsb : "垂直滚动条",
-			i_Tib : "标题栏",
-			i_Icon : "图标",
-			i_Cptn : "标题",
-			i_Minz : "最小化",
-			i_Nmlz : "常规化",
-			i_Maxz : "最大化",
-			i_Cls : "关闭",
-			i_AnyPkup : "任何拾取物"
-		},
-		false);
-	tInrName = nPick.tInrName;	// IE8
+	(function ()
+	{
+		nWse.fClass(nPick,
+			/// 内部名称
+			function tInrName()
+			{
+			},
+			null,
+			{},
+			{
+				i_Frmwk: "框架",
+				i_Root: "根",
+				i_AreaBdr: "区域边框",
+				i_VwptBdr: "视口边框",
+				i_Hsb: "水平滚动条",
+				i_Vsb: "垂直滚动条",
+				i_Tib: "标题栏",
+				i_Icon: "图标",
+				i_Cptn: "标题",
+				i_Minz: "最小化",
+				i_Nmlz: "常规化",
+				i_Maxz: "最大化",
+				i_Cls: "关闭",
+				i_AnyPkup: "任何拾取物"
+			},
+			false);
+	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 消息
 
-	var tMsg;
 	(function ()
 	{
-		tMsg = nWse.fClass(nPick,
+		nWse.fClass(nPick,
 			/// 消息
 			function tMsg(a_Code, a_Rcvr, a_Sndr)
 			{
-				this.c_Code = nWse.fIsUdfnOrNull(a_Code) ? tMsg.tInrCode.i_Ivld : a_Code;
+				this.c_Code = nWse.fIsUdfnOrNull(a_Code) ? nPick.tMsg.tInrCode.i_Ivld : a_Code;
 				this.c_Rcvr = a_Rcvr || null;
 				this.c_Sndr = a_Sndr || null;
 			}
@@ -106,7 +109,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 
-		nWse.fEnum(tMsg, function tInrCode() {}, null,
+		nWse.fEnum(nPick.tMsg, function tInrCode() {}, null,
 			["ui_GlbBgn", -9999],
 			["i_BrsrMsg", -9999],		// 浏览器消息
 			"i_OnRbndMainCvs",			// 当重绑主画布时
@@ -158,15 +161,13 @@ function fOnIcld(a_Errs)
 			["ui_SpclEnd", -1]
 		);
 	})();
-	tMsg = nPick.tMsg;	// IE8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 各个枚举
 
-	var tRelLyr, tRefFrm, tPrmrSta, tDockWay;
 	(function ()
 	{
-		tRelLyr = nWse.fEnum(nPick,
+		nWse.fEnum(nPick,
 			/// 相对层次
 			function tRelLyr() { }
 			,
@@ -195,7 +196,7 @@ function fOnIcld(a_Errs)
 				i_InrUprLmt : +32767
 			});
 
-		tRefFrm = nWse.fEnum(nPick,
+		nWse.fEnum(nPick,
 			/// 参照系
 			function tRefFrm() { }
 			,
@@ -213,7 +214,7 @@ function fOnIcld(a_Errs)
 			});
 
 		var tSBN_i_ = tSara.tBdrNum;
-		tDockWay = nWse.fEnum(nPick,
+		nWse.fEnum(nPick,
 			/// 停靠方式
 			function tDockWay() { }
 			,
@@ -260,7 +261,7 @@ function fOnIcld(a_Errs)
 				i_FillXY : 12
 			});
 
-		tPrmrSta = nWse.fEnum(nPick,
+		nWse.fEnum(nPick,
 			/// 主状态
 			function tPrmrSta() { }
 			,
@@ -289,10 +290,6 @@ function fOnIcld(a_Errs)
 				i_Foc : 5
 			});
 	})();
-	tRelLyr = nPick.tRelLyr;	// IE8
-	tRefFrm = nPick.tRefFrm;	// IE8
-	tDockWay = nPick.tDockWay;	// IE8
-	tPrmrSta = nPick.tPrmrSta;	// IE8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 拾取物
@@ -314,7 +311,7 @@ function fOnIcld(a_Errs)
 				/// 验证消息接收者
 				cVrfMsgRcvr : function (a_Msg)
 				{
-					if ((this.e_Name != a_Msg.c_Rcvr) && (tInrName.i_AnyPkup != a_Msg.c_Rcvr))
+					if ((this.e_Name != a_Msg.c_Rcvr) && (nPick.tInrName.i_AnyPkup != a_Msg.c_Rcvr))
 					{
 						throw new Error("意外接收到消息：c_Code = "
 						+ a_Msg.c_Code.toString() + "，c_Rcvr = " + a_Msg.c_Rcvr + "，c_Sndr = " + a_Msg.c_Sndr
@@ -359,7 +356,7 @@ function fOnIcld(a_Errs)
 				/// 处理自己发送的消息
 				dHdlMsgFromSelf : function (a_Code, a_Data)
 				{
-					var l_Msg = new tMsg(a_Code, this.e_Name, this.e_Name);
+					var l_Msg = new nPick.tMsg(a_Code, this.e_Name, this.e_Name);
 					if (undefined !== a_Data)
 					{
 						l_Msg.c_Data = a_Data;
