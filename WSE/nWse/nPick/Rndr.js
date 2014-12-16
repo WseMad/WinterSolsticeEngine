@@ -310,6 +310,7 @@ function fOnIcld(a_Errs)
 				this.e_BindHtmlCfg = null;
 				this.e_PutSrc = null;
 				this.e_PutTgt = null;
+				this.e_CssBoxMdl = null;
 			}
 			,
 			null
@@ -332,18 +333,28 @@ function fOnIcld(a_Errs)
 				/// 当控件进入呈现目标
 				vdOnWgtEntPrstTgt : function ()
 				{
-					// 如果已绑定Html，把自己的目标摆放到宿主的目标
+					// 如果已绑定Html
 					if (this.cHasBndHtml())
-					{ this.cPutSelfTgtToHostTgt(); }
+					{
+						// 先把自己的目标摆放到宿主的目标（呈现至呈现目标）
+						// 然后校准自己的目标，这是为了正确计算放置目标的盒模型！
+						// 要正确计算盒模型，需要首先将元素放入最终目的地，
+						// 一是因为CSS选择器盒元素在文档里的位置有关，
+						// 二是因为只有当元素出现在文档里，stCssUtil才有办法正确计算盒模型。
+						this.cPutSelfTgtToHostTgt();
+						this.cRgltPutTgt();
+					}
 					return this;
 				}
 				,
 				/// 如果已绑定Html，当控件离开呈现目标
 				vdOnWgtLeaPrstTgt : function ()
 				{
-					// 从宿主的目标归还自己的目标
+					// 如果已绑定Html
 					if (this.cHasBndHtml())
-					{ this.cRtnSelfTgtFromHostTgt(); }
+					{
+						this.cRtnSelfTgtFromHostTgt();	// 从宿主的目标归还自己的目标
+					}
 					return this;
 				}
 				,
@@ -396,6 +407,7 @@ function fOnIcld(a_Errs)
 					var l_PutTgt = fObtnPutTgt(l_This, a_Cfg, l_PutSrc);
 					l_This.e_PutSrc = l_PutSrc;
 					l_This.e_PutTgt = l_PutTgt;
+					l_This.e_CssBoxMdl = {};		// CSS盒模型
 					return this;
 				}
 				,
@@ -417,7 +429,7 @@ function fOnIcld(a_Errs)
 					return this.e_PutTgt;
 				}
 				,
-				/// 校准放置目标
+				/// 校准放置目标，使外边距＋边框＋内边距＋内容＝区域
 				cRgltPutTgt : function ()
 				{
 					if (! this.cHasBndHtml())
@@ -426,7 +438,14 @@ function fOnIcld(a_Errs)
 					var l_Wgt = this.cAcsWgt();
 					var l_CSSA = tSara.scEnsrTemps(1)[0];
 					l_Wgt.cCalcCssArea(l_CSSA);
-					stCssUtil.cSetPosDim(this.e_PutTgt, l_CSSA.c_X, l_CSSA.c_Y, l_CSSA.c_W, l_CSSA.c_H);
+
+					// 获取盒模型，对齐像素
+					// 注意，对于绝对定位的元素，其左上角从外边距开始算，而非边框，所以位置直接使用CssArea.c_XY就可以了！
+					stCssUtil.cGetBoxMdl(this.e_CssBoxMdl, this.cAcsPutTgt(), null, true);
+					var l_CBM = this.e_CssBoxMdl;
+					stCssUtil.cSetPosDim(this.e_PutTgt, l_CSSA.c_X, l_CSSA.c_Y,
+						l_CSSA.c_W - (l_CBM.c_MgnLt + l_CBM.c_BdrThkLt + l_CBM.c_PadLt + l_CBM.c_PadRt + l_CBM.c_BdrThkRt + l_CBM.c_MgnRt),
+						l_CSSA.c_H - (l_CBM.c_MgnUp + l_CBM.c_BdrThkUp + l_CBM.c_PadUp + l_CBM.c_PadDn + l_CBM.c_BdrThkDn + l_CBM.c_MgnDn));
 				}
 				,
 				/// 把来源里的全部内容放入自己的目标

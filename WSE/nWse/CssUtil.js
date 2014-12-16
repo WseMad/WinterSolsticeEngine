@@ -129,7 +129,7 @@ function fOnIcld(a_Errs)
 		{
 			return	nWse.fIsNum(a_Val) 
 					? (a_Val.toString() + "px")
-					: (a_Val);// || "auto");	// 用空串，以便样式表发挥作用！
+					: (a_Val || "");	// 用空串，以便样式表发挥作用！
 		}
 
 		function eDftAgm(a_Agms)
@@ -229,6 +229,18 @@ function fOnIcld(a_Errs)
 				a_Rst.c_PadUp = Math.round(a_Rst.c_PadUp);
 				a_Rst.c_PadDn = Math.round(a_Rst.c_PadDn);
 			}
+		}
+
+		function eGetCtntWid(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			// 不用对齐像素，因为当a_AlnPxl为true时，相关数据已对齐像素
+			a_Rst.c_CtntWid = a_DomElmt.offsetWidth - a_Rst.c_BdrThkLt - a_Rst.c_PadLt - a_Rst.c_PadRt - a_Rst.c_BdrThkRt;
+		}
+
+		function eGetCtntHgt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			// 不用对齐像素，因为当a_AlnPxl为true时，相关数据已对齐像素
+			a_Rst.c_CtntHgt = a_DomElmt.offsetHeight - a_Rst.c_BdrThkUp - a_Rst.c_PadUp - a_Rst.c_PadDn - a_Rst.c_BdrThkDn;
 		}
 
 		function eGetMinMaxWidHgt(a_Rst, a_CmptStl)
@@ -756,7 +768,7 @@ function fOnIcld(a_Errs)
 			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			stCssUtil.cGetBdrThk(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
-			a_Rst.c_CtntWid = a_DomElmt.offsetWidth - a_Rst.c_BdrThkLt - a_Rst.c_PadLt - a_Rst.c_PadRt - a_Rst.c_BdrThkRt;
+			eGetCtntWid(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 
@@ -772,7 +784,19 @@ function fOnIcld(a_Errs)
 			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			stCssUtil.cGetBdrThk(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
-			a_Rst.c_CtntHgt = a_DomElmt.offsetHeight - a_Rst.c_BdrThkUp - a_Rst.c_PadUp - a_Rst.c_PadDn - a_Rst.c_BdrThkDn;
+			eGetCtntHgt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			return a_Rst;
+		};
+
+		/// 获取盒模型
+		stCssUtil.cGetBoxMdl = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
+		{
+			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
+			stCssUtil.cGetMgn(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			stCssUtil.cGetBdrThk(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			stCssUtil.cGetPad(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			eGetCtntWid(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
+			eGetCtntHgt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl);
 			return a_Rst;
 		};
 

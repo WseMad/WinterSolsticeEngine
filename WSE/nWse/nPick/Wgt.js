@@ -349,21 +349,14 @@ function fOnIcld(a_Errs)
 				//---- 定义字段
 
 				this.e_Host = null;					// 宿主，对于根为tPnl，其他为tWgt
-
 				this.e_Flag = 0;					// 标志
-
 				this.e_Area = new tSara();			// 区域，必有
-			//	this.e_AreaMinWid = 0;				// 区域最小宽度，需要时才添加
-			//	this.e_AreaMinHgt = 0;				// 区域最小高度，需要时才添加
-
-			//	this.e_Vwpt = new tSara();			// 视口，需要时才添加
-
+				this.e_Vwpt = null;					// 视口，需要时才新建
 				this.e_RelLyr = (a_RelLyr || 0).valueOf();	// 注意可能是枚举值，必须显示转换成数字
 				this.e_RefFrm = a_RefFrm || tRefFrm.i_Host;
 				this.e_DockWay = a_DockWay || tDockWay.i_LtUp;
 				this.e_PrmrSta = tPrmrSta.i_Exit;
-
-			//	this.e_SubWgts = [];				// 子控件数组，需要时才添加
+				this.e_SubWgts = null;				// 子控件数组，需要时才新建
 			}
 			,
 			atPkup
@@ -869,11 +862,9 @@ function fOnIcld(a_Errs)
 				/// 设置区域
 				cSetArea$Xywh : function (a_X, a_Y, a_W, a_H)
 				{
-					a_W = Math.max(a_W, this.e_AreaMinWid || 0);
-					a_H = Math.max(a_H, this.e_AreaMinHgt || 0);
-
 					var l_OldArea = tSara.scCopy(this.e_Area);
-					this.e_Area.cCrt(a_X, a_Y, a_W, a_H);
+				//	this.e_Area.cCrt(a_X, a_Y, a_W, a_H);	// 不要调用这个，tSara不允许null值，而控件使用null表自动计算
+					this.e_Area.c_X = a_X;	this.e_Area.c_Y = a_Y;	this.e_Area.c_W = a_W;	this.e_Area.c_H = a_H;
 
 					if (! tSara.scEq(this.e_Area, l_OldArea))
 					{
@@ -1036,18 +1027,25 @@ function fOnIcld(a_Errs)
 					return this.e_PrmrSta;
 				}
 				,
-				/// 计算CSS区域，总是相对于宿主的呈现区，主要用于CSS绝对定位
+				/// 计算CSS区域（含外边距、边框、内边距、内容），总是相对于宿主的呈现区，主要用于CSS绝对定位
 				/// 返回：a_Rst
 				cCalcCssArea : function (a_Rst)
 				{
 					// 尺寸不变，位置平移
-					tSara.scAsn(a_Rst, this.e_Area);
+				//	tSara.scAsn(a_Rst, this.e_Area);	// 不要调用这个，可能会把null变成0
+					a_Rst.c_X = this.e_Area.c_X;
+					a_Rst.c_Y = this.e_Area.c_Y;
 
 					// 如果有视口，显示区域的位置取决于e_Area.c_XY，尺寸取决于e_Vwpt.c_WH
 					if (this.e_Vwpt)
 					{
 						a_Rst.c_W = this.e_Vwpt.c_W;
 						a_Rst.c_H = this.e_Vwpt.c_H;
+					}
+					else
+					{
+						a_Rst.c_W = this.e_Area.c_W;
+						a_Rst.c_H = this.e_Area.c_H;
 					}
 
 					var l_Host;
@@ -1086,7 +1084,7 @@ function fOnIcld(a_Errs)
 					return a_Rst;
 				}
 				,
-				/// 计算呈现区域，总是相对于框架的呈现目标，主要用于拾取
+				/// 计算呈现区域（含外边距、边框、内边距、内容），总是相对于框架的呈现目标，主要用于拾取
 				/// 返回：a_Rst
 				cCalcPrstArea : function (a_Rst)
 				{

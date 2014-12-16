@@ -32,9 +32,16 @@
 			background-color: rgb(203, 233, 207);
 		}
 
+		.cnWse_PrstTgt .cnWse_PutTgt
+		{
+			margin: 5px;
+			border: 1px solid black;
+			padding: 4px;
+		}
+
 		#k_PutTgt_Pnl1_Root
 		{
-			background-color: rgb(255, 0, 255);
+			background-color: rgb(239, 228, 176);
 		}
 	</style>
 </head>
@@ -113,6 +120,7 @@ function fOnIcld(a_Errs)
 	// using
 
 	var nWse = l_Glb.nWse;
+	var tSara = nWse.tSara;
 	var stVtuCsl = nWse.stVtuCsl;
 //	var tFsm = nWse.tFsm;
 	var tPntIptTrkr = nWse.tPntIptTrkr;
@@ -165,20 +173,19 @@ function fOnIcld(a_Errs)
 					l_Wgt.cAcsRndr().vcBindHtml({
 						c_PutSrc: "k_Pnl1_Root"
 						,c_PutTgt: "k_PutTgt_Pnl1_Root"
-					});
-					l_Wgt.cAcsRndr().cRgltPutTgt();
-					l_Wgt.cAcsRndr().cPutAllToTgt();
+					})
+						.cPutAllToTgt();
 
 					{
 						l_Wgt = new nPick.tWgt("k_Pnl1_Para1");
+						l_Wgt.cSetArea$Xywh(100, 100, 100, null);
+						l_Pnl.cAcsRoot().cAdd(l_Wgt);
+
 						l_Wgt.cAcsRndr().vcBindHtml({
 							c_PutSrc: "k_Pnl1_Para1"
 							,c_PutTgt: "k_PutTgt_Pnl1_Para1"
-						});
-					//	l_Wgt.cAcsRndr().cRgltPutTgt();	// 自动计算即可
-						l_Wgt.cAcsRndr().cPutAllToTgt();
-						l_Pnl.cAcsRoot().cAdd(l_Wgt);
-					//	l_Pnl.cAcsRoot().cAcsRndr().cPutToTgt(l_Wgt.cAcsPutTgt());	// 摆到根
+						})
+							.cPutAllToTgt();
 					}
 
 					/*

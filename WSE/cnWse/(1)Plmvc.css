@@ -9,34 +9,36 @@ html, body
 	height: 100%;
 }
 
-/* 实时应用程序框架的呈现目标，控件的放置目标 */
-.cnWse_PrstTgt, .cnWse_PutTgt
+/*
+注意这里罗列的顺序，因为呈现目标一定是放置目标，故把呈现目标列在放置目标的后面！
+来源同理！
+*/
+
+/* 控件的放置目标，实时应用程序框架的呈现目标 */
+.cnWse_PutTgt, .cnWse_PrstTgt
 {
-	width: 100%;			/* 默认全宽全高 */
-	height: 100%;
 	overflow: hidden;		/*【重点】正在动画的元素溢出时导致滚动条出现，隐藏就能避免*/
 }
 
-/* 这些已转移到(0)Rset.css */
-/*.cnWse_PutTgt, .cnWse_PutSrc*/
-/*{*/
-	/*box-sizing: border-box;*/
-	/*margin: 0;*/
-	/*border: none;*/
-	/*padding: 0;*/
-/*}*/
-
-/* 控件的放置目标 */
 .cnWse_PutTgt
 {
 	display: block;
 	position: absolute;		/* 绝对定位（为子元素的绝对定位建立新的参照点）*/
 	left: 0px;				/* 默认在左上角 */
 	top: 0px;
+
+	width: auto;			/* 默认自动计算 */
+	height: auto;			/* 默认自动计算 */
+}
+
+.cnWse_PrstTgt
+{
+	width: 100%;			/* 默认全宽 */
+	height: 100%;			/* 默认全高 */
 }
 
 /* 实时应用程序框架的呈现来源，控件的放置来源 */
-.cnWse_PrstSrc, .cnWse_PutSrc
+.cnWse_PutSrc, .cnWse_PrstSrc
 {
 	display: none;			/*【重点】放置来源不显示 */
 }
