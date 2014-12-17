@@ -54,6 +54,8 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_TempSara0 = new tSara();
+
 	function fSetDmntTchId(a_This, a_TchId)
 	{
 		a_This.e_DmntTchId = a_TchId || null;
@@ -436,11 +438,15 @@ function fOnIcld(a_Errs)
 							// 如果发送者是自己
 							if (a_Msg.c_Sndr == this.e_Name)
 							{
-								// 检查视口是否超出区域，这是一种简便做法
-								this.cMoveVwpt(0, 0);
+								// 如果有视口
+								if (this.e_Vwpt)
+								{
+									// 检查视口是否超出区域，这是一种简便做法
+									this.cMoveVwpt(0, 0);
 
-								// 评估滚动条
-								fEsmtScrlBar(this);
+									// 评估滚动条
+									fEsmtScrlBar(this);
+								}
 							}
 							else // 可能是先辈
 							{
@@ -1094,7 +1100,7 @@ function fOnIcld(a_Errs)
 					var l_HostPA;
 					if ((tRefFrm.i_Prst != this.e_RefFrm) && this.e_Host)
 					{
-						l_HostPA = tSara.scEnsrTemps(tSara.sc_Temps.c_Len + 1)[tSara.sc_Temps.c_Len - 1];
+						l_HostPA = s_TempSara0;
 						this.e_Host.cCalcPrstArea(l_HostPA);
 						a_Rst.c_X += l_HostPA.c_X;
 						a_Rst.c_Y += l_HostPA.c_Y;

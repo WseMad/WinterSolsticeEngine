@@ -56,6 +56,8 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	var s_TempSara0 = new tSara(), s_TempSara1 = new tSara();
+
 	unKnl.fObtnPutSrc = function (a_PutSrc)
 	{
 		// 获取，若不存在则返回
@@ -437,7 +439,7 @@ function fOnIcld(a_Errs)
 
 					// 首先计算控件放置目标的CSS区域
 					var l_Wgt = this.cAcsWgt();
-					var l_CSSA = tSara.scEnsrTemps(1)[0];
+					var l_CSSA = s_TempSara0;
 					l_Wgt.cCalcCssArea(l_CSSA);
 
 					// 获取盒模型，对齐像素
@@ -446,8 +448,8 @@ function fOnIcld(a_Errs)
 
 					// 计算CSS位置尺寸，设置
 					// 另外注意对“tRndr”的访问，为支持IE8
-					var l_CssPosDim = tSara.scEnsrTemps(tSara.sc_Temps.c_Len + 1)[tSara.sc_Temps.c_Len - 1];
-					tWgt.tRndr.scCalcCssPosDimByCssArea(l_CssPosDim, l_CSSA, this.e_PutTgt, l_CmptStl, this.e_CssBoxMdl);
+					var l_CssPosDim = s_TempSara1;
+					tWgt.tRndr.scCalcCssPosDimByCssArea(l_CssPosDim, l_CSSA, this.e_PutTgt, l_CmptStl, this.e_CssBoxMdl, true);
 					stCssUtil.cSetPosDim(this.e_PutTgt, l_CssPosDim.c_X, l_CssPosDim.c_Y, l_CssPosDim.c_W, l_CssPosDim.c_H);
 					return this;
 				}
@@ -553,8 +555,9 @@ function fOnIcld(a_Errs)
 				/// 根据CSS区域计算CSS位置尺寸
 				/// a_Rst：tSara，可把四个字段直接传给stCssUtil.cSetPosDim
 				/// a_CssArea：tSara，CSS区域，调用cCalcCssArea()得到
+				/// a_AlnPxl：Boolean，是否对齐像素
 				/// 返回：a_Rst
-				scCalcCssPosDimByCssArea : function (a_Rst, a_CssArea, a_DomElmt, a_CmptStl, a_CssBoxMdl)
+				scCalcCssPosDimByCssArea : function (a_Rst, a_CssArea, a_DomElmt, a_CmptStl, a_CssBoxMdl, a_AlnPxl)
 				{
 					// 调整实参
 					a_CmptStl = a_CmptStl || stCssUtil.cGetCmptStl(a_DomElmt);
@@ -584,12 +587,17 @@ function fOnIcld(a_Errs)
 					else
 					if (a_CssArea.c_H < 0)	// 保持宽高比，使offsetWidth / offsetHeight = -a_CssArea.c_H
 					{
-						a_Rst.c_H = (a_DomElmt.offsetWidth / -a_CssArea.c_H) -
+						a_Rst.c_H = (a_CssArea.c_W - a_CssBoxMdl.c_HrztMgn) / -a_CssArea.c_H -
 									(l_BdrBoxSizing ? 0 : (a_CssBoxMdl.c_VticBdrThk + a_CssBoxMdl.c_VticPad));
 					}
 					else // 显示指定
 					{
 						a_Rst.c_H = a_CssArea.c_H - (l_BdrBoxSizing ? a_CssBoxMdl.c_VticMgn : a_CssBoxMdl.c_VticMbp);
+					}
+
+					if (a_AlnPxl)
+					{
+						tSara.scAlnPxl(a_Rst);
 					}
 					return a_Rst;
 				}

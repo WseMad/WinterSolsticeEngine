@@ -39,24 +39,6 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
-	function fEnsrTemps(a_tClass, a_Len)
-	{
-		if (! a_tClass.sc_Temps)
-		{ a_tClass.sc_Temps = []; }
-
-		var i, l_Len;
-		if (a_tClass.sc_Temps.length < a_Len)
-		{
-			l_Len = a_Len - a_tClass.sc_Temps.length;
-			for (i = 0; i < l_Len; ++i)
-			{ a_tClass.sc_Temps.push(new a_tClass()); }
-		}
-
-		a_tClass.sc_Temps.c_Len = a_Len;	// 记录这次预留的长度，进一步预留时可能会用到
-		return a_tClass.sc_Temps;
-	}
-	unKnl.fEnsrTemps = fEnsrTemps;
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 带锁数组
 
@@ -464,13 +446,6 @@ function fOnIcld(a_Errs)
 			}
 			,
 			{
-				/// 临时变量数组
-				sc_Temps : null
-				,
-				/// 确保临时变量数
-				scEnsrTemps : function (a_Len)
-				{ return nWse.unKnl.fEnsrTemps(nWse.tSara, a_Len); }
-				,
 				/// 拷贝
 				/// a_Orig：原本
 				/// 返回：副本
@@ -869,13 +844,6 @@ function fOnIcld(a_Errs)
 			}
 			,
 			{
-				/// 临时变量数组
-				sc_Temps : null
-				,
-				/// 确保临时变量数
-				scEnsrTemps : function (a_Len)
-				{ return nWse.unKnl.fEnsrTemps(nWse.tClo, a_Len); }
-				,
 				/// 从RGB新建，A初始化为1
 				/// a_R：Number，红色分量，浮点数
 				/// a_G：Number，绿色分量，浮点数

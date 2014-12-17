@@ -255,13 +255,6 @@ function fOnIcld(a_Errs)
 		}
 		,
 		{
-			/// 临时变量数组
-			sc_Temps : null
-			,
-			/// 确保临时变量数
-			scEnsrTemps : function (a_Len)
-			{ return nWse.unKnl.fEnsrTemps(t4dVct, a_Len); }
-			,
 			/// 拷贝
 			scCopy : function (a_Orig)
 			{
@@ -735,13 +728,6 @@ function fOnIcld(a_Errs)
 		}
 		,
 		{
-			/// 临时变量数组
-			sc_Temps : null
-			,
-			/// 确保临时变量数
-			scEnsrTemps : function (a_Len)
-			{ return nWse.unKnl.fEnsrTemps(t4dMtx, a_Len); }
-			,
 			/// 拷贝
 			scCopy : function (a_Orig)
 			{

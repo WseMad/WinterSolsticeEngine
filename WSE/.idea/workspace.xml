@@ -4,21 +4,21 @@
     <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="187" />
     <bookmark url="file://$PROJECT_DIR$/Test/nUiWgts.html" line="439" />
     <bookmark url="file://$PROJECT_DIR$/Test/CvsWgts.html" line="51" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="754" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="1090" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Rndr.js" line="302" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="760" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="1096" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Rndr.js" line="304" />
     <bookmark url="file://$PROJECT_DIR$/Test/nPick.html" line="47" />
     <bookmark url="file://$PROJECT_DIR$/nWse/RltmAfx.js" line="466" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js" line="951" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="335" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="1204" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="337" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="1210" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Pnl.js" line="223" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="88" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="57" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="167" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="62" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="828" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="353" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="90" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="59" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" line="169" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="44" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="803" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(3)CoreDast.js" line="335" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4380cf6c-33ed-435a-ba83-807757ca52e3" name="Default" comment="" />
@@ -47,8 +47,8 @@
       <file leaf-file-name="nPick.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Test/nPick.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.821428" vertical-offset="456" max-vertical-offset="5814">
-              <caret line="37" column="37" selection-start-line="37" selection-start-column="30" selection-end-line="37" selection-end-column="37" />
+            <state vertical-scroll-proportion="-10.178572" vertical-offset="3021" max-vertical-offset="5814">
+              <caret line="174" column="54" selection-start-line="174" selection-start-column="54" selection-end-line="174" selection-end-column="54" />
               <folding />
             </state>
           </provider>
@@ -57,23 +57,63 @@
       <file leaf-file-name="Wgt.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Wgt.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.2" vertical-offset="22672" max-vertical-offset="23940">
-              <caret line="1210" column="26" selection-start-line="1210" selection-start-column="21" selection-end-line="1210" selection-end-column="26" />
+            <state vertical-scroll-proportion="-8.76" vertical-offset="20719" max-vertical-offset="24054">
+              <caret line="1104" column="24" selection-start-line="1104" selection-start-column="24" selection-end-line="1104" selection-end-column="24" />
               <folding>
-                <marker date="1418718918270" expanded="true" signature="596:27475" placeholder="{...}" />
+                <marker date="1418781376728" expanded="true" signature="596:27516" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Rndr.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="(0)GpuMath.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="13704" max-vertical-offset="14706">
+              <caret line="729" column="9" selection-start-line="729" selection-start-column="9" selection-end-line="729" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="(0)Pkup.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="8380" max-vertical-offset="14535">
+              <caret line="453" column="42" selection-start-line="453" selection-start-column="42" selection-end-line="453" selection-end-column="42" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Rndr.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/nPick/Rndr.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.6086957" vertical-offset="5448" max-vertical-offset="11989">
-              <caret line="444" column="82" selection-start-line="444" selection-start-column="82" selection-end-line="444" selection-end-column="82" />
+            <state vertical-scroll-proportion="-7.24" vertical-offset="8369" max-vertical-offset="12141">
+              <caret line="450" column="49" selection-start-line="450" selection-start-column="49" selection-end-line="450" selection-end-column="49" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="(3)CoreDast.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/nWse/(3)CoreDast.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.40377358" vertical-offset="261" max-vertical-offset="21888">
+              <caret line="27" column="1" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CssUtil.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="6309" max-vertical-offset="36575">
+              <caret line="344" column="58" selection-start-line="344" selection-start-column="58" selection-end-line="344" selection-end-column="58" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -141,14 +181,15 @@
         <option value="$PROJECT_DIR$/Test/Lang.html" />
         <option value="$PROJECT_DIR$/模板/模板代码.txt" />
         <option value="$PROJECT_DIR$/nWse/RltmAfx.js" />
+        <option value="$PROJECT_DIR$/nWse/nPick/Pnl.js" />
+        <option value="$PROJECT_DIR$/cnWse/(0)Rset.css" />
         <option value="$PROJECT_DIR$/Test/nPick.html" />
+        <option value="$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js" />
+        <option value="$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" />
         <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
         <option value="$PROJECT_DIR$/nWse/nPick/Rndr.js" />
         <option value="$PROJECT_DIR$/nWse/nPick/Wgt.js" />
-        <option value="$PROJECT_DIR$/nWse/nPick/Pnl.js" />
-        <option value="$PROJECT_DIR$/nWse/nPick/(0)Pkup.js" />
         <option value="$PROJECT_DIR$/nWse/(3)CoreDast.js" />
-        <option value="$PROJECT_DIR$/cnWse/(0)Rset.css" />
       </list>
     </option>
   </component>
@@ -213,6 +254,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -325,7 +367,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -357,10 +398,14 @@
       <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
       <method />
     </configuration>
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <method />
     </configuration>
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
@@ -368,10 +413,6 @@
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="Chrome" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" config-file="">
-      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
@@ -443,7 +484,7 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931727" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33370662" sideWeight="0.49964765" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33370662" sideWeight="0.49964765" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17118746" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
@@ -456,8 +497,8 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -474,9 +515,9 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16560958" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -502,13 +543,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Test/Media/Bicycle.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27439886" vertical-offset="7064" max-vertical-offset="7771">
-          <caret line="382" column="0" selection-start-line="382" selection-start-column="0" selection-end-line="382" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/cnWse/CmnWgts.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.2135785" vertical-offset="666" max-vertical-offset="15732">
@@ -707,9 +741,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2267" max-vertical-offset="15219">
           <caret line="129" column="16" selection-start-line="129" selection-start-column="16" selection-end-line="129" selection-end-column="16" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -797,7 +828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="27607">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -805,41 +835,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="15163" max-vertical-offset="21755">
           <caret line="822" column="25" selection-start-line="822" selection-start-column="25" selection-end-line="822" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test/nPick.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.821428" vertical-offset="456" max-vertical-offset="5814">
-          <caret line="37" column="37" selection-start-line="37" selection-start-column="30" selection-end-line="37" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nPick/Wgt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.2" vertical-offset="22672" max-vertical-offset="23940">
-          <caret line="1210" column="26" selection-start-line="1210" selection-start-column="21" selection-end-line="1210" selection-end-column="26" />
-          <folding>
-            <marker date="1418718918270" expanded="true" signature="596:27475" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/(3)CoreDast.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6328502" vertical-offset="21668" max-vertical-offset="22496">
-          <caret line="1170" column="33" selection-start-line="1170" selection-start-column="29" selection-end-line="1170" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4684899" vertical-offset="6484" max-vertical-offset="14497">
-          <caret line="364" column="32" selection-start-line="364" selection-start-column="32" selection-end-line="364" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -847,17 +842,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22592153" vertical-offset="0" max-vertical-offset="11552">
           <caret line="12" column="63" selection-start-line="12" selection-start-column="59" selection-end-line="12" selection-end-column="63" />
-          <folding>
-            <marker date="1418718954283" expanded="true" signature="-1:-1" placeholder="{...}" />
-            <marker date="1418718954283" expanded="true" signature="-1:-1" placeholder="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14744352" vertical-offset="15608" max-vertical-offset="36499">
-          <caret line="830" column="10" selection-start-line="830" selection-start-column="10" selection-end-line="830" selection-end-column="10" />
           <folding />
         </state>
       </provider>
@@ -880,13 +864,63 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Test/nPick.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.178572" vertical-offset="3021" max-vertical-offset="5814">
+          <caret line="174" column="54" selection-start-line="174" selection-start-column="54" selection-end-line="174" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="13704" max-vertical-offset="14706">
+          <caret line="729" column="9" selection-start-line="729" selection-start-column="9" selection-end-line="729" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nPick/(0)Pkup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="8380" max-vertical-offset="14535">
+          <caret line="453" column="42" selection-start-line="453" selection-start-column="42" selection-end-line="453" selection-end-column="42" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="6309" max-vertical-offset="36575">
+          <caret line="344" column="58" selection-start-line="344" selection-start-column="58" selection-end-line="344" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nPick/Rndr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.6086957" vertical-offset="5448" max-vertical-offset="11989">
-          <caret line="444" column="82" selection-start-line="444" selection-start-column="82" selection-end-line="444" selection-end-column="82" />
+        <state vertical-scroll-proportion="-7.24" vertical-offset="8369" max-vertical-offset="12141">
+          <caret line="450" column="49" selection-start-line="450" selection-start-column="49" selection-end-line="450" selection-end-column="49" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/nPick/Wgt.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.76" vertical-offset="20719" max-vertical-offset="24054">
+          <caret line="1104" column="24" selection-start-line="1104" selection-start-column="24" selection-end-line="1104" selection-end-column="24" />
+          <folding>
+            <marker date="1418781376728" expanded="true" signature="596:27516" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/(3)CoreDast.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40377358" vertical-offset="261" max-vertical-offset="21888">
+          <caret line="27" column="1" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>

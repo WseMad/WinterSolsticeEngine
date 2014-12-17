@@ -40,6 +40,11 @@ function fOnIcld(a_Errs)
 	var tClo = nWse.tClo;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 静态变量
+
+	var s_TempClo0 = new tClo();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // CSS实用静态类
 
 	var stCssUtil;
@@ -337,8 +342,7 @@ function fOnIcld(a_Errs)
 						else
 						if (6 == l_Item.c_TypeIdx)	// 颜色
 						{
-							tClo.scEnsrTemps(1);
-							l_V = tClo.scLnrItp(tClo.sc_Temps[0], l_Bgn, l_End, l_EsnScl);
+							l_V = tClo.scLnrItp(s_TempClo0, l_Bgn, l_End, l_EsnScl);
 							a_DomElmt.style[l_PN] = tClo.scToCssCloStr(l_V);
 						}
 						else // 其他
