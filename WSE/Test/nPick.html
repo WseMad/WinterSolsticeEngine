@@ -178,7 +178,8 @@ function fOnIcld(a_Errs)
 
 					{
 						l_Wgt = new nPick.tWgt("k_Pnl1_Para1");
-						l_Wgt.cSetArea$Xywh(100, 100, 100, -4/3);
+					//	l_Wgt.cSetArea$Xywh(100, 100, 100, -4/3);
+						l_Wgt.cSetArea$Xywh(null, null, null, -4/3);	// 自动计算，保持宽高比
 						l_Pnl.cAcsRoot().cAdd(l_Wgt);
 
 						l_Wgt.cAcsRndr().vcBindHtml({

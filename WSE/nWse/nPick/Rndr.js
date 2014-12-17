@@ -227,41 +227,6 @@ function fOnIcld(a_Errs)
 		return l_Rst;
 	}
 
-	// 主状态动画函数，确保只有一个实例
-	function fPrmrStaAnmt(a_FrmTime, a_FrmItvl, a_FrmIdx)
-	{
-		var l_Rst = true;
-		var l_Wgt = this.e_Wgt;
-		var l_RootRndr = l_Wgt.cAcsRoot().cAcsRndr();
-		var l_Dur = l_RootRndr.cGetPsaDur();
-		var l_Scl;
-
-		this.e_Psa_AphTimer += a_FrmItvl;
-
-		// 完成
-		if (this.e_Psa_AphTimer > l_Dur)
-		{
-			l_Scl = 1;
-			this.e_Psa_AphTimer = 0;
-			this.e_Psa_Aph = this.e_Psa_AphEnd;
-			l_Rst = false;
-
-			//unKnl.fSetWgtFlag(l_Wgt, 1, false);		// 主状态动画中
-			//
-			//// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
-			//if (tPrmrSta.i_Exit == l_Wgt.e_PrmrSta)
-			//{
-			//	fSendMsg_PrmrOver(l_Wgt);
-			//}
-		}
-		else // 继续
-		{
-			l_Scl = this.e_Psa_AphTimer / l_Dur;
-			this.e_Psa_Aph = stNumUtil.cPrbItp(this.e_Psa_AphBgn, this.e_Psa_AphEnd, l_Scl, false);
-		}
-		return l_Rst;
-	}
-
 	/*
 	 /// 当控件裁剪时
 	 vdOnWgtClip : function ()
@@ -572,7 +537,15 @@ function fOnIcld(a_Errs)
 
 					// 根据盒模型计算内容宽度，先设置
 					var l_BdrBoxSizing = ("boxSizing" in a_CmptStl) && ("border-box" == a_CmptStl.boxSizing);
-					a_Rst.c_W = a_PutArea.c_W - (l_BdrBoxSizing ? a_CssBoxMdl.c_HrztMgn : a_CssBoxMdl.c_HrztMbp);
+					if (nWse.fIsNull(a_PutArea.c_W)) // 自动计算
+					{
+					//	a_Rst.c_W = a_DomElmt.offsetWidth - (l_BdrBoxSizing ? 0 : (a_CssBoxMdl.c_HrztBdrThk + a_CssBoxMdl.c_HrztPad));
+						a_Rst.c_W = a_CssBoxMdl.c_CtntWid;	// 应该与上一行相等！
+					}
+					else // 显示指定
+					{
+						a_Rst.c_W = a_PutArea.c_W - (l_BdrBoxSizing ? a_CssBoxMdl.c_HrztMgn : a_CssBoxMdl.c_HrztMbp);
+					}
 
 					// 计算高度
 					var l_CrntWid;

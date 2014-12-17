@@ -359,6 +359,7 @@ function fOnIcld(a_Errs)
 				this.e_DockWay = a_DockWay || tDockWay.i_LtUp;
 				this.e_PrmrSta = tPrmrSta.i_Exit;
 				this.e_SubWgts = null;				// 子控件数组，需要时才新建
+				this.e_PcdrLot = null;				// 程序化布局，需要时才新建
 			}
 			,
 			atPkup
