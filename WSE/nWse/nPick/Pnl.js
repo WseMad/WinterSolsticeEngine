@@ -128,18 +128,20 @@ function fOnIcld(a_Errs)
 	{
 		// 对于所有先辈宿主，若在就需以下，进入半焦点
 		var l_Msg = new tMsg(tMsg.tInrCode.i_ChgPrmrSta, null, a_This.e_Name);
-		l_Msg.c_New = tPrmrSta.i_Semi;
 
-		fTrvsAncs(a_Foc,
-			function (a_Host)
-			{
-				if (a_Host.e_PrmrSta < l_Msg.c_New)
-				{
-					l_Msg.c_Rcvr = a_Host.e_Name;
-					a_Host.vcHdlMsg(l_Msg);
-				}
-				return true;
-			});
+		//【TODO: 已取消半焦点状态，怎么处理？】
+		//l_Msg.c_New = tPrmrSta.i_Semi;
+		//
+		//fTrvsAncs(a_Foc,
+		//	function (a_Host)
+		//	{
+		//		if (a_Host.e_PrmrSta < l_Msg.c_New)
+		//		{
+		//			l_Msg.c_Rcvr = a_Host.e_Name;
+		//			a_Host.vcHdlMsg(l_Msg);
+		//		}
+		//		return true;
+		//	});
 
 		// 对于焦点，进入焦点
 		l_Msg.c_Rcvr = a_Foc.e_Name;
@@ -560,7 +562,7 @@ function fOnIcld(a_Errs)
 				,
 				/// 改变控件主状态
 				/// a_Wgt：tWgt，必须是本面板的控件，且不能是根，不能是已被收集（等待移除）的控件
-				/// a_New：tPrmrSta，新主状态，不能是i_Semi和i_Foc
+				/// a_New：tPrmrSta，新主状态，不能是i_Foc
 				cChgWgtPrmrSta : function (a_Wgt, a_New)
 				{
 					// 检查实参
@@ -573,8 +575,8 @@ function fOnIcld(a_Errs)
 					if (a_Wgt.cIsRoot())
 					{ throw new Error("a_Wgt不能是根！"); }
 
-					if (tPrmrSta.i_Semi <= a_New)
-					{ throw new Error("a_New不能是i_Semi和i_Foc！"); }
+					if (tPrmrSta.i_Foc == a_New)
+					{ throw new Error("a_New不能是i_Foc！"); }
 
 					if (stNumUtil.cGetBit(a_Wgt.e_Flag, 14))
 					{ throw new Error("a_New不能是已被收集（等待移除）的控件！"); }

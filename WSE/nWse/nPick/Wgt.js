@@ -1033,9 +1033,9 @@ function fOnIcld(a_Errs)
 					return this.e_PrmrSta;
 				}
 				,
-				/// 计算CSS区域（含外边距、边框、内边距、内容），总是相对于宿主的呈现区，主要用于CSS绝对定位
+				/// 计算放置区域（含外边距、边框、内边距、内容），总是相对于宿主的呈现区，可用于CSS绝对定位和画布绘制定位
 				/// 返回：a_Rst
-				cCalcCssArea : function (a_Rst)
+				cCalcPutArea : function (a_Rst)
 				{
 					// 尺寸不变，位置平移
 				//	tSara.scAsn(a_Rst, this.e_Area);	// 不要调用这个，可能会把null变成0
@@ -1096,7 +1096,7 @@ function fOnIcld(a_Errs)
 				{
 					// 先计算CSS区域，总是相对于宿主的呈现区
 					// 然后，非呈现坐标系时，累加宿主的呈现区
-					this.cCalcCssArea(a_Rst);
+					this.cCalcPutArea(a_Rst);
 					var l_HostPA;
 					if ((tRefFrm.i_Prst != this.e_RefFrm) && this.e_Host)
 					{

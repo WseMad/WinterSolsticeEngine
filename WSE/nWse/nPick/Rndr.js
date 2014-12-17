@@ -440,7 +440,7 @@ function fOnIcld(a_Errs)
 					// 首先计算控件放置目标的CSS区域
 					var l_Wgt = this.cAcsWgt();
 					var l_CSSA = s_TempSara0;
-					l_Wgt.cCalcCssArea(l_CSSA);
+					l_Wgt.cCalcPutArea(l_CSSA);
 
 					// 获取盒模型，对齐像素
 					var l_CmptStl = stCssUtil.cGetCmptStl(this.e_PutTgt);
@@ -449,7 +449,7 @@ function fOnIcld(a_Errs)
 					// 计算CSS位置尺寸，设置
 					// 另外注意对“tRndr”的访问，为支持IE8
 					var l_CssPosDim = s_TempSara1;
-					tWgt.tRndr.scCalcCssPosDimByCssArea(l_CssPosDim, l_CSSA, this.e_PutTgt, l_CmptStl, this.e_CssBoxMdl, true);
+					tWgt.tRndr.scCalcCssPosDimByPutArea(l_CssPosDim, l_CSSA, this.e_PutTgt, l_CmptStl, this.e_CssBoxMdl, true);
 					stCssUtil.cSetPosDim(this.e_PutTgt, l_CssPosDim.c_X, l_CssPosDim.c_Y, l_CssPosDim.c_W, l_CssPosDim.c_H);
 					return this;
 				}
@@ -552,31 +552,31 @@ function fOnIcld(a_Errs)
 			}
 			,
 			{
-				/// 根据CSS区域计算CSS位置尺寸
+				/// 根据放置区域计算CSS位置尺寸
 				/// a_Rst：tSara，可把四个字段直接传给stCssUtil.cSetPosDim
-				/// a_CssArea：tSara，CSS区域，调用cCalcCssArea()得到
+				/// a_PutArea：tSara，放置区域，调用cCalcPutArea()得到
 				/// a_AlnPxl：Boolean，是否对齐像素
 				/// 返回：a_Rst
-				scCalcCssPosDimByCssArea : function (a_Rst, a_CssArea, a_DomElmt, a_CmptStl, a_CssBoxMdl, a_AlnPxl)
+				scCalcCssPosDimByPutArea : function (a_Rst, a_PutArea, a_DomElmt, a_CmptStl, a_CssBoxMdl, a_AlnPxl)
 				{
 					// 调整实参
 					a_CmptStl = a_CmptStl || stCssUtil.cGetCmptStl(a_DomElmt);
 					a_CssBoxMdl = a_CssBoxMdl || stCssUtil.cGetBoxMdl({}, a_DomElmt, a_CmptStl, true);
 
-					// 对于绝对定位的元素，其左上角从外边距开始算，而非边框，所以直接使用a_CssArea.c_XY就可以了！
-					a_Rst.c_X = a_CssArea.c_X;
-					a_Rst.c_Y = a_CssArea.c_Y;
+					// 对于绝对定位的元素，其左上角从外边距开始算，而非边框，所以直接使用a_PutArea.c_XY就可以了！
+					a_Rst.c_X = a_PutArea.c_X;
+					a_Rst.c_Y = a_PutArea.c_Y;
 
 					// 接下来计算宽高……
 					// 注意box-sizing对宽高计算的影响！
 
 					// 根据盒模型计算内容宽度，先设置
 					var l_BdrBoxSizing = ("boxSizing" in a_CmptStl) && ("border-box" == a_CmptStl.boxSizing);
-					a_Rst.c_W = a_CssArea.c_W - (l_BdrBoxSizing ? a_CssBoxMdl.c_HrztMgn : a_CssBoxMdl.c_HrztMbp);
+					a_Rst.c_W = a_PutArea.c_W - (l_BdrBoxSizing ? a_CssBoxMdl.c_HrztMgn : a_CssBoxMdl.c_HrztMbp);
 
 					// 计算高度
 					var l_CrntWid;
-					if (nWse.fIsNull(a_CssArea.c_H))	// 自动计算
+					if (nWse.fIsNull(a_PutArea.c_H))	// 自动计算
 					{
 						l_CrntWid = l_BdrBoxSizing ? a_DomElmt.offsetWidth : a_CssBoxMdl.c_CtntWid;		// 记录当前宽度
 						stCssUtil.cSetDimWid(a_DomElmt, a_Rst.c_W);		// 设置新宽度
@@ -585,14 +585,14 @@ function fOnIcld(a_Errs)
 						stCssUtil.cSetDimWid(a_DomElmt, l_CrntWid);		// 还原当前宽度
 					}
 					else
-					if (a_CssArea.c_H < 0)	// 保持宽高比，使offsetWidth / offsetHeight = -a_CssArea.c_H
+					if (a_PutArea.c_H < 0)	// 保持宽高比，使offsetWidth / offsetHeight = -a_PutArea.c_H
 					{
-						a_Rst.c_H = (a_CssArea.c_W - a_CssBoxMdl.c_HrztMgn) / -a_CssArea.c_H -
+						a_Rst.c_H = (a_PutArea.c_W - a_CssBoxMdl.c_HrztMgn) / -a_PutArea.c_H -
 									(l_BdrBoxSizing ? 0 : (a_CssBoxMdl.c_VticBdrThk + a_CssBoxMdl.c_VticPad));
 					}
 					else // 显示指定
 					{
-						a_Rst.c_H = a_CssArea.c_H - (l_BdrBoxSizing ? a_CssBoxMdl.c_VticMgn : a_CssBoxMdl.c_VticMbp);
+						a_Rst.c_H = a_PutArea.c_H - (l_BdrBoxSizing ? a_CssBoxMdl.c_VticMgn : a_CssBoxMdl.c_VticMbp);
 					}
 
 					if (a_AlnPxl)

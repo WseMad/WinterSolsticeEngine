@@ -273,20 +273,20 @@ function fOnIcld(a_Errs)
 				/// 退出
 				i_Exit : -1
 				,
-				/// 隐藏
+				/// 隐藏（不参与布局）
 				i_Hide : 0
 				,
+				/// 不可见（参与布局）
+				i_Ivsb : 1
+				,
 				/// 禁用
-				i_Dsab : 1
+				i_Dsab : 2
 				,
 				/// 等待
-				i_Wait : 2
+				i_Wait : 3
 				,
 				/// 就绪
-				i_Rdy : 3
-				,
-				/// 半焦点
-				i_Semi : 4
+				i_Rdy : 4
 				,
 				/// 焦点
 				i_Foc : 5
