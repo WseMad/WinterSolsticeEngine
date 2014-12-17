@@ -208,11 +208,11 @@ function fOnIcld(a_Errs)
 				/// 呈现坐标系
 				i_Prst : 0
 				,
-				/// 视口坐标系
-				i_Vwpt : 1
-				,
 				/// 宿主坐标系
-				i_Host : 2
+				i_Host : 1
+				,
+				/// 视口坐标系
+				i_Vwpt : 2
 			});
 
 		var tSBN_i_ = tSara.tBdrNum;

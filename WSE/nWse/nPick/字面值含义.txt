@@ -51,6 +51,13 @@ vdOnWgtLeaPrstTgt：当控件离开呈现目标，PS：≤i_Hide ← ＞i_Hide�
 仍然像以前那样自动创建Boa和Col，只是现在把Put从以前的DOM元素改成tWgt，只操纵PutArea；
 但要注意：不能先布局，再把PutTgt放入呈现目标，因为布局需要知道PutArea，而对他的计算又依赖于先把PutTgt放入呈现目标（自动高度计算）！
 
+->流程：
+①新建面板，把控件树构建完毕
+②打开面板，当面板入栈时会收到i_Ent消息，所有控件也都会收到，每个宿主控件都运行布局（如果e_Lot有效）
+③tLot.vcRun算法：
+	遍历e_Wgt的每个子控件，根据其PutArea的设置摆放（stCssUtil，或画布绘制……），
+
+	★注意：布局回调渲染器，布局只工作在Wgt和PutArea基础上！
 
 
 

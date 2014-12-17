@@ -19,7 +19,7 @@
 	//@ 包含
 	l_Glb.nWse.stAsynIcld.cFromLib("nWse:nPick",
 		[
-			"Wgt.js"
+			"Lot.js"
 		]
 		,
 		fOnIcld);
@@ -308,6 +308,7 @@ function fOnIcld(a_Errs)
 						// 要正确计算盒模型，需要首先将元素放入最终目的地，
 						// 一是因为CSS选择器盒元素在文档里的位置有关，
 						// 二是因为只有当元素出现在文档里，stCssUtil才有办法正确计算盒模型。
+					//	this.cRgltPutTgt();
 						this.cPutSelfTgtToHostTgt();
 						this.cRgltPutTgt();
 					}

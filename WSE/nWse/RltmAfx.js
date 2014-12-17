@@ -216,6 +216,8 @@ function fOnIcld(a_Errs)
 	// 初始化
 	function fInit(a_This)
 	{
+		var tRltmAfx = nWse.tRltmAfx;
+
 		// 如果在循环里
 		if (a_This.e_InLoop)
 		{ throw new Error("初始化失败，必须首先停止"); }
@@ -253,6 +255,8 @@ function fOnIcld(a_Errs)
 	// 停止
 	function fStop(a_This)
 	{
+		var tRltmAfx = nWse.tRltmAfx;
+
 		// 如果在循环里
 		if (a_This.e_InLoop)
 		{
@@ -322,7 +326,7 @@ function fOnIcld(a_Errs)
 
 	// 暂停渲染
 	function fPauRnd(a_This)
-	{ ++ e_PauRnd; }
+	{ ++ a_This.e_PauRnd; }
 
 	/// 继续更新
 	function fRsmUpd(a_This)
@@ -335,6 +339,7 @@ function fOnIcld(a_Errs)
 	// 一帧
 	function fOneFrm(a_FrmTime, a_FrmItvl, a_FrmNum)
 	{
+		var tRltmAfx = nWse.tRltmAfx;
 		var l_This = this;
 
 		// 如果请求停止
@@ -463,10 +468,9 @@ function fOnIcld(a_Errs)
 	//		↓
 	// 		Exit（退出）
 
-	var tRltmAfx;
 	(function ()
 	{
-		tRltmAfx = nWse.fClass(nWse,
+		nWse.fClass(nWse,
 			/// 实时应用程序框架
 			function tRltmAfx()
 			{
@@ -602,7 +606,7 @@ function fOnIcld(a_Errs)
 			,
 			false);
 
-		nWse.fEnum(tRltmAfx,
+		nWse.fEnum(nWse.tRltmAfx,
 			/// 流程阶段
 			function tFlowStg() {},
 			null,
@@ -623,7 +627,7 @@ function fOnIcld(a_Errs)
 				i_Rnd : 6
 			});
 
-		nWse.fEnum(tRltmAfx,
+		nWse.fEnum(nWse.tRltmAfx,
 			/// 自适应模式
 			function tAdpMode() {},
 			null,
@@ -638,7 +642,6 @@ function fOnIcld(a_Errs)
 			//	,i_Cstm : 3	//【暂不支持】
 			});
 	})();
-	var tRltmAfx = nWse.tRltmAfx;	// IE8
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over

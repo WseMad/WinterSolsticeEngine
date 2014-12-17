@@ -54,6 +54,7 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+//	var s_TempWH = { c_W: 0, c_H: 0 };
 	var s_TempSara0 = new tSara();
 
 	function fSetDmntTchId(a_This, a_TchId)
@@ -359,7 +360,7 @@ function fOnIcld(a_Errs)
 				this.e_DockWay = a_DockWay || tDockWay.i_LtUp;
 				this.e_PrmrSta = tPrmrSta.i_Exit;
 				this.e_SubWgts = null;				// 子控件数组，需要时才新建
-				this.e_PcdrLot = null;				// 程序化布局，需要时才新建
+				this.e_Lot = null;					// 布局，需要时才新建
 			}
 			,
 			atPkup
@@ -751,7 +752,35 @@ function fOnIcld(a_Errs)
 					this.e_Rndr = a_Rndr || null;
 					if (this.e_Rndr)
 					{
-						this.e_Rndr.d_Wgt = this;	// 记录控件
+						this.e_Rndr.e_Wgt = this;	// 记录控件
+					}
+					return this;
+				}
+				,
+				/// 有布局？
+				cHasLot : function ()
+				{
+					return (null != this.e_Lot);
+				}
+				,
+				/// 存取布局
+				/// 如果还没有布局，则新建一个tLot实例
+				cAcsLot : function ()
+				{
+					if (! this.e_Lot)
+					{
+						this.e_Lot = new nPick.tLot(this);
+					}
+					return this.e_Lot;
+				}
+				,
+				/// 使用布局
+				cUseLot : function (a_Lot)
+				{
+					this.e_Lot = a_Lot || null;
+					if (this.e_Lot)
+					{
+						this.e_Lot.e_Wgt = this;	// 记录控件
 					}
 					return this;
 				}
@@ -861,8 +890,9 @@ function fOnIcld(a_Errs)
 					}
 					else
 					{
-						var l_PTA = nPick.stFrmwk.cAcsPrstTgtArea();
-						return this.cSetArea$Xywh(l_PTA.c_X, l_PTA.c_Y, l_PTA.c_W, l_PTA.c_H);
+						//var l_PTA = nPick.stFrmwk.cAcsPrstTgtArea();	// 获取时现算！
+						//return this.cSetArea$Xywh(l_PTA.c_X, l_PTA.c_Y, l_PTA.c_W, l_PTA.c_H);
+						return this.cSetArea$Xywh(null, null, null, null);
 					}
 				}
 				,
@@ -1039,7 +1069,6 @@ function fOnIcld(a_Errs)
 				cCalcPutArea : function (a_Rst)
 				{
 					// 尺寸不变，位置平移
-				//	tSara.scAsn(a_Rst, this.e_Area);	// 不要调用这个，可能会把null变成0
 					a_Rst.c_X = this.e_Area.c_X;
 					a_Rst.c_Y = this.e_Area.c_Y;
 
@@ -1128,6 +1157,12 @@ function fOnIcld(a_Errs)
 					return this;
 				}
 				,
+				/// 存取子控件，若没有返回null或空数组
+				cAcsSubWgts : function ()
+				{
+					return this.cAcsRndr();
+				}
+				,
 				/// 根据名称存取子控件
 				/// a_Rcur：Boolean，递归搜索子控件宿主？默认false
 				cAcsSubWgtByName : function (a_Name, a_Rcur)
@@ -1179,6 +1214,7 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 获取子控件总数
+				/// a_Rcur：Boolean，递归统计？
 				cGetSubWgtsTot : function (a_Rcur)
 				{
 					if ((! this.e_SubWgts) || (0 == this.e_SubWgts.length))
