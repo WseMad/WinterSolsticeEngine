@@ -192,7 +192,7 @@ function fOnIcld(a_Errs)
 				/// 遍历
 				cFor : function (a___)
 				{
-					//---- 遍历
+					//---- 遍历，注意当长度为0时不要立即返回，后面还有更新需要进行！
 
 					if (this.e_Ary && (this.e_Ary.length > 0))
 					{

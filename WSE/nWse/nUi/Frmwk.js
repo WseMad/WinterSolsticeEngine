@@ -81,7 +81,7 @@ function fOnIcld(a_Errs)
 		var e_PickFrqc = 0.2;		// 拾取频率：默认每秒5次
 		var e_PickTmrId = null;		// 计时器ID
 		var e_CltSara = null;		// 客户区
-		var e_PickCvs = null;		// 拾取画布
+		var e_PickCanv = null;		// 拾取画布
 		var e_PickCtxt = null;		// 拾取上下文
 		var e_PickAllPuts = null;	// 全部放置元素
 		var e_Picker = null;		// 拾取器
@@ -229,16 +229,16 @@ function fOnIcld(a_Errs)
 			}
 
 			// 创建拾取画布，对齐页面客户区
-			if (! e_PickCvs)
+			if (! e_PickCanv)
 			{
-				e_PickCvs = document.createElement("canvas");
-				eUpdPickCvsDim();
+				e_PickCanv = document.createElement("canvas");
+				eUpdPickCanvDim();
 
 				// 上下文
 				if (! e_PickCtxt)
 				{ e_PickCtxt = new t2dCtxt(); }
 
-				e_PickCtxt.cBindCvs(e_PickCvs);
+				e_PickCtxt.cBindCanv(e_PickCanv);
 				e_PickCtxt.cSetDrawMthd(1);
 			}
 
@@ -388,13 +388,13 @@ function fOnIcld(a_Errs)
 			}
 
 			// 如果需要，初始化拾取系统
-			if (! e_PickCvs)
+			if (! e_PickCanv)
 			{ eInitPickSys(); }
 			else // 更新拾取画布尺寸
-			{ eUpdPickCvsDim(); }
+			{ eUpdPickCanvDim(); }
 
 			// 计算客户区
-			e_CltSara.cCrt$Wh(e_PickCvs.width, e_PickCvs.height);
+			e_CltSara.cCrt$Wh(e_PickCanv.width, e_PickCanv.height);
 
 			// 记录待定触点
 			stAryUtil.cShlwAsn(e_Picker.e_PendTchs, a_Ipt.c_Tchs);
@@ -465,16 +465,16 @@ function fOnIcld(a_Errs)
 		}
 
 		// 更新拾取画布尺寸
-		function eUpdPickCvsDim()
+		function eUpdPickCanvDim()
 		{
-			if (! e_PickCvs)
+			if (! e_PickCanv)
 			{ return; }
 
-			if (e_PickCvs.width != stDomUtil.cGetVwptWid())
-			{ e_PickCvs.width = stDomUtil.cGetVwptWid(); }
+			if (e_PickCanv.width != stDomUtil.cGetVwptWid())
+			{ e_PickCanv.width = stDomUtil.cGetVwptWid(); }
 
-			if (e_PickCvs.height != stDomUtil.cGetVwptHgt())
-			{ e_PickCvs.height = stDomUtil.cGetVwptHgt(); }
+			if (e_PickCanv.height != stDomUtil.cGetVwptHgt())
+			{ e_PickCanv.height = stDomUtil.cGetVwptHgt(); }
 		}
 
 		// 输入处理器

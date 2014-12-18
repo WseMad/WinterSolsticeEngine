@@ -385,7 +385,7 @@ function fOnIcld(a_Errs)
 					var i_Code = tMsg.tInrCode;
 					switch (a_Msg.c_Code)
 					{
-						//case i_Code.i_OnRbndMainCvs:	// 原因详见stFrmwk里的eSendMsg_OnRbndMainCvs()
+						//case i_Code.i_OnRbndMainCanv:	// 原因详见stFrmwk里的eSendMsg_OnRbndMainCanv()
 						//	{
 						//		l_NtfSubWgts = true;
 						//	} break;
@@ -764,12 +764,12 @@ function fOnIcld(a_Errs)
 				}
 				,
 				/// 存取布局
-				/// 如果还没有布局，则新建一个tLot实例
+				/// 如果还没有布局，则新建一个tPcdrLot实例
 				cAcsLot : function ()
 				{
 					if (! this.e_Lot)
 					{
-						this.e_Lot = new nPick.tLot(this);
+						this.e_Lot = new nPick.tPcdrLot(this);
 					}
 					return this.e_Lot;
 				}

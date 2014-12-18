@@ -73,7 +73,7 @@ function fOnIcld(a_Errs)
 
 	function fRset(a_This)
 	{
-		a_This.d_Cvs = null;
+		a_This.d_Canv = null;
 		a_This.d_2dCtxt = null;
 		a_This.d_Path = null;
 
@@ -91,7 +91,7 @@ function fOnIcld(a_Errs)
 
 		// 控件集
 		a_This.d_WgtSet = null;
-		a_This.d_DivCvsDta = -1;	// -1表示待计算
+		a_This.d_DivCanvDta = -1;	// -1表示待计算
 
 		// 张贴，拷贝一份
 		a_This.d_PostAry = s_PostAry.slice(0);
@@ -132,7 +132,7 @@ function fOnIcld(a_Errs)
 				l_This.d_ArAry = l_This.dGetDomNodesByAttr("Wse_Ar", false);
 
 				// 新建画布，面板，控件集
-				l_This.dNewCvs();
+				l_This.dNewCanv();
 				l_This.dNewPnl();
 				l_This.dNewWgtSet();
 
@@ -174,9 +174,9 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 
 				// 把画布和面板摆放到目标
-				if (l_This.d_Cvs)
+				if (l_This.d_Canv)
 				{
-					l_This.dPutToTgt(l_This.d_Cvs);
+					l_This.dPutToTgt(l_This.d_Canv);
 				}
 
 //				if (l_This.d_Pnl)
@@ -259,7 +259,7 @@ function fOnIcld(a_Errs)
 
 				// 修正放置目标和画布尺寸
 				var l_OfstWid = l_This.dGetPutTgtOfstWid();
-				l_This.dFixPutTgtAndCvsDim(l_OfstWid);
+				l_This.dFixPutTgtAndCanvDim(l_OfstWid);
 
 				// 修正控件位置尺寸
 				l_This.dFixWgtsPosDim(l_OfstWid);
@@ -345,13 +345,13 @@ function fOnIcld(a_Errs)
 				l_This.d_PlayIdx = stNumUtil.cClmOnNum(l_This.d_PlayIdx, -1, l_This.cGetSldTot() - 1);
 
 				// 若尚未建立画布，立即返回，等到建立后再修正
-				if (! l_This.d_Cvs)
+				if (! l_This.d_Canv)
 				{ return this; }
 
 				// 画布已建立……
 				// 修正放置目标和画布尺寸
-				var l_OfstWid = l_This.d_Cvs.width;	// 保持宽度不变
-				l_This.dFixPutTgtAndCvsDim(l_OfstWid);
+				var l_OfstWid = l_This.d_Canv.width;	// 保持宽度不变
+				l_This.dFixPutTgtAndCanvDim(l_OfstWid);
 
 				// 修正控件位置尺寸
 				l_This.dFixWgtsPosDim(l_OfstWid);
@@ -392,14 +392,14 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 新建画布
-			dNewCvs : function ()
+			dNewCanv : function ()
 			{
 				var l_This = this;
 
-				l_This.d_Cvs = document.createElement("canvas");
-				l_This.dApdToSrc(l_This.d_Cvs);				// 放入来源
+				l_This.d_Canv = document.createElement("canvas");
+				l_This.dApdToSrc(l_This.d_Canv);				// 放入来源
 				l_This.d_2dCtxt = new t2dCtxt();			// 创建上下文
-				l_This.d_2dCtxt.cBindCvs(l_This.d_Cvs);		// 绑定画布
+				l_This.d_2dCtxt.cBindCanv(l_This.d_Canv);		// 绑定画布
 				l_This.d_Path = new tPath();				// 创建路径
 
 				return this;
@@ -589,29 +589,29 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 修正放置目标和画布尺寸
-			dFixPutTgtAndCvsDim : function (a_OfstWid)
+			dFixPutTgtAndCanvDim : function (a_OfstWid)
 			{
 				a_OfstWid = Math.round(a_OfstWid);
 
 				var l_This = this;
-				if ((! l_This.d_Cvs) || (l_This.d_Cvs.width == a_OfstWid)) // 无变化
+				if ((! l_This.d_Canv) || (l_This.d_Canv.width == a_OfstWid)) // 无变化
 				{ return l_This; }
 
-				if (l_This.d_Cvs.width != a_OfstWid)
+				if (l_This.d_Canv.width != a_OfstWid)
 				{
-					l_This.d_Cvs.width = a_OfstWid;
+					l_This.d_Canv.width = a_OfstWid;
 				}
 
-				var l_CvsH = Math.round(a_OfstWid / l_This.d_Ar);
-				if (l_This.d_Cvs.height != l_CvsH)
+				var l_CanvH = Math.round(a_OfstWid / l_This.d_Ar);
+				if (l_This.d_Canv.height != l_CanvH)
 				{
-					l_This.d_Cvs.height = l_CvsH;
+					l_This.d_Canv.height = l_CanvH;
 				}
 
 				// 放置目标的高度不能低于画布
-				if (l_This.d_PutTgt.offsetHeight < l_CvsH)
+				if (l_This.d_PutTgt.offsetHeight < l_CanvH)
 				{
-					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_CvsH);
+					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_CanvH);
 				}
 
 				// 清屏，用哪个？
@@ -654,13 +654,13 @@ function fOnIcld(a_Errs)
 				// 计算整个放置目标的高度
 
 				// 计算<div>与<canvas>的差量，以此确定面板Y
-				if (l_This.d_DivCvsDta < 0)
+				if (l_This.d_DivCanvDta < 0)
 				{
-					l_This.d_DivCvsDta = Math.max(0, l_This.d_PutTgt.offsetHeight - l_This.d_Cvs.height);
-				//	console.log("l_This.d_DivCvsDta = " + l_This.d_DivCvsDta)
+					l_This.d_DivCanvDta = Math.max(0, l_This.d_PutTgt.offsetHeight - l_This.d_Canv.height);
+				//	console.log("l_This.d_DivCanvDta = " + l_This.d_DivCanvDta)
 				}
 
-				l_This.d_PnlY = l_This.d_Cvs.height + l_This.d_DivCvsDta;
+				l_This.d_PnlY = l_This.d_Canv.height + l_This.d_DivCanvDta;
 
 				// 修正位置，即排版……
 				l_This.dCalcEachDim();
@@ -1018,15 +1018,15 @@ function fOnIcld(a_Errs)
 			}
 			,
 			/// 获取画布宽度
-			cGetCvsWid : function ()
+			cGetCanvWid : function ()
 			{
-				return this.d_Cvs ? this.d_Cvs.width : 0;
+				return this.d_Canv ? this.d_Canv.width : 0;
 			}
 			,
 			/// 获取画布高度
-			cGetCvsHgt : function ()
+			cGetCanvHgt : function ()
 			{
-				return this.d_Cvs ? this.d_Cvs.height : 0;
+				return this.d_Canv ? this.d_Canv.height : 0;
 			}
 		}
 		,
@@ -1116,7 +1116,7 @@ function fOnIcld(a_Errs)
 			{
 				// 前一个时左入，后一个时右入
 				var l_This = this;
-				l_This.d_Bgn = a_AsNext ? a_Plr.cGetCvsWid() : -a_Plr.cGetCvsWid();
+				l_This.d_Bgn = a_AsNext ? a_Plr.cGetCanvWid() : -a_Plr.cGetCanvWid();
 				l_This.d_End = 0;
 				return this;
 			}
@@ -1134,7 +1134,7 @@ function fOnIcld(a_Errs)
 				var l_Scl = l_This.dCalcTimeScl(a_FrmTime);
 				l_Scl = stNumUtil.cPrbItp(0, 1, l_Scl, false);	// 松弛
 				var l_X = stNumUtil.cLnrItp(l_This.d_Bgn, l_This.d_End, l_Scl);
-				l_DstSara.cCrt(l_X, 0, a_Plr.cGetCvsWid(), a_Plr.cGetCvsHgt());
+				l_DstSara.cCrt(l_X, 0, a_Plr.cGetCanvWid(), a_Plr.cGetCanvHgt());
 				l_2dCtxt.cMap(l_DstSara, a_Img, null, null);
 				return this;
 			}
@@ -1196,9 +1196,9 @@ function fOnIcld(a_Errs)
 			{
 				// 根据画布高度划分
 				var l_This = this;
-				var l_CvsHgt = a_Plr.cGetCvsHgt();
+				var l_CanvHgt = a_Plr.cGetCanvHgt();
 				l_This.d_GridDim = 20;
-				l_This.d_GridTot = Math.ceil(l_CvsHgt / l_This.d_GridDim);
+				l_This.d_GridTot = Math.ceil(l_CanvHgt / l_This.d_GridDim);
 				return this;
 			}
 			,
@@ -1233,7 +1233,7 @@ function fOnIcld(a_Errs)
 				{
 					// 快点达成，使得中间有个停顿
 					l_H = stNumUtil.cLnrItp(1, l_This.d_GridDim, Math.min(0.2 + l_Aph, 1));
-					l_This.d_ClipPath.cRect(false, 0, l_Idx * l_This.d_GridDim, a_Plr.cGetCvsWid(), l_H);
+					l_This.d_ClipPath.cRect(false, 0, l_Idx * l_This.d_GridDim, a_Plr.cGetCanvWid(), l_H);
 				}
 
 				l_2dCtxt.cSaveCfg();
@@ -1267,23 +1267,23 @@ function fOnIcld(a_Errs)
 				var l_Scl = l_This.dCalcTimeScl(a_FrmTime);
 
 				// 构建裁剪路径
-				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
-				var l_Cx = l_CvsW / 2, l_Cy = l_CvsH / 2;
+				var l_CanvW = a_Plr.cGetCanvWid(), l_CanvH = a_Plr.cGetCanvHgt();
+				var l_Cx = l_CanvW / 2, l_Cy = l_CanvH / 2;
 				var l_HR, l_VR;
 
 				if (a_AsNext) // 向外扩张，顺时针围椭圆
 				{
-					l_HR = stNumUtil.cPrbItp(1, l_CvsW, l_Scl, true);
-					l_VR = stNumUtil.cPrbItp(1, l_CvsH, l_Scl, true);
+					l_HR = stNumUtil.cPrbItp(1, l_CanvW, l_Scl, true);
+					l_VR = stNumUtil.cPrbItp(1, l_CanvH, l_Scl, true);
 					l_This.d_ClipPath.cRset()
 						.cElps(false, l_Cx, l_Cy, l_HR, l_VR);
 				}
 				else // 向内收缩，顺时针围矩形，逆时针围椭圆
 				{
-					l_HR = stNumUtil.cPrbItp(l_CvsW, 1, l_Scl);
-					l_VR = stNumUtil.cPrbItp(l_CvsH, 1, l_Scl);
+					l_HR = stNumUtil.cPrbItp(l_CanvW, 1, l_Scl);
+					l_VR = stNumUtil.cPrbItp(l_CanvH, 1, l_Scl);
 					l_This.d_ClipPath.cRset()
-						.cRect(false, 0, 0, l_CvsW, l_CvsH)
+						.cRect(false, 0, 0, l_CanvW, l_CanvH)
 						.cElps(false, l_Cx, l_Cy, l_HR, l_VR, true);
 				}
 
@@ -1309,7 +1309,7 @@ function fOnIcld(a_Errs)
 			vcRdyToAnmt : function f(a_Plr, a_Img, a_AsNext)
 			{
 				var l_This = this;
-				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
+				var l_CanvW = a_Plr.cGetCanvWid(), l_CanvH = a_Plr.cGetCanvHgt();
 				l_This.d_FlowDur = 2;
 				l_This.d_StrmTot = 20;
 				l_This.d_StrmAry = new Array(l_This.d_StrmTot);
@@ -1339,9 +1339,9 @@ function fOnIcld(a_Errs)
 				var l_2dCtxt = a_Plr.cAcs2dCtxt();
 
 				// 构建裁剪路径
-				var l_CvsW = a_Plr.cGetCvsWid(), l_CvsH = a_Plr.cGetCvsHgt();
-				var l_StrmWid = Math.max(l_CvsW / l_This.d_StrmTot, 2);
-				var l_Cap = Math.min(l_StrmWid, l_CvsH) / 2;
+				var l_CanvW = a_Plr.cGetCanvWid(), l_CanvH = a_Plr.cGetCanvHgt();
+				var l_StrmWid = Math.max(l_CanvW / l_This.d_StrmTot, 2);
+				var l_Cap = Math.min(l_StrmWid, l_CanvH) / 2;
 				l_This.d_ClipPath.cRset();
 				stAryUtil.cFor(l_This.d_StrmAry,
 					function (a_Ary, a_Idx, a_Strm)
@@ -1353,8 +1353,8 @@ function fOnIcld(a_Errs)
 
 						var l_X = a_Idx * l_StrmWid;
 						var l_TimeScl = stNumUtil.cClmOnNum(a_Strm.c_Time / l_This.d_FlowDur, 0, 1);
-						var l_Y = stNumUtil.cPrbItp(-l_CvsH, 0, l_TimeScl, true);	// 加速下落
-						l_This.d_ClipPath.cCaps(false, l_X, l_Y - l_Cap, l_StrmWid, l_CvsH + l_Cap * 2);
+						var l_Y = stNumUtil.cPrbItp(-l_CanvH, 0, l_TimeScl, true);	// 加速下落
+						l_This.d_ClipPath.cCaps(false, l_X, l_Y - l_Cap, l_StrmWid, l_CanvH + l_Cap * 2);
 					});
 
 				l_2dCtxt.cSaveCfg();

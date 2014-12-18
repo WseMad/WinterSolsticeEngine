@@ -114,7 +114,7 @@ function fOnIcld(a_Errs)
 		nWse.fEnum(nPick.tMsg, function tInrCode() {}, null,
 			["ui_GlbBgn", -9999],
 			["i_BrsrMsg", -9999],		// 浏览器消息
-			"i_OnRbndMainCvs",			// 当重绑主画布时
+			"i_OnRbndMainCanv",			// 当重绑主画布时
 			["ui_GlbEnd", -9000],
 			["ui_FrmwkBgn", -8999],
 			["i_PrprOver", -8999],		// 准备完毕，c_Who：atPkup，谁
@@ -385,8 +385,8 @@ function fOnIcld(a_Errs)
 			/// 报告
 			function tPickRpt()
 			{
-				this.e_CvsWid = 0;
-				this.e_CvsHgt = 0;
+				this.e_CanvWid = 0;
+				this.e_CavnHgt = 0;
 
 				this.e_IdClo = tClo.i_White; // rgba(1, 1, 1, 1)
 
@@ -396,7 +396,7 @@ function fOnIcld(a_Errs)
 				//	this.e_Wgts = [];	// 一次只拾取一个，不用数组
 				this.e_Wgt = null;
 
-				this.e_CvsPrstArea = new tSara();
+				this.e_CanvPrstArea = new tSara();
 			}
 			,
 			null
@@ -412,7 +412,7 @@ function fOnIcld(a_Errs)
 						function (a_Ary, a_Idx, a_Tch)
 						{
 							// 补充几个字段
-							a_Tch.c_InCvs = l_This.eIsTchInCvs(a_Tch.c_CvsX, a_Tch.c_CvsY);
+							a_Tch.c_InCanv = l_This.eIsTchInCanv(a_Tch.c_CanvX, a_Tch.c_CanvY);
 							a_Tch.c_PkdWgt = null;
 							a_Tch.e_CanPick = false; // 只在这个控件拾取期间有效，下一个控件将会覆盖
 						});
@@ -421,23 +421,23 @@ function fOnIcld(a_Errs)
 					this.e_Wgt = null;
 				}
 				,
-				eIsTchInCvs : function (a_CvsX, a_CvsY)
+				eIsTchInCanv : function (a_CanvX, a_CanvY)
 				{
-					return	(0 <= a_CvsX) && (a_CvsX < this.e_CvsWid) && (0 <= a_CvsY) && (a_CvsY < this.e_CvsHgt);
+					return	(0 <= a_CanvX) && (a_CanvX < this.e_CanvWid) && (0 <= a_CanvY) && (a_CanvY < this.e_CanvHgt);
 				}
 				,
 				eCanPick : function (a_PrstArea)
 				{
-					//var l_CvsPrstArea = this.e_CvsPrstArea;
-					//tSara.scAsn(l_CvsPrstArea, a_GuiPrstArea);
-					//nPick.stFrmwk.cDoCvsFromGui(l_CvsPrstArea, true);
+					//var l_CanvPrstArea = this.e_CanvPrstArea;
+					//tSara.scAsn(l_CanvPrstArea, a_GuiPrstArea);
+					//nPick.stFrmwk.cDoCanvFromGui(l_CanvPrstArea, true);
 
 					var l_Rst = false;
 					stAryUtil.cFor(this.e_Tchs,
 						function (a_Ary, a_Idx, a_Tch)
 						{
 							// 该触点必须在画布里，且当前尚未拾取到任何控件，且显示区包含该触点
-							a_Tch.e_CanPick = a_Tch.c_InCvs && (null == a_Tch.c_PkdWgt) &&
+							a_Tch.e_CanPick = a_Tch.c_InCanv && (null == a_Tch.c_PkdWgt) &&
 												tSara.scCtan$Xy(a_PrstArea, a_Tch.c_X, a_Tch.c_Y);
 							if (a_Tch.e_CanPick)
 							{
@@ -499,24 +499,24 @@ function fOnIcld(a_Errs)
 				eOnPrstTgtLost : function ()
 				{
 					//// 标识符画布
-					//var l_MainCvs = stRltmAfx.cAcsMainCvs();
-					//if (this.e_IdCvs && (this.e_IdCvs.width == l_MainCvs.width) && (this.e_IdCvs.height == l_MainCvs.height))
+					//var l_MainCanv = stRltmAfx.cAcsMainCanv();
+					//if (this.e_IdCanv && (this.e_IdCanv.width == l_MainCanv.width) && (this.e_IdCanv.height == l_MainCanv.height))
 					//{
 					//	return;
 					//}
 					//
-					//this.e_IdCvs = document.createElement("canvas");
-					//this.e_IdCvs.width = l_MainCvs.width;
-					//this.e_IdCvs.height = l_MainCvs.height;
+					//this.e_IdCanv = document.createElement("canvas");
+					//this.e_IdCanv.width = l_MainCanv.width;
+					//this.e_IdCanv.height = l_MainCanv.height;
 					//
 					//if (2 == nPick.stFrmwk.cGetGpuDvcDim())
 					//{
-					//	this.e_IdCtxt = this.e_IdCvs.getContext("2d");
+					//	this.e_IdCtxt = this.e_IdCanv.getContext("2d");
 					//}
 					//
 					//// 报告记录宽高
-					//this.e_Rpt.e_CvsWid = l_MainCvs.width;
-					//this.e_Rpt.e_CvsHgt = l_MainCvs.height;
+					//this.e_Rpt.e_CanvWid = l_MainCanv.width;
+					//this.e_Rpt.e_CanvHgt = l_MainCanv.height;
 				}
 				,
 				/// 获取帧号
@@ -533,7 +533,7 @@ function fOnIcld(a_Errs)
 				,
 				/// 拾取开始
 				///【警告】内部直接引用a_Tchs和a_Pnls，不要修改它们！
-				/// a_Tchs类型是Array，元素类型是Object，需含有字段c_CvsX，c_CvsY
+				/// a_Tchs类型是Array，元素类型是Object，需含有字段c_CanvX，c_CanvY
 				/// 返回：false=没有拾取到，true=待定
 				ePickBgn : function (a_FrmIdx, a_Tchs)
 				{
@@ -563,7 +563,7 @@ function fOnIcld(a_Errs)
 					var l_PendTchs = this.e_PendTchs;
 					l_PendTchs.length = 0;
 					stAryUtil.cFor(this.e_Rpt.e_Tchs,
-						function (a_Ary, a_Idx, a_Tch) { if (a_Tch.c_InCvs) { l_PendTchs.push(a_Tch); } });
+						function (a_Ary, a_Idx, a_Tch) { if (a_Tch.c_InCanv) { l_PendTchs.push(a_Tch); } });
 					if (0 == l_PendTchs.length)
 					{
 						return false;
@@ -613,20 +613,20 @@ function fOnIcld(a_Errs)
 				{
 					// 切换画布
 					var stGpuDvc = nPick.stFrmwk.cAcsGpuDvc();
-					var l_OldCvs = stGpuDvc.cAcsCvs();
-					stGpuDvc.cBindCvs(this.e_IdCvs);
+					var l_OldCanv = stGpuDvc.cAcsCanv();
+					stGpuDvc.cBindCanv(this.e_IdCanv);
 
 					// 设置裁剪区
-					//	stGpuDvc.cPushCvsCtxtSta();	// 不用复杂逻辑
+					//	stGpuDvc.cPushCanvCtxtSta();	// 不用复杂逻辑
 					var l_IdCtxt = stGpuDvc.cAcsCtxt();
 					l_IdCtxt.save();
 					l_IdCtxt.beginPath();
 					stAryUtil.cFor(this.e_PendTchs,
-						function (a_Ary, a_Idx, a_Tch) { l_IdCtxt.rect(a_Tch.c_CvsX, a_Tch.c_CvsY, 1, 1); });
+						function (a_Ary, a_Idx, a_Tch) { l_IdCtxt.rect(a_Tch.c_CanvX, a_Tch.c_CanvY, 1, 1); });
 					l_IdCtxt.clip();
 
 					// 清理，注意是在裁剪后进行这一步，因为只需要清理触点所在的像素
-					l_IdCtxt.clearRect(0, 0, this.e_IdCvs.width, this.e_IdCvs.height);
+					l_IdCtxt.clearRect(0, 0, this.e_IdCanv.width, this.e_IdCanv.height);
 
 					//【注意】拾取顺序与渲染顺序恰好相反！！
 					// 栈顶→栈底
@@ -643,11 +643,11 @@ function fOnIcld(a_Errs)
 					}
 
 					// 清除裁剪区
-					//	stGpuDvc.cPopCvsCtxtSta();	// 不用复杂逻辑
+					//	stGpuDvc.cPopCanvCtxtSta();	// 不用复杂逻辑
 					l_IdCtxt.restore();
 
 					// 还原画布
-					stGpuDvc.cBindCvs(l_OldCvs);
+					stGpuDvc.cBindCanv(l_OldCanv);
 					return true;
 				}
 				,
@@ -701,7 +701,7 @@ function fOnIcld(a_Errs)
 						{ continue; }
 
 						// 检索图像数据，如果像素的a分量≥128，就认为被拾取到！
-						l_ImgData = l_IdCtxt.getImageData(l_PendTch.c_CvsX, l_PendTch.c_CvsY, 1, 1);
+						l_ImgData = l_IdCtxt.getImageData(l_PendTch.c_CanvX, l_PendTch.c_CanvY, 1, 1);
 						//	console.log(l_ImgData.data[0]);
 						if (l_ImgData.data[3] >= 128)
 						{
@@ -735,9 +735,9 @@ function fOnIcld(a_Errs)
 							l_Rsts.push({
 								c_TchId : a_Tch.c_TchId,
 								c_Kind : a_Tch.c_Kind,
-								c_CvsX : a_Tch.c_CvsX,
-								c_CvsY : a_Tch.c_CvsY,
-								c_InCvs : a_Tch.c_InCvs,
+								c_CanvX : a_Tch.c_CanvX,
+								c_CanvY : a_Tch.c_CanvY,
+								c_InCanv : a_Tch.c_InCanv,
 								c_PkdWgt : a_Tch.c_PkdWgt
 							});
 						});

@@ -202,9 +202,9 @@ function fOnIcld(a_Errs)
 			l_PrstTgt.style.height = (l_H).toString() + "px";
 		}
 
-		// 自适应完成回调
-		if ((0 != l_AdpModeNum) && l_Cfg.c_fOnAdpPrstTgtCplt)
-		{ l_Cfg.c_fOnAdpPrstTgtCplt.call(null, l_W, l_H); }
+		// 自适应完成事件
+		if ((0 != l_AdpModeNum) && a_This.e_OnAdpPrstTgtCplt)
+		{ a_This.e_OnAdpPrstTgtCplt.cFor(l_W, l_H); }
 	}
 
 	// 当……时
@@ -298,6 +298,9 @@ function fOnIcld(a_Errs)
 		a_This.e_FrmTime = 0;
 		a_This.e_FrmItvl = 0;
 		a_This.e_FrmNum = 0;
+
+		// 其他
+		a_This.e_OnAdpPrstTgtCplt = null;
 	}
 
 	// 运行
@@ -528,7 +531,6 @@ function fOnIcld(a_Errs)
 				/// c_PrstTgt：HTMLElement$String，呈现目标或元素ID，必须是块级元素
 				/// c_AdpMode：tAdpMode，自适应模式，默认i_None
 				/// c_PrstTgtMinWid，c_PrstTgtMinHgt：Number，呈现目标最小尺寸，自适应时使用
-				/// c_fOnAdpPrstTgtCplt：void f(a_Wid, a_Hgt)，当自适应呈现目标完成时
 				/// c_App：类，必须继承自tRltmAfx.atApp，默认null
 				/// }
 				cInit : function (a_Cfg)
@@ -597,6 +599,16 @@ function fOnIcld(a_Errs)
 				cGetFrmNum: function ()
 				{
 					return this.e_FrmNum;
+				}
+				,
+				/// 存取事件，当自适应呈现目标完成时
+				/// 返回：tEvtHdlrAry，void f(a_Wid, a_Hgt)
+				cAcsEvt_OnAdpPrstTgtCplt : function ()
+				{
+					if (! this.e_OnAdpPrstTgtCplt)
+					{ this.e_OnAdpPrstTgtCplt = new nWse.tEvtHdlrAry(); }
+
+					return this.e_OnAdpPrstTgtCplt;
 				}
 			}
 			,

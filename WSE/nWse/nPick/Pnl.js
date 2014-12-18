@@ -252,7 +252,7 @@ function fOnIcld(a_Errs)
 					var i_Code = tMsg.tInrCode;
 					switch (a_Msg.c_Code)
 					{
-						//case i_Code.i_OnRbndMainCvs:	// 原因详见stFrmwk里的eSendMsg_OnRbndMainCvs()
+						//case i_Code.i_OnRbndMainCanv:	// 原因详见stFrmwk里的eSendMsg_OnRbndMainCanv()
 						//	{
 						//		l_NtfRoot = true;
 						//	} break;
@@ -437,13 +437,13 @@ function fOnIcld(a_Errs)
 					//		stAryUtil.cFor(l_This.e_Focs,
 					//			function (a_Ary, a_Idx, a_Foc) { l_FocNames.push(a_Foc.e_Name); });
 					//
-					//		//	stGpuPrt.cFillTextLine_CvsCs(l_FocNames.toString(), 0, -4, "C", "D");
+					//		//	stGpuPrt.cFillTextLine_CanvCs(l_FocNames.toString(), 0, -4, "C", "D");
 					//
 					//		stGpuPrt.cDrawTextLine_GuiCs(l_FocNames.toString() + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
 					//	}
 					//	else
 					//	{
-					//		//	stGpuPrt.cFillTextLine_CvsCs("无焦点", 0, -4, "C", "D");
+					//		//	stGpuPrt.cFillTextLine_CanvCs("无焦点", 0, -4, "C", "D");
 					//		stGpuPrt.cDrawTextLine_GuiCs("无焦点" + ", " + l_WgtsTot, null, l_PrtDstSara, 7);
 					//	}
 					//})();//#endif

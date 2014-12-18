@@ -390,9 +390,9 @@ function fOnIcld(a_Errs)
 
 	function fIsTchLost(a_Tch) // 触点丢失？
 	{
-//		var l_MainCvsCltBbox = stRltmAfx.cAcsMainCvsCltBbox();
-//		var l_CltX = a_Tch.c_CvsX + l_MainCvsCltBbox.c_X;
-//		var l_CltY = a_Tch.c_CvsY + l_MainCvsCltBbox.c_Y;
+//		var l_MainnPick.tLotCltBbox = stRltmAfx.cAcsMainnPick.tLotCltBbox();
+//		var l_CltX = a_Tch.c_nPick.tLotX + l_MainnPick.tLotCltBbox.c_X;
+//		var l_CltY = a_Tch.c_nPick.tLotY + l_MainnPick.tLotCltBbox.c_Y;
 		var l_CltX = a_Tch.c_X;
 		var l_CltY = a_Tch.c_Y;
 		var l_DocElmt = document.documentElement;

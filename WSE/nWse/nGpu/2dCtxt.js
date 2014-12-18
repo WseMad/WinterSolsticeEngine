@@ -66,53 +66,53 @@ function fOnIcld(a_Errs)
 		nWse.fClassBody(a_tCtxt,
 			{
 				/// 绑定画布
-				/// a_Cvs：HTMLCanvasElement，画布
-				cBindCvs: function (a_Cvs)
+				/// a_Canv：HTMLCanvasElement，画布
+				cBindCanv: function (a_Canv)
 				{
 					// 重绑？
-					if (this.e_Cvs === a_Cvs)
-					{ return this.cRbndCvs(); }
+					if (this.e_Canv === a_Canv)
+					{ return this.cRbndCanv(); }
 
 					// 先解绑以前的
-					var l_OldCvs = this.e_Cvs;
-					if (this.e_Cvs)
-					{ this.cUbndCvs(); }
+					var l_OldCanv = this.e_Canv;
+					if (this.e_Canv)
+					{ this.cUbndCanv(); }
 
 					// 记录画布并取得上下文
-					this.e_Cvs = a_Cvs;
-					this.e_Ctxt = this.e_Cvs.getContext("2d");
+					this.e_Canv = a_Canv;
+					this.e_Ctxt = this.e_Canv.getContext("2d");
 
 					// 当重绑画布时
-					this.eOnRbndCvs();
+					this.eOnRbndCanv();
 					return this;
 				}
 				,
 				/// 重绑画布
 				///【警告】如果应用程序修改了画布的属性，必须调用本函数！
-				cRbndCvs : function ()
+				cRbndCanv : function ()
 				{
 					// 当重绑画布时
-					this.eOnRbndCvs();
+					this.eOnRbndCanv();
 					return this;
 				}
 				,
 				/// 解绑画布
-				cUbndCvs : function ()
+				cUbndCanv : function ()
 				{
-					if (null == this.e_Cvs)
+					if (null == this.e_Canv)
 					{ return; }
 
 					// 清零
-					this.e_Cvs = null;
+					this.e_Canv = null;
 					this.e_Ctxt = null;
 
 					// 当重绑画布时
-					this.eOnRbndCvs();
+					this.eOnRbndCanv();
 					return this;
 				}
 				,
 				/// 存取画布
-				cAcsCvs : function () { return this.e_Cvs; }
+				cAcsCanv : function () { return this.e_Canv; }
 				,
 				/// 存取
 				cAcs : function () { return this.e_Ctxt; }
@@ -120,22 +120,22 @@ function fOnIcld(a_Errs)
 				/// 设置画布尺寸
 				/// a_Wid：Number，宽度（像素）
 				/// a_Hgt：Number，高度（像素）
-				cSetCvsDim : function (a_Wid, a_Hgt)
+				cSetCanvDim : function (a_Wid, a_Hgt)
 				{
-					var l_WidChgd = (this.e_Cvs.width != a_Wid);
-					var l_HgtChgd = (this.e_Cvs.height != a_Hgt);
-					if (l_WidChgd) { this.e_Cvs.width = a_Wid; }
-					if (l_HgtChgd) { this.e_Cvs.height = a_Hgt; }
+					var l_WidChgd = (this.e_Canv.width != a_Wid);
+					var l_HgtChgd = (this.e_Canv.height != a_Hgt);
+					if (l_WidChgd) { this.e_Canv.width = a_Wid; }
+					if (l_HgtChgd) { this.e_Canv.height = a_Hgt; }
 
 					// 重绑画布
-					return (l_WidChgd || l_HgtChgd) ? this.cRbndCvs() : this;
+					return (l_WidChgd || l_HgtChgd) ? this.cRbndCanv() : this;
 				}
 				,
 				/// 获取画布宽度
-				cGetCvsWid : function () { return this.e_Cvs.width; }
+				cGetCanvWid : function () { return this.e_Canv.width; }
 				,
 				/// 获取画布高度
-				cGetCvsHgt : function () { return this.e_Cvs.height; }
+				cGetCanvHgt : function () { return this.e_Canv.height; }
 			});
 	};
 
@@ -410,7 +410,7 @@ function fOnIcld(a_Errs)
 		nWse.fClassBody(t2dCtxt,
 		{
 			// 当重绑画布时
-			eOnRbndCvs : function ()
+			eOnRbndCanv : function ()
 			{
 				//
 			}
@@ -432,7 +432,7 @@ function fOnIcld(a_Errs)
 				var l_Ctxt = this.cAcs();
 				a_Sara
 				? l_Ctxt.clearRect(a_Sara.c_X, a_Sara.c_Y, a_Sara.c_W, a_Sara.c_H)
-				: l_Ctxt.clearRect(0, 0, this.cGetCvsWid(), this.cGetCvsHgt());
+				: l_Ctxt.clearRect(0, 0, this.cGetCanvWid(), this.cGetCanvHgt());
 				return this;
 			}
 			,
@@ -443,7 +443,7 @@ function fOnIcld(a_Errs)
 				l_Ctxt.fillStyle = a_Clo ? tClo.scToCssCloStr(a_Clo) : "rgba(0, 0, 0, 1)";
 				a_Sara
 					? l_Ctxt.fillRect(a_Sara.c_X, a_Sara.c_Y, a_Sara.c_W, a_Sara.c_H)
-					: l_Ctxt.fillRect(0, 0, this.cGetCvsWid(), this.cGetCvsHgt());
+					: l_Ctxt.fillRect(0, 0, this.cGetCanvWid(), this.cGetCanvHgt());
 				return this;
 			}
 			,
@@ -542,7 +542,7 @@ function fOnIcld(a_Errs)
 					if (! s_TempSara0)
 					{ s_TempSara0 = new tSara(); }
 
-					s_TempSara0.cCrt$Wh(this.cGetCvsWid(), this.cGetCvsHgt());
+					s_TempSara0.cCrt$Wh(this.cGetCanvWid(), this.cGetCanvHgt());
 					a_DstSara = s_TempSara0;
 				}
 

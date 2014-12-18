@@ -191,7 +191,7 @@ function fOnIcld(a_Errs)
 			a_Pnl.vcHdlMsg(l_Msg);
 		}
 
-		function eSendMsg_OnRbndMainCvs()
+		function eSendMsg_OnRbndMainCanv()
 		{
 			//【注意】
 			// GUI系统真正应该响应的是相机视域及视口变化！
@@ -202,7 +202,7 @@ function fOnIcld(a_Errs)
 			//e_LockPnlStk = true;
 
 			//// 栈顶→栈底
-			//var l_Msg = new tMsg(tMsg.tInrCode.i_OnRbndMainCvs, null, tInrName.i_Frmwk);
+			//var l_Msg = new tMsg(tMsg.tInrCode.i_OnRbndMainCanv, null, tInrName.i_Frmwk);
 			//stAryUtil.cRvsFor(e_PnlStk,
 			//	function (a_Ary, a_Idx, a_Pnl)
 			//	{
@@ -268,7 +268,7 @@ function fOnIcld(a_Errs)
 			{
 				stAryUtil.cFor(e_PcdrTrgrTch,
 					function (a_Ary, a_Idx, a_Tch)
-					{ eTrgrTch(a_Tch.c_TchId, a_Tch.c_Kind, a_Tch.c_CvsX, a_Tch.c_CvsY); });
+					{ eTrgrTch(a_Tch.c_TchId, a_Tch.c_Kind, a_Tch.c_CanvX, a_Tch.c_CanvY); });
 
 				e_PcdrTrgrTch.length = 0;
 			}
@@ -381,7 +381,7 @@ function fOnIcld(a_Errs)
 			stFrmwk.cIptRset();
 
 			// 通知栈里的面板
-			eSendMsg_OnRbndMainCvs();
+			eSendMsg_OnRbndMainCanv();
 		}
 
 		function eOnFrmBgn()
@@ -739,9 +739,9 @@ function fOnIcld(a_Errs)
 		/// 触发触摸，【注意】如果触发拾取，将在下一帧进行
 		/// a_TchId：String，触点ID，键盘是“K”，鼠标是“M”，触摸点是“0……”
 		/// a_Kind：tPntIpt.tKind，种类，触发拾取的是i_TchBgn和i_TchEnd
-		/// a_CvsX：Number，触点相对于主画布的x坐标
-		/// a_CvsY：Number，触点相对于主画布的y坐标
-		stFrmwk.cTrgrTch = function (a_TchId, a_Kind, a_CvsX, a_CvsY)
+		/// a_CanvX：Number，触点相对于主画布的x坐标
+		/// a_CanvY：Number，触点相对于主画布的y坐标
+		stFrmwk.cTrgrTch = function (a_TchId, a_Kind, a_CanvX, a_CanvY)
 		{
 			if ((! a_TchId) || (0 == a_TchId.length))
 			{
@@ -749,7 +749,7 @@ function fOnIcld(a_Errs)
 			}
 
 			a_TchId = a_TchId.toString();
-			e_PcdrTrgrTch.push({ c_TchId : a_TchId, c_Kind : a_Kind, c_CvsX : a_CvsX, c_CvsY : a_CvsY });
+			e_PcdrTrgrTch.push({ c_TchId : a_TchId, c_Kind : a_Kind, c_CanvX : a_CanvX, c_CanvY : a_CanvY });
 			return stFrmwk;
 		};
 
