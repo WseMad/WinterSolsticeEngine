@@ -216,7 +216,7 @@ function fOnIcld(a_Errs)
 		/// a_Id：String，元素ID，若与a_Slc同时为空则总是新建
 		/// a_Cssc：String，CSS类，新建时使用，可以为空
 		/// a_Prn：Node，父节点，新建时使用，可以为空
-		/// 返回：Node，仅当Boolean Wse_DomUtil.c_New字段为true时表示新建
+		/// 返回：Node，仅当Boolean Wse_DomUtil.c_New字段为true时表示新建（未必存在相关字段）
 		stDomUtil.cObtnOne = function (a_Slc, a_Tag, a_Id, a_Cssc, a_Prn)
 		{
 			a_Tag = a_Tag.toLowerCase(); // 这里应是小写

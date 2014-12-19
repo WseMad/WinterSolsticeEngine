@@ -24,8 +24,7 @@ figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video
 {
-	/* IE7不支持，所以是否启用留给应用程序决定 */
-	/*box-sizing: border-box;*/
+	box-sizing: border-box;
 
 	margin: 0;
 	border: none;

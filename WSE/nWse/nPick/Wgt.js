@@ -395,12 +395,12 @@ function fOnIcld(a_Errs)
 							// 如果是子控件发来的
 							if (this === a_Msg.c_Who.e_Host)
 							{
-								// 如果自身主状态不是i_Exit，移除子控件
+								// 如果子控件主状态是i_Exit，但自身不是，则移除子控件
 								// 否则等待自己的宿主处理，若根为i_Exit表示离栈
-								if (tPrmrSta.i_Exit != this.e_PrmrSta)
+								if ((tPrmrSta.i_Exit == a_Msg.c_Who.e_PrmrSta) && (tPrmrSta.i_Exit != this.e_PrmrSta))
 								{
 									fRmv(this, a_Msg.c_Who, true);
-									//	console.log("Rmv " + a_Msg.c_Who.e_Name);
+								//	console.log("Rmv " + a_Msg.c_Who.e_Name);
 								}
 							}
 							else // 怎么会收到？
@@ -824,8 +824,8 @@ function fOnIcld(a_Errs)
 
 					fSetWgtFlag(this, 1, false);	// 主状态动画完
 
-					// 如果此时主状态为i_Exit，通知宿主（一定存在，可为面板）
-					if (tPrmrSta.i_Exit == this.e_PrmrSta)
+					// 如果此时主状态≤i_Hide，通知宿主（一定存在，可为面板）
+					if (tPrmrSta.i_Hide >= this.e_PrmrSta)
 					{
 						fSendMsg_PrmrOver(this);
 
@@ -873,6 +873,19 @@ function fOnIcld(a_Errs)
 				cIsHost : function ()
 				{
 					return ! stAryUtil.cIsEmt(this.e_SubWgts);
+				}
+				,
+				/// 是否为代理
+				cIsPox : function ()
+				{
+					return stNumUtil.cGetBit(this.e_Flag, 3);
+				}
+				,
+				/// 作为代理
+				cAsPox : function (a_YesNo)
+				{
+					stNumUtil.cSetBit(this.e_Flag, 3, a_YesNo);
+					return this;
 				}
 				,
 				/// 存取区域

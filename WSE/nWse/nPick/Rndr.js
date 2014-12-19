@@ -204,7 +204,7 @@ function fOnIcld(a_Errs)
 
 	function fObtnPutSrc(a_This, a_Cfg)
 	{
-		var l_Rst = unKnl.fObtnPutSrc(a_Cfg.c_PutSrc);
+		var l_Rst = unKnl.fObtnPutSrc((a_Cfg.c_PutSrc || a_This.cAcsWgt().cGetName()));
 
 		// 簿记
 		if (! l_Rst.Wse_Wgt)
@@ -355,7 +355,7 @@ function fOnIcld(a_Errs)
 				/// a_Cfg：Object，配置
 				/// {
 				///	c_PutTgt：String，放置目标的HTML元素ID，若不存在则自动创建带有指定ID的<div>，作为c_PutSrc的前一个兄弟节点
-				/// c_PutSrc：String，放置来源的HTML元素ID，必须有效
+				/// c_PutSrc：String，放置来源的HTML元素ID，若无效则取关联控件的名字
 				/// }
 				vcBindHtml : function (a_Cfg)
 				{

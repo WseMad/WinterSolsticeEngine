@@ -252,9 +252,14 @@
 	nWse.i_InBrsr = ! i_InNodeJs;
 
 	/// 是否在线浏览？
-	nWse.fIsOnlineBrs = function ()
+	/// a_HostName：String，主机名，不区分大小写，默认"localhost"
+	/// a_Port：Number，端口，默认80
+	/// 返回：Boolean，若两个参数都与location里对应字段相等则返回true
+	nWse.fIsOnlnBrs = function (a_HostName, a_Port)
 	{
-		return nWse.i_InBrsr && (80 == l_Glb.location.port);
+		return nWse.i_InBrsr &&
+			((a_HostName || "localhost").toLowerCase() == l_Glb.location.hostname.toLowerCase()) &&
+			((a_Port || 80) == l_Glb.location.port);
 	};
 
 	/// Number，异步延迟（秒），用于模拟异步请求时的网络延迟，应仅用于开发时！
@@ -263,7 +268,7 @@
 	/// 是否异步延迟？
 	nWse.fIsAsynDly = function ()
 	{
-		return (! nWse.fIsOnlineBrs()) && (nWse.g_AsynDly > 0);
+		return (! nWse.fIsOnlnBrs()) && (nWse.g_AsynDly > 0);
 	};
 
 	/// 名字空间
