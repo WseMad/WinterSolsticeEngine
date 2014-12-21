@@ -22,14 +22,11 @@ table, caption, tbody, tfoot, thead, tr, th, td,
 article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
-time, mark, audio, video
-{
+time, mark, audio, video {
 	box-sizing: border-box;
-
 	margin: 0;
 	border: none;
 	padding: 0;
-
 	font: inherit;
 	font-size: 100%;
 	vertical-align: baseline;
@@ -37,62 +34,68 @@ time, mark, audio, video
 
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section
-{
+footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 
-body
-{
+body {
 	line-height: 1.2;
 }
 
-ol
-{
+ol {
 	/*padding-left: 2em;*/
 	list-style: decimal;
 }
 
-ul
-{
+ul {
 	/*padding-left: 2em;*/
 	list-style: square;
 }
 
-input, textarea
+input, button, textarea
 {
-	outline: none;		/* Chrome <- 不用显示输入框的轮廓 */
+	outline: none; /* Chrome <- 不用显示输入框的轮廓 */
 }
 
-textarea
-{
-	resize: none;		/* Chrome <- 禁止调整大小 */
-	overflow: auto;		/* IE <- 隐藏垂直滚动条 */
+textarea {
+	resize: none; /* Chrome <- 禁止调整大小 */
+	overflow: auto; /* IE <- 隐藏垂直滚动条 */
 }
 
-blockquote, q
-{
+blockquote, q {
 	quotes: none;
 }
 
-blockquote:before, blockquote:after,
-q:before, q:after
-{
-	content: '';
-	content: none;
-}
+	blockquote:before, blockquote:after,
+	q:before, q:after {
+		content: '';
+		content: none;
+	}
 
-table
-{
+table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
 
-canvas
-{
-	position: relative;		/* 默认情况下画布总是相对定位，使其子元素能相对于画布定位 */
+canvas {
+	position: relative; /* 默认情况下画布总是相对定位，使其子元素能相对于画布定位 */
 	left: 0px;
 	top: 0px;
+}
+
+/* clear fix */
+.cnWse_ClearFix {
+	*zoom: 1;
+}
+
+	.cnWse_ClearFix:before, .cnWse_ClearFix:after {
+		display: table;
+		line-height: 0;
+		content: "";
+	}
+
+.cnWse_ClearFix:after {
+	clear: both;
 }
 
 /*********************************************************************** Over ***********************************************************************/
