@@ -248,16 +248,24 @@ function fOnIcld(a_Errs)
 		stDomUtil.cQryOne = function (a_Slc, a_Root)
 		{
 			var l_Rst;
+			if (a_Root) // 如果提供了根，先把所有元素都找出，再选第一个
+			{
+				l_Rst = stDomUtil.cQryAll(a_Slc, a_Root);
+				return (l_Rst.length > 0) ? l_Rst[0] : null;
+			}
+
 			if (nWse.fMaybeNonHtml5Brsr())
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
 
-				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get(0) : null;
+				l_Rst = (l_Rst && (l_Rst.length > 0)) ? l_Rst.get(0) : null;
 			}
-
-			l_Rst = document.querySelector(a_Slc);
-			return a_Root ? (stDomUtil.cIsAcst(a_Root, l_Rst) ? l_Rst : null) : l_Rst;
+			else
+			{
+				l_Rst = document.querySelector(a_Slc);
+			}
+			return l_Rst;
 		};
 
 		/// 查询全部
@@ -272,10 +280,13 @@ function fOnIcld(a_Errs)
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
 
-				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
+				l_Rst = (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
 			}
-
-			l_Rst = stDomUtil.cDumpToAry(document.querySelectorAll(a_Slc));
+			else
+			{
+				l_Rst = stDomUtil.cDumpToAry(document.querySelectorAll(a_Slc));
+			}
+			
 			if (a_Root)
 			{
 				stAryUtil.cErsAll(l_Rst,
