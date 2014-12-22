@@ -244,13 +244,14 @@ function fOnIcld(a_Errs)
 		/// 查询一个
 		/// a_Slc：String，选择器
 		/// a_Root：Node，查询的根节点，返回的元素为其后代，默认undefined
+		/// a_PrnOnly：Boolean，只考虑a_Root作为父节点的情况，默认false
 		/// 返回：Node，不存在时返回null
-		stDomUtil.cQryOne = function (a_Slc, a_Root)
+		stDomUtil.cQryOne = function (a_Slc, a_Root, a_PrnOnly)
 		{
 			var l_Rst;
 			if (a_Root) // 如果提供了根，先把所有元素都找出，再选第一个
 			{
-				l_Rst = stDomUtil.cQryAll(a_Slc, a_Root);
+				l_Rst = stDomUtil.cQryAll(a_Slc, a_Root, a_PrnOnly);
 				return (l_Rst.length > 0) ? l_Rst[0] : null;
 			}
 
@@ -271,8 +272,9 @@ function fOnIcld(a_Errs)
 		/// 查询全部
 		/// a_Slc：String，选择器
 		/// a_Root：Node，查询的根节点，返回的元素为其后代，默认undefined
+		/// a_PrnOnly：Boolean，只考虑a_Root作为父节点的情况，默认false
 		/// 返回：Node[]，不存在时返回空数组
-		stDomUtil.cQryAll = function (a_Slc, a_Root)
+		stDomUtil.cQryAll = function (a_Slc, a_Root, a_PrnOnly)
 		{
 			var l_Rst;
 			if (nWse.fMaybeNonHtml5Brsr())
@@ -291,7 +293,7 @@ function fOnIcld(a_Errs)
 			{
 				stAryUtil.cErsAll(l_Rst,
 				function (a_Ary, a_Idx, a_DomElmt)
-				{ return ! stDomUtil.cIsAcst(a_Root, a_DomElmt); });
+				{ return a_PrnOnly ? (a_Root !== a_DomElmt.parentNode) : (! stDomUtil.cIsAcst(a_Root, a_DomElmt)); });
 			}
 			return l_Rst;
 		};
