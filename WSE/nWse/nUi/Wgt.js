@@ -110,10 +110,10 @@ function fOnIcld(a_Errs)
 
 		if (! s_RcRectRds)
 		{ s_RcRectRds = new Array(4); }
-		s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtUp;
-		s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtUp;
-		s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtDn;
-		s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtDn;
+		s_RcRectRds[0] = l_BdrRds.c_BdrRdsLtTp;
+		s_RcRectRds[1] = l_BdrRds.c_BdrRdsRtTp;
+		s_RcRectRds[2] = l_BdrRds.c_BdrRdsRtBm;
+		s_RcRectRds[3] = l_BdrRds.c_BdrRdsLtBm;
 
 		a_Path.cRset().cRcRect(false, a_Bbox.c_X, a_Bbox.c_Y, a_Bbox.c_W, a_Bbox.c_H, s_RcRectRds);
 	}

@@ -205,8 +205,8 @@ function fOnIcld(a_Errs)
 
 	function fCalcBoaColTotDim_Bp(a_CssDim)
 	{
-		a_CssDim.c_BpUp = a_CssDim.c_BdrThkUp + a_CssDim.c_PadUp;
-		a_CssDim.c_BpDn = a_CssDim.c_PadDn + a_CssDim.c_BdrThkDn;
+		a_CssDim.c_BpUp = a_CssDim.c_BdrThkTp + a_CssDim.c_PadTp;
+		a_CssDim.c_BpDn = a_CssDim.c_PadBm + a_CssDim.c_BdrThkBm;
 		a_CssDim.c_BpUpDn = a_CssDim.c_BpUp + a_CssDim.c_BpDn;
 
 		a_CssDim.c_BpLt = a_CssDim.c_BdrThkLt + a_CssDim.c_PadLt;
@@ -981,7 +981,7 @@ function fOnIcld(a_Errs)
 				stCssUtil.cSetDimWid(a_Put, l_OldWid);	// 恢复
 			}
 
-			l_TgtArea.c_H += l_CssMgn.c_MgnUp + l_CssMgn.c_MgnDn;
+			l_TgtArea.c_H += l_CssMgn.c_MgnTp + l_CssMgn.c_MgnBm;
 		}
 
 		// 更新行高
@@ -1134,7 +1134,7 @@ function fOnIcld(a_Errs)
 		}
 
 		if (l_FxdAny)	// 固定时需要设置初始高度（此时不可定制）
-		{ stCssUtil.cSetDimHgt(a_Put, l_TgtArea.c_H - l_CssMgn.c_MgnUp - l_CssMgn.c_MgnDn); }
+		{ stCssUtil.cSetDimHgt(a_Put, l_TgtArea.c_H - l_CssMgn.c_MgnTp - l_CssMgn.c_MgnBm); }
 
 		// 没有特效时，立即返回
 		if ((! tEfc))
@@ -1151,7 +1151,7 @@ function fOnIcld(a_Errs)
 				"top" : l_TgtArea.c_Y.toString() + "px",
 				"width" : (l_TgtArea.c_W - l_CssMgn.c_MgnLt - l_CssMgn.c_MgnRt).toString() + "px",
 				"height" : l_FxdAny
-					? ((l_TgtArea.c_H - (l_CssMgn.c_MgnUp + l_CssMgn.c_MgnDn)).toString() + "px")
+					? ((l_TgtArea.c_H - (l_CssMgn.c_MgnTp + l_CssMgn.c_MgnBm)).toString() + "px")
 					: undefined	// 必须用这个，将被cShlwAsn跳过
 			}, null);
 	}

@@ -144,18 +144,18 @@ function fOnIcld(a_Errs)
 				a_Agms[1] = a_Agms[2] = a_Agms[3] = a_Agms[4] = "0";
 			}
 			else
-			if (2 == a_Agms.length)	// a_DomElmt, a_Up
+			if (2 == a_Agms.length)	// a_DomElmt, a_Tp
 			{
 				a_Agms[4] = a_Agms[2] = a_Agms[3] = a_Agms[1];
 			}
 			else
-			if (3 == a_Agms.length)	// a_DomElmt, a_Up, a_Rt
+			if (3 == a_Agms.length)	// a_DomElmt, a_Tp, a_Rt
 			{
 				a_Agms[4] = a_Agms[2];
 				a_Agms[3] = a_Agms[1];
 			}
 			else
-			if (4 == a_Agms.length)	// a_DomElmt, a_Up, a_Rt, a_Dn
+			if (4 == a_Agms.length)	// a_DomElmt, a_Tp, a_Rt, a_Dn
 			{
 				a_Agms[4] = a_Agms[2];
 			}
@@ -171,14 +171,14 @@ function fOnIcld(a_Errs)
 		{
 			a_Rst.c_MgnLt = parseFloat(a_CmptStl.marginLeft);
 			a_Rst.c_MgnRt = parseFloat(a_CmptStl.marginRight);
-			a_Rst.c_MgnUp = parseFloat(a_CmptStl.marginTop);
-			a_Rst.c_MgnDn = parseFloat(a_CmptStl.marginBottom);
+			a_Rst.c_MgnTp = parseFloat(a_CmptStl.marginTop);
+			a_Rst.c_MgnBm = parseFloat(a_CmptStl.marginBottom);
 			if (a_AlnPxl)
 			{
 				a_Rst.c_MgnLt = Math.round(a_Rst.c_MgnLt);
 				a_Rst.c_MgnRt = Math.round(a_Rst.c_MgnRt);
-				a_Rst.c_MgnUp = Math.round(a_Rst.c_MgnUp);
-				a_Rst.c_MgnDn = Math.round(a_Rst.c_MgnDn);
+				a_Rst.c_MgnTp = Math.round(a_Rst.c_MgnTp);
+				a_Rst.c_MgnBm = Math.round(a_Rst.c_MgnBm);
 			}
 		}
 
@@ -195,29 +195,29 @@ function fOnIcld(a_Errs)
 		{
 			a_Rst.c_BdrThkLt = eCalcBdrThk(a_CmptStl.borderLeftWidth);
 			a_Rst.c_BdrThkRt = eCalcBdrThk(a_CmptStl.borderRightWidth);
-			a_Rst.c_BdrThkUp = eCalcBdrThk(a_CmptStl.borderTopWidth);
-			a_Rst.c_BdrThkDn = eCalcBdrThk(a_CmptStl.borderBottomWidth);
+			a_Rst.c_BdrThkTp = eCalcBdrThk(a_CmptStl.borderTopWidth);
+			a_Rst.c_BdrThkBm = eCalcBdrThk(a_CmptStl.borderBottomWidth);
 			if (a_AlnPxl)
 			{
 				a_Rst.c_BdrThkLt = Math.round(a_Rst.c_BdrThkLt);
 				a_Rst.c_BdrThkRt = Math.round(a_Rst.c_BdrThkRt);
-				a_Rst.c_BdrThkUp = Math.round(a_Rst.c_BdrThkUp);
-				a_Rst.c_BdrThkDn = Math.round(a_Rst.c_BdrThkDn);
+				a_Rst.c_BdrThkTp = Math.round(a_Rst.c_BdrThkTp);
+				a_Rst.c_BdrThkBm = Math.round(a_Rst.c_BdrThkBm);
 			}
 		}
 
 		function eGetBdrRds(a_Rst, a_CmptStl, a_AlnPxl)
 		{
-			a_Rst.c_BdrRdsLtUp = parseFloat(a_CmptStl.borderTopLeftRadius);
-			a_Rst.c_BdrRdsRtUp = parseFloat(a_CmptStl.borderTopRightRadius);
-			a_Rst.c_BdrRdsLtDn = parseFloat(a_CmptStl.borderBottomLeftRadius);
-			a_Rst.c_BdrRdsRtDn = parseFloat(a_CmptStl.borderBottomRightRadius);
+			a_Rst.c_BdrRdsLtTp = parseFloat(a_CmptStl.borderTopLeftRadius);
+			a_Rst.c_BdrRdsRtTp = parseFloat(a_CmptStl.borderTopRightRadius);
+			a_Rst.c_BdrRdsLtBm = parseFloat(a_CmptStl.borderBottomLeftRadius);
+			a_Rst.c_BdrRdsRtBm = parseFloat(a_CmptStl.borderBottomRightRadius);
 			if (a_AlnPxl)
 			{
-				a_Rst.c_BdrRdsLtUp = Math.round(a_Rst.c_BdrRdsLtUp);
-				a_Rst.c_BdrRdsRtUp = Math.round(a_Rst.c_BdrRdsRtUp);
-				a_Rst.c_BdrRdsLtDn = Math.round(a_Rst.c_BdrRdsLtDn);
-				a_Rst.c_BdrRdsRtDn = Math.round(a_Rst.c_BdrRdsRtDn);
+				a_Rst.c_BdrRdsLtTp = Math.round(a_Rst.c_BdrRdsLtTp);
+				a_Rst.c_BdrRdsRtTp = Math.round(a_Rst.c_BdrRdsRtTp);
+				a_Rst.c_BdrRdsLtBm = Math.round(a_Rst.c_BdrRdsLtBm);
+				a_Rst.c_BdrRdsRtBm = Math.round(a_Rst.c_BdrRdsRtBm);
 			}
 		}
 
@@ -225,14 +225,14 @@ function fOnIcld(a_Errs)
 		{
 			a_Rst.c_PadLt = parseFloat(a_CmptStl.paddingLeft);
 			a_Rst.c_PadRt = parseFloat(a_CmptStl.paddingRight);
-			a_Rst.c_PadUp = parseFloat(a_CmptStl.paddingTop);
-			a_Rst.c_PadDn = parseFloat(a_CmptStl.paddingBottom);
+			a_Rst.c_PadTp = parseFloat(a_CmptStl.paddingTop);
+			a_Rst.c_PadBm = parseFloat(a_CmptStl.paddingBottom);
 			if (a_AlnPxl)
 			{
 				a_Rst.c_PadLt = Math.round(a_Rst.c_PadLt);
 				a_Rst.c_PadRt = Math.round(a_Rst.c_PadRt);
-				a_Rst.c_PadUp = Math.round(a_Rst.c_PadUp);
-				a_Rst.c_PadDn = Math.round(a_Rst.c_PadDn);
+				a_Rst.c_PadTp = Math.round(a_Rst.c_PadTp);
+				a_Rst.c_PadBm = Math.round(a_Rst.c_PadBm);
 			}
 		}
 
@@ -245,7 +245,7 @@ function fOnIcld(a_Errs)
 		function eGetCtntHgt(a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			// 不用对齐像素，因为当a_AlnPxl为true时，相关数据已对齐像素
-			a_Rst.c_CtntHgt = a_DomElmt.offsetHeight - a_Rst.c_BdrThkUp - a_Rst.c_PadUp - a_Rst.c_PadDn - a_Rst.c_BdrThkDn;
+			a_Rst.c_CtntHgt = a_DomElmt.offsetHeight - a_Rst.c_BdrThkTp - a_Rst.c_PadTp - a_Rst.c_PadBm - a_Rst.c_BdrThkBm;
 		}
 
 		function eGetMinMaxWidHgt(a_Rst, a_CmptStl)
@@ -711,7 +711,7 @@ function fOnIcld(a_Errs)
 		/// 获取外边距
 		/// a_Rst：Object
 		/// {
-		///	c_MgnLt，c_MgnRt，c_MgnUp，c_MgnDn：Number，像素
+		///	c_MgnLt，c_MgnRt，c_MgnTp，c_MgnBm：Number，像素
 		/// }
 		/// a_DomElmt：HTMLElement
 		/// a_CmptStl：计算样式，如不提供则现计算
@@ -727,7 +727,7 @@ function fOnIcld(a_Errs)
 		/// 获取边框厚度
 		/// a_Rst：Object
 		/// {
-		///	c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
+		///	c_BdrThkLt，c_BdrThkRt，c_BdrThkTp，c_BdrThkBm：Number，像素
 		/// }
 		stCssUtil.cGetBdrThk = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
@@ -739,7 +739,7 @@ function fOnIcld(a_Errs)
 		/// 获取边框半径
 		/// a_Rst：Object
 		/// {
-		///	c_BdrRdsLtUp，c_BdrRdsRtUp，c_BdrRdsLtDn，c_BdrRdsRtDn：Number，像素
+		///	c_BdrRdsLtTp，c_BdrRdsRtTp，c_BdrRdsLtBm，c_BdrRdsRtBm：Number，像素
 		/// }
 		stCssUtil.cGetBdrRds = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
@@ -751,7 +751,7 @@ function fOnIcld(a_Errs)
 		/// 获取内边距
 		/// a_Rst：Object
 		/// {
-		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
+		///	c_PadLt，c_PadRt，c_PadTp，c_PadBm：Number，像素
 		/// }
 		stCssUtil.cGetPad = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
@@ -763,8 +763,8 @@ function fOnIcld(a_Errs)
 		/// 获取内容宽度（减去边框和内边距），【注意】a_DomElmt.offsetWidth必须有效！
 		/// a_Rst：Object
 		/// {
-		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
-		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
+		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkTp，c_BdrThkBm：Number，像素
+		///	c_PadLt，c_PadRt，c_PadTp，c_PadBm：Number，像素
 		/// c_CtntWid：Number，像素
 		/// }
 		stCssUtil.cGetCtntWid = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
@@ -779,8 +779,8 @@ function fOnIcld(a_Errs)
 		/// 获取内容高度（减去边框和内边距），【注意】a_DomElmt.offsetHeight必须有效！
 		/// a_Rst：Object
 		/// {
-		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkUp，c_BdrThkDn：Number，像素
-		///	c_PadLt，c_PadRt，c_PadUp，c_PadDn：Number，像素
+		/// c_BdrThkLt，c_BdrThkRt，c_BdrThkTp，c_BdrThkBm：Number，像素
+		///	c_PadLt，c_PadRt，c_PadTp，c_PadBm：Number，像素
 		/// c_CtntHgt：Number，像素
 		/// }
 		stCssUtil.cGetCtntHgt = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
@@ -809,9 +809,9 @@ function fOnIcld(a_Errs)
 			a_Rst.c_HrztPad = a_Rst.c_PadLt + a_Rst.c_PadRt;
 			a_Rst.c_HrztMbp = a_Rst.c_HrztMgn + a_Rst.c_HrztBdrThk + a_Rst.c_HrztPad;
 
-			a_Rst.c_VticMgn = a_Rst.c_MgnUp + a_Rst.c_MgnDn;
-			a_Rst.c_VticBdrThk = a_Rst.c_BdrThkUp + a_Rst.c_BdrThkDn;
-			a_Rst.c_VticPad = a_Rst.c_PadUp + a_Rst.c_PadDn;
+			a_Rst.c_VticMgn = a_Rst.c_MgnTp + a_Rst.c_MgnBm;
+			a_Rst.c_VticBdrThk = a_Rst.c_BdrThkTp + a_Rst.c_BdrThkBm;
+			a_Rst.c_VticPad = a_Rst.c_PadTp + a_Rst.c_PadBm;
 			a_Rst.c_VticMbp = a_Rst.c_VticMgn + a_Rst.c_VticBdrThk + a_Rst.c_VticPad;
 			return a_Rst;
 		};
@@ -819,17 +819,17 @@ function fOnIcld(a_Errs)
 		/// 获取位置
 		/// a_Rst：Object
 		/// {
-		/// c_Lt，c_Up：Number，像素
+		/// c_Lt，c_Tp：Number，像素
 		/// }
 		stCssUtil.cGetPos = function (a_Rst, a_DomElmt, a_CmptStl, a_AlnPxl)
 		{
 			a_CmptStl = a_CmptStl || eGetCmptStl(a_DomElmt);
 			a_Rst.c_Lt = parseFloat(a_CmptStl.left);
-			a_Rst.c_Up = parseFloat(a_CmptStl.top);
+			a_Rst.c_Tp = parseFloat(a_CmptStl.top);
 			if (a_AlnPxl)
 			{
 				a_Rst.c_Lt = Math.round(a_Rst.c_Lt);
-				a_Rst.c_Up = Math.round(a_Rst.c_Up);
+				a_Rst.c_Tp = Math.round(a_Rst.c_Tp);
 			}
 			return a_Rst;
 		};
@@ -848,10 +848,10 @@ function fOnIcld(a_Errs)
 		/// 设置位置
 		/// a_DomElmt：HTMLElement
 		/// 返回：stCssUtil
-		stCssUtil.cSetPos = function (a_DomElmt, a_Lt, a_Up)
+		stCssUtil.cSetPos = function (a_DomElmt, a_Lt, a_Tp)
 		{
 			a_DomElmt.style.left = eToCssUnit(a_Lt);
-			a_DomElmt.style.top = eToCssUnit(a_Up);
+			a_DomElmt.style.top = eToCssUnit(a_Tp);
 			return stCssUtil;
 		};
 
@@ -867,9 +867,9 @@ function fOnIcld(a_Errs)
 		/// 设置位置上
 		/// a_DomElmt：HTMLElement
 		/// 返回：stCssUtil
-		stCssUtil.cSetPosUp = function (a_DomElmt, a_Up)
+		stCssUtil.cSetPosTp = function (a_DomElmt, a_Tp)
 		{
-			a_DomElmt.style.top = eToCssUnit(a_Up);
+			a_DomElmt.style.top = eToCssUnit(a_Tp);
 			return stCssUtil;
 		};
 
@@ -902,15 +902,15 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 设置位置尺寸
-		stCssUtil.cSetPosDim = function (a_DomElmt, a_Lt, a_Up, a_Wid, a_Hgt)
+		stCssUtil.cSetPosDim = function (a_DomElmt, a_Lt, a_Tp, a_Wid, a_Hgt)
 		{
-			return stCssUtil.cSetPos(a_DomElmt, a_Lt, a_Up).cSetDim(a_DomElmt, a_Wid, a_Hgt);
+			return stCssUtil.cSetPos(a_DomElmt, a_Lt, a_Tp).cSetDim(a_DomElmt, a_Wid, a_Hgt);
 		};
 
 		/// 设置外边距
 		/// a_DomElmt：HTMLElement
 		/// 返回：stCssUtil
-		stCssUtil.cSetMgn = function (a_DomElmt, a_Up, a_Rt, a_Dn, a_Lt)
+		stCssUtil.cSetMgn = function (a_DomElmt, a_Tp, a_Rt, a_Dn, a_Lt)
 		{
 			eDftAgm(arguments);
 			a_DomElmt.style.marginTop = eToCssUnit(arguments[1]);
@@ -923,7 +923,7 @@ function fOnIcld(a_Errs)
 		/// 设置边框宽度
 		/// a_DomElmt：HTMLElement
 		/// 返回：stCssUtil
-		stCssUtil.cSetBdrWid = function (a_DomElmt, a_Up, a_Rt, a_Dn, a_Lt)
+		stCssUtil.cSetBdrWid = function (a_DomElmt, a_Tp, a_Rt, a_Dn, a_Lt)
 		{
 			eDftAgm(arguments);
 			a_DomElmt.style.borderTopWidth = eToCssUnit(arguments[1]);
@@ -936,7 +936,7 @@ function fOnIcld(a_Errs)
 		/// 设置内边距
 		/// a_DomElmt：HTMLElement
 		/// 返回：stCssUtil
-		stCssUtil.cSetPad = function (a_DomElmt, a_Up, a_Rt, a_Dn, a_Lt)
+		stCssUtil.cSetPad = function (a_DomElmt, a_Tp, a_Rt, a_Dn, a_Lt)
 		{
 			eDftAgm(arguments);
 			a_DomElmt.style.paddingTop = eToCssUnit(arguments[1]);

@@ -380,7 +380,7 @@ function fOnIcld(a_Errs)
 				{
 					l_PutTgtH = (Math.round(a_OfstWid / l_FxdAr));
 					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_PutTgtH);
-					stCssUtil.cSetDimHgt(l_This.d_Body, l_PutTgtH - l_Pad.c_PadUp - l_Pad.c_PadDn);
+					stCssUtil.cSetDimHgt(l_This.d_Body, l_PutTgtH - l_Pad.c_PadTp - l_Pad.c_PadBm);
 				}
 
 				// 调整形状
@@ -442,7 +442,7 @@ function fOnIcld(a_Errs)
 				{ s_TempRst = {}; }
 
 				var l_CtntH = stCssUtil.cGetCtntHgt(s_TempRst, l_This.d_Body).c_CtntHgt;
-				stCssUtil.cSetPosUp(l_This.d_DomTit, (l_CtntH - l_This.d_DomTit.offsetHeight) / 2);
+				stCssUtil.cSetPosTp(l_This.d_DomTit, (l_CtntH - l_This.d_DomTit.offsetHeight) / 2);
 				return this;
 			}
 			,

@@ -535,7 +535,7 @@ function fOnIcld(a_Errs)
 //
 //					l_ShowAmt = stNumUtil.cClmOnNum(l_ShowAmt, 1, l_This.d_LiAry.length);
 //					var l_Hgt = l_This.dGetLiHgt() * l_ShowAmt +
-//						l_BdrThk.c_BdrThkUp + l_BdrThk.c_BdrThkDn + l_Pad.c_PadUp + l_Pad.c_PadDn;
+//						l_BdrThk.c_BdrThkTp + l_BdrThk.c_BdrThkBm + l_Pad.c_PadTp + l_Pad.c_PadBm;
 //					stCssUtil.cSetDimHgt(l_This.d_PutTgt, l_Hgt);
 //				}
 //				else

@@ -748,9 +748,9 @@ function fOnIcld(a_Errs)
 
 				e_Temp_TgtArea.cCrt(
 					a_Put.offsetLeft - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnLt),
-					a_Put.offsetTop - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnUp),
+					a_Put.offsetTop - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnTp),
 					a_Put.offsetWidth + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnLt + e_Temp_CssUtilRst.c_MgnRt)),
-					a_Put.offsetHeight + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnUp + e_Temp_CssUtilRst.c_MgnDn)));
+					a_Put.offsetHeight + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnTp + e_Temp_CssUtilRst.c_MgnBm)));
 				return e_Temp_TgtArea;
 			}
 
@@ -782,9 +782,9 @@ function fOnIcld(a_Errs)
 
 				l_Rst = e_Temp_TgtArea.cCrt(
 					l_Rst.c_X + l_Mgn.c_MgnLt,
-					l_Rst.c_Y + l_Mgn.c_MgnUp,
+					l_Rst.c_Y + l_Mgn.c_MgnTp,
 					l_Rst.c_W - (l_Mgn.c_MgnLt + l_Mgn.c_MgnRt),
-					l_Rst.c_H - (l_Mgn.c_MgnUp + l_Mgn.c_MgnDn)
+					l_Rst.c_H - (l_Mgn.c_MgnTp + l_Mgn.c_MgnBm)
 				)
 			}
 			return l_Rst;

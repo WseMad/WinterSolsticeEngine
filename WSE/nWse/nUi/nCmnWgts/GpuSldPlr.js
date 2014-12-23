@@ -694,13 +694,13 @@ function fOnIcld(a_Errs)
 				l_PutTgt = l_This.d_NumIpt.cAcsPutTgt();
 				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_PutTgt, null, true);
 				l_This.d_NumIptW = l_PutTgt.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
-				l_This.d_NumIptH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
+				l_This.d_NumIptH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnTp + tWgt.sd_PutTgtMgn.c_MgnBm;
 
 				// 贴图模式
 				l_PutTgt = l_This.d_Post.cAcsPutTgt();
 				stCssUtil.cGetMgn(tWgt.sd_PutTgtMgn, l_PutTgt, null, true);
 				l_This.d_PostW = l_PutTgt.offsetWidth + tWgt.sd_PutTgtMgn.c_MgnLt + tWgt.sd_PutTgtMgn.c_MgnRt;
-				l_This.d_PostH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnUp + tWgt.sd_PutTgtMgn.c_MgnDn;
+				l_This.d_PostH = l_PutTgt.offsetHeight + tWgt.sd_PutTgtMgn.c_MgnTp + tWgt.sd_PutTgtMgn.c_MgnBm;
 
 				// 确定排成几行，和每行高度
 				l_This.d_RowAmt = 1;

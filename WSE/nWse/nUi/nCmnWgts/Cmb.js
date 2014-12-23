@@ -614,11 +614,11 @@ function fOnIcld(a_Errs)
 				var l_DnSpc = l_CltSara.c_Y + l_CltSara.c_H - (l_PtSara.c_Y + l_PtSara.c_H);
 				if ((l_DnSpc < l_UlSara.c_H) && (l_UpSpc > l_DnSpc)) // 放上方
 				{
-					stCssUtil.cSetPosUp(l_This.d_Ul, -l_UlSara.c_H);
+					stCssUtil.cSetPosTp(l_This.d_Ul, -l_UlSara.c_H);
 				}
 				else // 放下方
 				{
-					stCssUtil.cSetPosUp(l_This.d_Ul, l_PtSara.c_H);
+					stCssUtil.cSetPosTp(l_This.d_Ul, l_PtSara.c_H);
 				}
 				
 				return this;

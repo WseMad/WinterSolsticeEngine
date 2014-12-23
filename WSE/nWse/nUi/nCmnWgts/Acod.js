@@ -259,8 +259,8 @@ function fOnIcld(a_Errs)
 					stCssUtil.cAnmt(a_Ctnt,
 						{
 							"height": a_Ctnt.Wse_Acod.c_Hgt.toString() + "px=",
-							"paddingTop": l_This.d_CtntPad.c_PadUp.toString() + "px=",
-							"paddingBottom": l_This.d_CtntPad.c_PadDn.toString() + "px="
+							"paddingTop": l_This.d_CtntPad.c_PadTp.toString() + "px=",
+							"paddingBottom": l_This.d_CtntPad.c_PadBm.toString() + "px="
 						},
 						{
 							c_Dur: tAcod.sc_AnmtDur,
