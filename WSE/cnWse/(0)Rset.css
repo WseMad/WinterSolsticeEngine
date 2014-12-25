@@ -53,7 +53,7 @@ ul {
 	list-style: square;
 }
 
-input, button, textarea
+input, button, select, textarea
 {
 	outline: none; /* Chrome <- 不用显示输入框的轮廓 */
 }
