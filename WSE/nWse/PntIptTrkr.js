@@ -127,7 +127,7 @@ function fOnIcld(a_Errs)
 		{
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			ePushTchIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
+			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
 
 //			//【调试iPad】
 //			var l_TestOpt = document.getElementById("k_TestOpt");
@@ -139,14 +139,14 @@ function fOnIcld(a_Errs)
 		{
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			ePushTchIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
+			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
 		};
 
 		var l_fOnTchUp = function (a_Evt)
 		{
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			ePushTchIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
+			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
 		};
 
 		a_This.e_fOnTchMove = stFctnUtil.cBindThis(a_This, l_fOnTchMove);
@@ -201,6 +201,9 @@ function fOnIcld(a_Errs)
 
 	function ePushTchIpt(a_This, a_Kind, a_Evt)
 	{
+		// 处理结果，默认继续处理
+		var l_Rst = true;
+
 		// 当前正在追踪的触点在touches，但是触摸结束时这些触点就从该数组删除，此时应使用changedTouches
 //		var l_EvtTchs = a_Evt.touches;
 //		if ((tPntIptKind.i_TchEnd == a_Kind))
@@ -208,7 +211,7 @@ function fOnIcld(a_Errs)
 //			l_EvtTchs = Array.prototype.concat.call(a_Evt.touches, a_Evt.changedTouches);
 //		}
 		var l_EvtTchs = (tPntIptKind.i_TchEnd == a_Kind) ? a_Evt.changedTouches : a_Evt.touches;
-
+		
 		// 立即处理？
 		var l_PntIpt;
 		if (a_This.e_ImdtHdl)
@@ -219,10 +222,10 @@ function fOnIcld(a_Errs)
 				stAryUtil.cFor(l_EvtTchs,
 					function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
 					{
-						l_PntIpt.eAddTch(a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
+						l_PntIpt.eAddTch(a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_Evt, a_EvtTch);
 					});
 				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
-				a_This.e_fImdtHdlr(l_PntIpt);				// 处理
+				l_Rst = a_This.e_fImdtHdlr(l_PntIpt);				// 处理
 				eActTchsUrg(a_This, l_PntIpt);				// 注销活动触点
 				stAryUtil.cFor(l_PntIpt.c_Tchs,
 					function (a_Tchs, a_TchIdx, a_Tch)
@@ -239,6 +242,9 @@ function fOnIcld(a_Errs)
 					eTrgrTch(a_This, a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_EvtTch);
 				});
 		}
+
+		// 返回
+		return l_Rst;
 	}
 
 	function eAcsQueTail(a_This)
@@ -558,9 +564,9 @@ function fOnIcld(a_Errs)
 		null
 		,
 		{
-			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt)
+			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs)
 			{
-				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt));
+				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs));
 				return this;
 			}
 			,
@@ -729,16 +735,16 @@ function fOnIcld(a_Errs)
 		/// c_PvtDft：Boolean，仅用于立即处理，阻止默认动作？默认false
 		/// c_StopPpgt：Boolean，仅用于立即处理，停止传播？默认false
 		/// c_StopImdtPpgt：Boolean，仅用于立即处理，停止立即传播？默认false
-		function tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt)
+		function tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt)
 		{
-			this.cCrt(a_TchId, a_Kind, a_X, a_Y, a_Evt);
+			this.cCrt(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt);
 		}
 		,
 		null
 		,
 		{
 			/// 创建
-			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTgt)
+			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt)
 			{
 				this.c_TchId = a_TchId;
 				this.c_Kind = a_Kind;
@@ -748,6 +754,7 @@ function fOnIcld(a_Errs)
 				this.c_OfstY = 0;
 				this.c_Hdld = false;
 				this.c_Evt = a_Evt || null;
+				this.c_EvtTchs = a_EvtTchs || null;
 				this.c_EvtTgt = a_EvtTgt || (this.c_Evt && this.c_Evt.target);
 				this.c_PvtDft = false;
 				this.c_StopPpgt = false;
