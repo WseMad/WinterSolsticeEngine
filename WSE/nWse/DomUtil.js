@@ -176,7 +176,7 @@ function fOnIcld(a_Errs)
 			{ return []; }
 
 			var l_Rst, i, l_Len;
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (nWse.fMaybeNonHtml5Brsr()) // IE8不允许使用数组方法拷贝NodeList
 			{
 				l_Len = a_NodeList.length;
 				l_Rst = new Array(l_Len);
@@ -195,7 +195,7 @@ function fOnIcld(a_Errs)
 		stDomUtil.cGetElmtsByCssc = function (a_Cssc)
 		{
 			var l_Rst;
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (! document.getElementsByClassName)
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery("." + a_Cssc); }
@@ -255,7 +255,7 @@ function fOnIcld(a_Errs)
 				return (l_Rst.length > 0) ? l_Rst[0] : null;
 			}
 
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (! document.querySelector)
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
@@ -277,7 +277,7 @@ function fOnIcld(a_Errs)
 		stDomUtil.cQryAll = function (a_Slc, a_Root, a_PrnOnly)
 		{
 			var l_Rst;
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (! document.querySelectorAll)
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
