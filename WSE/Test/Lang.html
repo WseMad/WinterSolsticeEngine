@@ -3,6 +3,7 @@
 <html>
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>模板页面</title>
 
@@ -24,6 +25,12 @@
 
 
 	<style type="text/css">
+		/*
+			注意，cw = 内容宽度 + 内边距；ow = cw + 边框
+			context-box时，cw=220,ch=220; ow=240,oh=240
+			border-box 时，cw=180,ch=180; ow=200,oh=200
+			*/
+
 		html,body{
 			margin:0;
 			border-width:0;
@@ -35,7 +42,7 @@
 		{
 			width:100%;
 			height:100%;
-			background-color: rgb(0, 0, 128);
+			/*background-color: rgb(0, 0, 128);*/
 		}
 
 		#k_Div2
@@ -45,27 +52,36 @@
 			border: 10px solid white;
 			padding: 10px;
 			width: 200px;
-			height: 200px;
-			/*
-			注意，cw = 内容宽度 + 内边距；ow = cw + 边框
-			context-box时，cw=220,ch=220; ow=240,oh=240
-			border-box 时，cw=180,ch=180; ow=200,oh=200
-			*/
+			height: 200px;		
 		}
+
+		.cnApp_Date
+		{
+			display: inline-block;
+
+
+			width: 50%;
+			padding: 5px;
+			border: 1px solid black;
+		}
+
 	</style>
 </head>
 <body>
 
-	<div id="k_Test" style="">
+	<!--<div id="k_Test" style="">
 		你好，世界！
 
 		<div id="k_Div2">
 			我们都好！
 		</div>
-	</div>
+	</div>-->
 
 	<div id="k_PrstTgt">
 		呈现目标
+		<p>
+			<span class="cnApp_Date">选择日期</span>
+		</p>
 	</div>
 
 	<!--<div style="position:relative; width:400px;height: 400px; clip:rect(0px, 400px, 400px, 0px); background-color: rgb(0, 0, 255);">-->
@@ -105,7 +121,7 @@
 							"DomUtil.js",
 							"CssUtil.js"
 
-							,"RltmAfx.js"
+						//	,"RltmAfx.js"
 						]
 						,
 						fOnIcld);
@@ -118,7 +134,21 @@
 
 			///////////////////////////////////////////////// 接口
 
+			nWse.fClass(nApp,
+				function tDatePkr(a_TextBox)
+				{
+				},
+				null,
+				{
+				});
 
+			nApp.g_DatePkrs = [];
+			var l_All = nWse.stDomUtil.cQryAll(".cnApp_Date");
+			nWse.stAryUtil.cFor(l_All,
+				function (a_Ary, a_Idx, a_TextBox)
+				{
+					nApp.g_DatePkrs.push(new nApp.tDatePkr(a_TextBox));
+				});
 		}
 
 		
