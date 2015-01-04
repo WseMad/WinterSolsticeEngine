@@ -9,19 +9,19 @@
 
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 
-    <script type="text/javascript">
+	<script type="text/javascript">
 		nWse.stAsynIcld.cLibDiryMap({
 			"nWse": "../nWse",
 			"cnWse": "../cnWse"
 		});
-	//	nWse.stAsynIcld.cPreLoad("nWse", ["Rls/WSE_All.js"]);
-	//	nWse.stAsynIcld.cPreLoad("nWse", ["(1)ObjOrtd", "(2)LangUtil"]);
-    </script>
+		//	nWse.stAsynIcld.cPreLoad("nWse", ["Rls/WSE_All.js"]);
+		//	nWse.stAsynIcld.cPreLoad("nWse", ["(1)ObjOrtd", "(2)LangUtil"]);
+	</script>
 	<!--<script type="text/javascript" src="../nWse/(1)ObjOrtd.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/(2)LangUtil.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/(3)CoreDtst.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/CssUtil.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/DomUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/(2)LangUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/(3)CoreDtst.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/CssUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/DomUtil.js"></script>-->
 
 
 	<style type="text/css">
@@ -31,40 +31,58 @@
 			border-box 时，cw=180,ch=180; ow=200,oh=200
 			*/
 
-		html,body{
-			margin:0;
-			border-width:0;
-			padding:0;
-			height:100%;
+		html, body {
+			margin: 0;
+			border-width: 0;
+			padding: 0;
+			height: 100%;
+			background-color: rgb(128, 128, 128);
 		}
 
-		#k_Test
-		{
-			width:100%;
-			height:100%;
+		#k_Test {
+			width: 100%;
+			height: 100%;
 			/*background-color: rgb(0, 0, 128);*/
 		}
 
-		#k_Div2
-		{
+		#k_Div2 {
 			box-sizing: border-box;
 			margin: 10px;
 			border: 10px solid white;
 			padding: 10px;
 			width: 200px;
-			height: 200px;		
+			height: 200px;
 		}
 
-		.cnApp_Date
-		{
+		/*************************************/
+
+		.cnApp_PutTgt.cnApp_DatePkr {
+			position: fixed;
+			left: 0px;
+			top: 0px;
+			width: 100%;
+			max-width: 600px;
+		}
+
+		.cnApp_Date {
+			/*程序库*/
 			display: inline-block;
-
-
+			position: relative;
+			left: 0px;
+			top: 0px;
+			overflow: visible;
+			/*应用程序自定义*/
 			width: 50%;
 			padding: 5px;
 			border: 1px solid black;
+			background-color: white;
 		}
 
+		/*应用程序自定义*/
+		.cnApp_PutTgt.cnApp_DatePkr {
+			min-height: 100px;
+			background-color: cyan;
+		}
 	</style>
 </head>
 <body>
@@ -85,20 +103,18 @@
 	</div>
 
 	<!--<div style="position:relative; width:400px;height: 400px; clip:rect(0px, 400px, 400px, 0px); background-color: rgb(0, 0, 255);">-->
-		<!--<div style="position: absolute;clip:rect(0px, 70px, 50px, 0px); left:350px; top:350px; width:100px;height: 100px; background-color: rgb(255, 255, 0);">-->
-		<!--</div>-->
+	<!--<div style="position: absolute;clip:rect(0px, 70px, 50px, 0px); left:350px; top:350px; width:100px;height: 100px; background-color: rgb(255, 255, 0);">-->
 	<!--</div>-->
-
+	<!--</div>-->
 	<!--<div style="font-size:24px;">-->
-		<!--你好，世界-->
-		<!--<p id="k_Dspl">0:00</p>-->
+	<!--你好，世界-->
+	<!--<p id="k_Dspl">0:00</p>-->
 	<!--</div>-->
 
 	<script type="text/javascript">
 		"use strict";
 
-		window.onload = function ()
-		{
+		window.onload = function () {
 			console.log("window.onload");
 
 			if (nWse.fIsOnlnBrs()) // 在线
@@ -128,30 +144,129 @@
 			}
 		};
 
-		function fOnIcld(a_Errs)
-		{
-            console.log("============================= OK：" + a_Errs);
+		function fOnIcld(a_Errs) {
+			console.log("============================= OK：" + a_Errs);
 
 			///////////////////////////////////////////////// 接口
 
 			nWse.fClass(nApp,
-				function tDatePkr(a_TextBox)
-				{
+				function tDatePkr() {
+					this.cRset();
 				},
 				null,
 				{
+					/// 重置
+					cRset: function () {
+						var l_This = this;
+						l_This.e_PutTgt = null;
+						return this;
+					}
+					,
+					/// {
+					/// c_TextBox：HTMLElement，文本框
+					/// c_PrnNode：Node，父节点，默认<body>
+					/// c_StupDate：Date，起始日期，默认null表当前
+					/// }
+					cInit: function (a_Cfg) {
+						var l_This = this;
+						l_This.c_Cfg = a_Cfg;
+
+						// 单击文本框
+						nWse.stDomUtil.cAddEvtHdlr(l_This.c_Cfg.c_TextBox, "click", function () { l_This.eTglDate(); });
+
+						return this;
+					}
+					,
+					eIsShowDate: function () {
+						var l_This = this;
+						return l_This.e_PutTgt && (null !== l_This.e_PutTgt.parentNode) && ("none" != l_This.e_PutTgt.style.display);
+					}
+					,
+					eShowDate: function () {
+						var l_This = this;
+						if (l_This.eIsShowDate())
+						{ return this; }
+
+						console.log("Show");
+
+						// 放置目标
+						if (!l_This.e_PutTgt) {
+							l_This.e_PutTgt = document.createElement("div");
+							l_This.e_PutTgt.style.display = "none";
+							nWse.stCssUtil.cAddCssc(l_This.e_PutTgt, "cnApp_PutTgt cnApp_DatePkr");
+						}
+
+						var l_PrnNode = null;
+						if (!l_This.e_PutTgt.parentNode) {
+							l_PrnNode = l_This.c_Cfg.c_PrnNode || nWse.stDomUtil.cAcsBody();
+							l_PrnNode.appendChild(l_This.e_PutTgt);
+						}
+
+						// 组装日期
+						nWse.stDomUtil.cRmvAllChds(l_This.e_PutTgt);
+						l_This.ePpltDate();
+
+						// 先显示出来，后调整位置（下对齐）
+						l_This.e_PutTgt.style.display = "block";
+
+						var l_X = Math.max(0, (nWse.stDomUtil.cGetVwptWid() - l_This.e_PutTgt.offsetWidth) / 2);
+						var l_Y = Math.max(0, (nWse.stDomUtil.cGetVwptHgt() - l_This.e_PutTgt.offsetHeight));
+						nWse.stCssUtil.cSetPos(l_This.e_PutTgt, l_X, l_Y);
+
+
+
+						return this;
+					}
+					,
+					eHideDate: function () {
+						var l_This = this;
+						if (!l_This.eIsShowDate())
+						{ return this; }
+
+						console.log("Hide");
+
+						l_This.e_PutTgt.style.display = "none";
+						return this;
+					}
+					,
+					eTglDate: function () {
+						this.eIsShowDate() ? this.eHideDate() : this.eShowDate();
+						return this;
+					}
+					,
+					ePpltDate: function () {
+						var l_This = this;
+						var l_StupDate = l_This.c_Cfg.c_StupDate || (new Date());
+						var l_Year = l_StupDate.getFullYear();
+						var l_Month = l_StupDate.getMonth();
+						var l_Day = l_StupDate.getDate();
+						var l_Week = l_StupDate.getDay();
+						var l_Node;
+
+						// 年月
+						l_Node = document.createElement("div");
+						l_Node.innerHTML = "<span>" + l_Year + "年</span><span>" + (l_Month + 1) + "月</span>";
+						l_This.e_PutTgt.appendChild(l_Node);
+						return this;
+					}
+					,
+					eIsLeapYear: function (a_Year)
+					{
+						return ! ((0 != a_Year % 4) || ((0 == a_Year % 100) && (0 != a_Year % 400)));
+					}
 				});
 
 			nApp.g_DatePkrs = [];
 			var l_All = nWse.stDomUtil.cQryAll(".cnApp_Date");
 			nWse.stAryUtil.cFor(l_All,
-				function (a_Ary, a_Idx, a_TextBox)
-				{
-					nApp.g_DatePkrs.push(new nApp.tDatePkr(a_TextBox));
+				function (a_Ary, a_Idx, a_TextBox) {
+					nApp.g_DatePkrs.push((new nApp.tDatePkr()).cInit({
+						c_TextBox: a_TextBox
+					}));
 				});
 		}
 
-		
+
 	</script>
 
 </body>
