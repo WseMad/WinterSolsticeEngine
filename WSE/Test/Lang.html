@@ -63,6 +63,7 @@
 			top: 0px;
 			width: 100%;
 			height: 100%;
+			background-color: rgb(0, 0, 0);
 			background-color: rgba(0, 0, 0, 0.5);
 		}
 
@@ -71,65 +72,87 @@
 				left: 0px;
 				top: 0px;
 				width: 100%;
-				max-width: 600px;
-				background-color: rgba(255, 255, 255, 1);
+				max-width: 480px;
+				background-color: rgb(255, 255, 255);
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa {
-				padding: 10px;
+				padding: 5px;
 				text-align: center;
 			}
 
-				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa > .cnApp_Col > * {
-					display: inline-block;
-				}
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Col > * {
+				display: inline-block;
+			}
 
-				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col.cnApp_0 {
-					width: 62%;
-					float: left;
-					text-align: left;
-				}
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Col.cnApp_Lt {
+				float: left;
+				text-align: left;
+			}
 
-				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col.cnApp_1 {
-					width: 38%;
-					float: left;
-					text-align: right;
-				}
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Col.cnApp_Ct {
+				float: left;
+				text-align: center;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Col.cnApp_Rt {
+				float: left;
+				text-align: right;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col {
+				width: 50%;
+				text-align: center;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_Ctrl .cnApp_Col {
+				width: 33%;
+			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum {
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
-				width: 24px; /*显示两位数*/
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Lt {
-				margin-right: 10px;
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw {
+				/*border-radius: 16px;
+				border: 1px solid rgb(0, 0, 0);
+				background-color: rgb(0, 0, 0);
+				font-size: 16px;
+				color: white;*/
+				cursor: pointer;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Rt {
-				margin-left: 10px;
-			}
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Lt {
+					margin-right: 10px;
+				}
+
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Rt {
+					margin-left: 10px;
+				}
 
 			.cnApp_PutTgt.cnApp_DatePkr table {
 				display: inline-block;
+				border-collapse: separate; /*重要，(0)Rset.css给合并了*/
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr tr {
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr th, .cnApp_PutTgt.cnApp_DatePkr td {
-				padding: 10px;
-				border-width: 1px;
-				border-style: solid;
-				border-color: rgba(255, 255, 255, 0.1);
-
+				padding: 8px;
+				border: 1px solid transparent; /*看不见的边框，充当占位符*/
 				font-size: 16px;
 				text-align: center;
 			}
 
+			.cnApp_PutTgt.cnApp_DatePkr td {
+				cursor: pointer;
+			}
+
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfLastMonth {
-				color: lightgray;
+				color: gray;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMonth {
@@ -137,22 +160,21 @@
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfNextMonth {
-				color: lightgray;
+				color: gray;
 			}
 
+			.cnApp_PutTgt.cnApp_DatePkr th.cnApp_WeekEnd,
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMonth.cnApp_WeekEnd {
 				color: red;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Slcd {
 				background-color: lightblue;
-				/*border: 1px solid blue;*/
-				border-color: blue;
+				border: 1px solid blue;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Today {
-				/*border: 1px solid rgb(0, 0, 128);*/
-				border-color: rgb(0, 0, 128);
+				border: 1px solid darkblue;
 			}
 
 			/*应用程序自定义*/
@@ -161,15 +183,36 @@
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
 				font-size: 24px;
-				margin-right: 5px;
 			}
 
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum.cnApp_One {
+					margin-right: 5px;
+				}
+
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum {
-				color: magenta;
+				color: black;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
-				color: orange;
+				color: black;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_Ctrl .cnApp_Col.cnApp_Lt {
+				text-align: right;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_Ctrl .cnApp_Col.cnApp_Rt {
+				text-align: left;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_ClsBtn, .cnApp_PutTgt.cnApp_DatePkr .cnApp_TdyBtn, .cnApp_PutTgt.cnApp_DatePkr .cnApp_OkBtn {
+				width: auto;
+				padding: 5px 10px;
+				border: 1px solid rgb(0, 0, 0);
+				border-radius: 5px;
+				font-size: 16px;
+				text-align: center;
+				cursor: pointer;
 			}
 
 		.cnApp_Date {
@@ -276,7 +319,9 @@
 						l_This.c_Cfg = a_Cfg;
 
 						// 单击文本框
-						nWse.stDomUtil.cAddEvtHdlr(l_This.c_Cfg.c_TextBox, "click", function () { l_This.eTglDate(); });
+						if (l_This.c_Cfg.c_TextBox) {
+							nWse.stDomUtil.cAddEvtHdlr(l_This.c_Cfg.c_TextBox, "click", function () { l_This.eTglDate(); });
+						}
 
 						return this;
 					}
@@ -315,6 +360,15 @@
 							// 输入处理
 							nWse.stDomUtil.cAddEvtHdlr(l_This.e_Pane, "click", function (a_Evt) { return l_This.eHdlIpt(a_Evt || window.event); });
 
+							// 禁止选取文本
+							nWse.stDomUtil.cAddEvtHdlr(l_This.e_Pane, "selectstart",
+								function (a_Evt) {
+									a_Evt = a_Evt || window.event;
+									a_Evt.preventDefault();
+									a_Evt.stopPropagation();
+									return false;
+								});
+
 							// 组装DOM
 							l_This.ePpltDom();
 						}
@@ -349,27 +403,28 @@
 						var l_This = this;
 
 						// DOM创建
-						var l_Boa, l_Col0, l_Col1;
+						var l_Boa, l_Col_Lt, l_Col_Ct, l_Col_Rt;
 						var l_Tab, l_TH, l_TB, l_tr, l_td;
 
 						// 年月板
 						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_YearMonth cnWse_ClearFix");
-						l_Col0 = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col0, "cnApp_Col cnApp_0");
-						l_Col1 = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col1, "cnApp_Col cnApp_1");
-						l_Col0.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_YearNum\"></span><span class=\"cnApp_YearText\">年</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
-						l_Col1.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_MonthNum\"></span><span class=\"cnApp_MonthText\">月</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
-						l_This.e_YearNode = l_Col0.childNodes[1];
-						l_This.e_MonthNode = l_Col1.childNodes[1];
-						l_Boa.appendChild(l_Col0);
-						l_Boa.appendChild(l_Col1);
+						l_Col_Lt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Lt, "cnApp_Col cnApp_Lt");
+						l_Col_Rt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Rt, "cnApp_Col cnApp_Rt");
+						l_Col_Lt.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_YearNum\"></span><span class=\"cnApp_YearText\">年</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
+						l_Col_Rt.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_MonthNum cnApp_Ten\"></span><span class=\"cnApp_MonthNum cnApp_One\"></span><span class=\"cnApp_MonthText\">月</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
+						l_This.e_YearNode = l_Col_Lt.childNodes[1];
+						l_This.e_MonthTenNode = l_Col_Rt.childNodes[1];
+						l_This.e_MonthOneNode = l_Col_Rt.childNodes[2];
+						l_Boa.appendChild(l_Col_Lt);
+						l_Boa.appendChild(l_Col_Rt);
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 日板，无论哪年哪月都显示6行
-						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Day");
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Days");
 						l_Tab = document.createElement("table");
 						l_TH = document.createElement("thead");
 						l_TB = document.createElement("tbody");
-						l_TH.innerHTML = "<tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>"
+						l_TH.innerHTML = "<tr><th class=\"cnApp_WeekEnd\">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class=\"cnApp_WeekEnd\">六</th></tr>"
 
 						l_This.e_DayNodes = new Array(42);
 						var l_r, l_d;
@@ -395,6 +450,21 @@
 
 						// 信息板
 						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Info");
+						l_This.e_InfoBoa = l_Boa;
+						l_This.e_Pane.appendChild(l_Boa);
+
+						// 控制板
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Ctrl cnWse_ClearFix");
+						l_This.e_CtrlBoa = l_Boa;
+						l_Col_Lt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Lt, "cnApp_Col cnApp_Lt");
+						l_Col_Ct = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Ct, "cnApp_Col cnApp_Ct");
+						l_Col_Rt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Rt, "cnApp_Col cnApp_Rt");
+						l_Col_Lt.innerHTML = "<span class=\"cnApp_ClsBtn\">关闭</span>";
+						l_Col_Ct.innerHTML = "<span class=\"cnApp_TdyBtn\">今天</span>";
+						l_Col_Rt.innerHTML = "<span class=\"cnApp_OkBtn\">确定</span>";
+						l_Boa.appendChild(l_Col_Lt);
+						l_Boa.appendChild(l_Col_Ct);
+						l_Boa.appendChild(l_Col_Rt);
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 加入放置目标
@@ -414,7 +484,17 @@
 
 						// 填写年月
 						l_This.e_YearNode.textContent = l_This.e_CrntDate.getFullYear().toString();
-						l_This.e_MonthNode.textContent = (l_This.e_CrntDate.getMonth() + 1).toString();
+						var l_Month = l_This.e_CrntDate.getMonth() + 1;
+						if (l_Month < 10) {
+							l_This.e_MonthTenNode.textContent = "0";
+							l_This.e_MonthTenNode.style.visibility = "hidden";	// 隐藏
+							l_This.e_MonthOneNode.textContent = (l_Month).toString();
+						}
+						else {
+							l_This.e_MonthTenNode.textContent = "1";
+							l_This.e_MonthTenNode.style.visibility = "visible";	// 显示
+							l_This.e_MonthOneNode.textContent = (l_Month - 10).toString();
+						}
 
 						// 填写天
 						var l_LastMonth = l_This.eGetLastMonth1stDayDate();
@@ -482,6 +562,9 @@
 					}
 					,
 					eUpdInfoBoa: function () {
+						var l_This = this;
+						l_This.e_InfoBoa.textContent = l_This.e_CrntDate.toLocaleDateString();
+						return this;
 					}
 					,
 					eAcsStupDate: function () {
@@ -597,6 +680,8 @@
 							a_Day = l_CrntDayAmt;
 						}
 
+						l_This.e_CrntDate.setDate(a_Day);
+
 						// 更新CSS类
 						var l_NewSlcdNodeIdx = l_This.eFindDayNodeByDay(a_Day);
 						if ((l_This.e_SlcdNode !== l_This.e_DayNodes[l_NewSlcdNodeIdx])) {
@@ -604,6 +689,9 @@
 							l_This.e_SlcdNode = l_This.e_DayNodes[l_NewSlcdNodeIdx];
 							nWse.stCssUtil.cAddCssc(l_This.e_SlcdNode, "cnApp_Slcd");
 						}
+
+						// 更新信息板
+						l_This.eUpdInfoBoa();
 						return this;
 					}
 					,
@@ -613,10 +701,10 @@
 						// 点中箭头？
 						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_Arw")) {
 							if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_Lt")) {
-								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_0") ? l_This.eGotoLastYear() : l_This.eGotoLastMonth();
+								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_Lt") ? l_This.eGotoLastYear() : l_This.eGotoLastMonth();
 							}
 							else {
-								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_0") ? l_This.eGotoNextYear() : l_This.eGotoNextMonth();
+								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_Lt") ? l_This.eGotoNextYear() : l_This.eGotoNextMonth();
 							}
 							return false;
 						}
@@ -641,6 +729,36 @@
 								}
 							return false;
 						}
+
+						// 点中关闭？
+						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_ClsBtn")) {
+							l_This.eHideDate();
+							return false;
+						}
+
+						// 点中今天？
+						var l_Date;
+						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_TdyBtn")) {
+							l_Date = new Date();
+							l_This.eFillDate(l_Date);
+							l_This.eSetSlcdDay(l_Date.getDate());
+							return false;
+						}
+
+						// 点中确定？
+						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_OkBtn")) {
+							// 报告
+							if (l_This.c_Cfg.c_TextBox) {
+								l_This.c_Cfg.c_TextBox.textContent = l_This.e_CrntDate.toLocaleDateString();
+							}
+
+							l_This.eHideDate();
+							return false;
+						}
+
+						a_Evt.preventDefault();
+						a_Evt.stopPropagation();
+						return false;
 					}
 				});
 
