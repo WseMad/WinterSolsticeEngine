@@ -7,6 +7,7 @@
 
 	<title>模板页面</title>
 
+	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Rset.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 
 	<script type="text/javascript">
@@ -36,7 +37,7 @@
 			border-width: 0;
 			padding: 0;
 			height: 100%;
-			background-color: rgb(128, 128, 128);
+			background-color: rgb(239, 228, 176);
 		}
 
 		#k_Test {
@@ -61,8 +62,81 @@
 			left: 0px;
 			top: 0px;
 			width: 100%;
-			max-width: 600px;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
 		}
+
+			.cnApp_PutTgt.cnApp_DatePkr > .cnApp_Pane {
+				position: absolute;
+				left: 0px;
+				top: 0px;
+				width: 100%;
+				max-width: 600px;
+				background-color: rgba(255, 255, 255, 1);
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa {
+				padding: 10px;
+			}
+
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa > .cnApp_Col > * {
+					display: inline-block;
+				}
+
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col.cnApp_0 {
+					width: 62%;
+					float: left;
+					text-align: left;
+				}
+
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col.cnApp_1 {
+					width: 38%;
+					float: left;
+					text-align: right;
+				}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum {
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
+				width: 24px; /*显示两位数*/
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Lt {
+				margin-right: 10px;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw.cnApp_Rt {
+				margin-left: 10px;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr table {
+				display: block;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr th, .cnApp_PutTgt.cnApp_DatePkr td {
+				padding: 10px 10px;
+				font-size: 16px;
+				text-align: center;
+			}
+
+
+			/*应用程序自定义*/
+			.cnApp_PutTgt.cnApp_DatePkr > .cnApp_Pane {
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
+				font-size: 24px;
+				margin-right: 5px;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum {
+				color: red;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
+				color: blue;
+			}
 
 		.cnApp_Date {
 			/*程序库*/
@@ -77,12 +151,6 @@
 			border: 1px solid black;
 			background-color: white;
 		}
-
-		/*应用程序自定义*/
-		.cnApp_PutTgt.cnApp_DatePkr {
-			min-height: 100px;
-			background-color: cyan;
-		}
 	</style>
 </head>
 <body>
@@ -94,6 +162,8 @@
 			我们都好！
 		</div>
 	</div>-->
+
+
 
 	<div id="k_PrstTgt">
 		呈现目标
@@ -192,7 +262,6 @@
 						// 放置目标
 						if (!l_This.e_PutTgt) {
 							l_This.e_PutTgt = document.createElement("div");
-							l_This.e_PutTgt.style.display = "none";
 							nWse.stCssUtil.cAddCssc(l_This.e_PutTgt, "cnApp_PutTgt cnApp_DatePkr");
 						}
 
@@ -202,18 +271,22 @@
 							l_PrnNode.appendChild(l_This.e_PutTgt);
 						}
 
+						l_This.e_PutTgt.style.display = "block"; // 显示出来
+
+						// 窗格
+						if (!l_This.e_Pane) {
+							l_This.e_Pane = document.createElement("div");
+							nWse.stCssUtil.cAddCssc(l_This.e_Pane, "cnApp_Pane");
+						}
+
 						// 组装日期
-						nWse.stDomUtil.cRmvAllChds(l_This.e_PutTgt);
-						l_This.ePpltDate();
+						nWse.stDomUtil.cRmvAllChds(l_This.e_Pane);
+						l_This.ePpltDate(l_This.eAcsStupDate());
 
 						// 先显示出来，后调整位置（下对齐）
-						l_This.e_PutTgt.style.display = "block";
-
-						var l_X = Math.max(0, (nWse.stDomUtil.cGetVwptWid() - l_This.e_PutTgt.offsetWidth) / 2);
-						var l_Y = Math.max(0, (nWse.stDomUtil.cGetVwptHgt() - l_This.e_PutTgt.offsetHeight));
-						nWse.stCssUtil.cSetPos(l_This.e_PutTgt, l_X, l_Y);
-
-
+						var l_X = Math.max(0, (l_This.e_PutTgt.offsetWidth - l_This.e_Pane.offsetWidth) / 2);
+						var l_Y = Math.max(0, (l_This.e_PutTgt.offsetHeight - l_This.e_Pane.offsetHeight));
+						nWse.stCssUtil.cSetPos(l_This.e_Pane, l_X, l_Y);
 
 						return this;
 					}
@@ -234,25 +307,159 @@
 						return this;
 					}
 					,
-					ePpltDate: function () {
+					ePpltDate: function (a_StupDate) {
 						var l_This = this;
-						var l_StupDate = l_This.c_Cfg.c_StupDate || (new Date());
-						var l_Year = l_StupDate.getFullYear();
-						var l_Month = l_StupDate.getMonth();
-						var l_Day = l_StupDate.getDate();
-						var l_Week = l_StupDate.getDay();
-						var l_Node;
 
-						// 年月
-						l_Node = document.createElement("div");
-						l_Node.innerHTML = "<span>" + l_Year + "年</span><span>" + (l_Month + 1) + "月</span>";
-						l_This.e_PutTgt.appendChild(l_Node);
+						// DOM创建
+						var l_Boa, l_Col0, l_Col1;
+						var l_Tab, l_TH, l_TB, l_tr, l_td;
+
+						// 年月板
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_YearMonth cnWse_ClearFix");
+						l_Col0 = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col0, "cnApp_Col cnApp_0");
+						l_Col1 = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col1, "cnApp_Col cnApp_1");
+						l_Col0.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_YearNum\"></span><span class=\"cnApp_YearText\">年</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
+						l_Col1.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_MonthNum\"></span><span class=\"cnApp_MonthText\">月</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
+						l_This.e_YearNode = l_Col0.childNodes[1];
+						l_This.e_MonthNode = l_Col1.childNodes[1];
+						l_Boa.appendChild(l_Col0);
+						l_Boa.appendChild(l_Col1);
+						l_This.e_Pane.appendChild(l_Boa);
+
+						nWse.stDomUtil.cAddEvtHdlr(l_Col0.childNodes[0], "click", function () { l_This.eFillLastYear(); return false; });
+						nWse.stDomUtil.cAddEvtHdlr(l_Col0.childNodes[l_Col1.childNodes.length - 1], "click", function () { l_This.eFillNextYear(); return false; });
+						nWse.stDomUtil.cAddEvtHdlr(l_Col1.childNodes[0], "click", function () { l_This.eFillLastMonth(); return false; });
+						nWse.stDomUtil.cAddEvtHdlr(l_Col1.childNodes[l_Col1.childNodes.length - 1], "click", function () { l_This.eFillNextMonth(); return false; });
+
+						// 日板，无论哪年哪月都显示6行
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Day");
+						l_Tab = document.createElement("table");
+						l_TH = document.createElement("thead");
+						l_TB = document.createElement("tbody");
+						l_TH.innerHTML = "<tr><th>日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th>六</th></tr>"
+
+						l_This.e_DayNodes = new Array(42);
+						var l_r, l_d;
+						for (l_r = 0; l_r < 6; ++l_r) {
+							l_tr = document.createElement("tr");
+							for (l_d = 0; l_d < 7; ++l_d) {
+								l_td = document.createElement("td");
+								l_tr.appendChild(l_td);
+								l_This.e_DayNodes[l_r * 7 + l_d] = l_td;
+							}
+
+							l_TB.appendChild(l_tr);
+						}
+
+
+						l_Tab.appendChild(l_TH);
+						l_Tab.appendChild(l_TB);
+						l_Boa.appendChild(l_Tab);
+						l_This.e_Pane.appendChild(l_Boa);
+
+						// 根据启动日期填写
+						l_This.eFillDate(a_StupDate);
+
+						// 加入放置目标
+						l_This.e_PutTgt.appendChild(l_This.e_Pane);
 						return this;
 					}
 					,
-					eIsLeapYear: function (a_Year)
-					{
-						return ! ((0 != a_Year % 4) || ((0 == a_Year % 100) && (0 != a_Year % 400)));
+					eFillDate: function (a_RefDate) {
+						var l_This = this;
+
+						// 记录启动日期，及该年该月第一天，注意getMonth()返回[0, 11]
+						l_This.e_CrntDate = a_RefDate;
+						l_This.e_CrntYm1stDayDate = new Date(l_This.e_CrntDate.getFullYear(), l_This.e_CrntDate.getMonth(), 1);
+
+						// 填写年月
+						l_This.e_YearNode.textContent = l_This.e_CrntDate.getFullYear().toString();
+						l_This.e_MonthNode.textContent = (l_This.e_CrntDate.getMonth() + 1).toString();
+
+						// 填写天
+						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMonth());
+						var l_LastMonth = l_This.eGetLastMonthDate();
+						var l_LastDayAmt = l_This.eGetDayAmtByYm(l_LastMonth.getFullYear(), l_LastMonth.getMonth() + 1);
+						var l_Week = l_This.e_CrntYm1stDayDate.getDay();
+						var l_DayIdx = 0;
+						var l_d, l_Len;
+						l_Len = l_Week || 7; // 上个月最后几天，至多7天
+						for (l_d = 0; l_d < l_Len; ++l_d) {
+							l_This.e_DayNodes[l_DayIdx++].textContent = (l_LastDayAmt - l_Len + l_d + 1).toString();
+						}
+
+						l_Len = l_CrntDayAmt;
+						for (l_d = 0; l_d < l_Len; ++l_d) // 这个月全部天
+						{
+							l_This.e_DayNodes[l_DayIdx++].textContent = (l_d + 1).toString();
+						}
+
+						l_Len = 42 - l_DayIdx;
+						for (l_d = 0; l_d < l_Len; ++l_d) // 下个月前几天，至多7天
+						{
+							l_This.e_DayNodes[l_DayIdx++].textContent = (l_d + 1).toString();
+						}
+						return this;
+					}
+					,
+					eFillLastYear: function () {
+						return this.eFillDate(this.eGetLastYearDate());
+					}
+					,
+					eFillNextYear: function () {
+						return this.eFillDate(this.eGetNextYearDate());
+					}
+					,
+					eFillLastMonth: function () {
+						return this.eFillDate(this.eGetLastMonthDate());
+					}
+					,
+					eFillNextMonth: function () {
+						return this.eFillDate(this.eGetNextMonthDate());
+					}
+					,
+					eAcsStupDate: function () {
+						return (this.c_Cfg.c_StupDate || (new Date()));
+					}
+					,
+					eIsLeapYear: function (a_Year) {
+						return !((0 != a_Year % 4) || ((0 == a_Year % 100) && (0 != a_Year % 400)));
+					}
+					,
+					eGetYear: function () {
+						return this.e_CrntYm1stDayDate.getFullYear();
+					}
+					,
+					eGetMonth: function () {
+						return this.e_CrntYm1stDayDate.getMonth() + 1;	// 返回[1, 12]
+					}
+					,
+					eGetDayAmtByYm: function (a_Year, a_Month) {
+						var l_This = this;
+						if ((1 == a_Month) || (3 == a_Month) || (5 == a_Month) || (7 == a_Month) || (8 == a_Month) || (10 == a_Month) || (12 == a_Month)) {
+							return 31;
+						}
+						else
+							if ((2 == a_Month)) {
+								return l_This.eIsLeapYear(a_Year) ? 29 : 28;
+							}
+						return 30;
+					}
+					,
+					eGetLastYearDate: function () {
+						return new Date(this.e_CrntYm1stDayDate.getFullYear() - 1, this.e_CrntYm1stDayDate.getMonth(), 1);
+					}
+					,
+					eGetNextYearDate: function () {
+						return new Date(this.e_CrntYm1stDayDate.getFullYear() + 1, this.e_CrntYm1stDayDate.getMonth(), 1);
+					}
+					,
+					eGetLastMonthDate: function () {
+						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() - 1, 1);
+					}
+					,
+					eGetNextMonthDate: function () {
+						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() + 1, 1);
 					}
 				});
 
@@ -266,7 +473,7 @@
 				});
 		}
 
-
+		//// http://blog.csdn.net/cuixiping/article/details/7826138 html5 midi
 	</script>
 
 </body>
