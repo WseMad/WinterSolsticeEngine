@@ -1087,11 +1087,13 @@
 							if (1 == l_This.e_WhichTab) {
 								l_This.eFillDate_1(l_This.e_DsplTab, l_Date);
 								l_This.eSetSlcdYear(l_Date.getFullYear());
+								l_This.eShowTab(3, l_This.e_CrntDate);	// 回到年月日
 							}
 							else
 								if (2 == l_This.e_WhichTab) {
 									l_This.eFillDate_2(l_This.e_DsplTab, l_Date);
 									l_This.eSetSlcdMon(l_Date.getMonth());
+									l_This.eShowTab(3, l_This.e_CrntDate);	// 回到年月日
 								}
 								else
 									if (3 == l_This.e_WhichTab) {
