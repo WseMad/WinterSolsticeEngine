@@ -379,16 +379,15 @@
 							l_This.ePpltDom();
 						}
 
-						// 显示年月日，填写日期，使用启动日期
-						l_This.eShowTab(3, l_This.eAcsStupDate());
+						// 先显示年月日，填写日期，使用启动日期
+						// 后固定显示板高度为现在的值，为使单选年月时高度和位置不发生收缩
+						l_This.eShowTab(3, l_This.e_CrntDate || l_This.eAcsStupDate());
+						l_This.e_DsplBoa.style.height = l_This.e_DsplBoa.offsetHeight + "px";
 
 						// 先显示出来，后调整位置（下对齐）
 						var l_X = Math.max(0, (l_This.e_PutTgt.offsetWidth - l_This.e_Pane.offsetWidth) / 2);
 						var l_Y = Math.max(0, (l_This.e_PutTgt.offsetHeight - l_This.e_Pane.offsetHeight));
 						nWse.stCssUtil.cSetPos(l_This.e_Pane, l_X, l_Y);
-
-						// 窗格高度不得低于现在
-						l_This.e_Pane.style.minHeight = l_This.e_Pane.offsetHeight + "px";
 						return this;
 					}
 					,
@@ -429,7 +428,7 @@
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 显示板
-						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Days");
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Dspl");
 						l_This.e_DsplBoa = l_Boa;
 						l_This.e_Pane.appendChild(l_Boa);
 
@@ -456,9 +455,13 @@
 						var l_Tab, l_TH, l_TB, l_tr, l_th, l_td;
 
 						l_Tab = document.createElement("table");
-						l_TH = document.createElement("thead");
+
+						if (2 != a_Which) {
+							l_TH = document.createElement("thead");
+							l_Tab.appendChild(l_TH);
+						}
+
 						l_TB = document.createElement("tbody");
-						l_Tab.appendChild(l_TH);
 						l_Tab.appendChild(l_TB);
 
 						//【注意】为了支持IE9以前，不要使用innerHTML
@@ -467,9 +470,9 @@
 						function f1() {
 							// (1+4)行5列
 							var i_Rows = 4, i_Cols = 5;
-							l_tr = document.createElement("tr");
 
 							// 所有<th>
+							l_tr = document.createElement("tr");
 							var r, c;
 							l_This.e_YearsRgeNodes = new Array(i_Cols);
 							for (c = 0; c < i_Cols; ++c) {
@@ -501,6 +504,24 @@
 						}
 
 						function f2() {
+							// (4)行3列
+							var i_Rows = 4, i_Cols = 3;
+
+							// 所有<td>
+							l_This.e_MonsNodes = new Array(i_Rows * i_Cols);
+							var m = 1;
+							var r, c;
+							for (r = 0; r < i_Rows; ++r) {
+								l_tr = document.createElement("tr");
+								for (c = 0; c < i_Cols; ++c) {
+									l_td = document.createElement("td");
+									nWse.stDomUtil.cSetTextCtnt(l_td, m++);
+									l_tr.appendChild(l_td);
+									l_This.e_MonsNodes[r * i_Cols + c] = l_td;
+								}
+
+								l_TB.appendChild(l_tr);
+							}
 						}
 
 						function f3() {
@@ -606,6 +627,31 @@
 						return this;
 					}
 					,
+					eFillDate_2: function (a_Tab, a_RefDate) {
+						var l_This = this;
+						var l_TdyDate = new Date();	// 今天月份
+						var l_StupMon = a_RefDate.getMonth();
+
+						// 填写月
+						var i_DsplTot = l_This.e_MonsNodes.length;
+						var l_TdyNode = null;
+						var i;
+						for (i = 0; i < i_DsplTot; ++i) {
+							// 如果是本月
+							if (l_TdyDate.getMonth() == (i)) {
+								l_TdyNode = l_This.e_MonsNodes[i];
+							}
+						}
+
+						l_This.eChgTdyNode(l_TdyNode); // 改变今天节点
+
+						// 如果没有选中月，选中参数表示的那一月
+						if (!l_This.e_SlcdNode) {
+							l_This.eSetSlcdMon(a_RefDate.getMonth());
+						}
+						return this;
+					}
+					,
 					eFillDate_3: function (a_Tab, a_RefDate) {
 						var l_This = this;
 						var l_TdyDate = new Date();	// 今天日期
@@ -613,8 +659,7 @@
 
 						// 记录启动日期，及该年该月第一天，注意getMonth()返回[0, 11]
 						l_This.e_CrntDate = a_RefDate;
-						l_This.e_CrntYm1stDayDate = new Date(l_This.e_CrntDate.getFullYear(), l_This.e_CrntDate.getMonth(), 1);
-						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMon());
+						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.e_CrntDate.getFullYear(), l_This.e_CrntDate.getMonth() + 1);
 
 						// 填写年月
 						nWse.stDomUtil.cSetTextCtnt(l_This.e_YearNode, l_This.e_CrntDate.getFullYear().toString());
@@ -626,14 +671,16 @@
 						}
 						else {
 							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonTenNode, "1");
-							l_This.e_MonTenNode.style.visibility = "visible";	// 显示
+							if ("hidden" != l_This.e_YearMonBoa.style.visibility) {
+								l_This.e_MonTenNode.style.visibility = "visible";	// 当所属板未隐藏时显示
+							}
 							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonOneNode, (l_Mon - 10).toString());
 						}
 
 						// 填写天
 						var l_LastMon = l_This.eGetLastMon1stDayDate();
 						var l_LastDayAmt = l_This.eGetDayAmtByYm(l_LastMon.getFullYear(), l_LastMon.getMonth() + 1);
-						var l_Week = l_This.e_CrntYm1stDayDate.getDay();
+						var l_Week = l_This.eGetCrntYm1stDayDate().getDay();
 						var l_DayIdx = 0, l_Node, l_TdyNode = null;
 						var l_d, l_Len;
 						l_Len = l_Week || 7; // 上个月最后几天，至多7天
@@ -704,14 +751,6 @@
 						return !((0 != a_Year % 4) || ((0 == a_Year % 100) && (0 != a_Year % 400)));
 					}
 					,
-					eGetYear: function () {
-						return this.e_CrntYm1stDayDate.getFullYear();
-					}
-					,
-					eGetMon: function () {
-						return this.e_CrntYm1stDayDate.getMonth() + 1;	// 返回[1, 12]
-					}
-					,
 					/// a_Mon：Number∈[1, 12]
 					eGetDayAmtByYm: function (a_Year, a_Mon) {
 						var l_This = this;
@@ -725,20 +764,24 @@
 						return 30;
 					}
 					,
+					eGetCrntYm1stDayDate: function () {
+						return new Date(this.e_CrntDate.getFullYear(), this.e_CrntDate.getMonth(), 1);
+					}
+					,
 					eGetLastYearDate: function () {
-						return new Date(this.e_CrntYm1stDayDate.getFullYear() - 1, this.e_CrntYm1stDayDate.getMonth(), 1);
+						return new Date(this.eGetCrntYm1stDayDate().getFullYear() - 1, this.eGetCrntYm1stDayDate().getMonth(), 1);
 					}
 					,
 					eGetNextYearDate: function () {
-						return new Date(this.e_CrntYm1stDayDate.getFullYear() + 1, this.e_CrntYm1stDayDate.getMonth(), 1);
+						return new Date(this.eGetCrntYm1stDayDate().getFullYear() + 1, this.eGetCrntYm1stDayDate().getMonth(), 1);
 					}
 					,
 					eGetLastMon1stDayDate: function () {
-						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() - 1, 1);
+						return new Date(this.eGetCrntYm1stDayDate().getFullYear(), this.eGetCrntYm1stDayDate().getMonth() - 1, 1);
 					}
 					,
 					eGetNextMon1stDayDate: function () {
-						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() + 1, 1);
+						return new Date(this.eGetCrntYm1stDayDate().getFullYear(), this.eGetCrntYm1stDayDate().getMonth() + 1, 1);
 					}
 					,
 					eFindYearNodeByYear: function (a_Year) {
@@ -746,6 +789,14 @@
 						return nWse.stAryUtil.cFind(l_This.e_YearsNodes,
 							function (a_Nodes, a_Idx, a_Node) {
 								return l_This.eGetNumByNode(a_Node) == a_Year;
+							});
+					}
+					,
+					eFindMonNodeByMon: function (a_Mon) {
+						var l_This = this;
+						return nWse.stAryUtil.cFind(l_This.e_MonsNodes,
+							function (a_Nodes, a_Idx, a_Node) {
+								return l_This.eGetNumByNode(a_Node) == a_Mon + 1;	// 注意加1
 							});
 					}
 					,
@@ -831,10 +882,13 @@
 					eSetSlcdYear: function (a_Year) {
 						var l_This = this;
 
-						// 设置当前日期，注意保持选中天
+						// 设置当前日期，注意保持选中天和月
+						//	var l_SlcdMon = l_This.e_CrntDate.getMonth();
 						var l_SlcdDay = l_This.eGetSlcdDay();
-						l_This.e_CrntDate.setYear(a_Year);
-						l_This.eSetSlcdDay(l_SlcdDay);
+						l_This.e_CrntDate.setDate(1);		// 先把天设为1，防止闰年的2月29干扰到平年
+						l_This.e_CrntDate.setYear(a_Year);	// 然后设置年月
+						//	l_This.e_CrntDate.setMonth(l_SlcdMon);
+						l_This.eSetSlcdDay(l_SlcdDay);		// 恢复选中的天
 
 						// 更新CSS类
 						var l_NewSlcdNodeIdx = l_This.eFindYearNodeByYear(a_Year);
@@ -849,14 +903,35 @@
 						return this;
 					}
 					,
-					eGetSlcdDay: function () {
+					eSetSlcdMon: function (a_Mon) {
 						var l_This = this;
-						return l_This.e_SlcdNode ? l_This.eGetNumByNode(l_This.e_SlcdNode) : l_This.eAcsStupDate().getDate(); // 默认起始天
+
+						// 设置当前日期，注意保持选中天
+						var l_SlcdDay = l_This.eGetSlcdDay();
+						l_This.e_CrntDate.setDate(1);			// 先把天设为1，防止闰年的2月29干扰到平年
+						l_This.e_CrntDate.setMonth(a_Mon);		// 然后设置月
+						l_This.eSetSlcdDay(l_SlcdDay);			// 恢复选中的天
+
+						// 更新CSS类
+						var l_NewSlcdNodeIdx = l_This.eFindMonNodeByMon(a_Mon);
+						if ((l_This.e_SlcdNode !== l_This.e_MonsNodes[l_NewSlcdNodeIdx])) {
+							nWse.stCssUtil.cRmvCssc(l_This.e_SlcdNode, "cnApp_Slcd");
+							l_This.e_SlcdNode = l_This.e_MonsNodes[l_NewSlcdNodeIdx];
+							nWse.stCssUtil.cAddCssc(l_This.e_SlcdNode, "cnApp_Slcd");
+						}
+
+						// 更新信息板
+						l_This.eUpdInfoBoa(l_This.e_CrntDate.toLocaleDateString());
+						return this;
+					}
+					,
+					eGetSlcdDay: function () {
+						return this.e_CrntDate.getDate();
 					}
 					,
 					eSetSlcdDay: function (a_Day) {
 						var l_This = this;
-						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMon());
+						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.e_CrntDate.getFullYear(), l_This.e_CrntDate.getMonth() + 1);
 						if (a_Day > l_CrntDayAmt) {
 							a_Day = l_CrntDayAmt;
 						}
@@ -880,6 +955,8 @@
 					eShowHideYearMonBoa: function (a_Show) {
 						var l_This = this;
 						l_This.e_YearMonBoa.style.visibility = a_Show ? "visible" : "hidden";
+						l_This.e_MonTenNode.style.visibility = a_Show ? "" : "hidden";
+						l_This.e_MonOneNode.style.visibility = a_Show ? "" : "hidden";
 						return this;
 					}
 					,
@@ -889,15 +966,14 @@
 						// 清除一些字段
 						l_This.e_SlcdNode = null;	// 一开始没有选中
 
-						// 制作表格，填写，显示
+						// 制作表格，填写
 						var l_Tab = l_This.eMakeTab(a_Which);
-						(1 == a_Which) ? l_This.eFillDate_1(l_Tab, a_RefDate) : l_This.eFillDate_3(l_Tab, a_RefDate);
-						l_This.eDsplTab(l_Tab);
 
 						if (1 == a_Which) // 显示年
 						{
 							// 隐藏年月板，并把按钮设为“今年”
 							l_This.eShowHideYearMonBoa(false);
+							l_This.eFillDate_1(l_Tab, a_RefDate);
 							nWse.stDomUtil.cSetTextCtnt(l_This.e_TdyBtn, "今年");
 						}
 						else
@@ -905,16 +981,19 @@
 							{
 								// 隐藏年月板，并把按钮设为“本月”
 								l_This.eShowHideYearMonBoa(false);
+								l_This.eFillDate_2(l_Tab, a_RefDate);
 								nWse.stDomUtil.cSetTextCtnt(l_This.e_TdyBtn, "本月");
 							}
 							else // 显示天
 							{
 								// 显示年月板，并把按钮设为“今天”
 								l_This.eShowHideYearMonBoa(true);
+								l_This.eFillDate_3(l_Tab, a_RefDate);
 								nWse.stDomUtil.cSetTextCtnt(l_This.e_TdyBtn, "今天");
 							}
 
-						l_This.e_WhichTab = a_Which; // 记录哪个表格显示
+						l_This.eDsplTab(l_Tab);			// 显示表格
+						l_This.e_WhichTab = a_Which;	// 记录哪个表格显示
 						//	l_This.eUpdInfoBoa
 						return this;
 					}
@@ -946,9 +1025,14 @@
 							return false;
 						}
 
-						// 点中年？
+						// 点中年月板？
 						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_YearNum")) {
 							l_This.eShowTab(1, l_This.e_CrntDate);
+							return false;
+						}
+
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_MonNum")) {
+							l_This.eShowTab(2, l_This.e_CrntDate);
 							return false;
 						}
 
@@ -958,25 +1042,32 @@
 							if (1 == l_This.e_WhichTab) {
 								l_TdData = l_This.eGetNumByNode(l_EvtTgt);
 								l_This.eSetSlcdYear(l_TdData);
+								l_This.eShowTab(3, l_This.e_CrntDate);	// 回到年月日
 							}
 							else
-								if (3 == l_This.e_WhichTab) {
+								if (2 == l_This.e_WhichTab) {
 									l_TdData = l_This.eGetNumByNode(l_EvtTgt);
-
-									// 属于哪个月的？
-									if (l_This.eIsDayNodeOfLastMon(l_EvtTgt)) {
-										l_This.eGotoLastMon_3();
-										l_This.eSetSlcdDay(l_TdData);
-									}
-									else
-										if (l_This.eIsDayNodeOfCrntMon(l_EvtTgt)) {
-											l_This.eSetSlcdDay(l_TdData);
-										}
-										else {
-											l_This.eGotoNextMon_3();
-											l_This.eSetSlcdDay(l_TdData);
-										}
+									l_This.eSetSlcdMon(l_TdData - 1);		// 注意减1
+									l_This.eShowTab(3, l_This.e_CrntDate);	// 回到年月日
 								}
+								else
+									if (3 == l_This.e_WhichTab) {
+										l_TdData = l_This.eGetNumByNode(l_EvtTgt);
+
+										// 属于哪个月的？
+										if (l_This.eIsDayNodeOfLastMon(l_EvtTgt)) {
+											l_This.eGotoLastMon_3();
+											l_This.eSetSlcdDay(l_TdData);
+										}
+										else
+											if (l_This.eIsDayNodeOfCrntMon(l_EvtTgt)) {
+												l_This.eSetSlcdDay(l_TdData);
+											}
+											else {
+												l_This.eGotoNextMon_3();
+												l_This.eSetSlcdDay(l_TdData);
+											}
+									}
 
 							return false;
 						}
@@ -998,10 +1089,15 @@
 								l_This.eSetSlcdYear(l_Date.getFullYear());
 							}
 							else
-							if (3 == l_This.e_WhichTab) {
-								l_This.eFillDate_3(l_This.e_DsplTab, l_Date);
-								l_This.eSetSlcdDay(l_Date.getDate());
-							}
+								if (2 == l_This.e_WhichTab) {
+									l_This.eFillDate_2(l_This.e_DsplTab, l_Date);
+									l_This.eSetSlcdMon(l_Date.getMonth());
+								}
+								else
+									if (3 == l_This.e_WhichTab) {
+										l_This.eFillDate_3(l_This.e_DsplTab, l_Date);
+										l_This.eSetSlcdDay(l_Date.getDate());
+									}
 							return false;
 						}
 
