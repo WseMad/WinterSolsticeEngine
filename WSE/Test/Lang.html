@@ -64,6 +64,7 @@
 			width: 100%;
 			height: 100%;
 			background-color: rgb(0, 0, 0);
+			-ms-filter: "alpha(opacity = 50)";
 			background-color: rgba(0, 0, 0, 0.5);
 		}
 
@@ -77,6 +78,9 @@
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa {
+				position: relative;
+				left: 0px;
+				top: 0px;
 				padding: 5px;
 				text-align: center;
 			}
@@ -100,19 +104,12 @@
 				text-align: right;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMonth .cnApp_Col {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_YearMon .cnApp_Col {
 				width: 50%;
-				text-align: center;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Boa.cnApp_Ctrl .cnApp_Col {
 				width: 33%;
-			}
-
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum {
-			}
-
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Arw {
@@ -151,20 +148,20 @@
 				cursor: pointer;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfLastMonth {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfLastMon {
 				color: gray;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMonth {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMon {
 				color: black;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfNextMonth {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfNextMon {
 				color: gray;
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr th.cnApp_WeekEnd,
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMonth.cnApp_WeekEnd {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_DayOfCrntMon.cnApp_WeekEnd {
 				color: red;
 			}
 
@@ -173,7 +170,7 @@
 				border: 1px solid blue;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Today {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_Tdy {
 				border: 1px solid darkblue;
 			}
 
@@ -181,11 +178,13 @@
 			.cnApp_PutTgt.cnApp_DatePkr > .cnApp_Pane {
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonNum {
 				font-size: 24px;
+				border-bottom: 1px solid;
+				cursor: pointer;
 			}
 
-				.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum.cnApp_One {
+				.cnApp_PutTgt.cnApp_DatePkr .cnApp_YearNum, .cnApp_PutTgt.cnApp_DatePkr .cnApp_MonNum.cnApp_One {
 					margin-right: 5px;
 				}
 
@@ -193,7 +192,7 @@
 				color: black;
 			}
 
-			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonthNum {
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_MonNum {
 				color: black;
 			}
 
@@ -206,6 +205,7 @@
 			}
 
 			.cnApp_PutTgt.cnApp_DatePkr .cnApp_ClsBtn, .cnApp_PutTgt.cnApp_DatePkr .cnApp_TdyBtn, .cnApp_PutTgt.cnApp_DatePkr .cnApp_OkBtn {
+				display: inline-block;
 				width: auto;
 				padding: 5px 10px;
 				border: 1px solid rgb(0, 0, 0);
@@ -213,6 +213,10 @@
 				font-size: 16px;
 				text-align: center;
 				cursor: pointer;
+			}
+
+			.cnApp_PutTgt.cnApp_DatePkr .cnApp_TdyBtn {
+				margin: 0px 16px;
 			}
 
 		.cnApp_Date {
@@ -364,8 +368,10 @@
 							nWse.stDomUtil.cAddEvtHdlr(l_This.e_Pane, "selectstart",
 								function (a_Evt) {
 									a_Evt = a_Evt || window.event;
-									a_Evt.preventDefault();
-									a_Evt.stopPropagation();
+									if (a_Evt.preventDefault) {
+										a_Evt.preventDefault();
+										a_Evt.stopPropagation();
+									}
 									return false;
 								});
 
@@ -374,7 +380,7 @@
 						}
 
 						// 填写日期，使用启动日期
-						l_This.eFillDate(l_This.eAcsStupDate());
+					//	l_This.eFillDate_3(l_This.eAcsStupDate());
 
 						// 先显示出来，后调整位置（下对齐）
 						var l_X = Math.max(0, (l_This.e_PutTgt.offsetWidth - l_This.e_Pane.offsetWidth) / 2);
@@ -404,48 +410,25 @@
 
 						// DOM创建
 						var l_Boa, l_Col_Lt, l_Col_Ct, l_Col_Rt;
-						var l_Tab, l_TH, l_TB, l_tr, l_td;
+						var l_Tab;
 
 						// 年月板
-						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_YearMonth cnWse_ClearFix");
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_YearMon cnWse_ClearFix");
 						l_Col_Lt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Lt, "cnApp_Col cnApp_Lt");
 						l_Col_Rt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Rt, "cnApp_Col cnApp_Rt");
 						l_Col_Lt.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_YearNum\"></span><span class=\"cnApp_YearText\">年</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
-						l_Col_Rt.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_MonthNum cnApp_Ten\"></span><span class=\"cnApp_MonthNum cnApp_One\"></span><span class=\"cnApp_MonthText\">月</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
+						l_Col_Rt.innerHTML = "<span class=\"cnApp_Arw cnApp_Lt\">＜</span><span class=\"cnApp_MonNum cnApp_Ten\"></span><span class=\"cnApp_MonNum cnApp_One\"></span><span class=\"cnApp_MonText\">月</span><span class=\"cnApp_Arw cnApp_Rt\">＞</span>";
 						l_This.e_YearNode = l_Col_Lt.childNodes[1];
-						l_This.e_MonthTenNode = l_Col_Rt.childNodes[1];
-						l_This.e_MonthOneNode = l_Col_Rt.childNodes[2];
+						l_This.e_MonTenNode = l_Col_Rt.childNodes[1];
+						l_This.e_MonOneNode = l_Col_Rt.childNodes[2];
 						l_Boa.appendChild(l_Col_Lt);
 						l_Boa.appendChild(l_Col_Rt);
 						l_This.e_Pane.appendChild(l_Boa);
 
-						// 日板，无论哪年哪月都显示6行
+						// 显示板
 						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Days");
-						l_Tab = document.createElement("table");
-						l_TH = document.createElement("thead");
-						l_TB = document.createElement("tbody");
-						l_TH.innerHTML = "<tr><th class=\"cnApp_WeekEnd\">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class=\"cnApp_WeekEnd\">六</th></tr>"
-
-						l_This.e_DayNodes = new Array(42);
-						var l_r, l_d;
-						for (l_r = 0; l_r < 6; ++l_r) {
-							l_tr = document.createElement("tr");
-							for (l_d = 0; l_d < 7; ++l_d) {
-								l_td = document.createElement("td");
-								if ((0 == l_d) || (6 == l_d)) {
-									l_td.className = "cnApp_WeekEnd";
-								}
-
-								l_tr.appendChild(l_td);
-								l_This.e_DayNodes[l_r * 7 + l_d] = l_td;
-							}
-
-							l_TB.appendChild(l_tr);
-						}
-
-						l_Tab.appendChild(l_TH);
-						l_Tab.appendChild(l_TB);
-						l_Boa.appendChild(l_Tab);
+						l_This.e_DsplBoa = l_Boa;
+						l_Tab = l_This.eMakeTab(l_Boa, 1); // 一开始制作年月日表
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 信息板
@@ -454,87 +437,193 @@
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 控制板
-						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Ctrl cnWse_ClearFix");
-						l_This.e_CtrlBoa = l_Boa;
-						l_Col_Lt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Lt, "cnApp_Col cnApp_Lt");
-						l_Col_Ct = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Ct, "cnApp_Col cnApp_Ct");
-						l_Col_Rt = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Col_Rt, "cnApp_Col cnApp_Rt");
-						l_Col_Lt.innerHTML = "<span class=\"cnApp_ClsBtn\">关闭</span>";
-						l_Col_Ct.innerHTML = "<span class=\"cnApp_TdyBtn\">今天</span>";
-						l_Col_Rt.innerHTML = "<span class=\"cnApp_OkBtn\">确定</span>";
-						l_Boa.appendChild(l_Col_Lt);
-						l_Boa.appendChild(l_Col_Ct);
-						l_Boa.appendChild(l_Col_Rt);
+						l_Boa = document.createElement("div"); nWse.stCssUtil.cAddCssc(l_Boa, "cnApp_Boa cnApp_Ctrl");
+						l_Boa.innerHTML = "<span class=\"cnApp_ClsBtn\">关闭</span><span class=\"cnApp_TdyBtn\">今天</span><span class=\"cnApp_OkBtn\">确定</span>";
 						l_This.e_Pane.appendChild(l_Boa);
 
 						// 加入放置目标
 						l_This.e_PutTgt.appendChild(l_This.e_Pane);
+
+						// 显示年月日
+						l_This.eDsplTab(l_Tab);
 						return this;
 					}
 					,
-					eFillDate: function (a_RefDate) {
+					/// 制作表格
+					/// a_Which：Number，1=年，2=月，3=年月日
+					eMakeTab: function (a_Boa, a_Which) {
 						var l_This = this;
-						var l_TodayDate = new Date();	// 今天日期
-						var l_MaybeToday = (l_TodayDate.getFullYear() == a_RefDate.getFullYear()) && (l_TodayDate.getMonth() == a_RefDate.getMonth());
+						var l_Tab, l_TH, l_TB, l_tr, l_th, l_td;
+
+						l_Tab = document.createElement("table");
+						l_TH = document.createElement("thead");
+						l_TB = document.createElement("tbody");
+						l_Tab.appendChild(l_TH);
+						l_Tab.appendChild(l_TB);
+
+						//【注意】为了支持IE9以前，不要使用innerHTML
+						//	l_TH.innerHTML = "<tr><th class=\"cnApp_WeekEnd\">日</th><th>一</th><th>二</th><th>三</th><th>四</th><th>五</th><th class=\"cnApp_WeekEnd\">六</th></tr>";
+
+						function f1() {
+							// (1+4)行5列
+							var i_Rows = 4, i_Cols = 5;
+							l_tr = document.createElement("tr");
+
+							// 所有<th>
+							var r, c;
+							l_This.e_YearsRgeNodes = new Array(i_Cols);
+							for (c = 0; c < i_Cols; ++c) {
+								l_th = document.createElement("th");
+								l_tr.appendChild(l_th);
+								l_This.e_YearsRgeNodes[c] = l_th;
+							}
+
+							nWse.stDomUtil.cSetTextCtnt(l_This.e_YearsRgeNodes[2], "~");
+							l_TH.appendChild(l_tr);
+
+							// 所有<td>
+							l_This.e_YearsNodes = new Array(i_Rows * i_Cols);
+							for (r = 0; r < i_Rows; ++r) {
+								l_tr = document.createElement("tr");
+								for (c = 0; c < i_Cols; ++c) {
+									l_td = document.createElement("td");
+									l_tr.appendChild(l_td);
+									l_This.e_YearsNodes[r * i_Cols + c] = l_td;
+								}
+
+								l_TB.appendChild(l_tr);
+							}
+						}
+
+						function f2() {
+						}
+
+						function f3() {
+							// (1+6)行7列
+							var i_Rows = 6, i_Cols = 7;
+							l_tr = document.createElement("tr");
+							var l_Texts = ["日", "一", "二", "三", "四", "五", "六"];
+
+							// 所有<th>
+							var r, c;
+							for (c = 0; c < i_Cols; ++c) {
+								l_th = document.createElement("th");
+								nWse.stDomUtil.cSetTextCtnt(l_th, l_Texts[c]);
+								if ((0 == c) || (i_Cols - 1 == c)) {
+									l_th.className = "cnApp_WeekEnd";
+								}
+								l_tr.appendChild(l_th);
+							}
+							l_TH.appendChild(l_tr);
+
+							// 所有<td>
+							l_This.e_DaysNodes = new Array(i_Rows * i_Cols);
+							for (r = 0; r < i_Rows; ++r) {
+								l_tr = document.createElement("tr");
+								for (c = 0; c < i_Cols; ++c) {
+									l_td = document.createElement("td");
+									if ((0 == c) || (i_Cols - 1 == c)) {
+										l_td.className = "cnApp_WeekEnd";
+									}
+
+									l_tr.appendChild(l_td);
+									l_This.e_DaysNodes[r * i_Cols + c] = l_td;
+								}
+
+								l_TB.appendChild(l_tr);
+							}
+						}
+
+						if (1 == a_Which) {
+							f1();
+						}
+						else
+							if (2 == a_Which) {
+								f2();
+							}
+							else {
+								f3();
+							}
+						return l_Tab;
+					}
+					,
+					eDsplTab: function (a_Tab) {
+						var l_This = this;
+						nWse.stDomUtil.cRmvAllChds(l_This.e_DsplBoa);
+						l_This.e_DsplBoa.appendChild(a_Tab);
+						return this;
+					}
+					,
+					eFillDate_1: function (a_RefDate) {
+						var l_This = this;
+						var l_StupYear = a_RefDate.getFullYear();
+
+						return this;
+					}
+					,
+					eFillDate_3: function (a_RefDate) {
+						var l_This = this;
+						var l_TdyDate = new Date();	// 今天日期
+						var l_MaybeTdy = (l_TdyDate.getFullYear() == a_RefDate.getFullYear()) && (l_TdyDate.getMonth() == a_RefDate.getMonth());
 
 						// 记录启动日期，及该年该月第一天，注意getMonth()返回[0, 11]
 						l_This.e_CrntDate = a_RefDate;
 						l_This.e_CrntYm1stDayDate = new Date(l_This.e_CrntDate.getFullYear(), l_This.e_CrntDate.getMonth(), 1);
-						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMonth());
+						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMon());
 
 						// 填写年月
-						l_This.e_YearNode.textContent = l_This.e_CrntDate.getFullYear().toString();
-						var l_Month = l_This.e_CrntDate.getMonth() + 1;
-						if (l_Month < 10) {
-							l_This.e_MonthTenNode.textContent = "0";
-							l_This.e_MonthTenNode.style.visibility = "hidden";	// 隐藏
-							l_This.e_MonthOneNode.textContent = (l_Month).toString();
+						nWse.stDomUtil.cSetTextCtnt(l_This.e_YearNode, l_This.e_CrntDate.getFullYear().toString());
+						var l_Mon = l_This.e_CrntDate.getMonth() + 1;
+						if (l_Mon < 10) {
+							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonTenNode, "0");
+							l_This.e_MonTenNode.style.visibility = "hidden";	// 隐藏
+							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonOneNode, (l_Mon).toString());
 						}
 						else {
-							l_This.e_MonthTenNode.textContent = "1";
-							l_This.e_MonthTenNode.style.visibility = "visible";	// 显示
-							l_This.e_MonthOneNode.textContent = (l_Month - 10).toString();
+							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonTenNode, "1");
+							l_This.e_MonTenNode.style.visibility = "visible";	// 显示
+							nWse.stDomUtil.cSetTextCtnt(l_This.e_MonOneNode, (l_Mon - 10).toString());
 						}
 
 						// 填写天
-						var l_LastMonth = l_This.eGetLastMonth1stDayDate();
-						var l_LastDayAmt = l_This.eGetDayAmtByYm(l_LastMonth.getFullYear(), l_LastMonth.getMonth() + 1);
+						var l_LastMon = l_This.eGetLastMon1stDayDate();
+						var l_LastDayAmt = l_This.eGetDayAmtByYm(l_LastMon.getFullYear(), l_LastMon.getMonth() + 1);
 						var l_Week = l_This.e_CrntYm1stDayDate.getDay();
-						var l_DayIdx = 0, l_Node, l_TodayNode = null, l_SlcdNode = null;
+						var l_DayIdx = 0, l_Node, l_TdyNode = null, l_SlcdNode = null;
 						var l_d, l_Len;
 						l_Len = l_Week || 7; // 上个月最后几天，至多7天
 						for (l_d = 0; l_d < l_Len; ++l_d) {
-							l_Node = l_This.e_DayNodes[l_DayIdx++];
-							l_Node.textContent = (l_LastDayAmt - l_Len + l_d + 1).toString();
-							nWse.stCssUtil.cRplcCssc(l_Node, "cnApp_DayOfCrntMonth", "cnApp_DayOfLastMonth", true);
+							l_Node = l_This.e_DaysNodes[l_DayIdx++];
+							nWse.stDomUtil.cSetTextCtnt(l_Node, (l_LastDayAmt - l_Len + l_d + 1).toString());
+							nWse.stCssUtil.cRplcCssc(l_Node, "cnApp_DayOfCrntMon", "cnApp_DayOfLastMon", true);
 						}
 
 						l_Len = l_CrntDayAmt;
 						for (l_d = 0; l_d < l_Len; ++l_d) // 这个月全部天
 						{
-							l_Node = l_This.e_DayNodes[l_DayIdx++];
-							l_Node.textContent = (l_d + 1).toString();
-							nWse.stCssUtil.cRplcCssc(l_Node, (l_DayIdx < 21 ? "cnApp_DayOfLastMonth" : "cnApp_DayOfNextMonth"), "cnApp_DayOfCrntMonth", true);
+							l_Node = l_This.e_DaysNodes[l_DayIdx++];
+							nWse.stDomUtil.cSetTextCtnt(l_Node, (l_d + 1).toString());
+							nWse.stCssUtil.cRplcCssc(l_Node, (l_DayIdx < 21 ? "cnApp_DayOfLastMon" : "cnApp_DayOfNextMon"), "cnApp_DayOfCrntMon", true);
 
 							// 如果可能是今天
-							if (l_MaybeToday && (l_TodayDate.getDate() == (l_d + 1))) {
-								l_TodayNode = l_Node;
+							if (l_MaybeTdy && (l_TdyDate.getDate() == (l_d + 1))) {
+								l_TdyNode = l_Node;
 							}
 						}
 
-						if (l_This.e_TodayNode !== l_TodayNode) // 改变今天节点
+						if (l_This.e_TdyNode !== l_TdyNode) // 改变今天节点
 						{
-							nWse.stCssUtil.cRmvCssc(l_This.e_TodayNode, "cnApp_Today");
-							l_This.e_TodayNode = l_TodayNode;
-							nWse.stCssUtil.cAddCssc(l_This.e_TodayNode, "cnApp_Today");
+							nWse.stCssUtil.cRmvCssc(l_This.e_TdyNode, "cnApp_Tdy");
+							l_This.e_TdyNode = l_TdyNode;
+							nWse.stCssUtil.cAddCssc(l_This.e_TdyNode, "cnApp_Tdy");
 						}
 
 						l_Len = 42 - l_DayIdx;
 						for (l_d = 0; l_d < l_Len; ++l_d) // 下个月前几天，至多7天
 						{
-							l_Node = l_This.e_DayNodes[l_DayIdx++];
-							l_Node.textContent = (l_d + 1).toString();
-							nWse.stCssUtil.cRplcCssc(l_Node, "cnApp_DayOfCrntMonth", "cnApp_DayOfNextMonth", true);
+							l_Node = l_This.e_DaysNodes[l_DayIdx++];
+							nWse.stDomUtil.cSetTextCtnt(l_Node, (l_d + 1).toString());
+							nWse.stCssUtil.cRplcCssc(l_Node, "cnApp_DayOfCrntMon", "cnApp_DayOfNextMon", true);
 						}
 
 						// 如果没有选中天，选中参数表示的那一天
@@ -545,25 +634,25 @@
 						return this;
 					}
 					,
-					eFillLastYear: function () {
-						return this.eFillDate(this.eGetLastYearDate());
+					eFillLastYear_3: function () {
+						return this.eFillDate_3(this.eGetLastYearDate());
 					}
 					,
-					eFillNextYear: function () {
-						return this.eFillDate(this.eGetNextYearDate());
+					eFillNextYear_3: function () {
+						return this.eFillDate_3(this.eGetNextYearDate());
 					}
 					,
-					eFillLastMonth: function () {
-						return this.eFillDate(this.eGetLastMonth1stDayDate());
+					eFillLastMon_3: function () {
+						return this.eFillDate_3(this.eGetLastMon1stDayDate());
 					}
 					,
-					eFillNextMonth: function () {
-						return this.eFillDate(this.eGetNextMonth1stDayDate());
+					eFillNextMon_3: function () {
+						return this.eFillDate_3(this.eGetNextMon1stDayDate());
 					}
 					,
 					eUpdInfoBoa: function () {
 						var l_This = this;
-						l_This.e_InfoBoa.textContent = l_This.e_CrntDate.toLocaleDateString();
+						nWse.stDomUtil.cSetTextCtnt(l_This.e_InfoBoa, l_This.e_CrntDate.toLocaleDateString());
 						return this;
 					}
 					,
@@ -579,17 +668,18 @@
 						return this.e_CrntYm1stDayDate.getFullYear();
 					}
 					,
-					eGetMonth: function () {
+					eGetMon: function () {
 						return this.e_CrntYm1stDayDate.getMonth() + 1;	// 返回[1, 12]
 					}
 					,
-					eGetDayAmtByYm: function (a_Year, a_Month) {
+					/// a_Mon：Number∈[1, 12]
+					eGetDayAmtByYm: function (a_Year, a_Mon) {
 						var l_This = this;
-						if ((1 == a_Month) || (3 == a_Month) || (5 == a_Month) || (7 == a_Month) || (8 == a_Month) || (10 == a_Month) || (12 == a_Month)) {
+						if ((1 == a_Mon) || (3 == a_Mon) || (5 == a_Mon) || (7 == a_Mon) || (8 == a_Mon) || (10 == a_Mon) || (12 == a_Mon)) {
 							return 31;
 						}
 						else
-							if ((2 == a_Month)) {
+							if ((2 == a_Mon)) {
 								return l_This.eIsLeapYear(a_Year) ? 29 : 28;
 							}
 						return 30;
@@ -603,79 +693,83 @@
 						return new Date(this.e_CrntYm1stDayDate.getFullYear() + 1, this.e_CrntYm1stDayDate.getMonth(), 1);
 					}
 					,
-					eGetLastMonth1stDayDate: function () {
+					eGetLastMon1stDayDate: function () {
 						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() - 1, 1);
 					}
 					,
-					eGetNextMonth1stDayDate: function () {
+					eGetNextMon1stDayDate: function () {
 						return new Date(this.e_CrntYm1stDayDate.getFullYear(), this.e_CrntYm1stDayDate.getMonth() + 1, 1);
 					}
 					,
 					eFindDayNodeByDay: function (a_Day) {
 						var l_This = this;
-						var l_Bgn = nWse.stAryUtil.cFind(l_This.e_DayNodes,
+						var l_Bgn = nWse.stAryUtil.cFind(l_This.e_DaysNodes,
 							function (a_Nodes, a_Idx, a_Node) {
-								return parseInt(a_Node.textContent, 10) == 1; // 先找到本月第一天
+								return l_This.eGetDayByNode(a_Node) == 1; // 先找到本月第一天
 							});
 
-						return nWse.stAryUtil.cFind(l_This.e_DayNodes,
+						return nWse.stAryUtil.cFind(l_This.e_DaysNodes,
 							function (a_Nodes, a_Idx, a_Node) {
-								return parseInt(a_Node.textContent, 10) == a_Day;
+								return l_This.eGetDayByNode(a_Node) == a_Day;
 							}, l_Bgn);
 					}
 					,
-					eIsDayNodeOfLastMonth: function (a_DayNode) {
-						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfLastMonth");
+					eGetDayByNode: function (a_Node) {
+						return parseInt(nWse.stDomUtil.cGetTextCtnt(a_Node), 10);
 					}
 					,
-					eIsDayNodeOfCrntMonth: function (a_DayNode) {
-						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfCrntMonth");
+					eIsDayNodeOfLastMon: function (a_DayNode) {
+						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfLastMon");
 					}
 					,
-					eIsDayNodeOfNextMonth: function (a_DayNode) {
-						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfNextMonth");
+					eIsDayNodeOfCrntMon: function (a_DayNode) {
+						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfCrntMon");
 					}
 					,
-					eGotoLastYear: function () {
+					eIsDayNodeOfNextMon: function (a_DayNode) {
+						return nWse.stCssUtil.cHasCssc(a_DayNode, "cnApp_DayOfNextMon");
+					}
+					,
+					eGotoLastYear_3: function () {
 						var l_This = this;
 						var l_SlcdDay = l_This.eGetSlcdDay();
-						l_This.eFillLastYear();
+						l_This.eFillLastYear_3();
 						l_This.eSetSlcdDay(l_SlcdDay);
 						return this;
 					}
 					,
-					eGotoNextYear: function () {
+					eGotoNextYear_3: function () {
 						var l_This = this;
 						var l_SlcdDay = l_This.eGetSlcdDay();
-						l_This.eFillNextYear();
+						l_This.eFillNextYear_3();
 						l_This.eSetSlcdDay(l_SlcdDay);
 						return this;
 					}
 					,
-					eGotoLastMonth: function () {
+					eGotoLastMon_3: function () {
 						var l_This = this;
 						var l_SlcdDay = l_This.eGetSlcdDay();
-						l_This.eFillLastMonth();
+						l_This.eFillLastMon_3();
 						l_This.eSetSlcdDay(l_SlcdDay);
 						return this;
 					}
 					,
-					eGotoNextMonth: function () {
+					eGotoNextMon_3: function () {
 						var l_This = this;
 						var l_SlcdDay = l_This.eGetSlcdDay();
-						l_This.eFillNextMonth();
+						l_This.eFillNextMon_3();
 						l_This.eSetSlcdDay(l_SlcdDay);
 						return this;
 					}
 					,
 					eGetSlcdDay: function () {
 						var l_This = this;
-						return l_This.e_SlcdNode ? parseInt(l_This.e_SlcdNode.textContent, 10) : l_This.eAcsStupDate().getDate(); // 默认起始天
+						return l_This.e_SlcdNode ? l_This.eGetDayByNode(l_This.e_SlcdNode) : l_This.eAcsStupDate().getDate(); // 默认起始天
 					}
 					,
 					eSetSlcdDay: function (a_Day) {
 						var l_This = this;
-						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMonth());
+						var l_CrntDayAmt = l_This.eGetDayAmtByYm(l_This.eGetYear(), l_This.eGetMon());
 						if (a_Day > l_CrntDayAmt) {
 							a_Day = l_CrntDayAmt;
 						}
@@ -684,9 +778,9 @@
 
 						// 更新CSS类
 						var l_NewSlcdNodeIdx = l_This.eFindDayNodeByDay(a_Day);
-						if ((l_This.e_SlcdNode !== l_This.e_DayNodes[l_NewSlcdNodeIdx])) {
+						if ((l_This.e_SlcdNode !== l_This.e_DaysNodes[l_NewSlcdNodeIdx])) {
 							nWse.stCssUtil.cRmvCssc(l_This.e_SlcdNode, "cnApp_Slcd");
-							l_This.e_SlcdNode = l_This.e_DayNodes[l_NewSlcdNodeIdx];
+							l_This.e_SlcdNode = l_This.e_DaysNodes[l_NewSlcdNodeIdx];
 							nWse.stCssUtil.cAddCssc(l_This.e_SlcdNode, "cnApp_Slcd");
 						}
 
@@ -697,67 +791,78 @@
 					,
 					eHdlIpt: function (a_Evt) {
 						var l_This = this;
+						var l_EvtTgt = a_Evt.target || a_Evt.srcElement;
 
 						// 点中箭头？
-						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_Arw")) {
-							if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_Lt")) {
-								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_Lt") ? l_This.eGotoLastYear() : l_This.eGotoLastMonth();
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_Arw")) {
+							if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_Lt")) {
+								nWse.stCssUtil.cHasCssc(l_EvtTgt.parentNode, "cnApp_Lt") ? l_This.eGotoLastYear_3() : l_This.eGotoLastMon_3();
 							}
 							else {
-								nWse.stCssUtil.cHasCssc(a_Evt.target.parentNode, "cnApp_Lt") ? l_This.eGotoNextYear() : l_This.eGotoNextMonth();
+								nWse.stCssUtil.cHasCssc(l_EvtTgt.parentNode, "cnApp_Lt") ? l_This.eGotoNextYear_3() : l_This.eGotoNextMon_3();
 							}
+							return false;
+						}
+
+						// 点中年？
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_YearNum")) {
+							//	console.log("Year!");
+
+
 							return false;
 						}
 
 						// 点中天？
 						var l_Day;
-						if ("TD" == a_Evt.target.tagName) {
-							l_Day = parseInt(a_Evt.target.textContent, 10);
+						if ("TD" == l_EvtTgt.tagName) {
+							l_Day = l_This.eGetDayByNode(l_EvtTgt);
 
 							// 属于哪个月的？
-							if (l_This.eIsDayNodeOfLastMonth(a_Evt.target)) {
-								l_This.eGotoLastMonth();
+							if (l_This.eIsDayNodeOfLastMon(l_EvtTgt)) {
+								l_This.eGotoLastMon_3();
 								l_This.eSetSlcdDay(l_Day);
 							}
 							else
-								if (l_This.eIsDayNodeOfCrntMonth(a_Evt.target)) {
+								if (l_This.eIsDayNodeOfCrntMon(l_EvtTgt)) {
 									l_This.eSetSlcdDay(l_Day);
 								}
 								else {
-									l_This.eGotoNextMonth();
+									l_This.eGotoNextMon_3();
 									l_This.eSetSlcdDay(l_Day);
 								}
 							return false;
 						}
 
 						// 点中关闭？
-						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_ClsBtn")) {
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_ClsBtn")) {
 							l_This.eHideDate();
 							return false;
 						}
 
 						// 点中今天？
 						var l_Date;
-						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_TdyBtn")) {
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_TdyBtn")) {
 							l_Date = new Date();
-							l_This.eFillDate(l_Date);
+							l_This.eFillDate_3(l_Date);
 							l_This.eSetSlcdDay(l_Date.getDate());
 							return false;
 						}
 
 						// 点中确定？
-						if (nWse.stCssUtil.cHasCssc(a_Evt.target, "cnApp_OkBtn")) {
+						if (nWse.stCssUtil.cHasCssc(l_EvtTgt, "cnApp_OkBtn")) {
 							// 报告
 							if (l_This.c_Cfg.c_TextBox) {
-								l_This.c_Cfg.c_TextBox.textContent = l_This.e_CrntDate.toLocaleDateString();
+								nWse.stDomUtil.cSetTextCtnt(l_This.c_Cfg.c_TextBox, l_This.e_CrntDate.toLocaleDateString());
 							}
 
 							l_This.eHideDate();
 							return false;
 						}
 
-						a_Evt.preventDefault();
-						a_Evt.stopPropagation();
+						if (a_Evt.preventDefault) {
+							a_Evt.preventDefault();
+							a_Evt.stopPropagation();
+						}
 						return false;
 					}
 				});

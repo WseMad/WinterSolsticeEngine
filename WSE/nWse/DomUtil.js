@@ -569,6 +569,19 @@ function fOnIcld(a_Errs)
 			return stDomUtil;
 		};
 
+		/// 获取文本内容
+		stDomUtil.cGetTextCtnt = function (a_Elmt)
+		{
+			return ("textContent" in a_Elmt) ? a_Elmt.textContent : a_Elmt.innerText;
+		};
+
+		/// 设置文本内容
+		stDomUtil.cSetTextCtnt = function (a_Elmt, a_Ctnt)
+		{
+			("textContent" in a_Elmt) ? (a_Elmt.textContent = a_Ctnt) : (a_Elmt.innerText = a_Ctnt);
+			return stDomUtil;
+		}
+
 
 		/// 添加事件处理器
 		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
