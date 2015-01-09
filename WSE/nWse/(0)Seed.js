@@ -323,12 +323,104 @@
 	};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 异步导入
+
+	var stAsynImpt;
+	(function ()
+	{
+		/// 异步导入（样式表）
+		stAsynImpt = function () { };
+		nWse.stAsynImpt = stAsynImpt;
+		stAsynImpt.oc_nHost = nWse;
+		stAsynImpt.oc_FullName = nWse.ocBldFullName("stAsynImpt");
+
+		/// 构建全名
+		stAsynImpt.ocBldFullName = function (a_Name)
+		{
+			return stAsynImpt.oc_FullName + "." + a_Name;
+		};
+
+		//======== 私有字段
+
+		//======== 私有函数
+
+		//======== 公有函数
+
+		/// 按序并行，一次发出全部请求，同时保证每个文件按数组顺序加入到文档
+		/// a_Paths：String[]，路径数组，每个路径指向一个CSS文件
+		/// a_fCabk：void f(a_Errs)，回调，a_Errs记录出错的文件路径
+		stAsynImpt.cPrllInOdr = function (a_Paths, a_fCabk)
+		{
+			var l_Len = a_Paths ? a_Paths.length : 0;
+			if (! l_Len) // 没有时立即回调
+			{
+				a_fCabk(null);
+				return stAsynImpt;
+			}
+
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
+			var l_Dom_CssJs;
+			var l_Idx = 0, l_Cnt = 0;
+			for (; l_Idx<l_Len; ++l_Idx)
+			{
+				l_Dom_CssJs = l_Glb.document.createElement("link");
+				l_Dom_CssJs.rel="stylesheet";
+				l_Dom_CssJs.type = "text/css";
+				l_Dom_CssJs.onerror = fOnErr;
+				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
+				l_Dom_CssJs.href = l_Dom_CssJs.Wse_Path = a_Paths[l_Idx]; // 记录路径并赋予
+				l_Dom_Head.appendChild(l_Dom_CssJs); // 加入文档
+			}
+
+			function fOnErr()
+			{
+				// 记录错误
+				a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(this.Wse_Path) : (a_fCabk.Wse_Errs = [this.Wse_Path]);
+
+				// 累计一个
+				fAccOne();
+			}
+
+			function fOnLoad()
+			{
+				// IE8
+				if (nWse.fMaybeNonHtml5Brsr())
+				{
+					// 继续等待
+					if (("loaded" != this.readyState) && ("complete" != this.readyState))
+					{ return; }
+				}
+
+				// 累计一个
+				fAccOne();
+			}
+
+			function fAccOne()
+			{
+				// 加一个
+				++ l_Cnt;
+				if (l_Cnt < l_Len) // 还有
+				{
+					// 继续
+				}
+				else // 完成
+				{
+					// 回调
+					a_fCabk(a_fCabk.Wse_Errs || null);
+				}
+			}
+
+			return stAsynImpt;
+		};
+	})();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 异步加载
 
 	var stAsynLoad;
 	(function ()
 	{
-		/// 异步加载
+		/// 异步加载（脚本）
 		stAsynLoad = function () { };
 		nWse.stAsynLoad = stAsynLoad;
 		stAsynLoad.oc_nHost = nWse;
@@ -346,8 +438,10 @@
 
 		//======== 公有函数
 
-		/// 顺序
-		stAsynLoad.cSqnc = function (a_Paths, a_fCabk)
+		/// 按序串行，一个接一个地发出请求，保证每个文件按数组顺序加入到文档
+		/// a_Paths：String[]，路径数组，每个路径指向一个JS文件
+		/// a_fCabk：void f(a_Errs)，回调，a_Errs记录出错的文件路径
+		stAsynLoad.cSrilInOdr = function (a_Paths, a_fCabk)
 		{
 			var l_Len = a_Paths ? a_Paths.length : 0;
 			if (! l_Len) // 没有时立即回调
@@ -356,71 +450,54 @@
 				return stAsynLoad;
 			}
 
-			var i_Rgx = /\.css$/i;	// 用来区分样式表和脚本
 			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
-			var l_Paths = Array.prototype.slice.call(a_Paths);
 			var l_Idx = 0;
 			function fLoadOne()
 			{
-				var l_Path = l_Paths[l_Idx];
-				var l_Dom_CssJs, l_HrefSrc;
-				if (i_Rgx.test(l_Path))
-				{
-					l_Dom_CssJs = l_Glb.document.createElement("link");
-					l_Dom_CssJs.rel="stylesheet";
-					l_Dom_CssJs.type = "text/css";
-					l_HrefSrc = "href";
-
-				}
-				else
-				{
-					l_Dom_CssJs = l_Glb.document.createElement("script");
-					l_Dom_CssJs.type = "text/javascript";
-					l_HrefSrc = "src";
-				}
-
+				var l_Dom_CssJs = l_Glb.document.createElement("script");
+				l_Dom_CssJs.type = "text/javascript";
 				l_Dom_CssJs.onerror = fOnErr;
 				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
-				l_Dom_CssJs[l_HrefSrc] = l_Path;
-				l_Dom_Head.appendChild(l_Dom_CssJs);						// 加入文档
+				l_Dom_CssJs.src = l_Dom_CssJs.Wse_Path = a_Paths[l_Idx]; // 记录路径并赋予
+				l_Dom_Head.appendChild(l_Dom_CssJs); // 加入文档
+			}
 
-				function fOnErr()
+			function fOnErr()
+			{
+				// 记录错误
+				a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(this.Wse_Path) : (a_fCabk.Wse_Errs = [this.Wse_Path]);
+
+				// 下一个
+				fNext();
+			}
+
+			function fOnLoad()
+			{
+				// IE8
+				if (nWse.fMaybeNonHtml5Brsr())
 				{
-					// 记录错误
-					a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(l_Path) : (a_fCabk.Wse_Errs = [l_Path]);
-
-					// 下一个
-					fNext();
+					// 继续等待
+					if (("loaded" != this.readyState) && ("complete" != this.readyState))
+					{ return; }
 				}
 
-				function fOnLoad()
-				{
-					// IE8
-					if (nWse.fMaybeNonHtml5Brsr())
-					{
-						// 继续等待
-						if (("loaded" != this.readyState) && ("complete" != this.readyState))
-						{ return; }
-					}
+				// 下一个
+				fNext();
+			}
 
-					// 下一个
-					fNext();
+			function fNext()
+			{
+				// 下一个
+				++ l_Idx;
+				if (l_Idx < l_Len) // 还有
+				{
+					// 继续
+					fLoadOne();
 				}
-
-				function fNext()
+				else // 完成
 				{
-					// 下一个
-					++ l_Idx;
-					if (l_Idx < l_Len) // 还有
-					{
-						// 继续
-						fLoadOne();
-					}
-					else // 完成
-					{
-						// 回调
-						a_fCabk(a_fCabk.Wse_Errs || null);
-					}
+					// 回调
+					a_fCabk(a_fCabk.Wse_Errs || null);
 				}
 			}
 
@@ -460,8 +537,8 @@
 		// 初始化库目录映射
 		function eInitLibDiryMap()
 		{
-			if (i_InNodeJs)
-			{ return; }
+			//if (i_InNodeJs) // 如常处理
+			//{ return; }
 
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
 			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
