@@ -696,6 +696,24 @@ double w_GetSunRadiusVector(const double &dbJD)
 //
 // 返回指定节气的儒略日时间
 // ------------------------------------------------------------------------
+
+double fGetSunEclipticLongitudeECDegree(double a_JD, SOLARTERMS ST_SolarTerms)
+{
+	// 计算太阳黄经
+	double dbLongitude = w_GetSunLongitude(a_JD);
+	// 一次校正经度
+	dbLongitude += w_CorrectionCalcSunLongitude(dbLongitude, w_GetSunLatitude(a_JD), a_JD);
+	// 二次校正天体章动
+	dbLongitude += w_GetNutationJamScalar(a_JD) / 3600.0;
+	// 三次校正太阳半径向量
+	//	dbLongitude -= (20.4898 / w_GetSunRadiusVector(a_JD)) / 3600.0;
+	dbLongitude -= (20.49552 / w_GetSunRadiusVector(a_JD)) / 3600.0 / (20 * PI);	//@ 20*PI 文档中还除了这一项！
+
+	// 由于春分这天黄经为 0 度，比较特殊，因此专门判断（如不加以特殊对待则会导致计算范围覆盖整个 360 度角）
+	dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+	return dbLongitude;
+}
+
 double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 {
 	// 节气月份
@@ -720,7 +738,10 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 			break;
 		}
 
+
 		dbDichotomyDivisionDayJD = ((dbUpperLinit - dbLowerLinit) / 2.0) + dbLowerLinit;
+
+		/*
 		// 计算太阳黄经
 		dbLongitude = w_GetSunLongitude(dbDichotomyDivisionDayJD);
 		// 一次校正经度
@@ -728,15 +749,156 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 		// 二次校正天体章动
 		dbLongitude += w_GetNutationJamScalar(dbDichotomyDivisionDayJD) / 3600.0;
 		// 三次校正太阳半径向量
-	//	dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0;
+		//	dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0;
 		dbLongitude -= (20.49552 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0 / (20 * PI);	//@ 20*PI 文档中还除了这一项！
 
 		// 由于春分这天黄经为 0 度，比较特殊，因此专门判断（如不加以特殊对待则会导致计算范围覆盖整个 360 度角）
 		dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+		//*/
+
+		dbLongitude = fGetSunEclipticLongitudeECDegree(dbDichotomyDivisionDayJD, ST_SolarTerms);
+
+
 		// 调整二分法上下限
 		(dbLongitude > static_cast<double>(ST_SolarTerms)) ? dbUpperLinit = dbDichotomyDivisionDayJD : dbLowerLinit = dbDichotomyDivisionDayJD;
 	}
 	return dbDichotomyDivisionDayJD;
+}
+
+double fEstmInitGuess(int a_Year, SOLARTERMS a_Ang)
+{
+	/*
+	二十四节气
+	春分0° 3月20——21日 玄鸟至、雷乃发声、始电
+	清明15° 4月4——6日 桐始华、鼠化为鴽、虹始见
+	谷雨30° 4月19——21日 萍始生、鸣鸠拂其羽、戴胜降于桑
+	立夏45° 5月5——7日 蝼蝈鸣、蚯蚓出、王瓜生
+	小满60° 5月20——22日 苦菜秀、靡草死、麦秋至
+	芒种75° 6月5——7日 螳螂生、鹏始鸣、反舌无声
+	夏至90° 6月21——22日 鹿角解、蜩始鸣、半夏生
+	小暑105° 7月6——8日温风至、蟋蟀居宇、鹰始鸷
+	大暑120° 7月22——24日 腐草为萤、土润溽暑、大雨时行
+	立秋135° 8月7——9日 凉风至、白露生、寒蝉鸣
+	处暑150° 8月22——24日 鹰乃祭鸟、天地始肃、禾乃登
+	白露165° 9月7——9日 鸿雁来、玄鸟归、群鸟养羞
+	秋分180° 9月22——24日 雷始收声、蛰虫坯户、水始涸
+	寒露195° 10月8——9日 鸿雁来宾、雀入水为蛤、菊有黄华
+	霜降210° 10月23——24日 豺乃祭兽、草木黄落、蛰虫咸俯
+	立冬225° 11月7——8日 水始冰、地始冻、雉入大水为蜃
+	小雪240° 11月22——23日 虹藏不见、天气上升、闭塞成冬
+	大雪255° 12月6——8日 鹃鸥不鸣、虎始交、荔挺出
+	冬至270° 12月21——23日 （苗历新年） 蚯蚓结、糜角解、水泉动
+	小寒285° 1月5——7日 雁北乡、鹊始巢、雉始鸲
+	大寒300° 1月20——21日 鸡始乳、征鸟厉疾、水泽腹坚
+	立春315° 2月3——5日 东风解冻、蛰虫始振、鱼上冰
+	雨水330° 2月18——20日 獭祭鱼、鸿雁来、草木萌动
+	惊蛰345° 3月5——7日桃始华、仓庚鸣、鹰化为鸠
+
+	关于七十二候详情，见词条“七十二候”。
+	*/
+
+	double l_Rst;
+	switch (a_Ang)
+	{
+	case ST_VERNAL_EQUINOX:
+		l_Rst = w_GDToJD(a_Year, 3, 20, 0, 0, 0);
+		break;
+	case ST_CLEAR_AND_BRIGHT:
+		l_Rst = w_GDToJD(a_Year, 4, 4, 0, 0, 0);
+		break;
+	case ST_GRAIN_RAIN:
+		l_Rst = w_GDToJD(a_Year, 4, 19, 0, 0, 0);
+		break;
+	case ST_SUMMER_BEGINS:
+		l_Rst = w_GDToJD(a_Year, 5, 5, 0, 0, 0);
+		break;
+	case ST_GRAIN_BUDS:
+		l_Rst = w_GDToJD(a_Year, 5, 20, 0, 0, 0);
+		break;
+	case ST_GRAIN_IN_EAR:
+		l_Rst = w_GDToJD(a_Year, 6, 5, 0, 0, 0);
+		break;
+	case ST_SUMMER_SOLSTICE:
+		l_Rst = w_GDToJD(a_Year, 6, 21, 0, 0, 0);
+		break;
+	case ST_SLIGHT_HEAT:
+		l_Rst = w_GDToJD(a_Year, 7, 6, 0, 0, 0);
+		break;
+	case ST_GREAT_HEAT:
+		l_Rst = w_GDToJD(a_Year, 7, 22, 0, 0, 0);
+		break;
+	case ST_AUTUMN_BEGINS:
+		l_Rst = w_GDToJD(a_Year, 8, 7, 0, 0, 0);
+		break;
+	case ST_STOPPING_THE_HEAT:
+		l_Rst = w_GDToJD(a_Year, 8, 22, 0, 0, 0);
+		break;
+	case ST_WHITE_DEWS:
+		l_Rst = w_GDToJD(a_Year, 9, 7, 0, 0, 0);
+		break;
+	case ST_AUTUMN_EQUINOX:
+		l_Rst = w_GDToJD(a_Year, 9, 22, 0, 0, 0);
+		break;
+	case ST_COLD_DEWS:
+		l_Rst = w_GDToJD(a_Year, 10, 8, 0, 0, 0);
+		break;
+	case ST_HOAR_FROST_FALLS:
+		l_Rst = w_GDToJD(a_Year, 10, 23, 0, 0, 0);
+		break;
+	case ST_WINTER_BEGINS:
+		l_Rst = w_GDToJD(a_Year, 11, 7, 0, 0, 0);
+		break;
+	case ST_LIGHT_SNOW:
+		l_Rst = w_GDToJD(a_Year, 11, 22, 0, 0, 0);
+		break;
+	case ST_HEAVY_SNOW:
+		l_Rst = w_GDToJD(a_Year, 12, 6, 0, 0, 0);
+		break;
+	case ST_WINTER_SOLSTICE:
+		l_Rst = w_GDToJD(a_Year, 12, 21, 0, 0, 0);
+		break;
+	case ST_SLIGHT_COLD:
+		l_Rst = w_GDToJD(a_Year, 1, 5, 0, 0, 0);
+		break;
+	case ST_GREAT_COLD:
+		l_Rst = w_GDToJD(a_Year, 1, 20, 0, 0, 0);
+		break;
+	case ST_SPRING_BEGINS:
+		l_Rst = w_GDToJD(a_Year, 2, 3, 0, 0, 0);
+		break;
+	case ST_THE_RAINS:
+		l_Rst = w_GDToJD(a_Year, 2, 18, 0, 0, 0);
+		break;
+	case ST_INSECTS_AWAKEN:
+		l_Rst = w_GDToJD(a_Year, 3, 5, 0, 0, 0);
+		break;
+	}
+
+	return l_Rst;
+}
+
+double fCalcSolarTerms_Newton(const int &year, const SOLARTERMS &ST_SolarTerms)
+{
+	double l_JD0, l_JD1, l_Lon, l_LonDrv;
+	double l_Ang = (double)ST_SolarTerms;
+
+	l_JD1 = fEstmInitGuess(year, ST_SolarTerms);
+	int l_Cnt = 0;
+	do
+	{
+		l_JD0 = l_JD1;
+
+		// 计算太阳黄经
+		l_Lon = fGetSunEclipticLongitudeECDegree(l_JD0, ST_SolarTerms) - l_Ang;
+		l_LonDrv = (fGetSunEclipticLongitudeECDegree(l_JD0 + 0.000005, ST_SolarTerms) - 
+			fGetSunEclipticLongitudeECDegree(l_JD0 - 0.000005, ST_SolarTerms)) / 0.00001;
+
+		l_JD1 = l_JD0 - l_Lon / l_LonDrv;
+
+		++l_Cnt;
+	} while ((fabs(l_JD1 - l_JD0) > 0.0000001) && (l_Cnt < 100)); // 最多迭代100次
+	cout << "牛顿迭代次数 = " << l_Cnt << endl;
+	return l_JD1;
 }
 
 /*
@@ -865,7 +1027,8 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	// ST_SPRING_BEGINS ST_WINTER_SOLSTICE
 	// 2021年冬至，偏多35秒，成22号（百度算是21号）。
-	double l_JD = w_CalcSolarTerms(2021, ST_WINTER_SOLSTICE);
+//	double l_JD = w_CalcSolarTerms(2012, ST_WINTER_SOLSTICE);
+	double l_JD = fCalcSolarTerms_Newton(2012, ST_WINTER_SOLSTICE);
 
 	int l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec;
 	w_JDToGD(l_JD, l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec);
