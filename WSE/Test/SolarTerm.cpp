@@ -438,6 +438,16 @@ double w_CorrectionCalcSunLongitude(const double &dbSrcLongitude, const double &
 	return (-0.09033 + 0.03916 * (cos(dbLdash) + sin(dbLdash)) * tan(dbSrcLatitude * dbUnitRadian)) / 3600.0;
 }
 
+double fCrctSunLat(double dbSrcLongitude, double dbSrcLatitude, double dbJD)
+{
+	double dbT = (dbJD - 2451545.0) / 36525.0;
+	double dbLdash = dbSrcLongitude - 1.397 * dbT - 0.00031 * dbT * dbT;
+	// 转换为弧度
+	dbLdash *= dbUnitRadian;	// π/180
+	double l_Rst = (+0.03916 * (cos(dbLdash) - sin(dbLdash))) / 3600;	// 得到的是秒，度分秒系统里的秒，÷3600转成度
+	return l_Rst;
+}
+
 //
 // 二次修正黄经黄纬所需的天体章动系数
 const NUTATIONCOEFFICIENT Nutation_Gene[63] =
@@ -537,7 +547,7 @@ double w_GetNutationJamScalar(const double &dbJD)
 		double dbRadargument = (Nutation_Gene[i].nD * dbD + Nutation_Gene[i].nM * dbM + Nutation_Gene[i].nMprime * dbMprime + Nutation_Gene[i].nF * dbF + Nutation_Gene[i].nOmega * dbOmega) * dbUnitRadian;
 		dbResulte += (Nutation_Gene[i].nSincoeff1 + Nutation_Gene[i].dSincoeff2 * dbT) * sin(dbRadargument) * 0.0001;
 	}
-	return dbResulte;
+	return dbResulte; // 秒（度分秒）
 }
 
 //
@@ -651,27 +661,31 @@ double w_GetSunRadiusVector(const double &dbJD)
 
 // ------------------------------------------------------------------------
 //
-// 计算某时刻太阳黄经黄纬
+// 计算某时刻太阳黄经黄纬	//@这个函数根本没调用！
 //
 // dbJD[IN]：儒略日（计算该时刻太阳在黄道面上的经度和纬度）
 // dbLongitude[OUT]：黄经
 // dbLatitude[OUT]：黄纬
 // ------------------------------------------------------------------------
-void w_CalcEclipticLongLat(const double & dbJD, double &dbLongitude, double &dbLatitude)
-{
-	// 计算太阳黄经
-	dbLongitude = w_GetSunLongitude(dbJD);
-	// 计算太阳黄纬
-	dbLatitude = w_GetSunLatitude(dbJD);
-	// 一次校正经度
-	dbLongitude += w_CorrectionCalcSunLongitude(dbLongitude, dbLatitude, dbJD);
-	// 二次校正天体章动
-	dbLongitude += w_GetNutationJamScalar(dbJD) / 3600.0;
-	// 三次校正太阳半径向量
-	dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbJD)) / 3600.0;
-	// 校正太阳黄纬
-//@	dbLatitude += w_CorrectionCalcSunLatitude(dbLongitude, dbJD);
-}
+//void w_CalcEclipticLongLat(const double & dbJD, double &dbLongitude, double &dbLatitude)
+//{
+//	// 计算太阳黄经
+//	dbLongitude = w_GetSunLongitude(dbJD);	// 角度
+//	// 计算太阳黄纬
+//	dbLatitude = w_GetSunLatitude(dbJD);	// 角度
+//	// 一次校正经度
+//	dbLongitude += w_CorrectionCalcSunLongitude(dbLongitude, dbLatitude, dbJD);
+//
+//	//@ 校正纬度
+//	dbLatitude += fCrctSunLat(dbLongitude, dbLatitude, dbJD);
+//
+//	// 二次校正天体章动
+//	dbLongitude += w_GetNutationJamScalar(dbJD) / 3600.0;
+//	// 三次校正太阳半径向量
+//	dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbJD)) / 3600.0;
+//	// 校正太阳黄纬
+////@	dbLatitude += w_CorrectionCalcSunLatitude(dbLongitude, dbJD);	//没有？
+//}
 
 // ------------------------------------------------------------------------
 //
@@ -690,7 +704,7 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 	// 节令的发生日期基本都在每月 4 - 9 号间
 	int LowerLimitSolarTermsDay = ST_SolarTerms % 15 == 0 && ST_SolarTerms % 30 != 0 ? 1 : 15;//4 : 16;
 	// 节气的发生日期基本都在每月 16 - 24 号间
-	int UpperLimitSolarTermsDay = ST_SolarTerms % 15 == 0 && ST_SolarTerms % 30 != 0 ? 16 : 25;//9 : 24;
+	int UpperLimitSolarTermsDay = ST_SolarTerms % 15 == 0 && ST_SolarTerms % 30 != 0 ? 16 : 28;//9 : 24;
 	// 采用二分法逼近计算
 	double dbLowerLinit = w_GDToJD(year, SolarTermsMonth, LowerLimitSolarTermsDay, 0, 0, 0);
 	double dbUpperLinit = w_GDToJD(year, SolarTermsMonth, UpperLimitSolarTermsDay, 23, 59, 59);
@@ -699,7 +713,7 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 	// 太阳黄经角度
 	double dbLongitude = 0;
 	// 对比二分法精度是否达到要求
-	for (; fabs(dbLongitude - static_cast<double>(ST_SolarTerms)) >= 0.00001;)
+	for (; fabs(dbLongitude - static_cast<double>(ST_SolarTerms)) >= 0.0000001;)
 	{
 		if (dbUpperLinit <= dbLowerLinit)
 		{
@@ -714,7 +728,9 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 		// 二次校正天体章动
 		dbLongitude += w_GetNutationJamScalar(dbDichotomyDivisionDayJD) / 3600.0;
 		// 三次校正太阳半径向量
-		dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0;
+	//	dbLongitude -= (20.4898 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0;
+		dbLongitude -= (20.49552 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0 / (20 * PI);	//@ 20*PI 文档中还除了这一项！
+
 		// 由于春分这天黄经为 0 度，比较特殊，因此专门判断（如不加以特殊对待则会导致计算范围覆盖整个 360 度角）
 		dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
 		// 调整二分法上下限
@@ -849,7 +865,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	// ST_SPRING_BEGINS ST_WINTER_SOLSTICE
 	// 2021年冬至，偏多35秒，成22号（百度算是21号）。
-	double l_JD = w_CalcSolarTerms(2016, ST_WINTER_SOLSTICE);
+	double l_JD = w_CalcSolarTerms(2021, ST_WINTER_SOLSTICE);
 
 	int l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec;
 	w_JDToGD(l_JD, l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec);
