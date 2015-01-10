@@ -1026,15 +1026,16 @@ void w_LSTToUTC(int &year, int &month, int &day, int &hour, int &minute, int &se
 int _tmain(int argc, _TCHAR* argv[])
 {
 	// ST_SPRING_BEGINS ST_WINTER_SOLSTICE
-	// 2021年冬至，偏多35秒，成22号（百度算是21号）。
+	// 2021年冬至，偏多35秒，成22号（百度算是21号）
+	// 与那篇文章里的2012年节气对比，早了接近但不到7分钟；但2012年春分误差达1个半小时
 //	double l_JD = w_CalcSolarTerms(2012, ST_WINTER_SOLSTICE);
-	double l_JD = fCalcSolarTerms_Newton(2012, ST_WINTER_SOLSTICE);
+	double l_JD = fCalcSolarTerms_Newton(2012, ST_VERNAL_EQUINOX);
 
 	int l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec;
 	w_JDToGD(l_JD, l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec);
-	cout << "格林威治时间：" << l_Year << ", " << l_Mon << ", " << l_Day << ", " << l_Hour << ", " << l_Min << ", " << l_Sec << endl;
+//	cout << "格林威治时间：" << l_Year << "-" << l_Mon << "-" << l_Day << ", " << l_Hour << ":" << l_Min << ":" << l_Sec << endl;
 	w_UTCToLST(l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec);
-	cout << "本地时间：" << l_Year << ", " << l_Mon << ", " << l_Day << ", " << l_Hour << ", " << l_Min << ", " << l_Sec << endl;
+	cout << "本地时间：" << l_Year << "-" << l_Mon << "-" << l_Day << ", " << l_Hour << ":" << l_Min << ":" << l_Sec << endl;
 
 	/////////////////////////////////////////////////////////////////////////
 	cout << endl << "===============================================" << endl;
