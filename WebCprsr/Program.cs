@@ -181,6 +181,11 @@ namespace nWebCprsr
 			XmlElement l_JsCss = (XmlElement)a_Node;
 			for (int c = 0; c < l_JsCss.ChildNodes.Count; ++c)
 			{
+				if (XmlNodeType.Element != l_JsCss.ChildNodes[c].NodeType)
+				{
+					continue;
+				}
+
 				XmlElement l_SetElmt = (XmlElement)l_JsCss.ChildNodes[c];
 				if (String.IsNullOrEmpty(l_SetElmt.GetAttribute("输出文件")))
 				{
@@ -192,6 +197,11 @@ namespace nWebCprsr
 
 				for (int s = 0; s < l_SetElmt.ChildNodes.Count; ++s)
 				{
+					if (XmlNodeType.Element != l_SetElmt.ChildNodes[s].NodeType)
+					{
+						continue;
+					}
+
 					XmlElement l_SrcElmt = (XmlElement)l_SetElmt.ChildNodes[s];
 					if (String.IsNullOrEmpty(l_SrcElmt.GetAttribute("输入目录")))
 					{
