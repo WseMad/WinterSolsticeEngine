@@ -7,14 +7,17 @@ using System.IO;
 using System.Xml;
 using System.Text.RegularExpressions;
 
-namespace WebCprsr
+namespace nWebCprsr
 {
-	class Program
+	class tProgram
 	{
 		static void Main(string[] args)
 		{
 			var l_RunCfg = new tRunCfg();
 			l_RunCfg.cLoadFromXml("./RunCfg.xml");
+
+			var l_Cprsr = new nCprsr.tCprsr();
+			l_Cprsr.cRun(l_RunCfg);
 
 			/////////////////////////////////////////////////////////////////////////////
 			Console.WriteLine("\n===================================================\n");
@@ -25,7 +28,7 @@ namespace WebCprsr
 	/// <summary>
 	/// 运行配置
 	/// </summary>
-	class tRunCfg
+	public class tRunCfg
 	{
 		/// <summary>
 		/// 文件集

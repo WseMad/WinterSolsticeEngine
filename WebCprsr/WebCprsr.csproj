@@ -41,17 +41,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="nCprsr\Cprsr.cs" />
+    <Compile Include="nCprsr\Fctn.cs" />
+    <Compile Include="nCprsr\IoStrm.cs" />
+    <Compile Include="nCprsr\Lex.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Cprsr\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="RunCfg.xml" />
+    <Content Include="RunCfg.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Sample.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
