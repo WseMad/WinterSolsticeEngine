@@ -118,14 +118,14 @@ namespace nWebCprsr.nCprsr
 			var l_FsrList = (2 == l_Which) ? this.e_JsFsrList : this.e_CssFsrList;
 
 			// 对每一个文件集
-			for (int fs=0; fs<a_FSL.Count; ++fs)
+			for (int fs = 0; fs < a_FSL.Count; ++fs)
 			{
 				// 生成文件集记录
 				tFileSetRcd l_Fsr = new tFileSetRcd(a_FSL[fs], l_Which);
-				
+
 				// 对每一个来源
 				var l_Sl = l_Fsr.c_FileSet.c_SrcList;
-				for (int s=0; s<l_Sl.Count; ++s)
+				for (int s = 0; s < l_Sl.Count; ++s)
 				{
 					// 生成来源记录，并列举目录所含文件，不空时录入
 					var l_Sr = new tFileSetRcd.tSrcRcd(l_Sl[s]);
@@ -134,12 +134,12 @@ namespace nWebCprsr.nCprsr
 					{
 						l_Fsr.c_SrcRcdList.Add(l_Sr);
 					}
-				}		
+				}
 
 				// 如果需要，创建输出目录
 				var l_OptPath = l_Fsr.c_FileSet.c_OptFile;
 				var l_OptDiry = Path.GetDirectoryName(l_OptPath);
-				if (! Directory.Exists(l_OptDiry))
+				if (!Directory.Exists(l_OptDiry))
 				{
 					Directory.CreateDirectory(l_OptDiry);
 				}
@@ -179,8 +179,8 @@ namespace nWebCprsr.nCprsr
 				if (2 == a_Which)
 				{
 					if ((l_Flnm.Length > 3) &&
-						('.' == l_Flnm[l_Flnm.Length - 3]) && 
-						('j' == l_Flnm[l_Flnm.Length - 2]) && 
+						('.' == l_Flnm[l_Flnm.Length - 3]) &&
+						('j' == l_Flnm[l_Flnm.Length - 2]) &&
 						('s' == l_Flnm[l_Flnm.Length - 1]))
 					{
 						l_Flnm = l_Rst[i];
@@ -191,8 +191,8 @@ namespace nWebCprsr.nCprsr
 				{
 					if ((l_Flnm.Length > 4) &&
 						('.' == l_Flnm[l_Flnm.Length - 4]) &&
-						('c' == l_Flnm[l_Flnm.Length - 3]) && 
-						('s' == l_Flnm[l_Flnm.Length - 2]) && 
+						('c' == l_Flnm[l_Flnm.Length - 3]) &&
+						('s' == l_Flnm[l_Flnm.Length - 2]) &&
 						('s' == l_Flnm[l_Flnm.Length - 1]))
 					{
 						l_Flnm = l_Rst[i];
@@ -229,21 +229,20 @@ namespace nWebCprsr.nCprsr
 			for (int s = 0; s < l_Srl.Count; ++s)
 			{
 				// 处理路径列表
-				this.eAnlzAndCprs_PathList(l_Srl[s]);
+				this.eAnlzAndCprs_PathList(l_Srl[s], a_Which);
 			}
 
-			//【调试】
-			for (int s = 0; s < l_Srl.Count; ++s)
-			{
-				l_Fsr.c_TotOptBfr.Append(l_Srl[s].c_OptBfrList.ToArray());
-				//	l_Fsr.c_TotRptBfr.Append(e_SortOpt[s].c_RptBfr);
-			}
-
-			File.WriteAllText(l_Fsr.c_FileSet.c_OptFile, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+			//【开发】
+			//for (int s = 0; s < l_Srl.Count; ++s)
+			//{
+			//	l_Fsr.c_TotOptBfr.Append(l_Srl[s].c_OptBfrList.ToArray());
+			//	//	l_Fsr.c_TotRptBfr.Append(e_SortOpt[s].c_RptBfr);
+			//}
+			//File.WriteAllText(l_Fsr.c_FileSet.c_OptFile, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
 			///////////
 		}
 
-		private void eAnlzAndCprs_PathList(tFileSetRcd.tSrcRcd a_SrcRcd)
+		private void eAnlzAndCprs_PathList(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Which)
 		{
 			Console.WriteLine("正在处理目录：" + a_SrcRcd.c_Src.c_IptDiry);
 
@@ -251,13 +250,13 @@ namespace nWebCprsr.nCprsr
 			for (int n = 0; n < a_SrcRcd.c_PathList.Count; ++n)
 			{
 				// 处理文件
-				this.eAnlzAndCprs_File(a_SrcRcd, n);
+				this.eAnlzAndCprs_File(a_SrcRcd, n, a_Which);
 			}
 
 			Console.WriteLine();
 		}
 
-		private void eAnlzAndCprs_File(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Idx)
+		private void eAnlzAndCprs_File(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Idx, int a_Which)
 		{
 			string l_Path = a_SrcRcd.c_PathList[a_Idx];
 			string l_Flnm = Path.GetFileName(l_Path);
@@ -273,7 +272,7 @@ namespace nWebCprsr.nCprsr
 				a_SrcRcd.c_RptBfrList.Add(new StringBuilder());
 
 				// 词法分析
-				l_Lex.cAnlzAndCprsFile(this, a_SrcRcd, a_Idx);
+				l_Lex.cAnlzAndCprsFile(this, a_SrcRcd, a_Idx, a_Which);
 			}
 			catch (Exception a_Exc)
 			{
@@ -287,6 +286,404 @@ namespace nWebCprsr.nCprsr
 
 			// 完成
 			Console.WriteLine("\t已处理：" + l_Flnm);
+		}
+	}
+
+	/// <summary>
+	/// 词法分析
+	/// </summary>
+	partial class tLex
+	{
+		//-------- 类型
+
+		/// <summary>
+		/// 终结符
+		/// </summary>
+		public enum tTmnl
+		{
+			ui_Code = -2,		// 代码，【测试用】
+			ui_None = -1,		// 无，【标记不存在的或无效的词法单元】
+
+			i_NewLine,			// 换行
+
+			i_PpcsDctv,			// 预处理指令，以“//#”开头【暂不支持】
+
+			i_LineCmt,			// 行注释
+			i_BlkCmt,			// 块注释
+
+			// 标点运算符
+			ui_PctuOpt_Bgn,
+
+			ui_Pctu_Bgn = ui_PctuOpt_Bgn,	// 标点
+			i_LBrc = ui_Pctu_Bgn,		// {
+			i_RBrc,						// }
+			i_LBrkt,					// [
+			i_RBrkt,					// ]
+			i_LPrth,					// (
+			i_RPrth,					// )
+			i_Dot,						// .
+			i_Smcln,					// ;
+			i_Cma,						// ,
+			i_Qstn,						// ?
+			i_Cln,						// :
+			ui_Pctu_End = i_Cln,
+
+			ui_Opt_Bgn,					// 运算符
+
+			ui_PureUnrOpt_Bgn = ui_Opt_Bgn,				// 纯一元
+			i_Inc = ui_PureUnrOpt_Bgn,	// ++
+			i_Dec,						// --
+			i_Not,						// !
+			i_Ngt,						// ~
+			ui_PureUnrOpt_End = i_Ngt,
+
+			ui_PureBnrOpt_Bgn,			// 纯二元
+			i_Lt = ui_PureBnrOpt_Bgn,	// <
+			i_Gt,						// >
+			i_Le,						// <=
+			i_Ge,						// >=
+			i_Eq,						// ==
+			i_Ne,						// !=
+			i_Seq,						// ===
+			i_Sne,						// !==	
+			i_Mul,						// *
+			i_Div,						// /
+			i_Mod,						// %	
+			i_Lshf,						// <<
+			i_Rshf,						// >>
+			i_UsnRshf,					// >>>
+			i_BtwsAnd,					// &
+			i_BtwsOr,					// |
+			i_BtwsXor,					// ^	
+			i_And,						// &&
+			i_Or,						// ||
+			i_Asn,						// =
+			i_AddAsn,					// +=
+			i_SubAsn,					// -=
+			i_MulAsn,					// *=
+			i_DivAsn,					// /=
+			i_ModAsn,					// %=
+			i_LshfAsn,					// <<=
+			i_RshfAsn,					// >>=
+			i_UsnRshfAsn,				// >>>=
+			i_BtwsAndAsn,				// &=
+			i_BtwsOrAsn,				// |=
+			i_BtwsXorAsn,				// ^=
+			ui_PureBnrOpt_End = i_BtwsXorAsn,
+
+			ui_SemiUnrBnrOpt_Bgn,			// 半一元二元
+			i_Add = ui_SemiUnrBnrOpt_Bgn,	// +
+			i_Sub,							// -
+			ui_SemiUnrBnrOpt_End = i_Sub,
+
+			ui_Opt_End = ui_SemiUnrBnrOpt_End,
+
+			ui_PctuOpt_End = ui_Opt_End,
+
+			// 字面值
+			ui_Ltrl_Bgn,
+			i_undefined = ui_Ltrl_Bgn,	// undefined
+			i_null,						// null
+			i_true,						// true
+			i_false,					// false
+			i_NumLtrl,					// 数字字面值
+			i_StrLtrl,					// 字符串字面值
+			i_RgxLtrl,					// 正则表达式字面值
+			ui_Ltrl_End = i_RgxLtrl,
+
+			// 关键字、将来保留字等
+			ui_Krwd_Bgn,
+			i_break = ui_Krwd_Bgn,
+			i_do,
+			i_instanceof,
+			i_typeof,
+			i_case,
+			i_else,
+			i_new,
+			i_var,
+			i_catch,
+			i_finally,
+			i_return,
+			i_void,
+			i_continue,
+			i_for,
+			i_switch,
+			i_while,
+			i_debugger,
+			i_function,
+			i_this,
+			i_with,
+			i_default,
+			i_if,
+			i_throw,
+			i_delete,
+			i_in,
+			i_try,
+			i_class,
+			i_enum,
+			i_extends,
+			i_super,
+			i_const,
+			i_export,
+			i_import,
+			i_implements,
+			i_let,
+			i_private,
+			i_public,
+			i_yield,
+			i_interface,
+			i_package,
+			i_protected,
+			i_static,
+			ui_Krwd_End = i_static,
+
+			i_Id,				// 标识符
+		};
+
+		/* css3 media query 构造
+		@media (min-width: 481px) and (max-width:768px) {
+			body { }
+		} 
+		//*/
+
+		/// <summary>
+		/// 词法单元
+		/// </summary>
+		public class tTkn
+		{
+			public tTmnl c_Tmnl;	// 终结符
+			public tTkn c_Ownr;		// 所属词法单元，仅用于左右花括号
+			public object c_Attr;	// 特性
+			public int c_Row;		// 行号
+			public bool c_FlwByWhtSpc;	// 后跟空白？用于CSS
+
+			public tTkn(tTmnl a_Tmnl, object a_Attr, int a_Row)
+			{
+				this.c_Tmnl = a_Tmnl;
+				this.c_Ownr = null;
+				this.c_Attr = a_Attr;
+				this.c_Row = a_Row;
+				this.c_FlwByWhtSpc = false;
+			}
+
+			public static tTkn ui_None = new tTkn(tTmnl.ui_None, null, -1);
+		};
+
+		//-------- 实用函数
+
+		private static bool seIsInlnDoc(string a_Line)
+		{
+			return (a_Line.Length > 3) ? ('/' == a_Line[2]) : false;
+		}
+
+		private static bool seIsWhtSpc(char a_Cha)	// 是否为空白
+		{
+			return (' ' == a_Cha) || ('\t' == a_Cha);
+		}
+
+		private static bool seIsNewLine(char a_Cha)	// 是否为换行
+		{
+			return ('\r' == a_Cha) || ('\n' == a_Cha);
+		}
+
+		private static bool seIsHexDit(char a_Cha)	// 是否为十六进制数字
+		{
+			return (('0' <= a_Cha) && (a_Cha <= '9')) ||
+					(('A' <= a_Cha) && (a_Cha <= 'F')) ||
+					(('a' <= a_Cha) && (a_Cha <= 'f'));
+		}
+
+		private static bool seIs汉字(char a_Cha)	// 是否为汉字
+		{
+			const int i_ChnChaBgn = 0x4E00;
+			const int i_ChnChaEnd = 0x9FA5;
+			return (i_ChnChaBgn <= (int)a_Cha) && ((int)a_Cha <= i_ChnChaEnd);
+		}
+
+		private static bool seIsIdFstCha(char a_Cha) // 是否为标识符首字符
+		{
+			// 下划线、$、字母、Unicode
+			return ('_' == a_Cha) || ('$' == a_Cha) || char.IsLetter(a_Cha) || ((int)a_Cha > 255);
+		}
+
+		private static bool seIsIdCha(char a_Cha) // 是否为标识符字符
+		{
+			// 下划线、$、字母、数字、Unicode
+			return ('_' == a_Cha) || ('$' == a_Cha) || char.IsLetterOrDigit(a_Cha) || ((int)a_Cha > 255);
+		}
+
+		private static bool seIsNonDivPctuOptCha(char a_Cha) // 是否为非除号标点字符
+		{
+			return ('_' != a_Cha) && ('$' != a_Cha) && (char.IsPunctuation(a_Cha) || char.IsSymbol(a_Cha));
+		}
+
+		private static tLex.tTmnl seMapId(string a_Id)	// 映射标识符
+		{
+			switch (a_Id)
+			{
+				case "undefined": { return tLex.tTmnl.i_undefined; }
+				case "null": { return tLex.tTmnl.i_null; }
+				case "true": { return tLex.tTmnl.i_true; }
+				case "false": { return tLex.tTmnl.i_false; }
+
+				case "break": { return tLex.tTmnl.i_break; }
+				case "do": { return tLex.tTmnl.i_do; }
+				case "instanceof": { return tLex.tTmnl.i_instanceof; }
+				case "typeof": { return tLex.tTmnl.i_typeof; }
+				case "case": { return tLex.tTmnl.i_case; }
+				case "else": { return tLex.tTmnl.i_else; }
+				case "new": { return tLex.tTmnl.i_new; }
+				case "var": { return tLex.tTmnl.i_var; }
+				case "catch": { return tLex.tTmnl.i_catch; }
+				case "finally": { return tLex.tTmnl.i_finally; }
+				case "return": { return tLex.tTmnl.i_return; }
+				case "void": { return tLex.tTmnl.i_void; }
+				case "continue": { return tLex.tTmnl.i_continue; }
+				case "for": { return tLex.tTmnl.i_for; }
+				case "switch": { return tLex.tTmnl.i_switch; }
+				case "while": { return tLex.tTmnl.i_while; }
+				case "debugger": { return tLex.tTmnl.i_debugger; }
+				case "function": { return tLex.tTmnl.i_function; }
+				case "this": { return tLex.tTmnl.i_this; }
+				case "with": { return tLex.tTmnl.i_with; }
+				case "default": { return tLex.tTmnl.i_default; }
+				case "if": { return tLex.tTmnl.i_if; }
+				case "throw": { return tLex.tTmnl.i_throw; }
+				case "delete": { return tLex.tTmnl.i_delete; }
+				case "in": { return tLex.tTmnl.i_in; }
+				case "try": { return tLex.tTmnl.i_try; }
+
+				case "class": { return tLex.tTmnl.i_class; }
+				case "enum": { return tLex.tTmnl.i_enum; }
+				case "extends": { return tLex.tTmnl.i_extends; }
+				case "super": { return tLex.tTmnl.i_super; }
+				case "const": { return tLex.tTmnl.i_const; }
+				case "export": { return tLex.tTmnl.i_export; }
+				case "import": { return tLex.tTmnl.i_import; }
+				case "implements": { return tLex.tTmnl.i_implements; }
+				case "let": { return tLex.tTmnl.i_let; }
+				case "private": { return tLex.tTmnl.i_private; }
+				case "public": { return tLex.tTmnl.i_public; }
+				case "yield": { return tLex.tTmnl.i_yield; }
+				case "interface": { return tLex.tTmnl.i_interface; }
+				case "package": { return tLex.tTmnl.i_package; }
+				case "protected": { return tLex.tTmnl.i_protected; }
+				case "static": { return tLex.tTmnl.i_static; }
+			}
+
+			return tLex.tTmnl.i_Id;
+		}
+
+		private static bool seIsPctuOpt(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_PctuOpt_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_PctuOpt_End);
+		}
+
+		private static bool seIsOpenBbp(tLex.tTmnl a_Tmnl)	// 是否为开括号，即“{”“[”“(”
+		{
+			return (tLex.tTmnl.i_LBrc == a_Tmnl) || (tLex.tTmnl.i_LBrkt == a_Tmnl) || (tLex.tTmnl.i_LPrth == a_Tmnl);
+		}
+
+		private static bool seIsClsBbp(tLex.tTmnl a_Tmnl)	// 是否为闭括号，即“}”“]”“)”
+		{
+			return (tLex.tTmnl.i_RBrc == a_Tmnl) || (tLex.tTmnl.i_RBrkt == a_Tmnl) || (tLex.tTmnl.i_RPrth == a_Tmnl);
+		}
+
+		private static bool seIsBbp(tLex.tTmnl a_Tmnl)	// 是否为括号
+		{
+			return seIsOpenBbp(a_Tmnl) || seIsClsBbp(a_Tmnl);
+		}
+
+		private static bool seIsSmcln(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.i_Smcln == a_Tmnl);
+		}
+
+		private static bool seIsPctu(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_Pctu_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_Pctu_End);
+		}
+
+		private static bool seNotClsBbpPctu(tLex.tTmnl a_Tmnl) // 非三种右括号的标点
+		{
+			return seIsPctu(a_Tmnl) && (!seIsClsBbp(a_Tmnl));
+		}
+
+		private static bool seIsPureUnrOpt(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_PureUnrOpt_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_PureUnrOpt_End);
+		}
+
+		private static bool seIsPureBnrOpt(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_PureBnrOpt_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_PureBnrOpt_End);
+		}
+
+		private static bool seIsSemiUnrBnrOpt(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_SemiUnrBnrOpt_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_SemiUnrBnrOpt_End);
+		}
+
+		private static bool seIsLtrl(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_Ltrl_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_Ltrl_End);
+		}
+
+		private static bool seIsKrwd(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.ui_Krwd_Bgn <= a_Tmnl) && (a_Tmnl <= tLex.tTmnl.ui_Krwd_End);
+		}
+
+		private static bool seIsId(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.i_Id == a_Tmnl);
+		}
+
+		private static bool seIsKrwdOrId(tLex.tTmnl a_Tmnl)
+		{
+			return (tLex.tTmnl.i_Id == a_Tmnl) || seIsKrwd(a_Tmnl);
+		}
+
+		private static bool seIsLtrlOrId(tLex.tTmnl a_Tmnl)
+		{
+			return seIsLtrl(a_Tmnl) || seIsId(a_Tmnl);
+		}
+
+		private static bool seIsKrwdOrLtrlOrId(tLex.tTmnl a_Tmnl)
+		{
+			return seIsKrwd(a_Tmnl) || seIsLtrl(a_Tmnl) || seIsId(a_Tmnl);
+		}
+
+		private static bool seIsNextNewLineFree(tLex.tTmnl a_Tmnl) // 无需后跟换行的词法单元
+		{
+			// 右括号以外的标点，注意右括号后接换行可能导致自动分号插入
+			// 二元运算符
+			// 半一元二元运算符
+			if (seNotClsBbpPctu(a_Tmnl) || seIsPureBnrOpt(a_Tmnl) || seIsSemiUnrBnrOpt(a_Tmnl))
+			{
+				return true;
+			}
+
+			// 一些关键字，但不是……
+			if ((tLex.tTmnl.i_break == a_Tmnl) ||
+				(tLex.tTmnl.i_continue == a_Tmnl) ||
+				(tLex.tTmnl.i_return == a_Tmnl) ||
+				(tLex.tTmnl.i_throw == a_Tmnl))
+			{
+				return false;
+			}
+
+			return seIsKrwd(a_Tmnl);
+		}
+
+		private static bool seIsPrevNewLineFree(tLex.tTmnl a_Tmnl) // 无需前附换行的词法单元
+		{
+			// 左花以外的标点，注意左花用作块语句起始符号时，前面的赋值语句可能没有以分号结尾
+			// 二元运算符
+			// 半一元二元运算符
+			return ((tLex.tTmnl.i_LBrc != a_Tmnl) && seIsPctu(a_Tmnl)) ||
+					seIsPureBnrOpt(a_Tmnl) ||
+					seIsSemiUnrBnrOpt(a_Tmnl);
 		}
 	}
 }

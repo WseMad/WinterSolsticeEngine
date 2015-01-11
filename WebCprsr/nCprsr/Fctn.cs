@@ -9,7 +9,14 @@ using System.Text.RegularExpressions;
 
 namespace nWebCprsr.nCprsr
 {
-	class tFctn
+	partial class tLex
 	{
+		/// <summary>
+		/// 函数
+		/// </summary>
+		class tFctn
+		{
+		}
 	}
+	
 }
