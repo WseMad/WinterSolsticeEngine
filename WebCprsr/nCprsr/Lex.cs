@@ -157,6 +157,12 @@ namespace nWebCprsr.nCprsr
 			// 空白
 			if (seIsWhtSpc(e_IptStrm.cGetNextCha()))
 			{
+				// 通知当前最后一个词法单元后跟空白
+				if (e_TknList.Count > 0)
+				{
+					e_TknList[e_TknList.Count - 1].c_FlwByWhtSpc = true;
+				}
+
 				// 跳过
 				e_IptStrm.cFch(true);
 			}
@@ -168,48 +174,48 @@ namespace nWebCprsr.nCprsr
 					++e_NewLineCnt;
 				}
 				else // 注释，除法，除法赋值，正则表达式字面值
-					if ('/' == e_IptStrm.cGetNextCha())
+				if ('/' == e_IptStrm.cGetNextCha())
+				{
+					// 行注释
+					if (e_IptStrm.cChkNext2('/', '/', true))
 					{
-						// 行注释
-						if (e_IptStrm.cChkNext2('/', '/', true))
-						{
-							eScan_StaMchn_LineCmt();
-						}
-						else // 块注释
-							if (e_IptStrm.cChkNext2('/', '*', true))
-							{
-								eScan_StaMchn_BlkCmt();
-							}
-							else // 除法，除法赋值，正则表达式字面值
-							{
-								eScan_StaMchn_Div();
-							}
+						eScan_StaMchn_LineCmt();
 					}
-					else // 数字字面值，【注意】允许以“.”开头，详见标准中文版P25
-						if (char.IsDigit(e_IptStrm.cGetNextCha()) ||
-							(('.' == e_IptStrm.cGetNextCha()) && e_IptStrm.cIsNext2_Num(false)))
+					else // 块注释
+						if (e_IptStrm.cChkNext2('/', '*', true))
 						{
-							eScan_StaMchn_NumLtrl();
+							eScan_StaMchn_BlkCmt();
 						}
-						else // 字符串字面值
-							if (('\'' == e_IptStrm.cGetNextCha()) || ('"' == e_IptStrm.cGetNextCha()))
-							{
-								eScan_StaMchn_StrLtrl();
-							}
-							else // 标点符号
-								if (seIsNonDivPctuOptCha(e_IptStrm.cGetNextCha()))
-								{
-									eScan_StaMchn_NonDivPctu();
-								}
-								else // 关键字，保留字，标识符
-									if (seIsIdFstCha(e_IptStrm.cGetNextCha()))
-									{
-										eScan_StaMchn_Id();
-									}
-									else // 其他
-									{
-										throw new Exception(e_Path + " (" + (1 + e_NewLineCnt) + ") 未识别的字符“" + e_IptStrm.cGetNextCha() + "”。");
-									}
+						else // 除法，除法赋值，正则表达式字面值
+						{
+							eScan_StaMchn_Div();
+						}
+				}
+				else // 数字字面值，【注意】允许以“.”开头，详见标准中文版P25
+				if (char.IsDigit(e_IptStrm.cGetNextCha()) ||
+					(('.' == e_IptStrm.cGetNextCha()) && e_IptStrm.cIsNext2_Num(false)))
+				{
+					eScan_StaMchn_NumLtrl();
+				}
+				else // 字符串字面值
+				if (('\'' == e_IptStrm.cGetNextCha()) || ('"' == e_IptStrm.cGetNextCha()))
+				{
+					eScan_StaMchn_StrLtrl();
+				}
+				else // 标点符号
+				if (seIsNonDivPctuOptCha(e_IptStrm.cGetNextCha()))
+				{
+					eScan_StaMchn_NonDivPctu();
+				}
+				else // 关键字，保留字，标识符
+				if (seIsIdFstCha(e_IptStrm.cGetNextCha()))
+				{
+					eScan_StaMchn_Id();
+				}
+				else // 其他
+				{
+					throw new Exception(e_Path + " (" + (1 + e_NewLineCnt) + ") 未识别的字符“" + e_IptStrm.cGetNextCha() + "”。");
+				}
 		}
 
 		private void eScan_StaMchn_LineCmt()

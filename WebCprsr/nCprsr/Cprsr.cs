@@ -30,7 +30,7 @@ namespace nWebCprsr.nCprsr
 			public List<int> c_LenList; // 长度列表
 			public List<StringBuilder> c_OptBfrList; // 输出缓冲列表
 			public List<StringBuilder> c_RptBfrList; // 报告缓冲列表
-			public List<StringBuilder> c_SortOptBfrList; // 排序输出缓冲列表
+			public List<int> c_SortIdx; // 排序索引
 
 			/// <summary>
 			/// 构造
@@ -50,7 +50,7 @@ namespace nWebCprsr.nCprsr
 				this.c_LenList = new List<int>();
 				this.c_OptBfrList = new List<StringBuilder>();
 				this.c_RptBfrList = new List<StringBuilder>();
-				this.c_SortOptBfrList = new List<StringBuilder>();
+				this.c_SortIdx = new List<int>();
 			}
 		}
 
@@ -253,6 +253,9 @@ namespace nWebCprsr.nCprsr
 				this.eAnlzAndCprs_File(a_SrcRcd, n, a_Which);
 			}
 
+			// 排序输出
+			this.eSortOpt(a_SrcRcd, a_Which);
+
 			Console.WriteLine();
 		}
 
@@ -278,16 +281,86 @@ namespace nWebCprsr.nCprsr
 			{
 				int l_Row = l_Lex.cGetRow();	// 帮助定位数组越界
 				Console.WriteLine("【文件】" + l_Flnm + " (" + l_Row + ")\n" + "【异常】" + a_Exc.Message);
-				return;
+				throw; // 继续抛出
 			}
-
-			// 排序输出
-			//
 
 			// 完成
 			Console.WriteLine("\t已处理：" + l_Flnm);
 		}
+
+		private void eSortOpt(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Which)
+		{
+			// 临时数组
+			List<string> l_Temp = new List<string>();
+	
+			// 对每个文件
+			for (int p = 0; p < a_SrcRcd.c_PathList.Count; ++p)
+			{
+				// 若还未录入，装到最后
+				// 注意依赖该文件的文件可能已把该文件装入到那个文件的前面
+				int l_IdxInTemp = l_Temp.IndexOf(a_SrcRcd.c_PathList[p]);
+				if (l_IdxInTemp < 0)
+				{
+					l_Temp.Add(a_SrcRcd.c_PathList[p]);
+					l_IdxInTemp = l_Temp.Count - 1;
+				}
+
+				// 对依赖的每个文件
+				var l_Dpdts = a_SrcRcd.c_DpdcTab[p];
+				for (int d = 0; d < l_Dpdts.Count; ++d)
+				{
+					// 先找到在路径列表里的索引
+					int l_DpdtIdx = eFindInSortIdxList(a_SrcRcd, l_Dpdts[d]); // 这个比较必须忽略大小写
+					if (l_DpdtIdx < 0) // 未找到，说明是其他目录的，跳过
+					{ continue; }
+
+					// 前提后，去掉后面重复的那项
+					var l_Lift = l_Temp.IndexOf(a_SrcRcd.c_PathList[l_DpdtIdx]);
+					if (l_IdxInTemp < l_Lift)
+					{
+						Console.WriteLine("依赖排序算法出错，不会执行到这里！");
+						l_Temp.RemoveAt(l_Lift);
+					}
+					else // 插入到自己的前面
+					if (l_Lift < 0)
+					{
+						l_Temp.Insert(l_IdxInTemp, a_SrcRcd.c_PathList[l_DpdtIdx]);
+					}
+				}
+			}
+
+			if (l_Temp.Count != a_SrcRcd.c_PathList.Count)
+			{
+				Console.WriteLine("依赖排序算法出错，数量不等！");
+			}
+
+			// 转换成索引
+			for (int t=0; t<l_Temp.Count; ++t)
+			{
+				var l_Idx = a_SrcRcd.c_PathList.IndexOf(l_Temp[t]);
+				if (l_Idx < 0)
+				{
+					Console.WriteLine("依赖排序算法出错，文件没录入？");
+				}
+
+				a_SrcRcd.c_SortIdx.Add(l_Idx);
+			}
+		}
+
+		private int eFindInSortIdxList(tFileSetRcd.tSrcRcd a_SrcRcd, string a_Path)
+		{
+			for (int i = 0; i < a_SrcRcd.c_PathList.Count; ++i)
+			{
+				if (a_SrcRcd.c_PathList[i].Equals(a_Path, StringComparison.OrdinalIgnoreCase)) // 忽略大小写
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
 	}
+
+	
 
 	/// <summary>
 	/// 词法分析
@@ -500,21 +573,26 @@ namespace nWebCprsr.nCprsr
 			return (i_ChnChaBgn <= (int)a_Cha) && ((int)a_Cha <= i_ChnChaEnd);
 		}
 
+		private static bool seIsLangSpclCha(char a_Cha) // 是否为语言特殊字符，即“_”“@”“$”
+		{
+			return ('_' == a_Cha) || ('@' == a_Cha) || ('$' == a_Cha);
+		}
+
 		private static bool seIsIdFstCha(char a_Cha) // 是否为标识符首字符
 		{
-			// 下划线、$、字母、Unicode
-			return ('_' == a_Cha) || ('$' == a_Cha) || char.IsLetter(a_Cha) || ((int)a_Cha > 255);
+			// 下划线、@、$、字母、Unicode
+			return seIsLangSpclCha(a_Cha) || char.IsLetter(a_Cha) || ((int)a_Cha > 255);
 		}
 
 		private static bool seIsIdCha(char a_Cha) // 是否为标识符字符
 		{
-			// 下划线、$、字母、数字、Unicode
-			return ('_' == a_Cha) || ('$' == a_Cha) || char.IsLetterOrDigit(a_Cha) || ((int)a_Cha > 255);
+			// 下划线、@、$、字母、数字、Unicode
+			return seIsLangSpclCha(a_Cha) || char.IsLetterOrDigit(a_Cha) || ((int)a_Cha > 255);
 		}
 
 		private static bool seIsNonDivPctuOptCha(char a_Cha) // 是否为非除号标点字符
 		{
-			return ('_' != a_Cha) && ('$' != a_Cha) && (char.IsPunctuation(a_Cha) || char.IsSymbol(a_Cha));
+			return (! seIsLangSpclCha(a_Cha)) && (char.IsPunctuation(a_Cha) || char.IsSymbol(a_Cha));
 		}
 
 		private static tLex.tTmnl seMapId(string a_Id)	// 映射标识符
