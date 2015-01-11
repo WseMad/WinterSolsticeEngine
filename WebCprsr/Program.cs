@@ -209,8 +209,8 @@ namespace nWebCprsr
 					}
 
 					l_FS.cAdd(l_SrcElmt.GetAttribute("输入目录"),
-						("是" == l_SrcElmt.GetAttribute("解析依赖")),
-						("是" == l_SrcElmt.GetAttribute("压缩")));
+						("否" != l_SrcElmt.GetAttribute("解析依赖")),
+						("否" != l_SrcElmt.GetAttribute("压缩")));
 				}
 
 				if (l_FS.c_SrcList.Count > 0)

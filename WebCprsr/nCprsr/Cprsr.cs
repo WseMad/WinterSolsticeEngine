@@ -58,6 +58,7 @@ namespace nWebCprsr.nCprsr
 		public List<tSrcRcd> c_SrcRcdList;	// 来源记录列表
 		public int c_Which;		// 那种？2=.js，3=.css
 
+		public string c_OptDiry;	// 输出目录
 		public StringBuilder c_TotOptBfr; // 总输出缓冲
 		public StringBuilder c_TotRptBfr; // 总报告缓冲
 
@@ -144,10 +145,22 @@ namespace nWebCprsr.nCprsr
 					Directory.CreateDirectory(l_OptDiry);
 				}
 
+				l_Fsr.c_OptDiry = this.eEnsrDiry(ref l_OptDiry);
+
 				// 加入列表
 				// 注意，无论l_Fsr.c_SrcRcdList是否为空都要加入，因为必须产生输出文件，哪怕是空文件！
 				l_FsrList.Add(l_Fsr);
 			}
+		}
+
+		private string eEnsrDiry(ref string a_Diry)
+		{
+			var l_LastCha = a_Diry[a_Diry.Length - 1];
+			if (('/' != l_LastCha) && ('\\' != l_LastCha))
+			{
+				a_Diry += '/';
+			}
+			return a_Diry;
 		}
 
 		private string eNmlzPath(ref string a_Path, bool a_Diry, bool a_ToLower = true)
@@ -223,6 +236,7 @@ namespace nWebCprsr.nCprsr
 		private void eAnlzAndCprs_FileSet(List<tFileSetRcd> a_FsrList, int a_Idx, int a_Which)
 		{
 			tFileSetRcd l_Fsr = a_FsrList[a_Idx];
+			Console.WriteLine("正在处理合集：" + l_Fsr.c_FileSet.c_OptFile);
 
 			// 对每一个来源
 			var l_Srl = l_Fsr.c_SrcRcdList;
@@ -232,19 +246,75 @@ namespace nWebCprsr.nCprsr
 				this.eAnlzAndCprs_PathList(l_Srl[s], a_Which);
 			}
 
-			//【开发】
-			//for (int s = 0; s < l_Srl.Count; ++s)
-			//{
-			//	l_Fsr.c_TotOptBfr.Append(l_Srl[s].c_OptBfrList.ToArray());
-			//	//	l_Fsr.c_TotRptBfr.Append(e_SortOpt[s].c_RptBfr);
-			//}
-			//File.WriteAllText(l_Fsr.c_FileSet.c_OptFile, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
-			///////////
+			// 写入到文件里
+			bool l_CtanWseDiry = false;
+			for (int s = 0; s < l_Srl.Count; ++s)
+			{
+				// 注意，WSE目录需要特殊处理(0)Seed.js
+				if (! l_CtanWseDiry)
+				{
+					if (l_Srl[s].c_IsWseDiry)
+					{
+						l_CtanWseDiry = true;
+						Console.WriteLine("\t\t已处理：(0)Seed.js");
+					}
+				}
+
+				// 写入预载入
+				// 注意同一目录下各个文件使用的默认库目录应该是一致的，所以只使用首个文件的，索引为l_Srl[s].c_SortIdx[0]
+				// 但要小心(0)Seed.js文件没有调用stAsynIcld的任何函数（该静态类就是在这个文件里定义的），故使用“nWse”。
+				if (true)
+				{
+					l_Fsr.c_TotOptBfr.Append("(function(){var i_InNodeJs=(\"undefined\"==typeof self);var l_Glb=i_InNodeJs?global:self;");
+					l_Fsr.c_TotOptBfr.Append("l_Glb.nWse.stAsynIcld.cPreLoad(\"" 
+						+ (l_Srl[s].c_IsWseDiry ? "nWse" : l_Srl[s].c_DftLibDiryList[l_Srl[s].c_SortIdx[0]]) 
+						+ "\", [");
+					for (int p = 0; p < l_Srl[s].c_PathList.Count; ++p)
+					{
+						l_Fsr.c_TotOptBfr.Append("\"" + Path.GetFileName(l_Srl[s].c_PathList[p]) + "\"");
+						if (p < l_Srl[s].c_PathList.Count - 1)
+						{
+							l_Fsr.c_TotOptBfr.Append(',');
+						}
+					}
+					l_Fsr.c_TotOptBfr.Append("]);})();");
+				}
+
+				// 对每个输出缓冲
+				for (int o = (l_Srl[s].c_IsWseDiry ? 1 : 0); o < l_Srl[s].c_OptBfrList.Count; ++o)
+				{
+					l_Fsr.c_TotOptBfr.Append(l_Srl[s].c_OptBfrList[l_Srl[s].c_SortIdx[o]].ToString());
+
+					if (this.c_RunCfg.c_OptRpt)
+					{
+						l_Fsr.c_TotRptBfr.Append(l_Srl[s].c_RptBfrList[l_Srl[s].c_SortIdx[o]].ToString());
+					}
+
+					// 信息
+					Console.WriteLine("\t\t已处理：" + Path.GetFileName(l_Srl[s].c_PathList[l_Srl[s].c_SortIdx[o]]));
+				}
+			}
+
+			if (l_CtanWseDiry)
+			{
+				File.WriteAllText(l_Fsr.c_OptDiry + "(0)Seed.js", l_Srl[0].c_OptBfrList[0].ToString(), Encoding.UTF8);
+			}
+
+			var l_OptPath = l_Fsr.c_FileSet.c_OptFile;
+			File.WriteAllText(l_OptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);	
+
+			if (this.c_RunCfg.c_OptRpt) // 报告
+			{
+				var l_RptPath = l_OptPath.Substring(0, l_OptPath.Length - 3) + "_压缩报告.txt";
+				File.WriteAllText(l_RptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+			}
+
+			Console.WriteLine();
 		}
 
 		private void eAnlzAndCprs_PathList(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Which)
 		{
-			Console.WriteLine("正在处理目录：" + a_SrcRcd.c_Src.c_IptDiry);
+			Console.WriteLine("\t正在处理目录：" + a_SrcRcd.c_Src.c_IptDiry);
 
 			// 对每一个文件名
 			for (int n = 0; n < a_SrcRcd.c_PathList.Count; ++n)
@@ -254,9 +324,7 @@ namespace nWebCprsr.nCprsr
 			}
 
 			// 排序输出
-			this.eSortOpt(a_SrcRcd, a_Which);
-
-			Console.WriteLine();
+			this.eSortOpt(a_SrcRcd);
 		}
 
 		private void eAnlzAndCprs_File(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Idx, int a_Which)
@@ -283,13 +351,12 @@ namespace nWebCprsr.nCprsr
 				Console.WriteLine("【文件】" + l_Flnm + " (" + l_Row + ")\n" + "【异常】" + a_Exc.Message);
 				throw; // 继续抛出
 			}
-
-			// 完成
-			Console.WriteLine("\t已处理：" + l_Flnm);
 		}
 
-		private void eSortOpt(tFileSetRcd.tSrcRcd a_SrcRcd, int a_Which)
+		private void eSortOpt(tFileSetRcd.tSrcRcd a_SrcRcd)
 		{
+			//【说明】这里的排序算法使得每个文件都将其依赖的全部文件插入到自己的前面
+
 			// 临时数组
 			List<string> l_Temp = new List<string>();
 	
@@ -314,15 +381,14 @@ namespace nWebCprsr.nCprsr
 					if (l_DpdtIdx < 0) // 未找到，说明是其他目录的，跳过
 					{ continue; }
 
-					// 前提后，去掉后面重复的那项
 					var l_Lift = l_Temp.IndexOf(a_SrcRcd.c_PathList[l_DpdtIdx]);
-					if (l_IdxInTemp < l_Lift)
-					{
-						Console.WriteLine("依赖排序算法出错，不会执行到这里！");
+					if (l_IdxInTemp < l_Lift) // 在当前文件后面，前提
+					{		
 						l_Temp.RemoveAt(l_Lift);
+						l_Lift = -1;
 					}
-					else // 插入到自己的前面
-					if (l_Lift < 0)
+
+					if (l_Lift < 0) // 插入到自己的前面
 					{
 						l_Temp.Insert(l_IdxInTemp, a_SrcRcd.c_PathList[l_DpdtIdx]);
 					}
@@ -351,7 +417,7 @@ namespace nWebCprsr.nCprsr
 		{
 			for (int i = 0; i < a_SrcRcd.c_PathList.Count; ++i)
 			{
-				if (a_SrcRcd.c_PathList[i].Equals(a_Path, StringComparison.OrdinalIgnoreCase)) // 忽略大小写
+				if (Path.GetFileName(a_SrcRcd.c_PathList[i]).Equals(a_Path, StringComparison.OrdinalIgnoreCase)) // 忽略大小写
 				{
 					return i;
 				}
