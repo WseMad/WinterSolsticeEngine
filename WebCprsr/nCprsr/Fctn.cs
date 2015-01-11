@@ -16,6 +16,13 @@ namespace nWebCprsr.nCprsr
 		/// </summary>
 		class tFctn
 		{
+			/// <summary>
+			/// 分析并压缩函数
+			/// </summary>
+			public void cAnlzAndCprsFctn(tLex a_Lex, ref List<tLex.tTkn> a_TknList)
+			{
+				//
+			}
 		}
 	}
 	

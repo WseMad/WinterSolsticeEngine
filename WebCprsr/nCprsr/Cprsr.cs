@@ -685,5 +685,169 @@ namespace nWebCprsr.nCprsr
 					seIsPureBnrOpt(a_Tmnl) ||
 					seIsSemiUnrBnrOpt(a_Tmnl);
 		}
+
+		/// <summary>
+		/// 找到配对括号
+		/// </summary>
+		private static Tuple<int, int> seFindPairBbp(List<tLex.tTkn> a_TknList, tLex.tTkn a_Bbp)
+		{
+			int l_PairIdx = -1;
+			int l_Idx = a_TknList.IndexOf(a_Bbp);
+			if (l_Idx < 0)
+			{
+				return new Tuple<int, int>(-1, -1);
+			}
+
+			int l_NestCnt = 1;	// 初始嵌套深度为1
+			bool l_IsOpen = seIsOpenBbp(a_Bbp.c_Tmnl);
+
+			if (l_IsOpen) // 向后找闭括号，比配对开括号大1
+			{
+				for (int i = l_Idx + 1; i < a_TknList.Count; ++i)
+				{
+					if (a_TknList[i].c_Tmnl == a_Bbp.c_Tmnl) // 再次遇到开括号，增加嵌套计数
+					{
+						++l_NestCnt;
+					}
+					else
+						if (a_TknList[i].c_Tmnl == a_Bbp.c_Tmnl + 1) // 遇到闭括号，递减嵌套计数，降为0时配对
+						{
+							--l_NestCnt;
+							if (0 == l_NestCnt)
+							{
+								l_PairIdx = i;
+								break;
+							}
+						}
+				}
+			}
+			else // 向前找开括号，比配对闭括号小1
+			{
+				if (!seIsClsBbp(a_Bbp.c_Tmnl))
+					throw new ArgumentException("a_Bbp必须是（开/闭）括号");
+
+				for (int i = l_Idx - 1; i >= 0; --i)
+				{
+					if (a_TknList[i].c_Tmnl == a_Bbp.c_Tmnl) // 再次遇到闭括号，增加嵌套计数
+					{
+						++l_NestCnt;
+					}
+					else
+						if (a_TknList[i].c_Tmnl == a_Bbp.c_Tmnl - 1) // 遇到开括号，递减嵌套计数，降为0时配对
+						{
+							--l_NestCnt;
+							if (0 == l_NestCnt)
+							{
+								l_PairIdx = i;
+								break;
+							}
+						}
+				}
+			}
+			return new Tuple<int, int>((l_IsOpen ? l_Idx : l_PairIdx), (l_IsOpen ? l_PairIdx : l_Idx));
+		}
+
+		/// <summary>
+		/// 是否在括号里
+		/// </summary>
+		private static bool seInBbp(List<tLex.tTkn> a_TknList, tLex.tTkn a_Bbp, tLex.tTkn a_Tkn)
+		{
+			int l_Idx = a_TknList.IndexOf(a_Tkn);
+			var l_BbpIdxPair = seFindPairBbp(a_TknList, a_Bbp);
+			if ((l_BbpIdxPair.Item1 >= 0) && (l_Idx < l_BbpIdxPair.Item1))
+				return false;
+
+			if ((l_BbpIdxPair.Item2 >= 0) && (l_Idx > l_BbpIdxPair.Item2))
+				return false;
+
+			return true;
+		}
+
+		private static int seFindNextSmclnOrNewLineOrClsBrc(List<tLex.tTkn> a_TknList, int a_Bgn)
+		{
+			for (int i = a_Bgn; i < a_TknList.Count; ++i)
+			{
+				if ((tLex.tTmnl.i_Smcln == a_TknList[i].c_Tmnl) ||
+					(tLex.tTmnl.i_NewLine == a_TknList[i].c_Tmnl) ||
+					(tLex.tTmnl.i_RBrc == a_TknList[i].c_Tmnl))
+				{
+					return i;
+				}
+			}
+			return -1;
+		}
+
+		private static int seFindByAttr(List<tLex.tTkn> a_TknList, int a_Bgn, string a_Attr)
+		{
+			return a_TknList.FindIndex(a_Bgn, (a_Tkn) => { return a_Attr == a_Tkn.c_Attr.ToString(); });
+		}
+
+		private static bool seIsFctnDfn(List<tLex.tTkn> a_TknList, int a_Idx)
+		{
+			// 函数定义的前一个词法单元可以是“{ } ;”，且函数定义一定有函数名
+			// 其余的认为是函数表达式
+
+			if (a_Idx < 1) // 没有前一个时认为是
+			{
+				return true;
+			}
+
+			if ((tLex.tTmnl.i_LBrc == a_TknList[a_Idx - 1].c_Tmnl) ||
+				(tLex.tTmnl.i_RBrc == a_TknList[a_Idx - 1].c_Tmnl) ||
+				(tLex.tTmnl.i_Smcln == a_TknList[a_Idx - 1].c_Tmnl))
+			{
+				return (tLex.tTmnl.i_Id == a_TknList[a_Idx + 1].c_Tmnl);	// 下一个词法单元是标识符
+			}
+
+			return false;
+		}
+
+		private static void seSkipToRbbp(List<tLex.tTkn> a_TknList, ref int a_Idx)
+		{
+			var l_PairIdx = seFindPairBbp(a_TknList, a_TknList[a_Idx]);
+			a_Idx = l_PairIdx.Item2;
+		}
+
+		private static bool seIsVarRef(List<tLex.tTkn> a_TknList, int a_Idx)
+		{
+			// 条件：
+			// 1.必须是标识符，
+			// 2.前一个词法单元不是“. function”，
+			// 3.当前一个词法单元不是“?”时，后一个词法单元不是“:”
+
+			if (!seIsId(a_TknList[a_Idx].c_Tmnl))
+			{
+				return false;
+			}
+
+			if ((a_Idx - 1 >= 0) &&
+				((tLex.tTmnl.i_Dot == a_TknList[a_Idx - 1].c_Tmnl) ||
+				(tLex.tTmnl.i_function == a_TknList[a_Idx - 1].c_Tmnl)))
+			{
+				return false;
+			}
+
+			if ((a_Idx - 1 >= 0) &&
+				(tLex.tTmnl.i_Qstn != a_TknList[a_Idx - 1].c_Tmnl) &&
+				(a_Idx + 1 < a_TknList.Count) &&
+				(tLex.tTmnl.i_Cln == a_TknList[a_Idx + 1].c_Tmnl))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		private static bool seIsPptyAcs(List<tLex.tTkn> a_TknList, int a_Idx)
+		{
+			// 前一个词法单元是“.”
+			if ((a_Idx - 1 >= 0) &&
+				((tLex.tTmnl.i_Dot == a_TknList[a_Idx - 1].c_Tmnl)))
+			{
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
