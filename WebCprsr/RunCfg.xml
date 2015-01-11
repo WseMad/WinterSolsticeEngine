@@ -4,7 +4,7 @@
 
 	<!-- JavaScript -->
 	<js>
-		<合集 输出文件="输出/(10)WSE_nWse.js">
+		<合集 输出文件="RunOpt/(10)WSE_nWse.js">
 			<!-- 注意来源顺序，输出顺序将与此一致！ -->
 			<来源 输入目录="F:/MyGit/WinterSolsticeEngine/WSE/nWse" 解析依赖="是" 压缩="是" />
 			<来源 输入目录="" />
