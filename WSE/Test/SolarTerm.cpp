@@ -710,7 +710,8 @@ double fGetSunEclipticLongitudeECDegree(double a_JD, SOLARTERMS ST_SolarTerms)
 	dbLongitude -= (20.49552 / w_GetSunRadiusVector(a_JD)) / 3600.0 / (20 * PI);	//@ 20*PI 文档中还除了这一项！
 
 	// 由于春分这天黄经为 0 度，比较特殊，因此专门判断（如不加以特殊对待则会导致计算范围覆盖整个 360 度角）
-	dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+//	dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+	dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? (dbLongitude - 360) : dbLongitude;
 	return dbLongitude;
 }
 
@@ -741,7 +742,9 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 
 		dbDichotomyDivisionDayJD = ((dbUpperLinit - dbLowerLinit) / 2.0) + dbLowerLinit;
 
-		/*
+	//	dbLongitude = fGetSunEclipticLongitudeECDegree(dbDichotomyDivisionDayJD, ST_SolarTerms);
+
+	//	/*
 		// 计算太阳黄经
 		dbLongitude = w_GetSunLongitude(dbDichotomyDivisionDayJD);
 		// 一次校正经度
@@ -753,11 +756,9 @@ double w_CalcSolarTerms(const int &year, const SOLARTERMS &ST_SolarTerms)
 		dbLongitude -= (20.49552 / w_GetSunRadiusVector(dbDichotomyDivisionDayJD)) / 3600.0 / (20 * PI);	//@ 20*PI 文档中还除了这一项！
 
 		// 由于春分这天黄经为 0 度，比较特殊，因此专门判断（如不加以特殊对待则会导致计算范围覆盖整个 360 度角）
-		dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+	//	dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? -dbLongitude : dbLongitude;
+		dbLongitude = ((ST_SolarTerms == ST_VERNAL_EQUINOX) && (dbLongitude > 345.0)) ? (dbLongitude - 360) : dbLongitude;
 		//*/
-
-		dbLongitude = fGetSunEclipticLongitudeECDegree(dbDichotomyDivisionDayJD, ST_SolarTerms);
-
 
 		// 调整二分法上下限
 		(dbLongitude > static_cast<double>(ST_SolarTerms)) ? dbUpperLinit = dbDichotomyDivisionDayJD : dbLowerLinit = dbDichotomyDivisionDayJD;
@@ -1028,7 +1029,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// ST_SPRING_BEGINS ST_WINTER_SOLSTICE
 	// 2021年冬至，偏多35秒，成22号（百度算是21号）
 	// 与那篇文章里的2012年节气对比，早了接近但不到7分钟；但2012年春分误差达1个半小时
-//	double l_JD = w_CalcSolarTerms(2012, ST_WINTER_SOLSTICE);
+//	double l_JD = w_CalcSolarTerms(2012, ST_VERNAL_EQUINOX);
 	double l_JD = fCalcSolarTerms_Newton(2012, ST_VERNAL_EQUINOX);
 
 	int l_Year, l_Mon, l_Day, l_Hour, l_Min, l_Sec;
