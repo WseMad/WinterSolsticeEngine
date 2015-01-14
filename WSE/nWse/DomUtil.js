@@ -33,6 +33,7 @@ function fOnIcld(a_Errs)
 
 	var nWse = l_Glb.nWse;
 	var unKnl = nWse.unKnl;
+	var stPageInit = nWse.stPageInit;
 	var stAryUtil = nWse.stAryUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -580,34 +581,20 @@ function fOnIcld(a_Errs)
 		{
 			("textContent" in a_Elmt) ? (a_Elmt.textContent = a_Ctnt) : (a_Elmt.innerText = a_Ctnt);
 			return stDomUtil;
-		}
+		};
 
 
 		/// 添加事件处理器
 		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			if (a_Elmt.addEventListener)
-			{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.attachEvent)
-			{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = a_fHdl; }
-
+			stPageInit.cAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器
 		stDomUtil.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			if (a_Elmt.removeEventListener)
-			{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.detachEvent)
-			{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = null; }
-
+			stPageInit.cRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 

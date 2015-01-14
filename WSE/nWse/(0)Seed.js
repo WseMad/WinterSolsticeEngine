@@ -323,6 +323,122 @@
 	};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 页面初始化
+
+	var stPageInit;
+	(function ()
+	{
+		/// 页面初始化
+		stPageInit = function () { };
+		nWse.stPageInit = stPageInit;
+		stPageInit.oc_nHost = nWse;
+		stPageInit.oc_FullName = nWse.ocBldFullName("stPageInit");
+
+		/// 构建全名
+		stPageInit.ocBldFullName = function (a_Name)
+		{ return stPageInit.oc_FullName + "." + a_Name; };
+
+		//======== 私有字段
+
+		var e_OnDocRdy = [];
+		var e_OnWndLoad = [];
+
+		//======== 私有函数
+
+		function eOnDocRdy()
+		{
+			if ((! e_OnDocRdy))
+			{ return; }
+
+			var i;
+			for (i = 0; i<e_OnDocRdy.length; ++i)
+			{
+				e_OnDocRdy[i]();
+			}
+
+			e_OnDocRdy = null;	// 完成后立即清除
+		}
+
+		function eOnDocRdy_NH5()
+		{
+			if (("interactive" != document.readyState) && ("complete" != document.readyState))
+			{ return; }
+
+			stPageInit.cRmvEvtHdlr(document, "readystatechange", eOnDocRdy_NH5);
+			eOnDocRdy();
+		}
+
+		function eOnWndLoad()
+		{
+			if (e_OnDocRdy) // 如果还没有被清除，现在回调
+			{ eOnDocRdy(); }
+
+			if ((! e_OnWndLoad))
+			{ return; }
+
+			var i;
+			for (i = 0; i<e_OnWndLoad.length; ++i)
+			{
+				e_OnWndLoad[i]();
+			}
+
+			e_OnWndLoad = null;	// 完成后立即清除
+		}
+
+		//======== 公有函数
+
+		/// 添加事件处理器
+		stPageInit.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
+		{
+			if (a_Elmt.addEventListener)
+			{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
+			else
+			if (a_Elmt.attachEvent)
+			{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
+			else
+			{ a_Elmt["on" + a_EvtName] = a_fHdl; }
+
+			return stPageInit;
+		};
+
+		/// 移除事件处理器
+		stPageInit.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
+		{
+			if (a_Elmt.removeEventListener)
+			{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
+			else
+			if (a_Elmt.detachEvent)
+			{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
+			else
+			{ a_Elmt["on" + a_EvtName] = null; }
+
+			return stPageInit;
+		};
+
+		// 注册两个事件处理器
+		if (nWse.fMaybeNonHtml5Brsr()) // IE8
+		{ stPageInit.cAddEvtHdlr(document, "readystatechange", eOnDocRdy_NH5); }
+		else // H5
+		{ stPageInit.cAddEvtHdlr(document, "DOMContentLoaded", eOnDocRdy); }
+
+		stPageInit.cAddEvtHdlr(window, "load", eOnWndLoad);
+
+		/// 添加事件处理器 - 文档就绪
+		stPageInit.cAddEvtHdlr_DocRdy = function (a_fCabk)
+		{
+			e_OnDocRdy.push(a_fCabk);
+			return stPageInit;
+		};
+
+		/// 添加事件处理器 - 窗口加载
+		stPageInit.cAddEvtHdlr_WndLoad = function (a_fCabk)
+		{
+			e_OnWndLoad.push(a_fCabk);
+			return stPageInit;
+		};
+	})();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 异步导入
 
 	var stAsynImpt;
