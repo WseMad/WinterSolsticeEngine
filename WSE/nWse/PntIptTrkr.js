@@ -51,6 +51,11 @@ function fOnIcld(a_Errs)
 		a_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件
 	}
 
+	function fIsKindOfMosMoveSrs(a_Kind)
+	{
+		return (a_Kind.valueOf() < tPntIptKind.i_MosMove.valueOf());
+	}
+
 	function eRegPageEvtHdlr(a_This)
 	{
 		// 由于采用各种技术检测“触点丢失”，不需要这些事件了
@@ -61,73 +66,103 @@ function fOnIcld(a_Errs)
 		if (a_This.e_fOnMosMove)
 		{ return; }
 
-		var l_fOnMosMove = function (a_Evt)
+		a_This.e_fOnMosMove = function (a_Evt)
 		{
+			a_Evt = a_Evt || window.event;
+
 			// 【BUG】IE11在鼠标离开文档后就不再触发鼠标事件给document
 			// 而不用调用preventDefault()就OK，但其他浏览器会开始拖选文字……
 		//	console.log("mousemove");
 
 			var l_This = a_This;
+			var l_Kind = tPntIptKind.i_TchMove;
 			if (! l_This.e_MosDown)		// 未按下时忽略
 			{
 			//	l_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件，【不要加上这句，Chrome模拟器会连续触发】
-				return;
+
+				if (l_This.e_HdlMosMove) // 如果要处理鼠标移动
+				{ l_Kind = tPntIptKind.i_MosMove; }
+				else
+				{ return false; }
 			}
 
 			if (l_This.e_IgnrMosEvt)	// 忽略？
 			{
 				l_This.e_MosDown = false;	// 复位
-				return;
+				return false;
 			}
 
-			ePushMosIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
+			return ePushMosIpt(l_This, l_Kind, a_Evt);
 		};
 
-		var l_fOnMosBtnDown = function (a_Evt)
+		a_This.e_fOnMosBtnDown = function (a_Evt)
 		{
-			if (0 != a_Evt.button)	// 只响应主键
+			a_Evt = a_Evt || window.event;
+
+			if (0 != a_Evt.button)	// 只响应主键，其他按键以默认方式处理（不返回false）
 			{ return; }
 
 			var l_This = a_This;
 			if (l_This.e_IgnrMosEvt)	// 忽略？
 			{
-				l_This.e_MosDown = false;	// 复位
-				return;
+				l_This.e_MosDown = false;		// 复位
+				return false;
 			}
 
 			l_This.e_MosDown = true;
-			ePushMosIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
+			return ePushMosIpt(l_This, tPntIptKind.i_TchBgn, a_Evt);
 		};
 
-		var l_fOnMosBtnUp = function (a_Evt)
+		a_This.e_fOnMosBtnUp = function (a_Evt)
 		{
-			if (0 != a_Evt.button)	// 只响应主键
+			a_Evt = a_Evt || window.event;
+
+			if (0 != a_Evt.button)	// 只响应主键，其他按键以默认方式处理（不返回false）
 			{ return; }
 
 			var l_This = a_This;
 			if (l_This.e_IgnrMosEvt)	// 忽略？
 			{
 				l_This.e_IgnrMosEvt = false;	// 复位：接受鼠标事件
-				return;
+				l_This.e_MosDown = false;		// 复位
+				return false;
 			}
 
 			fRsetMos(l_This); // 谨慎的做法……
-			ePushMosIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
+			return ePushMosIpt(l_This, tPntIptKind.i_TchEnd, a_Evt);
 		};
 
-		a_This.e_fOnMosMove = stFctnUtil.cBindThis(a_This, l_fOnMosMove);
-		a_This.e_fOnMosBtnDown = stFctnUtil.cBindThis(a_This, l_fOnMosBtnDown);
-		a_This.e_fOnMosBtnUp = stFctnUtil.cBindThis(a_This, l_fOnMosBtnUp);
 		stDomUtil.cAddEvtHdlr(window, "mousemove", a_This.e_fOnMosMove, false);
 		stDomUtil.cAddEvtHdlr(window, "mousedown", a_This.e_fOnMosBtnDown, false);
 		stDomUtil.cAddEvtHdlr(window, "mouseup", a_This.e_fOnMosBtnUp, false);
 
-
-		var l_fOnTchMove = function (a_Evt)
+		var l_fOnMosEnt, l_fOnMosLea;
+		if (a_This.e_HdlMosEntLea) // 如果还需要处理mouseover（Ent)和mouseout（Lea）
 		{
+			a_This.e_fOnMosEnt = function (a_Evt)
+			{
+				a_Evt = a_Evt || window.event;
+				return ePushMosIpt(l_This, tPntIptKind.i_MosEnt, a_Evt);
+			};
+
+			a_This.e_fOnMosLea = function (a_Evt)
+			{
+				a_Evt = a_Evt || window.event;
+				return ePushMosIpt(l_This, tPntIptKind.i_MosLea, a_Evt);
+			};
+
+			stDomUtil.cAddEvtHdlr(window, "mouseover", a_This.e_fOnMosEnt, false);
+			stDomUtil.cAddEvtHdlr(window, "mouseout", a_This.e_fOnMosLea, false);
+		}
+
+
+		a_This.e_fOnTchMove = function (a_Evt)
+		{
+			a_Evt = a_Evt || window.event;
+
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchMove, a_Evt);
+			return ePushTchIpt(l_This, tPntIptKind.i_TchMove, a_Evt);
 
 //			//【调试iPad】
 //			var l_TestOpt = document.getElementById("k_TestOpt");
@@ -135,23 +170,24 @@ function fOnIcld(a_Errs)
 //			{ l_TestOpt.textContent = a_Evt.touches[0].identifier + ", " + a_Evt.touches[0].clientX + ", " + a_Evt.touches[0].clientY; }
 		};
 
-		var l_fOnTchDown = function (a_Evt)
+		a_This.e_fOnTchDown = function (a_Evt)
 		{
+			a_Evt = a_Evt || window.event;
+
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchBgn, a_Evt);
+			return ePushTchIpt(l_This, tPntIptKind.i_TchBgn, a_Evt);
 		};
 
-		var l_fOnTchUp = function (a_Evt)
+		a_This.e_fOnTchUp = function (a_Evt)
 		{
+			a_Evt = a_Evt || window.event;
+
 			var l_This = a_This;
 			l_This.e_IgnrMosEvt = true;		// 忽略鼠标事件
-			return ePushTchIpt(l_This, tPntIpt.tKind.i_TchEnd, a_Evt);
+			return ePushTchIpt(l_This, tPntIptKind.i_TchEnd, a_Evt);
 		};
 
-		a_This.e_fOnTchMove = stFctnUtil.cBindThis(a_This, l_fOnTchMove);
-		a_This.e_fOnTchDown = stFctnUtil.cBindThis(a_This, l_fOnTchDown);
-		a_This.e_fOnTchUp = stFctnUtil.cBindThis(a_This, l_fOnTchUp);
 		stDomUtil.cAddEvtHdlr(window, "touchmove", a_This.e_fOnTchMove, false);
 		stDomUtil.cAddEvtHdlr(window, "touchstart", a_This.e_fOnTchDown, false);
 		stDomUtil.cAddEvtHdlr(window, "touchend", a_This.e_fOnTchUp, false);
@@ -179,24 +215,36 @@ function fOnIcld(a_Errs)
 
 	function ePushMosIpt(a_This, a_Kind, a_Evt)
 	{
-		// 立即处理？此时只有一个触点
+		// 处理结果，默认继续处理
+		var l_Rst = true;
+
+		// 立即处理或立即并缓冲？此时只有一个触点
 		var l_PntIpt;
-		if (a_This.e_ImdtHdl)
+		if (0 != a_This.e_HdlMode)
 		{
 			if (a_This.e_fImdtHdlr)
 			{
 				l_PntIpt = a_This.e_ImdtPntIpt;
 				l_PntIpt.c_Tchs[0].cCrt(i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
-				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
-				a_This.e_fImdtHdlr(l_PntIpt);				// 处理
-				eActTchsUrg(a_This, l_PntIpt);				// 注销活动触点
+				eActTchsReg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注册活动触点
+				l_Rst = a_This.e_fImdtHdlr(l_PntIpt);		// 处理
+				eActTchsUrg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注销活动触点
 				l_PntIpt.c_Tchs[0].eRspsByDomEvtFlag();		// 响应事件标志
 			}
 		}
-		else // 把输入缓冲起来
+
+		// 把输入缓冲起来
+		if (1 != a_This.e_HdlMode)
 		{
-			eTrgrTch(a_This, i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
+			if (! fIsKindOfMosMoveSrs(a_Kind)) // 如果不是鼠标移动系列
+			{
+				eTrgrTch(a_This, i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
+				l_Rst = false; // 已处理
+			}
 		}
+
+		// 返回
+		return l_Rst;
 	}
 
 	function ePushTchIpt(a_This, a_Kind, a_Evt)
@@ -211,10 +259,10 @@ function fOnIcld(a_Errs)
 //			l_EvtTchs = Array.prototype.concat.call(a_Evt.touches, a_Evt.changedTouches);
 //		}
 		var l_EvtTchs = (tPntIptKind.i_TchEnd == a_Kind) ? a_Evt.changedTouches : a_Evt.touches;
-		
-		// 立即处理？
+
+		// 立即处理或立即并缓冲？
 		var l_PntIpt;
-		if (a_This.e_ImdtHdl)
+		if (0 != a_This.e_HdlMode)
 		{
 			if (a_This.e_fImdtHdlr)
 			{
@@ -224,9 +272,9 @@ function fOnIcld(a_Errs)
 					{
 						l_PntIpt.eAddTch(a_EvtTch.identifier, a_Kind, a_EvtTch.clientX, a_EvtTch.clientY, a_Evt, a_EvtTch);
 					});
-				eActTchsReg(a_This, l_PntIpt);				// 注册活动触点
-				l_Rst = a_This.e_fImdtHdlr(l_PntIpt);				// 处理
-				eActTchsUrg(a_This, l_PntIpt);				// 注销活动触点
+				eActTchsReg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注册活动触点
+				l_Rst = a_This.e_fImdtHdlr(l_PntIpt);		// 处理
+				eActTchsUrg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注销活动触点
 				stAryUtil.cFor(l_PntIpt.c_Tchs,
 					function (a_Tchs, a_TchIdx, a_Tch)
 					{
@@ -234,7 +282,9 @@ function fOnIcld(a_Errs)
 					});
 			}
 		}
-		else // 把输入缓冲起来
+
+		// 把输入缓冲起来
+		if (1 != a_This.e_HdlMode)
 		{
 			stAryUtil.cFor(l_EvtTchs,
 				function (a_EvtTchs, a_EvtTchIdx, a_EvtTch)
@@ -285,7 +335,7 @@ function fOnIcld(a_Errs)
 				l_TailPntIpt.eAddTch(a_TchId, a_Kind, l_X, l_Y, a_Evt);
 			}
 			else // 找到时，i_TchBgn和i_TchEnd替换，其余丢弃
-			if ((tPntIpt.tKind.i_TchBgn == a_Kind) || (tPntIpt.tKind.i_TchEnd == a_Kind))
+			if ((tPntIptKind.i_TchBgn == a_Kind) || (tPntIptKind.i_TchEnd == a_Kind))
 			{
 				l_Tch = l_TailPntIpt.c_Tchs[l_TchIdx];
 				l_Tch.c_Kind = a_Kind;
@@ -302,24 +352,27 @@ function fOnIcld(a_Errs)
 	{
 		if (a_This.e_ActTchs)
 		{ a_This.e_ActTchs.length = 0; }
+
+		if (a_This.e_ImdtActTchs)
+		{ a_This.e_ImdtActTchs.length = 0; }
 	}
 
-	function eActTchsFind(a_This, a_TchId)
+	function eActTchsFind(a_This, a_ActTchs, a_TchId)
 	{
-		return stAryUtil.cFind(a_This.e_ActTchs, function (a_Ary, a_Idx, a_AT) { return a_AT.c_TchId == a_TchId; });
+		return stAryUtil.cFind(a_ActTchs, function (a_Ary, a_Idx, a_AT) { return a_AT.c_TchId == a_TchId; });
 	}
 
-	function eActTchsReg(a_This, a_Ipt)
+	function eActTchsReg(a_This, a_ActTchs, a_Ipt)
 	{
-		// 首先，对于e_ActTchs里有的触点，若a_Ipt里没有则补充i_TchCtnu输入，否则更新坐标
-		stAryUtil.cFor(a_This.e_ActTchs,
+		// 首先，对于a_ActTchs里有的触点，若a_Ipt里没有则补充i_TchCtnu输入，否则更新坐标
+		stAryUtil.cFor(a_ActTchs,
 			function (a_Ary, a_Idx, a_AT)
 			{
 				var l_IdxInIpt = a_Ipt.cFindTchById(a_AT.c_TchId);
 				var l_TchInIpt;
 				if (l_IdxInIpt < 0)
 				{
-					a_Ipt.eAddTch(a_AT.c_TchId, tPntIpt.tKind.i_TchCtnu, a_AT.c_X, a_AT.c_Y, a_AT.c_Evt);
+					a_Ipt.eAddTch(a_AT.c_TchId, tPntIptKind.i_TchCtnu, a_AT.c_X, a_AT.c_Y, a_AT.c_Evt);
 				}
 				else
 				{
@@ -340,12 +393,12 @@ function fOnIcld(a_Errs)
 
 //					//【调试iPad】
 //					var l_TestOpt = document.getElementById("k_TestOpt");
-//					if (l_TestOpt)// && (tPntIpt.tKind.i_TchMove == l_TchInIpt.c_Kind))
+//					if (l_TestOpt)// && (tPntIptKind.i_TchMove == l_TchInIpt.c_Kind))
 //					{ l_TestOpt.textContent = l_TchInIpt.c_TchId + ", " + l_TchInIpt.c_AccOfstDistX + ", " + l_TchInIpt.c_AccOfstDistY; }
 				}
 			});
 
-		// 然后，对于a_Ipt里种类为i_TchBgn的输入，若e_ActTchs里没有，注册
+		// 然后，对于a_Ipt里种类为i_TchBgn的输入，若a_ActTchs里没有，注册
 		stAryUtil.cFor(a_Ipt.c_Tchs,
 			function (a_Ary, a_Idx, a_Tch)
 			{
@@ -353,13 +406,13 @@ function fOnIcld(a_Errs)
 				// 若触点的位置离开文档，将种类换成i_TchLost，以应对“触点丢失”
 				if (fIsTchLost(a_Tch))
 				{
-					a_Tch.c_Kind = tPntIpt.tKind.i_TchLost;
+					a_Tch.c_Kind = tPntIptKind.i_TchLost;
 					//	console.log("触点丢失：" + a_Tch.c_TchId);
 				}
 				else
-				if ((tPntIpt.tKind.i_TchBgn == a_Tch.c_Kind) && (eActTchsFind(a_This, a_Tch.c_TchId) < 0))
+				if ((tPntIptKind.i_TchBgn == a_Tch.c_Kind) && (eActTchsFind(a_This, a_ActTchs, a_Tch.c_TchId) < 0))
 				{
-					a_This.e_ActTchs.push({			// 注意这里不需要c_Kind
+					a_ActTchs.push({				// 注意这里不需要c_Kind
 						c_TchId : a_Tch.c_TchId,	// 触点ID
 						c_X : a_Tch.c_X,			// 客户区坐标系位置
 						c_Y : a_Tch.c_Y,
@@ -373,22 +426,22 @@ function fOnIcld(a_Errs)
 			});
 	}
 
-	function eActTchsUrg(a_This, a_Ipt)
+	function eActTchsUrg(a_This, a_ActTchs, a_Ipt)
 	{
-		// 对于a_Ipt里种类为i_TchEnd的输入，若e_ActTchs里有，注销
+		// 对于a_Ipt里种类为i_TchEnd的输入，若a_ActTchs里有，注销
 		stAryUtil.cFor(a_Ipt.c_Tchs,
 			function (a_Ary, a_Idx, a_Tch)
 			{
 				var l_Idx;
-				if (tPntIpt.tKind.i_TchEnd == a_Tch.c_Kind)
+				if (tPntIptKind.i_TchEnd == a_Tch.c_Kind)
 				{
 					//	console.log("i_TchEnd：" + a_Tch.c_TchId);
 
-					l_Idx = eActTchsFind(a_This, a_Tch.c_TchId);
+					l_Idx = eActTchsFind(a_This, a_ActTchs, a_Tch.c_TchId);
 					if (l_Idx >= 0)
 					{
 						//	console.log("ers");
-						a_This.e_ActTchs.splice(l_Idx, 1);
+						a_ActTchs.splice(l_Idx, 1);
 					}
 				}
 			});
@@ -430,9 +483,10 @@ function fOnIcld(a_Errs)
 				l_This.e_PntIptQue = [];		// 点输入队列
 				l_This.e_PcdrTrgrTch = [];		// 程序触发触摸
 				l_This.e_ActTchs = [];			// 活动触点
+				l_This.e_ImdtActTchs = [];		// 立即活动触点
 				l_This.e_MosDown = false;		// 鼠标按下？
 				l_This.e_IgnrMosEvt = false;	// 忽略鼠标事件？
-				l_This.e_ImdtHdl = false;		// 立即处理？
+				l_This.e_HdlMode = 0;			// 处理模式
 				l_This.e_fImdtHdlr = null;		// 立即处理函数
 				return l_This;
 			}
@@ -440,7 +494,9 @@ function fOnIcld(a_Errs)
 			/// 初始化
 			/// a_Cfg：Object
 			/// {
-			/// c_ImdtHdl：Boolean，立即处理？默认false
+			/// c_HdlMode：Number，处理模式，0（默认）=缓冲，1=立即，2=立即并缓冲
+			/// c_HdlMosMove：Boolean，处理鼠标移动？默认false，仅适用于立即处理模式
+			/// c_HdlMosEntLea：Boolean，处理鼠标进入离开？默认false，仅适用于立即处理模式
 			/// c_RltmAfx：tRltmAfx，实时应用程序框架，默认null
 			/// }
 			cInit : function (a_Cfg)
@@ -448,10 +504,12 @@ function fOnIcld(a_Errs)
 				var l_This = this;
 				this.cRset();
 				this.e_Cfg = a_Cfg;
-				this.e_ImdtHdl = !! a_Cfg.c_ImdtHdl;
+				this.e_HdlMode = a_Cfg.c_HdlMode || 0;
 				this.e_RltmAfx = a_Cfg.c_RltmAfx || null;
+				this.e_HdlMosMove = (0 != this.e_HdlMode) && (a_Cfg.c_HdlMosMove || false);
+				this.e_HdlMosEntLea = (0 != this.e_HdlMode) && (a_Cfg.c_HdlMosEntLea || false);
 
-				if (this.e_ImdtHdl)
+				if (0 != this.e_HdlMode) // 立即处理或立即并缓冲
 				{
 					// 创建一个专用于立即处理的点输入，参数随意
 					l_This.e_ImdtPntIpt = new tPntIpt(0);
@@ -469,12 +527,6 @@ function fOnIcld(a_Errs)
 				// 清空活动触点
 				this.cClrActTchs();
 				return this;
-			}
-			,
-			/// 立即处理？
-			cIsImdtHdl : function (a_Udfn$YesNo)
-			{
-				return this.e_ImdtHdl;
 			}
 			,
 			/// 获取立即处理器
@@ -512,14 +564,14 @@ function fOnIcld(a_Errs)
 			/// 注册活动触点
 			cRegActTchs : function (a_Ipt)
 			{
-				eActTchsReg(this, a_Ipt);
+				eActTchsReg(this, this.e_ActTchs, a_Ipt);
 				return this;
 			}
 			,
 			/// 注销活动触点
 			cUrgActTchs : function (a_Ipt)
 			{
-				eActTchsUrg(this, a_Ipt);
+				eActTchsUrg(this, this.e_ActTchs, a_Ipt);
 				return this;
 			}
 			,
@@ -564,9 +616,9 @@ function fOnIcld(a_Errs)
 		null
 		,
 		{
-			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs)
+			eAddTch : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch)
 			{
-				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs));
+				this.c_Tchs.push(new tPntIpt.tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch));
 				return this;
 			}
 			,
@@ -684,7 +736,7 @@ function fOnIcld(a_Errs)
 				return (stAryUtil.cFind(this.c_Tchs,
 					function (a_Ary, a_Idx, a_Tch)
 					{
-						return (tPntIpt.tKind.i_TchBgn == a_Tch.c_Kind) || (tPntIpt.tKind.i_TchEnd == a_Tch.c_Kind);
+						return (tPntIptKind.i_TchBgn == a_Tch.c_Kind) || (tPntIptKind.i_TchEnd == a_Tch.c_Kind);
 					}) >= 0);
 			}
 			,
@@ -721,6 +773,15 @@ function fOnIcld(a_Errs)
 			,
 			/// 触摸丢失
 			i_TchLost : 4
+			,
+			/// 鼠标移动
+			i_MosMove : 12
+			,
+			/// 鼠标进入
+			i_MosEnt : 13
+			,
+			/// 鼠标离开
+			i_MosLea : 14
 		});
 
 		tTch = nWse.fClass(tPntIpt,
@@ -732,19 +793,21 @@ function fOnIcld(a_Errs)
 		/// c_OfstX，c_OfstY：Number，客户区坐标系偏移量
 		/// c_Hdld：Boolean，已处理？默认false
 		/// c_Evt：Event，DOM事件
+		/// c_EvtTch：Touch，DOM事件的触点信息
+		/// c_EvtTgt：HTMLElement，事件目标，可能不同于c_Evt.target
 		/// c_PvtDft：Boolean，仅用于立即处理，阻止默认动作？默认false
 		/// c_StopPpgt：Boolean，仅用于立即处理，停止传播？默认false
 		/// c_StopImdtPpgt：Boolean，仅用于立即处理，停止立即传播？默认false
-		function tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt)
+		function tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt)
 		{
-			this.cCrt(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt);
+			this.cCrt(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt);
 		}
 		,
 		null
 		,
 		{
 			/// 创建
-			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTchs, a_EvtTgt)
+			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt)
 			{
 				this.c_TchId = a_TchId;
 				this.c_Kind = a_Kind;
@@ -754,8 +817,8 @@ function fOnIcld(a_Errs)
 				this.c_OfstY = 0;
 				this.c_Hdld = false;
 				this.c_Evt = a_Evt || null;
-				this.c_EvtTchs = a_EvtTchs || null;
-				this.c_EvtTgt = a_EvtTgt || (this.c_Evt && this.c_Evt.target);
+				this.c_EvtTch = a_EvtTch || null;
+				this.c_EvtTgt = a_EvtTgt || (this.c_Evt && (this.c_Evt.target || this.c_Evt.srcElement));
 				this.c_PvtDft = false;
 				this.c_StopPpgt = false;
 				this.c_StopImdtPpgt = false;
@@ -783,7 +846,7 @@ function fOnIcld(a_Errs)
 			/// 存取事件目标
 			cAcsEvtTgt : function ()
 			{
-				return this.c_EvtTgt || (this.c_Evt && this.c_Evt.target);
+				return this.c_EvtTgt || (this.c_Evt && (this.c_Evt.target || this.c_Evt.srcElement));
 			}
 			,
 			/// 当前位置偏离起始点？

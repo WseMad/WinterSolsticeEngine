@@ -103,7 +103,7 @@ function fOnIcld(a_Errs)
 		{
 			e_PntIptTrkr = new tPntIptTrkr();
 			e_PntIptTrkr.cInit({
-				c_ImdtHdl : true
+				c_HdlMode : 1
 			});
 			e_PntIptTrkr.cSetImdtHdlr(fIptHdlr);
 

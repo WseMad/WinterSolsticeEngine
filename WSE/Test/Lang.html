@@ -74,7 +74,7 @@
 		window.onload = function () {
 			console.log("window.onload");
 
-			if (1 || nWse.fIsOnlnBrs()) // 在线
+			if (nWse.fIsOnlnBrs()) // 在线
 			{
 				nWse.stAsynLoad.cSrilInOdr(
 					[
@@ -92,6 +92,7 @@
 						"nWse:(3)CoreDast.js",
 						"DomUtil.js",
 						"CssUtil.js"
+						,"PntIptTrkr.js"
 
 					//	,"RltmAfx.js"
 					]

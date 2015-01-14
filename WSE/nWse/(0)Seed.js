@@ -252,16 +252,16 @@
 	nWse.i_InBrsr = ! i_InNodeJs;
 
 	/// 是否在线浏览？
-	/// a_HostName：String，主机名，不区分大小写，若为null则不参与比较
+	/// a_HostRgx：RegExp，主机正则表达式，若为null则不参与比较，若有效将与小写形式的location.hostname匹配
 	/// a_Port：Number，端口，80和443总是认为是，默认80
 	/// 返回：Boolean，若两个参数都与location里对应字段相等则返回true
-	nWse.fIsOnlnBrs = function (a_HostName, a_Port)
+	nWse.fIsOnlnBrs = function (a_HostRgx, a_Port)
 	{
 		if ((! nWse.i_InBrsr) || 
 			(! ((80 == l_Glb.location.port) || (443 == l_Glb.location.port) || ((a_Port || 80) == l_Glb.location.port))))
 		{ return false; }
 
-		return a_HostName ? (a_HostName.toLowerCase() == l_Glb.location.hostname.toLowerCase()) : true;
+		return a_HostRgx ? a_HostRgx.test(l_Glb.location.hostname.toLowerCase()) : true;
 	};
 
 	/// Number，异步延迟（秒），用于模拟异步请求时的网络延迟，应仅用于开发时！
