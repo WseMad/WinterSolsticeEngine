@@ -16,16 +16,18 @@
 	<script type="text/javascript">
 		//	"use strict"
 
-		function ff1(A, B) 
 		{ 
-			if (a_This.e_DomShow) 
+			var A = B.document.getElementsByTagName("script"), 
+				C = (A.length > 0) && A[A.length - 1].getAttribute("src"), 
+				D = C ? C.toLowerCase().indexOf("/nwse/(0)seed.js") : -1, 
+				E; 
+			if (D >= 0) 
 			{ 
-				fForEachPut(a_This, 
-					function (C, D, E, F) 
-					{ 
-					}) 
+				E = C.slice(0, D); 
+				A["nWse"] = E + "/nWse/"; 
+				A["cnWse"] = E + "/cnWse/" 
 			} 
-		};
+		}
 
 	</script>
 </body>

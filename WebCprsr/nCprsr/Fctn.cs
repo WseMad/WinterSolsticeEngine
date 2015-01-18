@@ -174,30 +174,80 @@ namespace nWebCprsr.nCprsr
 				}
 
 				/// <summary>
-				/// 名称可访问？
+				/// 名称已使用？
 				/// </summary>
-				public bool cIsNameAcsbl(string a_NewName)
+				public bool cIsNameUsed(string a_NewName)
 				{
-					// 检查是否与源代码定义的局部变量名相同
-					var l_Idx = c_LocDfns.FindIndex((a_Map) => { return a_Map.c_Old == a_NewName; });
+					// 检查是否与源代码定义的局部变量名（旧名）相同
+					var l_Idx = this.c_LocDfns.FindIndex((a_Map) => { return a_Map.c_Old == a_NewName; });
 					if (l_Idx >= 0)
 					{
 						return true;
 					}
 
-					// 检查是否与能够访问到的源代码函数名相同，
-					// 注意父函数名的检查在向上后进行，而顶级标识符名在调用本函数之前就已被检查过
-					teScp l_Scp = this;
+					//【不用了，子函数名应该已被加入到this.c_LocDfns】
+					//// 检查是否与源代码定义的函数名（位于子作用域）相同
+					//l_Idx = this.c_SubScps.FindIndex((a_S) => { return (a_S.c_Name == a_NewName); });
+					//if (l_Idx >= 0)
+					//{
+					//	return true;
+					//}
+
+					//【警告】这里不能轻易认定尚未使用，因为可能会发生名称访问的“隔代拦截”：
+					// 设有作用域：S0{ var AA; S1{ var BB; S2{ AA; } } } }
+					// 先将S0.AA->A，后将S1.BB->A，因S1里局部引用并未访问AA，
+					// 但S2.AA本应访问S0.AA，却访问到了S1.BB，即替换后：
+					// S0{ var A; S1{ var A; S2{ A; } } } }
+					// 解决办法是，除了遍历当前作用域的局部引用，还要搜索子作用域的，只要有一个名称相同就算已经使用！
+
+					// 沿着作用域链向上回溯，注意到顶级标识符名在调用本函数之前就已被检查过
+					// 对于祖先作用域里的局部变量名，应使用新名（他们已被替换！）进行比对
+					teScp l_Scp = this.c_Prn;
 					while (null != l_Scp)
 					{
-						l_Idx = l_Scp.c_SubScps.FindIndex((a_S) => { return (a_S.c_Name == a_NewName); });
-
+						l_Idx = l_Scp.c_LocDfns.FindIndex(
+							(a_Map) =>
+							{
+								// 如果找到一个新名相同的，但是若当前作用域里没有引用该新名对应的旧名，也可以使用该新名
+								if (a_Map.c_New == a_NewName)
+								{
+									return seIsScpSubtreeUseName(this, a_Map.c_Old); //【使用这个】
+									//return (this.c_LocRefs.FindIndex((a_Tkn) =>
+									//{ return a_Tkn.c_Attr.ToString() == a_Map.c_Old; }) >= 0);
+								}
+								return false;
+							});
 						if (l_Idx >= 0)
 						{
 							return true;
 						}
 
+						//【不用了】
+						//l_Idx = l_Scp.c_SubScps.FindIndex((a_S) => { return (a_S.c_Name == a_NewName); });
+						//if (l_Idx >= 0)
+						//{
+						//	return true;
+						//}
+
 						l_Scp = l_Scp.c_Prn;	// 向上
+					}
+
+					return false;
+				}
+
+				private static bool seIsScpSubtreeUseName(teScp a_Scp, string a_Old)
+				{
+					if (a_Scp.c_LocRefs.FindIndex((a_Tkn) => { return a_Tkn.c_Attr.ToString() == a_Old; }) >= 0)
+					{
+						return true;
+					}
+
+					for (int s = 0; s < a_Scp.c_SubScps.Count; ++s)
+					{
+						if (seIsScpSubtreeUseName(a_Scp.c_SubScps[s], a_Old))
+						{
+							return true;
+						}
 					}
 
 					return false;
@@ -206,7 +256,7 @@ namespace nWebCprsr.nCprsr
 				/// <summary>
 				/// 接受新名称
 				/// </summary>
-				public bool cAcpNewName(int a_LocDfnIdx, string a_NewName, out bool a_Used)
+				public bool cAcpNewName(int a_LocDfnIdx, string a_NewName, Regex a_PsrvPla, out bool a_Used)
 				{
 					// 先假定未使用传入的新名称
 					a_Used = false;
@@ -217,15 +267,18 @@ namespace nWebCprsr.nCprsr
 						return true;
 					}
 
-					// 如果禁止压缩，或本来就只有一个字符，不用压缩
-					if ((!c_CprsLocFctnName) || (1 == c_LocDfns[a_LocDfnIdx].c_Old.Length))
+					// 旧名是否匹配要保留的正则表达式？未匹配表示允许压缩
+					// 如果匹配，或禁止压缩，或本来就只有一个字符，不用压缩
+					if (a_PsrvPla.Match(c_LocDfns[a_LocDfnIdx].c_Old).Success || 
+						(!c_CprsLocFctnName) || 
+						(1 == c_LocDfns[a_LocDfnIdx].c_Old.Length))
 					{
 						c_LocDfns[a_LocDfnIdx].c_New = c_LocDfns[a_LocDfnIdx].c_Old;	// 新名称 = 旧名称
 						return true;
 					}
 
-					// 名称可访问？
-					if (cIsNameAcsbl(a_NewName))
+					// 名称已使用？是的话不能接受这个，告知调用者换一个新名继续尝试！
+					if (cIsNameUsed(a_NewName))
 					{
 						return false;
 					}
@@ -339,7 +392,7 @@ namespace nWebCprsr.nCprsr
 						if (cOfFctn() && a_Cprsr.c_RunCfg.c_LocFctnName && (null != c_Prn) && (l_Idx_Id >= 0))
 						{
 							// 是否匹配要保留的正则表达式？未匹配表示允许压缩
-							bool l_Mch = a_Cprsr.c_RunCfg.c_Psrv.Match(c_Name).Success;
+							bool l_Mch = a_Cprsr.c_RunCfg.c_PsrvLfn.Match(c_Name).Success;
 
 							// 对于子函数定义，其函数名也是父函数的局部变量，故添加到父函数的局部变量里，
 							// 但是对于子函数表达式，其函数名只在其内可见，父函数不可把它作为局部变量，
@@ -484,7 +537,8 @@ namespace nWebCprsr.nCprsr
 					do
 					{
 						l_NewName = eGnrtSbstName(ref l_SbstNameNum);
-					} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || (!a_Scp.cAcpNewName(d, l_NewName, out l_Used)));
+					} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || 
+						(!a_Scp.cAcpNewName(d, l_NewName, this.e_Cprsr.c_RunCfg.c_PsrvPal, out l_Used)));
 
 					// 若使用了新名称，则更新编号
 					if (l_Used)
@@ -510,13 +564,13 @@ namespace nWebCprsr.nCprsr
 						}
 						else // 生成新名称
 						{
-							//【警告】必须保证该名称尚不可访问
+							//【警告】必须保证该名称尚未使用
 
 							int l_SbstNameNum = a_Scp.c_SbstNameNum;
 							do
 							{
 								l_NewName = eGnrtSbstName(ref l_SbstNameNum);
-							} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || (a_Scp.cIsNameAcsbl(l_NewName)));
+							} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || (a_Scp.cIsNameUsed(l_NewName)));
 
 							// 更新编号
 							a_Scp.c_SbstNameNum = l_SbstNameNum;
@@ -530,7 +584,9 @@ namespace nWebCprsr.nCprsr
 				// 递归
 				for (int s = 0; s < a_Scp.c_SubScps.Count; ++s)
 				{
-					a_Scp.c_SubScps[s].c_SbstNameNum = a_Scp.c_SbstNameNum;
+					//【没有必要继续计数，复位到0即可。
+					a_Scp.c_SubScps[s].c_SbstNameNum = 0;
+				//	a_Scp.c_SubScps[s].c_SbstNameNum = a_Scp.c_SbstNameNum;
 					eBldSbstName(a_TknList, a_Scp.c_SubScps[s]);
 				}
 			}
@@ -601,7 +657,6 @@ namespace nWebCprsr.nCprsr
 				// 递归
 				for (int s = 0; s < a_Scp.c_SubScps.Count; ++s)
 				{
-					a_Scp.c_SubScps[s].c_SbstNameNum = a_Scp.c_SbstNameNum;
 					eSbstLocName(a_TknList, a_Scp.c_SubScps[s]);
 				}
 			}

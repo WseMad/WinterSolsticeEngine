@@ -58,7 +58,7 @@ namespace nWebCprsr.nCprsr
 		public List<tSrcRcd> c_SrcRcdList;	// 来源记录列表
 		public int c_Which;		// 那种？2=.js，3=.css
 
-		public string c_OptDiry;	// 输出目录
+		public string c_PrmrOptDiry;	// 主输出目录
 		public StringBuilder c_TotOptBfr; // 总输出缓冲
 		public StringBuilder c_TotRptBfr; // 总报告缓冲
 
@@ -130,7 +130,15 @@ namespace nWebCprsr.nCprsr
 				{
 					// 生成来源记录，并列举目录所含文件，不空时录入
 					var l_Sr = new tFileSetRcd.tSrcRcd(l_Sl[s]);
-					this.eEnumFiles(l_Sr.c_PathList, l_Sr.c_Src.c_IptDiry, l_Which);
+					if (l_Sr.c_Src.c_IptPathList.Count > 0) // 已经显示指定，不用列举
+					{
+						l_Sr.c_PathList = l_Sr.c_Src.c_IptPathList;
+					}
+					else
+					{
+						this.eEnumFiles(l_Sr.c_PathList, l_Sr.c_Src.c_IptDiry, l_Which);
+					}
+					
 					if (l_Sr.c_PathList.Count > 0)
 					{
 						l_Fsr.c_SrcRcdList.Add(l_Sr);
@@ -138,14 +146,20 @@ namespace nWebCprsr.nCprsr
 				}
 
 				// 如果需要，创建输出目录
-				var l_OptPath = l_Fsr.c_FileSet.c_OptFile;
-				var l_OptDiry = Path.GetDirectoryName(l_OptPath);
-				if (!Directory.Exists(l_OptDiry))
+				for (int o=0; o<l_Fsr.c_FileSet.c_OptPathList.Count; ++o)
 				{
-					Directory.CreateDirectory(l_OptDiry);
-				}
+					var l_OptPath = l_Fsr.c_FileSet.c_OptPathList[o];
+					var l_OptDiry = Path.GetDirectoryName(l_OptPath);
+					if (!Directory.Exists(l_OptDiry))
+					{
+						Directory.CreateDirectory(l_OptDiry);
+					}
 
-				l_Fsr.c_OptDiry = this.eEnsrDiry(ref l_OptDiry);
+					if (0 == o)
+					{
+						l_Fsr.c_PrmrOptDiry = this.eEnsrDiry(ref l_OptDiry);
+					}			
+				}				
 
 				// 加入列表
 				// 注意，无论l_Fsr.c_SrcRcdList是否为空都要加入，因为必须产生输出文件，哪怕是空文件！
@@ -182,40 +196,40 @@ namespace nWebCprsr.nCprsr
 			return a_Path;
 		}
 
-		private void eEnumFiles(List<string> a_FlnmList, string a_Diry, int a_Which)
+		private void eEnumFiles(List<string> a_PathList, string a_Diry, int a_Which)
 		{
 			var l_AllFiles = Directory.EnumerateFiles(a_Diry);
 			var l_Rst = l_AllFiles.ToArray();
 			for (int i = 0; i < l_Rst.Length; ++i)
 			{
-				var l_Flnm = l_Rst[i].ToLower(); // 比较时统一用小写，但录入时恢复原始大小写
+				var l_Path = l_Rst[i].ToLower(); // 比较时统一用小写，但录入时恢复原始大小写
 				if (2 == a_Which)
 				{
-					if ((l_Flnm.Length > 3) &&
-						('.' == l_Flnm[l_Flnm.Length - 3]) &&
-						('j' == l_Flnm[l_Flnm.Length - 2]) &&
-						('s' == l_Flnm[l_Flnm.Length - 1]))
+					if ((l_Path.Length > 3) &&
+						('.' == l_Path[l_Path.Length - 3]) &&
+						('j' == l_Path[l_Path.Length - 2]) &&
+						('s' == l_Path[l_Path.Length - 1]))
 					{
-						l_Flnm = l_Rst[i];
-						l_Rst[i] = (eNmlzPath(ref l_Flnm, false, false));
+						l_Path = l_Rst[i];
+						l_Rst[i] = (eNmlzPath(ref l_Path, false, false));
 					}
 				}
 				else
 				{
-					if ((l_Flnm.Length > 4) &&
-						('.' == l_Flnm[l_Flnm.Length - 4]) &&
-						('c' == l_Flnm[l_Flnm.Length - 3]) &&
-						('s' == l_Flnm[l_Flnm.Length - 2]) &&
-						('s' == l_Flnm[l_Flnm.Length - 1]))
+					if ((l_Path.Length > 4) &&
+						('.' == l_Path[l_Path.Length - 4]) &&
+						('c' == l_Path[l_Path.Length - 3]) &&
+						('s' == l_Path[l_Path.Length - 2]) &&
+						('s' == l_Path[l_Path.Length - 1]))
 					{
-						l_Flnm = l_Rst[i];
-						l_Rst[i] = (eNmlzPath(ref l_Flnm, false, false));
+						l_Path = l_Rst[i];
+						l_Rst[i] = (eNmlzPath(ref l_Path, false, false));
 					}
 				}
 			}
 
 			Array.Sort(l_Rst);
-			a_FlnmList.AddRange(l_Rst);
+			a_PathList.AddRange(l_Rst);
 		}
 
 		private void eAnlzAndCprsAll(List<tFileSetRcd> a_FsrList, int a_Which)
@@ -236,7 +250,7 @@ namespace nWebCprsr.nCprsr
 		private void eAnlzAndCprs_FileSet(List<tFileSetRcd> a_FsrList, int a_Idx, int a_Which)
 		{
 			tFileSetRcd l_Fsr = a_FsrList[a_Idx];
-			Console.WriteLine("正在处理合集：" + l_Fsr.c_FileSet.c_OptFile);
+			Console.WriteLine("正在处理合集：" + l_Fsr.c_FileSet.c_OptPathList[0]);	// 采用主路径
 
 			// 对每一个来源
 			var l_Srl = l_Fsr.c_SrcRcdList;
@@ -297,16 +311,19 @@ namespace nWebCprsr.nCprsr
 
 			if (l_CtanWseDiry)
 			{
-				File.WriteAllText(l_Fsr.c_OptDiry + "(0)Seed.js", l_Srl[0].c_OptBfrList[0].ToString(), Encoding.UTF8);
+				File.WriteAllText(l_Fsr.c_PrmrOptDiry + "(0)Seed.js", l_Srl[0].c_OptBfrList[0].ToString(), Encoding.UTF8);
 			}
 
-			var l_OptPath = l_Fsr.c_FileSet.c_OptFile;
-			File.WriteAllText(l_OptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);	
-
-			if (this.c_RunCfg.c_OptRpt) // 报告
+			for (int o=0; o<l_Fsr.c_FileSet.c_OptPathList.Count; ++o)
 			{
-				var l_RptPath = l_OptPath.Substring(0, l_OptPath.Length - 3) + "_压缩报告.txt";
-				File.WriteAllText(l_RptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+				var l_OptPath = l_Fsr.c_FileSet.c_OptPathList[o];
+				File.WriteAllText(l_OptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+
+				if ((0 == o) && (this.c_RunCfg.c_OptRpt)) // 报告
+				{
+					var l_RptPath = l_OptPath.Substring(0, l_OptPath.Length - 3) + "_压缩报告.txt";
+					File.WriteAllText(l_RptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+				}
 			}
 
 			Console.WriteLine();
