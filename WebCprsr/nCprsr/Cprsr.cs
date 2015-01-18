@@ -41,8 +41,8 @@ namespace nWebCprsr.nCprsr
 				this.c_TotLen = 0;
 				var l_Diry = a_Src.c_IptDiry;
 				this.c_IsWseDiry =
-					((l_Diry.Length - 5 >= 0) && l_Diry.ToLower().IndexOf("nwse/") == l_Diry.Length - 5) ||
-					((l_Diry.Length - 4 >= 0) && l_Diry.ToLower().IndexOf("nwse") == l_Diry.Length - 4);
+					((l_Diry.Length - 6 >= 0) && l_Diry.ToLower().IndexOf("/nwse/") == l_Diry.Length - 6) ||
+					((l_Diry.Length - 5 >= 0) && l_Diry.ToLower().IndexOf("/nwse") == l_Diry.Length - 5);
 
 				this.c_PathList = new List<string>();
 				this.c_DpdcTab = new List<List<string>>();
@@ -277,7 +277,7 @@ namespace nWebCprsr.nCprsr
 				// 如果解析依赖，写入预载入
 				// 注意同一目录下各个文件使用的默认库目录应该是一致的，所以只使用首个文件的，索引为l_Srl[s].c_SortIdx[0]
 				// 但要小心(0)Seed.js文件没有调用stAsynIcld的任何函数（该静态类就是在这个文件里定义的），故使用“nWse”。
-				if (l_Srl[s].c_Src.c_PseDpdc)
+				if ((2 == a_Which) && l_Srl[s].c_Src.c_PseDpdc)
 				{
 					l_Fsr.c_TotOptBfr.Append("(function(){var i_InNodeJs=(\"undefined\"==typeof self);var l_Glb=i_InNodeJs?global:self;");
 					l_Fsr.c_TotOptBfr.Append("l_Glb.nWse.stAsynIcld.cPreLoad(\"" 
@@ -321,8 +321,10 @@ namespace nWebCprsr.nCprsr
 
 				if ((0 == o) && (this.c_RunCfg.c_OptRpt)) // 报告
 				{
-					var l_RptPath = l_OptPath.Substring(0, l_OptPath.Length - 3) + "_压缩报告.txt";
-					File.WriteAllText(l_RptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
+					var l_RptPath = ((2 == a_Which) 
+						? l_OptPath.Substring(0, l_OptPath.Length - 3)
+						: l_OptPath.Substring(0, l_OptPath.Length - 4)) + "_压缩报告.txt";
+					File.WriteAllText(l_RptPath, l_Fsr.c_TotRptBfr.ToString(), Encoding.UTF8);
 				}
 			}
 

@@ -125,13 +125,13 @@ namespace nWebCprsr
 			l_Idx = this.eFindChd(l_Root, "js");
 			if (l_Idx >= 0)
 			{
-				this.eLoadJsCss(l_Root.ChildNodes[l_Idx]);
+				this.eLoadJsCss(this.c_JsList, l_Root.ChildNodes[l_Idx]);
 			}
 
 			l_Idx = this.eFindChd(l_Root, "css");
 			if (l_Idx >= 0)
 			{
-				this.eLoadJsCss(l_Root.ChildNodes[l_Idx]);
+				this.eLoadJsCss(this.c_CssList, l_Root.ChildNodes[l_Idx]);
 			}
 
 			l_Idx = this.eFindChd(l_Root, "输出报告");
@@ -197,7 +197,7 @@ namespace nWebCprsr
 			return -1;
 		}
 
-		private void eLoadJsCss(XmlNode a_Node)
+		private void eLoadJsCss(List<tFileSet> a_List, XmlNode a_Node)
 		{
 			XmlElement l_JsCss = (XmlElement)a_Node;
 			for (int c = 0; c < l_JsCss.ChildNodes.Count; ++c)
@@ -261,7 +261,7 @@ namespace nWebCprsr
 
 				if ((l_FS.c_OptPathList.Count > 0) && (l_FS.c_SrcList.Count > 0))
 				{
-					this.c_JsList.Add(l_FS);
+					a_List.Add(l_FS);
 				}
 			}
 		}
