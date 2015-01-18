@@ -176,7 +176,7 @@ namespace nWebCprsr.nCprsr
 				/// <summary>
 				/// 名称已使用？
 				/// </summary>
-				public bool cIsNameUsed(string a_NewName)
+				public bool cIsNameUsed(int a_LocDfnIdx, string a_NewName)
 				{
 					// 检查是否与源代码定义的局部变量名（旧名）相同
 					var l_Idx = this.c_LocDfns.FindIndex((a_Map) => { return a_Map.c_Old == a_NewName; });
@@ -199,6 +199,7 @@ namespace nWebCprsr.nCprsr
 					// 但S2.AA本应访问S0.AA，却访问到了S1.BB，即替换后：
 					// S0{ var A; S1{ var A; S2{ A; } } } }
 					// 解决办法是，除了遍历当前作用域的局部引用，还要搜索子作用域的，只要有一个名称相同就算已经使用！
+					// 但是，IE8还有一个BUG要解决：具名函数表达式的名字似乎会覆盖掉所在作用域里的同名变量！
 
 					// 沿着作用域链向上回溯，注意到顶级标识符名在调用本函数之前就已被检查过
 					// 对于祖先作用域里的局部变量名，应使用新名（他们已被替换！）进行比对
@@ -208,9 +209,18 @@ namespace nWebCprsr.nCprsr
 						l_Idx = l_Scp.c_LocDfns.FindIndex(
 							(a_Map) =>
 							{
-								// 如果找到一个新名相同的，但是若当前作用域里没有引用该新名对应的旧名，也可以使用该新名
+								// 如果找到一个新名相同的，但是若子树作用域没有引用该新名对应的旧名，也可以使用该新名
 								if (a_Map.c_New == a_NewName)
 								{
+									//【解决IE8的BUG】
+									if ((a_LocDfnIdx >= 0) &&  // 若调用者提供了索引，表示这是为某个局部变量生成替换名
+										(1 == this.c_ScpCtgr) &&  // 如果本作用域是函数表达式作用域
+										(! String.IsNullOrEmpty(this.c_Name) && // 且具名
+										(this.c_LocDfns[a_LocDfnIdx].c_Old == this.c_Name))) // 且正为函数名生成替换名
+									{
+										return true; // 已用
+									}
+
 									return seIsScpSubtreeUseName(this, a_Map.c_Old); //【使用这个】
 									//return (this.c_LocRefs.FindIndex((a_Tkn) =>
 									//{ return a_Tkn.c_Attr.ToString() == a_Map.c_Old; }) >= 0);
@@ -278,7 +288,7 @@ namespace nWebCprsr.nCprsr
 					}
 
 					// 名称已使用？是的话不能接受这个，告知调用者换一个新名继续尝试！
-					if (cIsNameUsed(a_NewName))
+					if (cIsNameUsed(a_LocDfnIdx, a_NewName))
 					{
 						return false;
 					}
@@ -570,7 +580,7 @@ namespace nWebCprsr.nCprsr
 							do
 							{
 								l_NewName = eGnrtSbstName(ref l_SbstNameNum);
-							} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || (a_Scp.cIsNameUsed(l_NewName)));
+							} while ((e_TopIdNames.IndexOf(l_NewName) >= 0) || (a_Scp.cIsNameUsed(-1, l_NewName)));
 
 							// 更新编号
 							a_Scp.c_SbstNameNum = l_SbstNameNum;

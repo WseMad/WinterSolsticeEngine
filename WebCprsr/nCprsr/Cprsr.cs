@@ -274,10 +274,10 @@ namespace nWebCprsr.nCprsr
 					}
 				}
 
-				// 写入预载入
+				// 如果解析依赖，写入预载入
 				// 注意同一目录下各个文件使用的默认库目录应该是一致的，所以只使用首个文件的，索引为l_Srl[s].c_SortIdx[0]
 				// 但要小心(0)Seed.js文件没有调用stAsynIcld的任何函数（该静态类就是在这个文件里定义的），故使用“nWse”。
-				if (true)
+				if (l_Srl[s].c_Src.c_PseDpdc)
 				{
 					l_Fsr.c_TotOptBfr.Append("(function(){var i_InNodeJs=(\"undefined\"==typeof self);var l_Glb=i_InNodeJs?global:self;");
 					l_Fsr.c_TotOptBfr.Append("l_Glb.nWse.stAsynIcld.cPreLoad(\"" 
