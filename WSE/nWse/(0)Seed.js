@@ -426,14 +426,16 @@
 		/// 添加事件处理器 - 文档就绪
 		stPageInit.cAddEvtHdlr_DocRdy = function (a_fCabk)
 		{
-			e_OnDocRdy.push(a_fCabk);
+			// 存在时录入，不存在时立即回调
+			e_OnDocRdy ? e_OnDocRdy.push(a_fCabk) : a_fCabk();
 			return stPageInit;
 		};
 
 		/// 添加事件处理器 - 窗口加载
 		stPageInit.cAddEvtHdlr_WndLoad = function (a_fCabk)
 		{
-			e_OnWndLoad.push(a_fCabk);
+			// 存在时录入，不存在时立即回调
+			e_OnWndLoad ? e_OnWndLoad.push(a_fCabk) : a_fCabk();
 			return stPageInit;
 		};
 	})();

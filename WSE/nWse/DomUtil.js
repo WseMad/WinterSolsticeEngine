@@ -195,16 +195,9 @@ function fOnIcld(a_Errs)
 		/// 返回：Array
 		stDomUtil.cGetElmtsByCssc = function (a_Cssc)
 		{
-			var l_Rst;
-			if (! document.getElementsByClassName)
-			{
-				if (l_Glb.jQuery)
-				{ l_Rst = l_Glb.jQuery("." + a_Cssc); }
-
-				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
-			}
-
-			return stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc));
+			return document.getElementsByClassName
+				? stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc))
+				: stDomUtil.cQryAll("." + a_Cssc);
 		};
 
 //		/// 根据CSS类存取第一个子节点	【无用】
