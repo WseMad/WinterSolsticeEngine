@@ -9,7 +9,6 @@
 	License: none (public domain)
 */
 
-/* 所有元素和标记 */
 *,
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -25,19 +24,13 @@ figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
 	box-sizing: border-box;
-	margin: 0px;
+	margin: 0;
 	border: none;
-	padding: 0px;
+	padding: 0;
 	font: inherit;
 	font-size: 100%;
 	vertical-align: baseline;
 	color: inherit;
-}
-
-/* 统一字体 */
-html, body
-{
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 /* HTML5 display-role reset for older browsers */
