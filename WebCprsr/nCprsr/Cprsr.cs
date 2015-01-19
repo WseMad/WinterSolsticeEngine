@@ -658,26 +658,38 @@ namespace nWebCprsr.nCprsr
 			return (i_ChnChaBgn <= (int)a_Cha) && ((int)a_Cha <= i_ChnChaEnd);
 		}
 
-		private static bool seIsLangSpclCha(char a_Cha) // 是否为语言特殊字符，即“_”“@”“$”
+		private static bool seIsLangSpclCha(char a_Cha, int a_Which) // 是否为语言特殊字符，即“_”“$”“-”“@”
 		{
-			return ('_' == a_Cha) || ('@' == a_Cha) || ('$' == a_Cha);
+			if (('_' == a_Cha))
+			{
+				return true;
+			}
+
+			if (2 == a_Which)
+			{
+				return ('$' == a_Cha);
+			}
+			else
+			{
+				return ('@' == a_Cha) || ('-' == a_Cha);
+			}
 		}
 
-		private static bool seIsIdFstCha(char a_Cha) // 是否为标识符首字符
+		private static bool seIsIdFstCha(char a_Cha, int a_Which) // 是否为标识符首字符
 		{
-			// 下划线、@、$、字母、Unicode
-			return seIsLangSpclCha(a_Cha) || char.IsLetter(a_Cha) || ((int)a_Cha > 255);
+			// 字母、Unicode
+			return seIsLangSpclCha(a_Cha, a_Which) || char.IsLetter(a_Cha) || ((int)a_Cha > 255);
 		}
 
-		private static bool seIsIdCha(char a_Cha) // 是否为标识符字符
+		private static bool seIsIdCha(char a_Cha, int a_Which) // 是否为标识符字符
 		{
-			// 下划线、@、$、字母、数字、Unicode
-			return seIsLangSpclCha(a_Cha) || char.IsLetterOrDigit(a_Cha) || ((int)a_Cha > 255);
+			// 字母、数字、Unicode
+			return seIsLangSpclCha(a_Cha, a_Which) || char.IsLetterOrDigit(a_Cha) || ((int)a_Cha > 255);
 		}
 
-		private static bool seIsNonDivPctuOptCha(char a_Cha) // 是否为非除号标点字符
+		private static bool seIsNonDivPctuOptCha(char a_Cha, int a_Which) // 是否为非除号标点字符
 		{
-			return (! seIsLangSpclCha(a_Cha)) && (char.IsPunctuation(a_Cha) || char.IsSymbol(a_Cha));
+			return (!seIsLangSpclCha(a_Cha, a_Which)) && (char.IsPunctuation(a_Cha) || char.IsSymbol(a_Cha));
 		}
 
 		private static tLex.tTmnl seMapId(string a_Id)	// 映射标识符

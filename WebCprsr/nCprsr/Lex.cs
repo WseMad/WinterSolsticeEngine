@@ -116,7 +116,7 @@ namespace nWebCprsr.nCprsr
 			}
 			else // CSS
 			{
-				int z=0;
+				//int z=0;
 			}
 
 			// 输出
@@ -221,12 +221,12 @@ namespace nWebCprsr.nCprsr
 				eScan_StaMchn_StrLtrl();
 			}
 			else // 标点符号
-			if (seIsNonDivPctuOptCha(e_IptStrm.cGetNextCha()))
+			if (seIsNonDivPctuOptCha(e_IptStrm.cGetNextCha(), this.e_Which))
 			{
 				eScan_StaMchn_NonDivPctu();
 			}
 			else // 关键字，保留字，标识符
-			if (seIsIdFstCha(e_IptStrm.cGetNextCha()))
+			if (seIsIdFstCha(e_IptStrm.cGetNextCha(), this.e_Which))
 			{
 				eScan_StaMchn_Id();
 			}
@@ -256,7 +256,7 @@ namespace nWebCprsr.nCprsr
 				// 提取指令名
 				for (int i = 3; i < l_Line.Length; ++i)
 				{
-					if (!seIsIdCha(l_Line[i]))
+					if (!seIsIdCha(l_Line[i], this.e_Which))
 					{
 						eAddTkn(e_TknList, tTmnl.i_PpcsDctv, l_Line.Substring(3, i - 3));
 						e_HasPpcsDctv = true;	// 有预处理指令
@@ -630,7 +630,7 @@ namespace nWebCprsr.nCprsr
 
 			while (!e_IptStrm.cIsOvfl())
 			{
-				if (seIsIdCha(e_IptStrm.cGetNextCha()))
+				if (seIsIdCha(e_IptStrm.cGetNextCha(), this.e_Which))
 				{
 					l_Bfr.Append(e_IptStrm.cGetNextCha());
 					e_IptStrm.cFch(false);
@@ -1186,18 +1186,39 @@ namespace nWebCprsr.nCprsr
 				{
 					l_NewLineTknIdxAry.Add(i);
 				}
-				else // 对于JS，如果“关键保留字字面值标识符”后面仍是“关键保留字字面值标识符”，跟上一个空格
-				if (
-					((2 == this.e_Which) &&
-					(i + 1 < e_TknList.Count) &&
-					seIsKrwdOrLtrlOrId(e_TknList[i].c_Tmnl) &&
-					seIsKrwdOrLtrlOrId(e_TknList[i + 1].c_Tmnl))
-					||
-					((3 == this.e_Which) && // 对于CSS，如果选择器里的词法单元后跟空白，也跟上一个
-					(0 == l_LBrcCnt) &&
-					e_TknList[i].c_FlwByWhtSpc))
+				else
+				if (2 == this.e_Which) // JS
 				{
-					l_Code += ' ';
+					// 如果“关键保留字字面值标识符”后面仍是“关键保留字字面值标识符”，跟上一个空格
+					if ((i + 1 < e_TknList.Count) &&
+						seIsKrwdOrLtrlOrId(e_TknList[i].c_Tmnl) &&
+						seIsKrwdOrLtrlOrId(e_TknList[i + 1].c_Tmnl))
+					{
+						l_Code += ' ';
+					}
+				}
+				else
+				if (3 == this.e_Which) // CSS
+				{
+					// 当词法单元后跟空白
+					// 如果在选择器里，且当前非“,:>}”，且下一个非“{(>”
+					if (e_TknList[i].c_FlwByWhtSpc)
+					{
+						if (0 == l_LBrcCnt)
+						{
+							if ((tTmnl.i_Cma != e_TknList[i].c_Tmnl) &&
+								(tTmnl.i_Cln != e_TknList[i].c_Tmnl) &&
+								(tTmnl.i_Gt != e_TknList[i].c_Tmnl) &&
+								(tTmnl.i_RBrc != e_TknList[i].c_Tmnl) &&
+								(i + 1 < e_TknList.Count) &&
+								(tTmnl.i_LBrc != e_TknList[i + 1].c_Tmnl) &&
+								(tTmnl.i_LPrth != e_TknList[i + 1].c_Tmnl) &&
+								(tTmnl.i_Gt != e_TknList[i + 1].c_Tmnl))
+							{
+								l_Code += ' ';
+							}
+						}
+					}
 				}
 
 				// 先写入输出流
@@ -1488,9 +1509,17 @@ namespace nWebCprsr.nCprsr
 
 		private void eAddTkn_NewLine(List<tTkn> a_TknList, int a_NewLineCnt = -1)
 		{
+			// 复位换行计数
 			if (a_NewLineCnt < 0)
 			{
 				a_NewLineCnt = e_NewLineCnt;
+			}
+
+			// 对于CSS，换行总是可以替换成空格
+			if (3 == this.e_Which)
+			{
+				eScan_FlwByWhtSpc();
+				return;
 			}
 
 			// 不需要在首行就是换行
