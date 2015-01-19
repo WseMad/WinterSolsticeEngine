@@ -3,125 +3,126 @@
 <html>
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
 	<title>模板页面</title>
 
+	<link rel="stylesheet" type="text/css" href="../cnWse/(0)Rset.css" />
 	<script type="text/javascript" src="../nWse/(0)Seed.js"></script>
 
-    <script type="text/javascript">
+	<script type="text/javascript">
 		nWse.stAsynIcld.cLibDiryMap({
 			"nWse": "../nWse",
 			"cnWse": "../cnWse"
 		});
-	//	nWse.stAsynIcld.cPreLoad("nWse", ["Rls/WSE_All.js"]);
-	//	nWse.stAsynIcld.cPreLoad("nWse", ["(1)ObjOrtd", "(2)LangUtil"]);
-    </script>
+		//	nWse.stAsynIcld.cPreLoad("nWse", ["Rls/WSE_All.js"]);
+		//	nWse.stAsynIcld.cPreLoad("nWse", ["(1)ObjOrtd", "(2)LangUtil"]);
+	</script>
 	<!--<script type="text/javascript" src="../nWse/(1)ObjOrtd.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/(2)LangUtil.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/(3)CoreDtst.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/CssUtil.js"></script>-->
-    <!--<script type="text/javascript" src="../nWse/DomUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/(2)LangUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/(3)CoreDtst.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/CssUtil.js"></script>-->
+	<!--<script type="text/javascript" src="../nWse/DomUtil.js"></script>-->
 
 
 	<style type="text/css">
-		html,body{
-			margin:0;
-			border-width:0;
-			padding:0;
-			height:100%;
-		}
-
-		#k_Test
-		{
-			width:100%;
-			height:100%;
-			background-color: rgb(0, 0, 128);
-		}
-
-		#k_Div2
-		{
-			box-sizing: border-box;
-			margin: 10px;
-			border: 10px solid white;
-			padding: 10px;
-			width: 200px;
-			height: 200px;
-			/*
+		/*
 			注意，cw = 内容宽度 + 内边距；ow = cw + 边框
 			context-box时，cw=220,ch=220; ow=240,oh=240
 			border-box 时，cw=180,ch=180; ow=200,oh=200
 			*/
+
+		html, body {
+			margin: 0;
+			border-width: 0;
+			padding: 0;
+			height: 100%;
+			background-color: rgb(239, 228, 176);
 		}
+
 	</style>
 </head>
 <body>
 
-	<div id="k_Test" style="">
+	<!--<div id="k_Test" style="">
 		你好，世界！
 
 		<div id="k_Div2">
 			我们都好！
 		</div>
-	</div>
+	</div>-->
+
+
 
 	<div id="k_PrstTgt">
-		呈现目标
+		<!--呈现目标-->
+		<div style="height: 200px;"></div>
 	</div>
 
 	<!--<div style="position:relative; width:400px;height: 400px; clip:rect(0px, 400px, 400px, 0px); background-color: rgb(0, 0, 255);">-->
-		<!--<div style="position: absolute;clip:rect(0px, 70px, 50px, 0px); left:350px; top:350px; width:100px;height: 100px; background-color: rgb(255, 255, 0);">-->
-		<!--</div>-->
+	<!--<div style="position: absolute;clip:rect(0px, 70px, 50px, 0px); left:350px; top:350px; width:100px;height: 100px; background-color: rgb(255, 255, 0);">-->
 	<!--</div>-->
-
+	<!--</div>-->
 	<!--<div style="font-size:24px;">-->
-		<!--你好，世界-->
-		<!--<p id="k_Dspl">0:00</p>-->
+	<!--你好，世界-->
+	<!--<p id="k_Dspl">0:00</p>-->
 	<!--</div>-->
 
 	<script type="text/javascript">
 		"use strict";
 
-		window.onload = function ()
-		{
+		window.onload = function () {
 			console.log("window.onload");
 
 			if (nWse.fIsOnlnBrs()) // 在线
 			{
-				nWse.stAsynLoad.cSqnc(
-						[
-							nWse.stAsynIcld.cPsePath("cnWse:(0)Plmvc.css"),
-							"NodeLib.js",
-							"NodeLib2.js"
-						],
-				fOnIcld);
+				nWse.stAsynLoad.cSrilInOdr(
+					[
+						"NodeLib.js",
+						"NodeLib2.js"
+					],
+					fOnIcld);
 			}
 			else // 开发
 			{
 				nWse.stAsynIcld.cFromApp("nWse",
-						[
-							"(1)ObjOrtd.js",
-							"(2)LangUtil.js",
-							"nWse:(3)CoreDast.js",
-							"DomUtil.js",
-							"CssUtil.js"
+					[
+						"(1)ObjOrtd.js",
+						"(2)LangUtil.js",
+						"nWse:(3)CoreDast.js",
+						"DomUtil.js",
+						"CssUtil.js"
+						,"PntIptTrkr.js"
 
-							,"RltmAfx.js"
-						]
-						,
-						fOnIcld);
+					//	,"RltmAfx.js"
+					]
+					,
+					fOnIcld);
 			}
 		};
 
-		function fOnIcld(a_Errs)
-		{
-            console.log("============================= OK：" + a_Errs);
+		function fOnIcld(a_Errs) {
+			console.log("============================= OK：" + a_Errs);
 
 			///////////////////////////////////////////////// 接口
 
+			function fHdlIpt(a_Ipt)
+			{
+				var l_DmntTch = a_Ipt.c_Tchs[0];
+				console.log(l_DmntTch.c_Kind.toString());
+			}
 
+			nApp.g_PIT = new nWse.tPntIptTrkr();
+			nApp.g_PIT.cInit({
+				c_HdlMode: 1
+			});
+			nApp.g_PIT.cSetImdtHdlr(fHdlIpt);
 		}
 
-		
+		//// http://blog.csdn.net/orbit/article/details/9210413 农历计算
+		//// http://blog.csdn.net/cuixiping/article/details/7826138 html5 midi
+
+
 	</script>
 
 </body>

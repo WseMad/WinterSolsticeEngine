@@ -1,0 +1,233 @@
+﻿/*	
+*
+*/
+
+
+/******************************** html ********************************/
+
+/* <a> */
+a, a:link {
+	text-decoration: none;
+}
+
+	a:visited {
+	}
+
+	a:hover {
+	}
+
+	a:active {
+	}
+
+li > a {
+	display: block;
+}
+
+/******************************** 显示控制 ********************************/
+
+.mi_dspl_none {
+	display: none;
+}
+
+.mi_dspl_blk {
+	display: block;
+}
+
+.mi_dspl_inln_blk {
+	display: inline-block;
+
+	/* 兼容IE7 */
+	*zoom: 1;
+	*display: inline;
+}
+
+.mi_vsblt_hdn {
+	visibility: hidden;
+}
+
+.mi_vsblt_vsbl {
+	visibility: visible;
+}
+
+/******************************** 定位 ********************************/
+
+.mi_rel_pstn {
+	position: relative;
+}
+
+.mi_abs_pstn {
+	position: absolute;
+}
+
+.mi_abs_pstn_lt_tp {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+.mi_abs_pstn_lt_bm {
+	position: absolute;
+	left: 0px;
+	bottom: 0px;
+}
+
+.mi_abs_pstn_rt_tp {
+	position: absolute;
+	right: 0px;
+	top: 0px;
+}
+
+.mi_abs_pstn_rt_bm {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+}
+
+.mi_fxd_pstn {
+	position: fixed;
+}
+
+.mi_full_wid {
+	width: 100%;
+}
+
+/******************************** 边距 ********************************/
+
+.mi_mgn_bm_l0 {
+	margin-bottom: 0px;
+}
+
+.mi_mgn_bm_l1 {
+	margin-bottom: 10px;
+}
+
+.mi_mgn_bm_l2 {
+	margin-bottom: 20px;
+}
+
+.mi_mgn_bm_l3 {
+	margin-bottom: 30px;
+}
+
+.mi_pad_l0 {
+	padding: 0px;
+}
+
+.mi_pad_l1 {
+	padding: 10px;
+}
+
+.mi_pad_l2 {
+	padding: 20px;
+}
+
+.mi_pad_l3 {
+	padding: 30px;
+}
+
+/******************************** 背景与遮罩 ********************************/
+
+.mi_bkgd, .mi_bkgd_anmt {
+	width: 100%;
+	height: 100%;
+	background-repeat: no-repeat;
+}
+
+/*透明黑底*/
+.mi_bkgd_clo_aph_black, .mi_mask {
+	background-color: rgb(0, 0, 0);		/* 兼容IE8 */
+	-ms-filter: 'alpha(opacity=70)';	/* 兼容IE8 */
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+.mi_mask {
+	width: 100%;
+	height: 100%;
+}
+
+.mi_bdr_grad_mask {
+	position: absolute;
+	background-color: transparent; /*若不支持渐变则透明*/
+}
+
+	.mi_bdr_grad_mask.mi_lt {
+		width: 1px;
+		height: 100%;
+		left: 0px; /*绝对定位从内边距开始*/
+	}
+
+	.mi_bdr_grad_mask.mi_rt {
+		width: 1px;
+		height: 100%;
+		right: 0px; /*绝对定位从内边距开始*/
+	}
+
+	.mi_bdr_grad_mask.mi_tp {
+		width: 100%;
+		height: 1px;
+		top: 0px; /*绝对定位从内边距开始*/
+	}
+
+	.mi_bdr_grad_mask.mi_bm {
+		width: 100%;
+		height: 1px;
+		bottom: 0px; /*绝对定位从内边距开始*/
+	}
+
+/******************************** 文字 ********************************/
+
+.mi_text_aln_lt {
+	text-align: left;
+}
+
+.mi_text_aln_ct {
+	text-align: center;
+}
+
+.mi_text_aln_rt {
+	text-align: right;
+}
+
+.mi_clo_white {
+	color: white;
+}
+
+/******************************** 板和列 ********************************/
+
+.mi_boa {
+	width: 100%;
+}
+
+.mi_boa .mi_col {
+	float: left;
+}
+
+/******************************** 按钮 ********************************/
+
+.mi_btn {
+	cursor: pointer;
+}
+
+/******************************** 光标 ********************************/
+
+.mi_cur_dft {
+	cursor: default;
+}
+
+.mi_cur_pntr {
+	cursor: pointer;
+}
+
+/******************************** 3D变换 ********************************/
+
+.mi_3d_pspctv {
+	-webkit-perspective: 320px;
+	-moz-perspective: 320px;
+	-ms-perspective: 320px;
+	-o-perspective: 320px;
+	perspective: 320px;
+}
+
+/********************************  ********************************/
+
+/*********************************************************************** Over ***********************************************************************/

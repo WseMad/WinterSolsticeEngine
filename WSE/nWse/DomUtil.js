@@ -176,7 +176,7 @@ function fOnIcld(a_Errs)
 			{ return []; }
 
 			var l_Rst, i, l_Len;
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (nWse.fMaybeNonHtml5Brsr()) // IE8不允许使用数组方法拷贝NodeList
 			{
 				l_Len = a_NodeList.length;
 				l_Rst = new Array(l_Len);
@@ -194,16 +194,9 @@ function fOnIcld(a_Errs)
 		/// 返回：Array
 		stDomUtil.cGetElmtsByCssc = function (a_Cssc)
 		{
-			var l_Rst;
-			if (nWse.fMaybeNonHtml5Brsr())
-			{
-				if (l_Glb.jQuery)
-				{ l_Rst = l_Glb.jQuery("." + a_Cssc); }
-
-				return (l_Rst && (l_Rst.length > 0)) ? l_Rst.get() : [];
-			}
-
-			return stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc));
+			return document.getElementsByClassName
+				? stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc))
+				: stDomUtil.cQryAll("." + a_Cssc);
 		};
 
 //		/// 根据CSS类存取第一个子节点	【无用】
@@ -255,7 +248,7 @@ function fOnIcld(a_Errs)
 				return (l_Rst.length > 0) ? l_Rst[0] : null;
 			}
 
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (! document.querySelector)
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
@@ -277,7 +270,7 @@ function fOnIcld(a_Errs)
 		stDomUtil.cQryAll = function (a_Slc, a_Root, a_PrnOnly)
 		{
 			var l_Rst;
-			if (nWse.fMaybeNonHtml5Brsr())
+			if (! document.querySelectorAll)
 			{
 				if (l_Glb.jQuery)
 				{ l_Rst = l_Glb.jQuery(a_Slc); }
@@ -569,32 +562,31 @@ function fOnIcld(a_Errs)
 			return stDomUtil;
 		};
 
+		/// 获取文本内容
+		stDomUtil.cGetTextCtnt = function (a_Elmt)
+		{
+			return ("textContent" in a_Elmt) ? a_Elmt.textContent : a_Elmt.innerText;
+		};
+
+		/// 设置文本内容
+		stDomUtil.cSetTextCtnt = function (a_Elmt, a_Ctnt)
+		{
+			("textContent" in a_Elmt) ? (a_Elmt.textContent = a_Ctnt) : (a_Elmt.innerText = a_Ctnt);
+			return stDomUtil;
+		};
+
 
 		/// 添加事件处理器
 		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			if (a_Elmt.addEventListener)
-			{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.attachEvent)
-			{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = a_fHdl; }
-
+			unKnl.fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器
 		stDomUtil.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			if (a_Elmt.removeEventListener)
-			{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.detachEvent)
-			{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = null; }
-
+			unKnl.fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 

@@ -22,6 +22,34 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态函数
 
+	/// 添加事件处理器
+	function fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.addEventListener)
+		{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.attachEvent)
+		{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = a_fHdl; }
+
+		return stPageInit;
+	}
+
+	/// 移除事件处理器
+	function fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.removeEventListener)
+		{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.detachEvent)
+		{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = null; }
+
+		return stPageInit;
+	}
+
 	/// 获取名称
 	/// a_fTgt：Function，目标函数
 	/// 返回：String，函数名
@@ -252,14 +280,16 @@
 	nWse.i_InBrsr = ! i_InNodeJs;
 
 	/// 是否在线浏览？
-	/// a_HostName：String，主机名，不区分大小写，默认"localhost"
-	/// a_Port：Number，端口，默认80
+	/// a_HostRgx：RegExp，主机正则表达式，若为null则不参与比较，若有效将与小写形式的location.hostname匹配
+	/// a_Port：Number，端口，80和443总是认为是，默认80
 	/// 返回：Boolean，若两个参数都与location里对应字段相等则返回true
-	nWse.fIsOnlnBrs = function (a_HostName, a_Port)
+	nWse.fIsOnlnBrs = function (a_HostRgx, a_Port)
 	{
-		return nWse.i_InBrsr &&
-			((a_HostName || "localhost").toLowerCase() == l_Glb.location.hostname.toLowerCase()) &&
-			((a_Port || 80) == l_Glb.location.port);
+		if ((! nWse.i_InBrsr) || 
+			(! ((80 == l_Glb.location.port) || (443 == l_Glb.location.port) || ((a_Port || 80) == l_Glb.location.port))))
+		{ return false; }
+
+		return a_HostRgx ? a_HostRgx.test(l_Glb.location.hostname.toLowerCase()) : true;
 	};
 
 	/// Number，异步延迟（秒），用于模拟异步请求时的网络延迟，应仅用于开发时！
@@ -297,6 +327,8 @@
 
 	// 定义内核空间，并装配之
 	unKnl = nWse.fNmspc(nWse, function unKnl() { });
+	unKnl.fAddEvtHdlr = fAddEvtHdlr;
+	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 	unKnl.fGetFctnName = fGetFctnName;
 	unKnl.fGetFctnInfo = fGetFctnInfo;
 	unKnl.fDfnDataPpty = fDfnDataPpty;
@@ -317,8 +349,190 @@
 	/// 可能是非Html5浏览器
 	nWse.fMaybeNonHtml5Brsr = function ()
 	{
-		return (! document.querySelector);	// IE8以前都没有这个函数
+		return (! document.getElementsByClassName);	// IE8以前都没有这个函数
 	};
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 页面初始化
+
+	var stPageInit;
+	(function ()
+	{
+		/// 页面初始化
+		stPageInit = function () { };
+		nWse.stPageInit = stPageInit;
+		stPageInit.oc_nHost = nWse;
+		stPageInit.oc_FullName = nWse.ocBldFullName("stPageInit");
+
+		/// 构建全名
+		stPageInit.ocBldFullName = function (a_Name)
+		{ return stPageInit.oc_FullName + "." + a_Name; };
+
+		//======== 私有字段
+
+		var e_OnDocRdy = [];
+		var e_OnWndLoad = [];
+
+		//======== 私有函数
+
+		function eOnDocRdy()
+		{
+			if ((! e_OnDocRdy))
+			{ return; }
+
+			var i;
+			for (i = 0; i<e_OnDocRdy.length; ++i)
+			{
+				e_OnDocRdy[i]();
+			}
+
+			e_OnDocRdy = null;	// 完成后立即清除
+		}
+
+		function eOnDocRdy_NH5()
+		{
+			if (("interactive" != document.readyState) && ("complete" != document.readyState))
+			{ return; }
+
+			fRmvEvtHdlr(document, "readystatechange", eOnDocRdy_NH5);
+			eOnDocRdy();
+		}
+
+		function eOnWndLoad()
+		{
+			if (e_OnDocRdy) // 如果还没有被清除，现在回调
+			{ eOnDocRdy(); }
+
+			if ((! e_OnWndLoad))
+			{ return; }
+
+			var i;
+			for (i = 0; i<e_OnWndLoad.length; ++i)
+			{
+				e_OnWndLoad[i]();
+			}
+
+			e_OnWndLoad = null;	// 完成后立即清除
+		}
+
+		//======== 公有函数
+
+		// 注册两个事件处理器
+		if (nWse.fMaybeNonHtml5Brsr()) // IE8
+		{ fAddEvtHdlr(document, "readystatechange", eOnDocRdy_NH5); }
+		else // H5
+		{ fAddEvtHdlr(document, "DOMContentLoaded", eOnDocRdy); }
+
+		fAddEvtHdlr(window, "load", eOnWndLoad);
+
+		/// 添加事件处理器 - 文档就绪
+		stPageInit.cAddEvtHdlr_DocRdy = function (a_fCabk)
+		{
+			// 存在时录入，不存在时立即回调
+			e_OnDocRdy ? e_OnDocRdy.push(a_fCabk) : a_fCabk();
+			return stPageInit;
+		};
+
+		/// 添加事件处理器 - 窗口加载
+		stPageInit.cAddEvtHdlr_WndLoad = function (a_fCabk)
+		{
+			// 存在时录入，不存在时立即回调
+			e_OnWndLoad ? e_OnWndLoad.push(a_fCabk) : a_fCabk();
+			return stPageInit;
+		};
+	})();
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 异步导入
+
+	var stAsynImpt;
+	(function ()
+	{
+		/// 异步导入（样式表）
+		stAsynImpt = function () { };
+		nWse.stAsynImpt = stAsynImpt;
+		stAsynImpt.oc_nHost = nWse;
+		stAsynImpt.oc_FullName = nWse.ocBldFullName("stAsynImpt");
+
+		/// 构建全名
+		stAsynImpt.ocBldFullName = function (a_Name)
+		{
+			return stAsynImpt.oc_FullName + "." + a_Name;
+		};
+
+		//======== 私有字段
+
+		//======== 私有函数
+
+		//======== 公有函数
+
+		/// 按序并行，一次发出全部请求，同时保证每个文件按数组顺序加入到文档
+		/// a_Paths：String[]，路径数组，每个路径指向一个CSS文件
+		/// a_fCabk：void f(a_Errs)，回调，a_Errs记录出错的文件路径
+		stAsynImpt.cPrllInOdr = function (a_Paths, a_fCabk)
+		{
+			var l_Len = a_Paths ? a_Paths.length : 0;
+			if (! l_Len) // 没有时立即回调
+			{
+				a_fCabk(null);
+				return stAsynImpt;
+			}
+
+			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
+			var l_Dom_CssJs;
+			var l_Idx = 0, l_Cnt = 0;
+			for (; l_Idx<l_Len; ++l_Idx)
+			{
+				l_Dom_CssJs = l_Glb.document.createElement("link");
+				l_Dom_CssJs.rel="stylesheet";
+				l_Dom_CssJs.type = "text/css";
+				l_Dom_CssJs.onerror = fOnErr;
+				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
+				l_Dom_CssJs.href = l_Dom_CssJs.Wse_Path = a_Paths[l_Idx]; // 记录路径并赋予
+				l_Dom_Head.appendChild(l_Dom_CssJs); // 加入文档
+			}
+
+			function fOnErr()
+			{
+				// 记录错误
+				a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(this.Wse_Path) : (a_fCabk.Wse_Errs = [this.Wse_Path]);
+
+				// 累计一个
+				fAccOne();
+			}
+
+			function fOnLoad()
+			{
+				// IE8
+				if (nWse.fMaybeNonHtml5Brsr())
+				{
+					// 继续等待
+					if (("loaded" != this.readyState) && ("complete" != this.readyState))
+					{ return; }
+				}
+
+				// 累计一个
+				fAccOne();
+			}
+
+			function fAccOne()
+			{
+				// 加一个
+				++ l_Cnt;
+				if (l_Cnt < l_Len) // 还有
+				{
+					// 继续
+				}
+				else // 完成
+				{
+					// 回调
+					a_fCabk(a_fCabk.Wse_Errs || null);
+				}
+			}
+
+			return stAsynImpt;
+		};
+	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 异步加载
@@ -326,7 +540,7 @@
 	var stAsynLoad;
 	(function ()
 	{
-		/// 异步加载
+		/// 异步加载（脚本）
 		stAsynLoad = function () { };
 		nWse.stAsynLoad = stAsynLoad;
 		stAsynLoad.oc_nHost = nWse;
@@ -344,8 +558,10 @@
 
 		//======== 公有函数
 
-		/// 顺序
-		stAsynLoad.cSqnc = function (a_Paths, a_fCabk)
+		/// 按序串行，一个接一个地发出请求，保证每个文件按数组顺序加入到文档
+		/// a_Paths：String[]，路径数组，每个路径指向一个JS文件
+		/// a_fCabk：void f(a_Errs)，回调，a_Errs记录出错的文件路径
+		stAsynLoad.cSrilInOdr = function (a_Paths, a_fCabk)
 		{
 			var l_Len = a_Paths ? a_Paths.length : 0;
 			if (! l_Len) // 没有时立即回调
@@ -354,71 +570,54 @@
 				return stAsynLoad;
 			}
 
-			var i_Rgx = /\.css$/i;	// 用来区分样式表和脚本
 			var l_Dom_Head = l_Glb.document.documentElement.firstChild;	// <head>
-			var l_Paths = Array.prototype.slice.call(a_Paths);
 			var l_Idx = 0;
 			function fLoadOne()
 			{
-				var l_Path = l_Paths[l_Idx];
-				var l_Dom_CssJs, l_HrefSrc;
-				if (i_Rgx.test(l_Path))
-				{
-					l_Dom_CssJs = l_Glb.document.createElement("link");
-					l_Dom_CssJs.rel="stylesheet";
-					l_Dom_CssJs.type = "text/css";
-					l_HrefSrc = "href";
-
-				}
-				else
-				{
-					l_Dom_CssJs = l_Glb.document.createElement("script");
-					l_Dom_CssJs.type = "text/javascript";
-					l_HrefSrc = "src";
-				}
-
+				var l_Dom_CssJs = l_Glb.document.createElement("script");
+				l_Dom_CssJs.type = "text/javascript";
 				l_Dom_CssJs.onerror = fOnErr;
 				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
-				l_Dom_CssJs[l_HrefSrc] = l_Path;
-				l_Dom_Head.appendChild(l_Dom_CssJs);						// 加入文档
+				l_Dom_CssJs.src = l_Dom_CssJs.Wse_Path = a_Paths[l_Idx]; // 记录路径并赋予
+				l_Dom_Head.appendChild(l_Dom_CssJs); // 加入文档
+			}
 
-				function fOnErr()
+			function fOnErr()
+			{
+				// 记录错误
+				a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(this.Wse_Path) : (a_fCabk.Wse_Errs = [this.Wse_Path]);
+
+				// 下一个
+				fNext();
+			}
+
+			function fOnLoad()
+			{
+				// IE8
+				if (nWse.fMaybeNonHtml5Brsr())
 				{
-					// 记录错误
-					a_fCabk.Wse_Errs ? a_fCabk.Wse_Errs.push(l_Path) : (a_fCabk.Wse_Errs = [l_Path]);
-
-					// 下一个
-					fNext();
+					// 继续等待
+					if (("loaded" != this.readyState) && ("complete" != this.readyState))
+					{ return; }
 				}
 
-				function fOnLoad()
-				{
-					// IE8
-					if (nWse.fMaybeNonHtml5Brsr())
-					{
-						// 继续等待
-						if (("loaded" != this.readyState) && ("complete" != this.readyState))
-						{ return; }
-					}
+				// 下一个
+				fNext();
+			}
 
-					// 下一个
-					fNext();
+			function fNext()
+			{
+				// 下一个
+				++ l_Idx;
+				if (l_Idx < l_Len) // 还有
+				{
+					// 继续
+					fLoadOne();
 				}
-
-				function fNext()
+				else // 完成
 				{
-					// 下一个
-					++ l_Idx;
-					if (l_Idx < l_Len) // 还有
-					{
-						// 继续
-						fLoadOne();
-					}
-					else // 完成
-					{
-						// 回调
-						a_fCabk(a_fCabk.Wse_Errs || null);
-					}
+					// 回调
+					a_fCabk(a_fCabk.Wse_Errs || null);
 				}
 			}
 
@@ -458,8 +657,8 @@
 		// 初始化库目录映射
 		function eInitLibDiryMap()
 		{
-			if (i_InNodeJs)
-			{ return; }
+			//if (i_InNodeJs) // 如常处理
+			//{ return; }
 
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
 			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本
@@ -761,6 +960,13 @@
 		/// 来自App
 		stAsynIcld.cFromApp = function (a_DftLibDiry, a_LibPaths, a_fCabk)
 		{
+			a_fCabk = a_fCabk || function (a_Errs) {}; // 回调函数必须存在，若未提供则补充一个空函数
+			if (! a_DftLibDiry) // 无效时立即回调
+			{
+				eCabkTree(a_fCabk, a_fCabk);
+				return stAsynIcld;
+			}
+
 			// 首次调用，创建队列
 			if (! e_FromLibQue)
 			{ e_FromLibQue = []; }
@@ -773,8 +979,14 @@
 		/// 来自库
 		stAsynIcld.cFromLib = function (a_DftLibDiry, a_LibPaths, a_fCabk)
 		{
+			a_fCabk = a_fCabk || function (a_Errs) {}; // 回调函数必须存在，若未提供则补充一个空函数
+			if (! a_DftLibDiry) // 无效时立即回调
+			{
+				eCabkTree(a_fCabk, a_fCabk);
+				return stAsynIcld;
+			}
+
 			var l_DftDiry = eGnrtDftDiry(a_DftLibDiry);
-			a_fCabk = a_fCabk || function (a_Errs) {};
 
 			// 需要异步加载的文件名存入这里
 			var l_AsynAry = [];
@@ -792,6 +1004,9 @@
 		/// 预载入
 		stAsynIcld.cPreLoad = function (a_DftLibDiry, a_LibPaths)
 		{
+			if (! a_DftLibDiry) // 无效时立即返回
+			{ return stAsynIcld; }
+
 			var l_DftDiry = eGnrtDftDiry(a_DftLibDiry);
 
 			var i = 0, l_Len = a_LibPaths ? a_LibPaths.length : 0;
