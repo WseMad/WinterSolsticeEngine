@@ -106,7 +106,17 @@
 
 			///////////////////////////////////////////////// 接口
 
+			function fHdlIpt(a_Ipt)
+			{
+				var l_DmntTch = a_Ipt.c_Tchs[0];
+				console.log(l_DmntTch.c_Kind.toString());
+			}
 
+			nApp.g_PIT = new nWse.tPntIptTrkr();
+			nApp.g_PIT.cInit({
+				c_HdlMode: 1
+			});
+			nApp.g_PIT.cSetImdtHdlr(fHdlIpt);
 		}
 
 		//// http://blog.csdn.net/orbit/article/details/9210413 农历计算

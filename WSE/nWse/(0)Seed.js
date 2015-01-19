@@ -22,6 +22,34 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态函数
 
+	/// 添加事件处理器
+	function fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.addEventListener)
+		{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.attachEvent)
+		{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = a_fHdl; }
+
+		return stPageInit;
+	}
+
+	/// 移除事件处理器
+	function fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl)
+	{
+		if (a_Elmt.removeEventListener)
+		{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
+		else
+		if (a_Elmt.detachEvent)
+		{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
+		else
+		{ a_Elmt["on" + a_EvtName] = null; }
+
+		return stPageInit;
+	}
+
 	/// 获取名称
 	/// a_fTgt：Function，目标函数
 	/// 返回：String，函数名
@@ -299,6 +327,8 @@
 
 	// 定义内核空间，并装配之
 	unKnl = nWse.fNmspc(nWse, function unKnl() { });
+	unKnl.fAddEvtHdlr = fAddEvtHdlr;
+	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 	unKnl.fGetFctnName = fGetFctnName;
 	unKnl.fGetFctnInfo = fGetFctnInfo;
 	unKnl.fDfnDataPpty = fDfnDataPpty;
@@ -364,7 +394,7 @@
 			if (("interactive" != document.readyState) && ("complete" != document.readyState))
 			{ return; }
 
-			stPageInit.cRmvEvtHdlr(document, "readystatechange", eOnDocRdy_NH5);
+			fRmvEvtHdlr(document, "readystatechange", eOnDocRdy_NH5);
 			eOnDocRdy();
 		}
 
@@ -387,41 +417,13 @@
 
 		//======== 公有函数
 
-		/// 添加事件处理器
-		stPageInit.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
-		{
-			if (a_Elmt.addEventListener)
-			{ a_Elmt.addEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.attachEvent)
-			{ a_Elmt.attachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = a_fHdl; }
-
-			return stPageInit;
-		};
-
-		/// 移除事件处理器
-		stPageInit.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
-		{
-			if (a_Elmt.removeEventListener)
-			{ a_Elmt.removeEventListener(a_EvtName, a_fHdl, false); }
-			else
-			if (a_Elmt.detachEvent)
-			{ a_Elmt.detachEvent("on" + a_EvtName, a_fHdl); }
-			else
-			{ a_Elmt["on" + a_EvtName] = null; }
-
-			return stPageInit;
-		};
-
 		// 注册两个事件处理器
 		if (nWse.fMaybeNonHtml5Brsr()) // IE8
-		{ stPageInit.cAddEvtHdlr(document, "readystatechange", eOnDocRdy_NH5); }
+		{ fAddEvtHdlr(document, "readystatechange", eOnDocRdy_NH5); }
 		else // H5
-		{ stPageInit.cAddEvtHdlr(document, "DOMContentLoaded", eOnDocRdy); }
+		{ fAddEvtHdlr(document, "DOMContentLoaded", eOnDocRdy); }
 
-		stPageInit.cAddEvtHdlr(window, "load", eOnWndLoad);
+		fAddEvtHdlr(window, "load", eOnWndLoad);
 
 		/// 添加事件处理器 - 文档就绪
 		stPageInit.cAddEvtHdlr_DocRdy = function (a_fCabk)

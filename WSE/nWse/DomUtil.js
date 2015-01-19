@@ -33,7 +33,6 @@ function fOnIcld(a_Errs)
 
 	var nWse = l_Glb.nWse;
 	var unKnl = nWse.unKnl;
-	var stPageInit = nWse.stPageInit;
 	var stAryUtil = nWse.stAryUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -580,14 +579,14 @@ function fOnIcld(a_Errs)
 		/// 添加事件处理器
 		stDomUtil.cAddEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			stPageInit.cAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			unKnl.fAddEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 
 		/// 移除事件处理器
 		stDomUtil.cRmvEvtHdlr = function (a_Elmt, a_EvtName, a_fHdl)
 		{
-			stPageInit.cRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
+			unKnl.fRmvEvtHdlr(a_Elmt, a_EvtName, a_fHdl);
 			return stDomUtil;
 		};
 

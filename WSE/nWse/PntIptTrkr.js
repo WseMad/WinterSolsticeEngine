@@ -42,6 +42,9 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
 
+	// 事件绑定到？
+	var s_EvtBndTo = nWse.fMaybeNonHtml5Brsr() ? document : window;
+
 	// 鼠标键盘触点ID
 	var i_TchId_Kbd = "K", i_TchId_Mos = "M";
 
@@ -54,6 +57,31 @@ function fOnIcld(a_Errs)
 	function fIsKindOfMosMoveSrs(a_Kind)
 	{
 		return (a_Kind.valueOf() < tPntIptKind.i_MosMove.valueOf());
+	}
+
+	function fGetMosBtn(a_Evt) // 取得鼠标按钮，兼容IE8
+	{
+		if (! nWse.fMaybeNonHtml5Brsr()) // H5
+	//	if (document.implementation.hasFeature("MouseEvents", "2.0"))
+		{
+			return a_Evt.button;
+		}
+		else // IE8
+		{
+			switch(a_Evt.button){
+				case 0:
+				case 1:
+				case 3:
+				case 5:
+				case 7:
+					return 0;
+				case 2:
+				case 6:
+					return 2;
+				case 4:
+					return 1;
+			}
+		}
 	}
 
 	function eRegPageEvtHdlr(a_This)
@@ -99,7 +127,7 @@ function fOnIcld(a_Errs)
 		{
 			a_Evt = a_Evt || window.event;
 
-			if (0 != a_Evt.button)	// 只响应主键，其他按键以默认方式处理（不返回false）
+			if (0 != fGetMosBtn(a_Evt))	// 只响应主键，其他按键以默认方式处理（不返回false）
 			{ return; }
 
 			var l_This = a_This;
@@ -117,7 +145,7 @@ function fOnIcld(a_Errs)
 		{
 			a_Evt = a_Evt || window.event;
 
-			if (0 != a_Evt.button)	// 只响应主键，其他按键以默认方式处理（不返回false）
+			if (0 != fGetMosBtn(a_Evt))	// 只响应主键，其他按键以默认方式处理（不返回false）
 			{ return; }
 
 			var l_This = a_This;
@@ -132,9 +160,9 @@ function fOnIcld(a_Errs)
 			return ePushMosIpt(l_This, tPntIptKind.i_TchEnd, a_Evt);
 		};
 
-		stDomUtil.cAddEvtHdlr(window, "mousemove", a_This.e_fOnMosMove, false);
-		stDomUtil.cAddEvtHdlr(window, "mousedown", a_This.e_fOnMosBtnDown, false);
-		stDomUtil.cAddEvtHdlr(window, "mouseup", a_This.e_fOnMosBtnUp, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "mousemove", a_This.e_fOnMosMove, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "mousedown", a_This.e_fOnMosBtnDown, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "mouseup", a_This.e_fOnMosBtnUp, false);
 
 		var l_fOnMosEnt, l_fOnMosLea;
 		if (a_This.e_HdlMosEntLea) // 如果还需要处理mouseover（Ent)和mouseout（Lea）
@@ -151,8 +179,8 @@ function fOnIcld(a_Errs)
 				return ePushMosIpt(l_This, tPntIptKind.i_MosLea, a_Evt);
 			};
 
-			stDomUtil.cAddEvtHdlr(window, "mouseover", a_This.e_fOnMosEnt, false);
-			stDomUtil.cAddEvtHdlr(window, "mouseout", a_This.e_fOnMosLea, false);
+			stDomUtil.cAddEvtHdlr(s_EvtBndTo, "mouseover", a_This.e_fOnMosEnt, false);
+			stDomUtil.cAddEvtHdlr(s_EvtBndTo, "mouseout", a_This.e_fOnMosLea, false);
 		}
 
 
@@ -188,9 +216,9 @@ function fOnIcld(a_Errs)
 			return ePushTchIpt(l_This, tPntIptKind.i_TchEnd, a_Evt);
 		};
 
-		stDomUtil.cAddEvtHdlr(window, "touchmove", a_This.e_fOnTchMove, false);
-		stDomUtil.cAddEvtHdlr(window, "touchstart", a_This.e_fOnTchDown, false);
-		stDomUtil.cAddEvtHdlr(window, "touchend", a_This.e_fOnTchUp, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "touchmove", a_This.e_fOnTchMove, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "touchstart", a_This.e_fOnTchDown, false);
+		stDomUtil.cAddEvtHdlr(s_EvtBndTo, "touchend", a_This.e_fOnTchUp, false);
 	}
 
 	function eUrgPageEvtHdlr(a_This)
@@ -198,16 +226,22 @@ function fOnIcld(a_Errs)
 		if (! a_This.e_fOnMosMove)
 		{ return; }
 
-		stDomUtil.cRmvEvtHdlr(window, "mousemove", a_This.e_fOnMosMove, false);
-		stDomUtil.cRmvEvtHdlr(window, "mousedown", a_This.e_fOnMosBtnDown, false);
-		stDomUtil.cRmvEvtHdlr(window, "mouseup", a_This.e_fOnMosBtnUp, false);
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "mousemove", a_This.e_fOnMosMove, false);
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "mousedown", a_This.e_fOnMosBtnDown, false);
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "mouseup", a_This.e_fOnMosBtnUp, false);
 		a_This.e_fOnMosMove = null;
 		a_This.e_fOnMosBtnDown = null;
 		a_This.e_fOnMosBtnUp = null;
 
-		stDomUtil.cRmvEvtHdlr(window, "touchmove", a_This.e_fOnTchMove, false);
-		stDomUtil.cRmvEvtHdlr(window, "touchstart", a_This.e_fOnTchDown, false);
-		stDomUtil.cRmvEvtHdlr(window, "touchend", a_This.e_fOnTchUp, false);
+		if (a_This.e_HdlMosEntLea)
+		{
+			stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "mouseover", a_This.e_fOnMosEnt, false);
+			stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "mouseout", a_This.e_fOnMosLea, false);
+		}
+
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "touchmove", a_This.e_fOnTchMove, false);
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "touchstart", a_This.e_fOnTchDown, false);
+		stDomUtil.cRmvEvtHdlr(s_EvtBndTo, "touchend", a_This.e_fOnTchUp, false);
 		a_This.e_fOnTchMove = null;
 		a_This.e_fOnTchDown = null;
 		a_This.e_fOnTchUp = null;
@@ -602,7 +636,7 @@ function fOnIcld(a_Errs)
 
 	(function ()
 	{
-		tPntIpt = nWse.fClass(tPntIptTrkr,
+		tPntIpt = nWse.fClass(nWse.tPntIptTrkr,
 		/// 点输入
 		/// —— 字段 ——
 		/// c_FrmNum：Number，帧编号，从1开始
@@ -755,7 +789,7 @@ function fOnIcld(a_Errs)
 			}
 		});
 
-	tPntIptKind = nWse.fEnum(tPntIpt,
+	tPntIptKind = nWse.fEnum(nWse.tPntIptTrkr.tPntIpt,
 		/// 种类
 		function tKind() {}, null,
 		{
@@ -784,7 +818,7 @@ function fOnIcld(a_Errs)
 			i_MosLea : 14
 		});
 
-		tTch = nWse.fClass(tPntIpt,
+		tTch = nWse.fClass(nWse.tPntIptTrkr.tPntIpt,
 		/// 触点
 		/// —— 字段 ——
 		/// c_TchId：String，触点ID
@@ -880,6 +914,10 @@ function fOnIcld(a_Errs)
 			sc_DvtThrhd : 4
 		});
 	})();
+
+	tPntIptTrkr = nWse.tPntIptTrkr; //【IE8】
+	tPntIpt = tPntIptTrkr.tPntIpt;	//【IE8】
+	tTch = tPntIpt.tTch; //【IE8】
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Over
