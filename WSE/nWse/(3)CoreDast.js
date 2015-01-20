@@ -520,8 +520,8 @@ function fOnIcld(a_Errs)
 					var l_Bcr = a_DomElmt.getBoundingClientRect();
 					a_Tgt.c_X = l_Bcr.left;
 					a_Tgt.c_Y = l_Bcr.top;
-					a_Tgt.c_W = l_Bcr.width;
-					a_Tgt.c_H = l_Bcr.height;
+					a_Tgt.c_W = l_Bcr.right - l_Bcr.left; // IE8没有width和height
+					a_Tgt.c_H = l_Bcr.bottom - l_Bcr.top;
 					return a_Tgt;
 				}
 				,
