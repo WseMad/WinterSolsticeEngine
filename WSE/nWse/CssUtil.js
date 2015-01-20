@@ -338,8 +338,7 @@ function fOnIcld(a_Errs)
 
 						if (eIsWse_Css_TypeIdx(l_Item.c_TypeIdx))	// 冬至引擎扩展CSS
 						{
-							eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur,
-								l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
 						}
 						else
 						if (6 == l_Item.c_TypeIdx)	// 颜色
@@ -405,14 +404,10 @@ function fOnIcld(a_Errs)
 		{
 			// 变换
 			if (e_Wse_CssExtd.i_2dTsfm == a_Item.c_TypeIdx)
-			{
-				eAnmtWse_CssExtd_2dTsfm.apply(null, arguments);
-			}
+			{ eAnmtWse_CssExtd_2dTsfm.apply(null, arguments); }
 			else
 			if (e_Wse_CssExtd.i_3dTsfm == a_Item.c_TypeIdx)
-			{
-				eAnmtWse_CssExtd_3dTsfm.apply(null, arguments);
-			}
+			{ eAnmtWse_CssExtd_3dTsfm.apply(null, arguments); }
 		}
 
 	//	function eAnmtWse_CssExtd_
@@ -457,9 +452,7 @@ function fOnIcld(a_Errs)
 					else
 					{ eLnrItp_Dim(l_CUT.c_Scl, l_Bgn, l_End, l_EsnScl, 2); }
 
-					if (l_CssStr)
-					{ l_CssStr += " "; }
-					l_CssStr += "scale(" + l_CUT.c_Scl.x + "," + l_CUT.c_Scl.y + ")";
+					l_CssStr = eBldTsfmCssStr(l_CssStr, "scale", l_CUT.c_Scl, "", 2);
 				}
 				else
 				if (e_Wse_CssExtd["skew"] == l_Tsfm.c_TypeIdx)
@@ -469,9 +462,7 @@ function fOnIcld(a_Errs)
 					else
 					{ eLnrItp_Dim(l_CUT.c_Skew, l_Bgn, l_End, l_EsnScl, 2); }
 
-					if (l_CssStr)
-					{ l_CssStr += " "; }
-					l_CssStr += "skew(" + l_CUT.c_Skew.x + "rad," + l_CUT.c_Skew.y + "rad)";
+					l_CssStr = eBldTsfmCssStr(l_CssStr, "skew", l_CUT.c_Skew, "rad", 2);
 				}
 				else
 				if (e_Wse_CssExtd["rotate"] == l_Tsfm.c_TypeIdx)
@@ -482,10 +473,7 @@ function fOnIcld(a_Errs)
 					{ l_CUT.c_Rot.w = stNumUtil.cLnrItp(l_Bgn.w, l_End.w, l_EsnScl); }
 
 					l_CUT.c_Rot.w = stNumUtil.cNmlzRad(l_CUT.c_Rot.w, false);	// 标准化
-
-					if (l_CssStr)
-					{ l_CssStr += " "; }
-					l_CssStr += "rotate(" + l_CUT.c_Rot.w + "rad)";
+					l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate", l_CUT.c_Rot.w, "rad", 1);
 				}
 				else
 			//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
@@ -495,9 +483,7 @@ function fOnIcld(a_Errs)
 					else
 					{ eLnrItp_Dim(l_CUT.c_Tslt, l_Bgn, l_End, l_EsnScl, 2); }
 
-					if (l_CssStr)
-					{ l_CssStr += " "; }
-					l_CssStr += "translate(" + l_CUT.c_Tslt.x + "px," + l_CUT.c_Tslt.y + "px)";
+					l_CssStr = eBldTsfmCssStr(l_CssStr, "translate", l_CUT.c_Tslt, "px", 2);
 				}
 			});
 
@@ -536,9 +522,7 @@ function fOnIcld(a_Errs)
 						else
 						{ l_CUT.c_Pspc.d = stNumUtil.cLnrItp(l_Bgn.d, l_End.d, l_EsnScl); }
 
-						if (l_CssStr)
-						{ l_CssStr += " "; }
-						l_CssStr += "perspective(" + l_CUT.c_Pspc.d + "px)";
+						l_CssStr = eBldTsfmCssStr(l_CssStr, "perspective", l_CUT.c_Pspc.d, "px", 1);
 					}
 					else
 					if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
@@ -548,9 +532,7 @@ function fOnIcld(a_Errs)
 						else
 						{ eLnrItp_Dim(l_CUT.c_Scl, l_Bgn, l_End, l_EsnScl, 3); }
 
-						if (l_CssStr)
-						{ l_CssStr += " "; }
-						l_CssStr += "scale3d(" + l_CUT.c_Scl.x + "," + l_CUT.c_Scl.y + "," + l_CUT.c_Scl.z + ")";
+						l_CssStr = eBldTsfmCssStr(l_CssStr, "scale3d", l_CUT.c_Scl, "", 3);
 					}
 					else
 					if (e_Wse_CssExtd["rotate3d"] == l_Tsfm.c_TypeIdx)
@@ -560,13 +542,9 @@ function fOnIcld(a_Errs)
 						else // 球面线性插值
 						{ stNumUtil.cQtnSlerp(l_CUT.c_Rot, l_Bgn, l_End, l_EsnScl); }
 
-						stNumUtil.cAxisRadFromQtn(e_AxisRad, l_CUT.c_Rot);	// 取得轴弧度
-						if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
-						{
-							if (l_CssStr)
-							{ l_CssStr += " "; }
-							l_CssStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
-						}
+						stNumUtil.cAxisRadFromQtn(e_AxisRad, l_CUT.c_Rot);	// 取得轴弧度，不是四元数但无妨
+						if (eNzQtn(e_AxisRad))
+						{ l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate3d", e_AxisRad, null, 4); }
 					}
 					else
 				//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
@@ -576,9 +554,7 @@ function fOnIcld(a_Errs)
 						else
 						{ eLnrItp_Dim(l_CUT.c_Tslt, l_Bgn, l_End, l_EsnScl, 3); }
 
-						if (l_CssStr)
-						{ l_CssStr += " "; }
-						l_CssStr += "translate3d(" + l_CUT.c_Tslt.x + "px," + l_CUT.c_Tslt.y + "px," + l_CUT.c_Tslt.z + "px)";
+						l_CssStr = eBldTsfmCssStr(l_CssStr, "translate3d", l_CUT.c_Tslt, "px", 3);
 					}
 				});
 
@@ -606,20 +582,20 @@ function fOnIcld(a_Errs)
 			if (2 == a_Dim)
 			{
 				a_DomElmt.Wse_CssUtil.c_2dTsfm = {
-					c_Scl : { x:1, y:1 },
-					c_Skew : { x:0, y:0 },
-					c_Rot : { w:0 },
-					c_Tslt : { x:0, y:0 }
+					c_Scl : { x:1, y:1, c_FrmTime:0 },
+					c_Skew : { x:0, y:0, c_FrmTime:0 },
+					c_Rot : { w:0, c_FrmTime:0 },
+					c_Tslt : { x:0, y:0, c_FrmTime:0 }
 				};
 			}
 			else
 			if (3 == a_Dim)
 			{
 				a_DomElmt.Wse_CssUtil.c_3dTsfm = {
-					c_Pspc : { d: null },
-					c_Scl : { x:1, y:1, z:1 },
-					c_Rot : { x:0, y:0, z:0, w:1 },	// 四元数
-					c_Tslt : { x:0, y:0, z:0 }
+					c_Pspc : { d: null, c_FrmTime:0 },
+					c_Scl : { x:1, y:1, z:1, c_FrmTime:0 },
+					c_Rot : { x:0, y:0, z:0, w:1, c_FrmTime:0 },	// 四元数
+					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 }
 				};
 			}
 		}
@@ -1392,6 +1368,31 @@ function fOnIcld(a_Errs)
 			return (a_Tsfm.c_End && (! nWse.fIsUdfnOrNull(a_Tsfm.c_End[a_CC]))) ? a_Tsfm.c_End[a_CC] : a_Dft;
 		}
 
+		function eNzQtn(a_Qtn)
+		{
+			return ((0 != a_Qtn.x) || (0 != a_Qtn.y) || (0 != a_Qtn.z) || (0 != a_Qtn.w));
+		}
+
+		function eBldTsfmCssStr(a_Str, a_TsfmName, a_Val, a_Unit, a_Dim)
+		{
+			if (a_Str)
+			{ a_Str += " "; }
+			a_Str += a_TsfmName;
+			a_Str += "(";
+			if (1 == a_Dim)
+			{ a_Str += a_Val + a_Unit; }
+			else
+			if (2 == a_Dim)
+			{ a_Str += a_Val.x + a_Unit + "," + a_Val.y + a_Unit; }
+			else
+			if (3 == a_Dim)
+			{ a_Str += a_Val.x + a_Unit + "," + a_Val.y + a_Unit + "," + a_Val.z + a_Unit; }
+			else // 只可能是旋转
+			{ a_Str += a_Val.x + "," + a_Val.y + "," + a_Val.z + "," + a_Val.w + "rad"; }
+			a_Str += ")";
+			return a_Str;
+		}
+
 		function eExtdAnmt(a_DomElmt, a_PN, a_PV)
 		{
 			if (! e_Wse_CssExtd)	// 如果需要，初始化
@@ -1437,53 +1438,37 @@ function fOnIcld(a_Errs)
 					if (e_Wse_CssExtd["scale"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Scl.x, y: l_DomTsfm.c_Scl.y };
-						if (l_Item.c_BgnStr)
-						{ l_Item.c_BgnStr += " "; }
-						l_Item.c_BgnStr += "scale(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + ")";
+						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "scale", l_Tsfm.c_Bgn, "", 2);
 
 						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 1), y: eCalcExtdEndPV(a_Tsfm, "y", 1) };
-						if (l_Item.c_EndStr)
-						{ l_Item.c_EndStr += " "; }
-						l_Item.c_EndStr += "scale(" + l_Tsfm.c_End.x + "," + l_Tsfm.c_End.y + ")";
+						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "scale", l_Tsfm.c_End, "", 2);
 					}
 					else
 					if (e_Wse_CssExtd["skew"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Skew.x, y: l_DomTsfm.c_Skew.y };
-						if (l_Item.c_BgnStr)
-						{ l_Item.c_BgnStr += " "; }
-						l_Item.c_BgnStr += "skew(" + l_Tsfm.c_Bgn.x + "rad," + l_Tsfm.c_Bgn.y + "rad)";
+						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "skew", l_Tsfm.c_Bgn, "rad", 2);
 
 						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
-						if (l_Item.c_EndStr)
-						{ l_Item.c_EndStr += " "; }
-						l_Item.c_EndStr += "skew(" + l_Tsfm.c_End.x + "rad," + l_Tsfm.c_End.y + "rad)";
+						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "skew", l_Tsfm.c_End, "rad", 2);
 					}
 					else
 					if (e_Wse_CssExtd["rotate"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = { w: l_DomTsfm.c_Rot.w };
-						if (l_Item.c_BgnStr)
-						{ l_Item.c_BgnStr += " "; }
-						l_Item.c_BgnStr += "rotate(" + l_Tsfm.c_Bgn.w + "rad)";
+						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "rotate", l_Tsfm.c_Bgn.w, "rad", 1);
 
 						l_Tsfm.c_End = { w: eCalcExtdEndPV(a_Tsfm, "w", 0) };
-						if (l_Item.c_EndStr)
-						{ l_Item.c_EndStr += " "; }
-						l_Item.c_EndStr += "rotate(" + l_Tsfm.c_End.w + "rad)";
+						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "rotate", l_Tsfm.c_End.w, "rad", 1);
 					}
 					else
 				//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
 					{
 						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Tslt.x, y: l_DomTsfm.c_Tslt.y };
-						if (l_Item.c_BgnStr)
-						{ l_Item.c_BgnStr += " "; }
-						l_Item.c_BgnStr += "translate(" + l_Tsfm.c_Bgn.x + "px," + l_Tsfm.c_Bgn.y + "px)";
+						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "translate", l_Tsfm.c_Bgn, "px", 2);
 
 						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
-						if (l_Item.c_EndStr)
-						{ l_Item.c_EndStr += " "; }
-						l_Item.c_EndStr += "translate(" + l_Tsfm.c_End.x + "px," + l_Tsfm.c_End.y + "px)";
+						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "translate", l_Tsfm.c_End, "px", 2);
 					}
 
 					l_Item.c_Sqnc.push(l_Tsfm);
@@ -1524,61 +1509,41 @@ function fOnIcld(a_Errs)
 						if (e_Wse_CssExtd["perspective"] == l_Tsfm.c_TypeIdx)
 						{
 							l_Tsfm.c_Bgn = { d: l_DomTsfm.c_Pspc.d };
-							if (l_Item.c_BgnStr)
-							{ l_Item.c_BgnStr += " "; }
-							l_Item.c_BgnStr += "perspective(" + l_Tsfm.c_Bgn.d + "px)";
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "perspective", l_Tsfm.c_Bgn.d, "px", 1);
 
 							l_Tsfm.c_End = { d: eCalcExtdEndPV(a_Tsfm, "d", 0) };
-							if (l_Item.c_EndStr)
-							{ l_Item.c_EndStr += " "; }
-							l_Item.c_EndStr += "perspective(" + l_Tsfm.c_End.d + "px)";
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "perspective", l_Tsfm.c_End.d, "px", 1);
 						}
 						else
 						if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
 						{
 							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Scl.x, y: l_DomTsfm.c_Scl.y, z:l_DomTsfm.c_Scl.z };
-							if (l_Item.c_BgnStr)
-							{ l_Item.c_BgnStr += " "; }
-							l_Item.c_BgnStr += "scale3d(" + l_Tsfm.c_Bgn.x + "," + l_Tsfm.c_Bgn.y + "," + l_Tsfm.c_Bgn.z + ")";
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "scale3d", l_Tsfm.c_Bgn, "", 3);
 
 							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 1), y: eCalcExtdEndPV(a_Tsfm, "y", 1), z: eCalcExtdEndPV(a_Tsfm, "z", 1) };
-							if (l_Item.c_EndStr)
-							{ l_Item.c_EndStr += " "; }
-							l_Item.c_EndStr += "scale3d(" + l_Tsfm.c_End.x + "," + l_Tsfm.c_End.y + "," + l_Tsfm.c_End.z + ")";
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "scale3d", l_Tsfm.c_End, "", 3);
 						}
 						else
 						if (e_Wse_CssExtd["rotate3d"] == l_Tsfm.c_TypeIdx)
 						{
 							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Rot.x, y: l_DomTsfm.c_Rot.y, z: l_DomTsfm.c_Rot.z, w: l_DomTsfm.c_Rot.w };	// 四元数
-							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Bgn);	// 取得轴弧度
-							if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
-							{
-								if (l_Item.c_BgnStr)
-								{ l_Item.c_BgnStr += " "; }
-								l_Item.c_BgnStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
-							}
+							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Bgn);	// 取得轴弧度，不是四元数但无妨
+							if (eNzQtn(e_AxisRad))
+							{ l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "rotate3d", e_AxisRad, null, 4); }
 
 							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0), z: eCalcExtdEndPV(a_Tsfm, "z", 0), w: eCalcExtdEndPV(a_Tsfm, "w", 1) };	// 四元数
-							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_End);	// 取得轴弧度
-							if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w))
-							{
-								if (l_Item.c_EndStr)
-								{ l_Item.c_EndStr += " "; }
-								l_Item.c_EndStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
-							}
+							stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_End);	// 取得轴弧度，不是四元数但无妨
+							if (eNzQtn(e_AxisRad))
+							{ l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "rotate3d", e_AxisRad, null, 4); }
 						}
 						else
-						//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
+					//	if (e_Wse_CssExtd["translate3d"] == l_Tsfm.c_TypeIdx)
 						{
 							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Tslt.x, y: l_DomTsfm.c_Tslt.y, z:l_DomTsfm.c_Tslt.z };
-							if (l_Item.c_BgnStr)
-							{ l_Item.c_BgnStr += " "; }
-							l_Item.c_BgnStr += "translate3d(" + l_Tsfm.c_Bgn.x + "px," + l_Tsfm.c_Bgn.y + "px," + l_Tsfm.c_Bgn.z + "px)";
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "translate3d", l_Tsfm.c_Bgn, "px", 3);
 
 							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0), z: eCalcExtdEndPV(a_Tsfm, "z", 0) };
-							if (l_Item.c_EndStr)
-							{ l_Item.c_EndStr += " "; }
-							l_Item.c_EndStr += "translate3d(" + l_Tsfm.c_End.x + "px," + l_Tsfm.c_End.y + "px," + l_Tsfm.c_End.z + "px)";
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "translate3d", l_Tsfm.c_End, "px", 3);
 						}
 
 						l_Item.c_Sqnc.push(l_Tsfm);
@@ -1739,18 +1704,22 @@ function fOnIcld(a_Errs)
 		/// 	c_Scl:
 		///		{
 		///		x，y：Number
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Skew:
 		///		{
 		///		x，y：Number
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Rot:
 		///		{
 		///		w：Number，绕Z轴旋转的弧度
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Tslt:
 		///		{
 		///		x，y：Number
+		/// 	c_FrmTime：Number
 		///		}
 		/// }
 		stCssUtil.cAcsExtdAnmt_2dTsfm = function (a_DomElmt)
@@ -1760,7 +1729,7 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 单位化扩展动画 - 二维变换
-		stCssUtil.cIdtyExtdAnmt_3dTsfm = function (a_DomElmt)
+		stCssUtil.cIdtyExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
 			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
 			{
@@ -1787,32 +1756,16 @@ function fOnIcld(a_Errs)
 			var l_CssStr = "";
 
 			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y)) // S
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "scale(" + l_Tsfm.c_Scl.x + "," + l_Tsfm.c_Scl.y + ")";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale", l_Tsfm.c_Scl, "", 2); }
 
 			if ((0 != l_Tsfm.c_Skew.x) || (0 != l_Tsfm.c_Skew.y)) // K
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "skew(" + l_Tsfm.c_Skew.x + "rad," + l_Tsfm.c_Skew.y + "rad)";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "skew", l_Tsfm.c_Skew, "rad", 2); }
 
 			if ((0 != l_Tsfm.c_Rot.w)) // R
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "rotate(" + l_Tsfm.c_Rot.w + "rad)";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate", l_Tsfm.c_Rot.w, "rad", 1); }
 
 			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y)) // T
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "translate(" + l_Tsfm.c_Tslt.x + "px," + l_Tsfm.c_Tslt.y + "px)";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate", l_Tsfm.c_Tslt, "px", 2); }
 
 			// 写成样式
 			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
@@ -1825,18 +1778,22 @@ function fOnIcld(a_Errs)
 		///		c_Pspc:
 		///		{
 		///		d：Number，透视投影距离，null表示正交投影
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Scl:
 		///		{
 		///		x，y, z：Number
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Rot:
 		///		{
 		///		x，y, z, w：Number，四元数，xyz是转轴向量的三个分量，w是弧度
+		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Tslt:
 		///		{
 		///		x，y, z：Number
+		/// 	c_FrmTime：Number
 		///		}
 		/// }
 		stCssUtil.cAcsExtdAnmt_3dTsfm = function (a_DomElmt)
@@ -1872,34 +1829,18 @@ function fOnIcld(a_Errs)
 			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_3dTsfm;
 			var l_CssStr = "";
 
-			if (! nWse.fIsUdfnOrNull(l_Tsfm.c_Pspc.d))
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "perspective(" + l_Tsfm.c_Pspc.d + "px)";
-			}
+			if (! nWse.fIsUdfnOrNull(l_Tsfm.c_Pspc.d)) // P
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "perspective", l_Tsfm.c_Pspc.d, "px", 1); }
 
 			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y) || (1 != l_Tsfm.c_Scl.z)) // S
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "scale3d(" + l_Tsfm.c_Scl.x + "," + l_Tsfm.c_Scl.y + "," + l_Tsfm.c_Scl.z + ")";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale3d", l_Tsfm.c_Scl, "", 3); }
 
-			stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Rot);	// 取得轴弧度
-			if ((0 != e_AxisRad.x) || (0 != e_AxisRad.y) || (0 != e_AxisRad.z) || (0 != e_AxisRad.w)) // R
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "rotate3d(" + e_AxisRad.x + "," + e_AxisRad.y + "," + e_AxisRad.z + "," + e_AxisRad.w + "rad)";
-			}
+			stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Rot);	// 取得轴弧度，不是四元数但无妨
+			if (eNzQtn(e_AxisRad)) // R
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate3d", e_AxisRad, null, 4); }
 
 			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y) || (0 != l_Tsfm.c_Tslt.z)) // T
-			{
-				if (l_CssStr)
-				{ l_CssStr += " "; }
-				l_CssStr += "translate3d(" + l_Tsfm.c_Tslt.x + "px," + l_Tsfm.c_Tslt.y + "px," + l_Tsfm.c_Tslt.z + "px)";
-			}
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate3d", l_Tsfm.c_Tslt, "px", 3); }
 
 			// 写成样式
 			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;

@@ -21,9 +21,9 @@
     <bookmark url="file://$PROJECT_DIR$/nWse/(0)Seed.js" line="761" />
     <bookmark url="file://$PROJECT_DIR$/nWse/PntIptTrkr.js" line="854" />
     <bookmark url="file://$PROJECT_DIR$/nWse/PntIptTrkr.js" line="704" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1498" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="507" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1394" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1483" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="493" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1395" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4380cf6c-33ed-435a-ba83-807757ca52e3" name="Default" comment="" />
@@ -49,61 +49,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="(0)Seed.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nWse/(0)Seed.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5908" max-vertical-offset="19798">
-              <caret line="330" column="36" selection-start-line="329" selection-start-column="4" selection-end-line="330" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DomUtil.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-22.24" vertical-offset="13732" max-vertical-offset="14573">
-              <caret line="754" column="0" selection-start-line="754" selection-start-column="0" selection-end-line="754" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CssUtil.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.40942028" vertical-offset="27002" max-vertical-offset="36461">
-              <caret line="1441" column="42" selection-start-line="1441" selection-start-column="42" selection-end-line="1441" selection-end-column="42" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="(2)LangUtil.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nWse/(2)LangUtil.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="9269" max-vertical-offset="35587">
-              <caret line="516" column="10" selection-start-line="516" selection-start-column="10" selection-end-line="516" selection-end-column="10" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Lang.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Lang.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Test/Lang.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.785714" vertical-offset="0" max-vertical-offset="2565">
+            <state vertical-scroll-proportion="0.23030303" vertical-offset="0" max-vertical-offset="2565">
               <caret line="10" column="69" selection-start-line="10" selection-start-column="69" selection-end-line="10" selection-end-column="69" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="抽奖.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/../../MyHome/OnlnTest/Heivr/Mre/js/抽奖.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="2533" max-vertical-offset="3515">
-              <caret line="168" column="33" selection-start-line="168" selection-start-column="28" selection-end-line="168" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -441,7 +391,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -449,7 +399,7 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33146697" sideWeight="0.49964765" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16877638" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17359856" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16560958" sideWeight="0.50066936" order="2" side_tool="true" content_ui="tabs" />
@@ -505,13 +455,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Test/jQuery/jquery-1.10.2.intellisense.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="3584" max-vertical-offset="50597">
-          <caret line="201" column="2" selection-start-line="201" selection-start-column="2" selection-end-line="201" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Test/jQuery/jquery-1.10.2.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.46676096" vertical-offset="8277" max-vertical-offset="185877">
@@ -635,13 +578,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="10184" max-vertical-offset="12198">
           <caret line="544" column="72" selection-start-line="544" selection-start-column="72" selection-end-line="544" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Test/Bicycle.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19219653" vertical-offset="0" max-vertical-offset="2413">
-          <caret line="7" column="22" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -820,22 +756,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-22.24" vertical-offset="13732" max-vertical-offset="14573">
-          <caret line="754" column="0" selection-start-line="754" selection-start-column="0" selection-end-line="754" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/GpuSldPlr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="10317" max-vertical-offset="26429">
-          <caret line="555" column="79" selection-start-line="555" selection-start-column="79" selection-end-line="555" selection-end-column="79" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-21.72" vertical-offset="5575" max-vertical-offset="14668">
@@ -860,26 +780,58 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
+    <entry file="file://$PROJECT_DIR$/nWse/nUi/nCmnWgts/GpuSldPlr.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.785714" vertical-offset="0" max-vertical-offset="2565">
-          <caret line="10" column="69" selection-start-line="10" selection-start-column="69" selection-end-line="10" selection-end-column="69" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="17499" max-vertical-offset="26429">
+          <caret line="936" column="35" selection-start-line="936" selection-start-column="35" selection-end-line="936" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-22.24" vertical-offset="13732" max-vertical-offset="14573">
+          <caret line="754" column="0" selection-start-line="754" selection-start-column="0" selection-end-line="754" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/Bicycle.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-25.107143" vertical-offset="0" max-vertical-offset="2413">
+          <caret line="37" column="4" selection-start-line="37" selection-start-column="4" selection-end-line="37" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../备份/WSE/nWse/CssUtil.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-11.2" vertical-offset="34661" max-vertical-offset="36062">
+          <caret line="1841" column="25" selection-start-line="1841" selection-start-column="16" selection-end-line="1841" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/(2)LangUtil.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="9269" max-vertical-offset="35587">
-          <caret line="516" column="10" selection-start-line="516" selection-start-column="10" selection-end-line="516" selection-end-column="10" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="13430" max-vertical-offset="35587">
+          <caret line="724" column="18" selection-start-line="724" selection-start-column="18" selection-end-line="724" selection-end-column="18" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40942028" vertical-offset="27002" max-vertical-offset="36461">
-          <caret line="1441" column="42" selection-start-line="1441" selection-start-column="42" selection-end-line="1441" selection-end-column="42" />
+        <state vertical-scroll-proportion="-12.88" vertical-offset="34467" max-vertical-offset="35340">
+          <caret line="1833" column="0" selection-start-line="1833" selection-start-column="0" selection-end-line="1833" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23030303" vertical-offset="0" max-vertical-offset="2565">
+          <caret line="10" column="69" selection-start-line="10" selection-start-column="69" selection-end-line="10" selection-end-column="69" />
           <folding />
         </state>
       </provider>
