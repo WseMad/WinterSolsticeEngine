@@ -55,10 +55,9 @@ namespace nWebCprsr.nCprsr
 				public string c_Name;						// 名称
 				public int c_ScpCtgr;						// 作用域类别：0=函数定义，1=函数表达式，2=捕获，3=其他块
 
-
 				public List<teIdNameMap> c_LocDfns;		// 局部变量定义
 				public List<tLex.tTkn> c_LocRefs;		// 局部变量引用
-				public List<tLex.tTkn> c_PptyAcs;		// 属性访问
+				public List<List<tLex.tTkn>> c_PptyAcsTab;	// 属性访问表，记录每个属性访问词法单元及出现次数
 				public Dictionary<string, string> c_PptyNameMap;	// 属性名映射
 				public List<teScp> c_SubScps;		// 子函数块列表
 
@@ -76,7 +75,7 @@ namespace nWebCprsr.nCprsr
 
 					c_LocDfns = new List<teIdNameMap>();
 					c_LocRefs = new List<tLex.tTkn>();
-					c_PptyAcs = new List<tLex.tTkn>();
+					c_PptyAcsTab = new List<List<tLex.tTkn>>();
 					c_PptyNameMap = new Dictionary<string, string>();
 					c_SubScps = new List<teScp>();
 				}
@@ -104,7 +103,7 @@ namespace nWebCprsr.nCprsr
 
 						l_FS = l_FS.c_Prn;
 					}
-					return l_FS;
+					return l_FS; // null表示顶级作用域
 				}
 
 				public bool cOfFctn()
@@ -166,9 +165,25 @@ namespace nWebCprsr.nCprsr
 
 				public void cAddPptyAcs(tLex.tTkn a_Tkn)
 				{
-					c_PptyAcs.Add(a_Tkn);
+					// 如果长度为1，不用录入
+					var l_TknStr = a_Tkn.c_Attr.ToString();
+					if (1 == l_TknStr.Length)
+					{
+						return;
+					}
 
-					if (!c_PptyNameMap.ContainsKey(a_Tkn.c_Attr.ToString()))
+					int l_Idx = c_PptyAcsTab.FindIndex((a_TL) => { return a_TL[0].c_Attr.ToString() == l_TknStr; });
+					if (l_Idx < 0)
+					{
+						c_PptyAcsTab.Add(new List<tLex.tTkn>());
+						l_Idx = c_PptyAcsTab.Count - 1;
+					}
+
+					c_PptyAcsTab[l_Idx].Add(a_Tkn);
+
+					// 如果至少已录入两个，则也录入新旧名映射
+					if ((c_PptyAcsTab[l_Idx].Count > 1) &&
+						(!c_PptyNameMap.ContainsKey(a_Tkn.c_Attr.ToString())))
 					{
 						c_PptyNameMap.Add(a_Tkn.c_Attr.ToString(), null);
 					}
@@ -179,12 +194,32 @@ namespace nWebCprsr.nCprsr
 				/// </summary>
 				public bool cIsNameUsed(int a_LocDfnIdx, string a_NewName)
 				{
-					// 检查是否与源代码定义的局部变量名（旧名）相同
-					var l_Idx = this.c_LocDfns.FindIndex((a_Map) => { return a_Map.c_Old == a_NewName; });
-					if (l_Idx >= 0)
+					// 检查是否与源代码定义的局部变量名（旧名＆新名）相同
+					//【注意1】由于这次调用可能是由属性访问引发，而压缩属性访问是在压缩局部变量之后进行的
+					// 所以无法保证局部变量新名不与属性访问新名冲突，故必须检查这两个名字！c_New为空不妨碍
+					//【注意2】不能只是搜索this，还必须向上找，直至函数作用域（var定义到的作用域）！
+					//【BUG】兄弟作用域会不会也用了？！
+					var l_VarScp = this.cGetScpForLocDfnByVar();
+					var l_Scp = this;
+					int l_Idx;
+					do
 					{
-						return true;
-					}
+						l_Idx = l_Scp.c_LocDfns.FindIndex(
+							(a_Map) => { return (a_Map.c_Old == a_NewName) || (a_Map.c_New == a_NewName); });
+						if (l_Idx >= 0)
+						{
+							return true;
+						}
+
+						if (l_Scp == l_VarScp)
+						{
+							break;
+						}
+						else
+						{
+							l_Scp = l_Scp.c_Prn;
+						}
+					} while ((null != l_Scp));
 
 					//【不用了，子函数名应该已被加入到this.c_LocDfns】
 					//// 检查是否与源代码定义的函数名（位于子作用域）相同
@@ -204,7 +239,7 @@ namespace nWebCprsr.nCprsr
 
 					// 沿着作用域链向上回溯，注意到顶级标识符名在调用本函数之前就已被检查过
 					// 对于祖先作用域里的局部变量名，应使用新名（他们已被替换！）进行比对
-					teScp l_Scp = this.c_Prn;
+					l_Scp = this.c_Prn;
 					while (null != l_Scp)
 					{
 						l_Idx = l_Scp.c_LocDfns.FindIndex(
@@ -280,9 +315,9 @@ namespace nWebCprsr.nCprsr
 
 					// 旧名是否匹配要保留的正则表达式？未匹配表示允许压缩
 					// 如果匹配，或禁止压缩，或本来就只有一个字符，不用压缩
-					if (a_PsrvPla.Match(c_LocDfns[a_LocDfnIdx].c_Old).Success || 
-						(!c_CprsLocFctnName) || 
-						(1 == c_LocDfns[a_LocDfnIdx].c_Old.Length))
+					if ((!c_CprsLocFctnName) || // 禁止（可能由于eval函数存在）
+						(1 == c_LocDfns[a_LocDfnIdx].c_Old.Length) || // 不用
+						a_PsrvPla.Match(c_LocDfns[a_LocDfnIdx].c_Old).Success) // 匹配
 					{
 						c_LocDfns[a_LocDfnIdx].c_New = c_LocDfns[a_LocDfnIdx].c_Old;	// 新名称 = 旧名称
 						return true;
@@ -340,6 +375,11 @@ namespace nWebCprsr.nCprsr
 						{
 							c_Name = a_TknList[l_Idx_Id].c_Attr.ToString();
 						}
+
+						//if ("fEnum" == c_Name)
+						//{
+						//	int z=0;
+						//}
 
 						// 如果尚未初始化，分辨类别
 						if (c_ScpCtgr < 0)
@@ -567,6 +607,12 @@ namespace nWebCprsr.nCprsr
 					a_Scp.c_PptyNameMap.Keys.CopyTo(l_Keys, 0);
 					for (int i = 0; i < l_Keys.Length; ++i)
 					{
+						if ("fEnum" == a_Scp.c_Name)
+					//	if ("apply" == l_Keys[i])
+						{
+							int z = 0;
+						}
+
 						// 首先尝试映射父作用域里的属性变量名
 						string l_NewName = a_Scp.cMapPrnPptyAcsVar(l_Keys[i]);
 						if (null != l_NewName)
@@ -675,12 +721,21 @@ namespace nWebCprsr.nCprsr
 			private void eCprsPptyAcs(List<tLex.tTkn> a_TknList, teScp a_Scp)
 			{
 				// 如果有属性访问，定义属性变量，成功时处理该作用域
-				if ((a_Scp.c_PptyAcs.Count > 0) && eDfnPptyVar(a_TknList, a_Scp))
+				if ((a_Scp.c_PptyAcsTab.Count > 0) && eDfnPptyVar(a_TknList, a_Scp))
 				{
 					// 压缩每一个属性访问
-					for (int a = 0; a < a_Scp.c_PptyAcs.Count; ++a)
+					for (int a = 0; a < a_Scp.c_PptyAcsTab.Count; ++a)
 					{
-						ePptyAcsBrkt(a_TknList, a_Scp, a_Scp.c_PptyAcs[a]);
+						// 跳过只访问一次的属性
+						if (1 == a_Scp.c_PptyAcsTab[a].Count)
+						{
+							continue;
+						}
+
+						for (int t = 0; t < a_Scp.c_PptyAcsTab[a].Count; ++t)
+						{
+							ePptyAcsBrkt(a_TknList, a_Scp, a_Scp.c_PptyAcsTab[a][t]);
+						}	
 					}
 				}
 
@@ -972,7 +1027,7 @@ namespace nWebCprsr.nCprsr
 				{
 					if (null == a_Scp) // 顶级作用域？
 					{
-						//
+						// 不作压缩处理
 					}
 					else
 					{

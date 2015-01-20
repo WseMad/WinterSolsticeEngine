@@ -1121,7 +1121,7 @@ function fOnIcld(a_Errs)
 		/// a_tBase$BaseAry：枚举$Array，继承基枚举的全部值
 		/// a___$Obj：[String, Number]$String$Object，若为String，值为前一项的值＋1，第一项的值为0；若为Object，必须显示指定属性值，并忽略继承
 		/// 返回：新定义的枚举
-		nWse.fEnum = function (a_nHost$tHost, a_fCtor, a_tBase$BaseAry, a___$Obj)
+		nWse.fEnum = function fEnum(a_nHost$tHost, a_fCtor, a_tBase$BaseAry, a___$Obj)
 		{
 			var l_tHead = nWse.fEnumHead(a_nHost$tHost, a_fCtor, a_tBase$BaseAry);
 			var l_Agms;

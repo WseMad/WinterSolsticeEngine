@@ -816,152 +816,153 @@ namespace nWebCprsr.nCprsr
 					++l_Idx;						// 进入下一个词法单元
 				}
 				else // 2
-					if (tTmnl.i_do == e_TknList[l_Idx].c_Tmnl)
+				if (tTmnl.i_do == e_TknList[l_Idx].c_Tmnl)
+				{
+					eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_do, tTmnl.i_LBrc, true, true);		// do{...}
+					eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_while, tTmnl.i_LPrth, false, false);	// while(...);
+					a_Tmp.Add(e_TknList[l_Idx++]);			// ;
+					eTrimNewLine_SkipNewLine(ref l_Idx);	// 跳过换行
+				}
+				else // 3
+				if (tTmnl.i_case == e_TknList[l_Idx].c_Tmnl)
+				{
+					eTrimNewLine_Add_CaseDefault(a_Tmp, ref l_Idx, true);
+				}
+				else // 4
+				if (tTmnl.i_else == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = e_TknList[l_Idx++];	// else
+					a_Tmp.Add(l_Tkn_Kwd);
+
+					if (tTmnl.i_if != e_TknList[l_Idx].c_Tmnl)	// 若是if，留给下一次迭代if的分支处理
 					{
-						eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_do, tTmnl.i_LBrc, true, true);		// do{...}
-						eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_while, tTmnl.i_LPrth, false, false);	// while(...);
-						a_Tmp.Add(e_TknList[l_Idx++]);			// ;
+						eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);	// 表达式或{...}
+					}
+				}
+				else // 5
+				if (tTmnl.i_catch == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_catch, tTmnl.i_LPrth, false, true);	// catch(...)
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
+				}
+				else // 6
+				if (tTmnl.i_finally == e_TknList[l_Idx].c_Tmnl)
+				{
+					eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_finally, tTmnl.i_LBrc, true, true);	// finally{...}
+				}
+				else // 7
+				if (tTmnl.i_for == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_for, tTmnl.i_LPrth, false, true);		// for(...)
+					eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);													// 表达式或{...}
+				}
+				else // 8
+				if (tTmnl.i_switch == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_switch, tTmnl.i_LPrth, false, true);	// switch(...)
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
+				}
+				else // 9
+				if (tTmnl.i_while == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_while, tTmnl.i_LPrth, false, true);	// while(...)
+					eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);													// 表达式或{...}
+				}
+				else // 10
+				if (tTmnl.i_function == e_TknList[l_Idx].c_Tmnl)
+				{
+					bool l_FexpAsn = (l_Idx > 0) && (tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl);	// 函数表达式赋值？
+
+					l_Tkn_Kwd = e_TknList[l_Idx++];
+					a_Tmp.Add(l_Tkn_Kwd);			// function
+					eTrimNewLine_SkipNewLine(ref l_Idx);	// 跳过换行
+
+					if (seIsId(e_TknList[l_Idx].c_Tmnl))	// 具名
+					{
+						a_Tmp.Add(e_TknList[l_Idx++]);			// Id
 						eTrimNewLine_SkipNewLine(ref l_Idx);	// 跳过换行
 					}
-					else // 3
-						if (tTmnl.i_case == e_TknList[l_Idx].c_Tmnl)
-						{
-							eTrimNewLine_Add_CaseDefault(a_Tmp, ref l_Idx, true);
-						}
-						else // 4
-							if (tTmnl.i_else == e_TknList[l_Idx].c_Tmnl)
-							{
-								l_Tkn_Kwd = e_TknList[l_Idx++];	// else
-								a_Tmp.Add(l_Tkn_Kwd);
 
-								if (tTmnl.i_if != e_TknList[l_Idx].c_Tmnl)	// 若是if，留给下一次迭代if的分支处理
-								{
-									eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);	// 表达式或{...}
-								}
-							}
-							else // 5
-								if (tTmnl.i_catch == e_TknList[l_Idx].c_Tmnl)
-								{
-									l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_catch, tTmnl.i_LPrth, false, true);	// catch(...)
-									eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
-								}
-								else // 6
-									if (tTmnl.i_finally == e_TknList[l_Idx].c_Tmnl)
-									{
-										eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_finally, tTmnl.i_LBrc, true, true);	// finally{...}
-									}
-									else // 7
-										if (tTmnl.i_for == e_TknList[l_Idx].c_Tmnl)
-										{
-											l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_for, tTmnl.i_LPrth, false, true);		// for(...)
-											eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);													// 表达式或{...}
-										}
-										else // 8
-											if (tTmnl.i_switch == e_TknList[l_Idx].c_Tmnl)
-											{
-												l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_switch, tTmnl.i_LPrth, false, true);	// switch(...)
-												eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
-											}
-											else // 9
-												if (tTmnl.i_while == e_TknList[l_Idx].c_Tmnl)
-												{
-													l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_while, tTmnl.i_LPrth, false, true);	// while(...)
-													eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);													// 表达式或{...}
-												}
-												else // 10
-													if (tTmnl.i_function == e_TknList[l_Idx].c_Tmnl)
-													{
-														bool l_FexpAsn = (l_Idx > 0) && (tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl);	// 函数表达式赋值？
+					// 函数表达式赋值的右花后确保有分号或逗号
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LPrth, false, true);			// (...)
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, (!l_FexpAsn));	// {...}
+				}
+				else // 11
+				if (tTmnl.i_with == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_with, tTmnl.i_LPrth, false, true);	// with(...)
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
+				}
+				else // 12
+				if (tTmnl.i_default == e_TknList[l_Idx].c_Tmnl)
+				{
+					eTrimNewLine_Add_CaseDefault(a_Tmp, ref l_Idx, false);
+				}
+				else // 13
+				if (tTmnl.i_if == e_TknList[l_Idx].c_Tmnl)
+				{
+					l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_if, tTmnl.i_LPrth, false, true);	// if(...)
+					eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);												// 表达式或{...}
+				}
+				else // 14
+				if (tTmnl.i_try == e_TknList[l_Idx].c_Tmnl)
+				{
+					eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_try, tTmnl.i_LBrc, true, true);	// try{...}
+				}
+				else // 15
+				if (tTmnl.i_LBrc == e_TknList[l_Idx].c_Tmnl)
+				{
+					// 对象字面值里不需要分号（若字段的值是函数，则递归解决），所以不必保留换行，可大胆移除
+					// 至于右花后的换行，除非调用者要求直接跳过换行，否则确保以分号逗号右花结束
+					bool l_ObjLtrl = (l_Idx > 0) &&
+					((tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl) ||		// ={...}
+					(tTmnl.i_LBrkt == e_TknList[l_Idx - 1].c_Tmnl) ||		// [{...}
+					(tTmnl.i_LPrth == e_TknList[l_Idx - 1].c_Tmnl) ||		// ({...}
+					(tTmnl.i_Cma == e_TknList[l_Idx - 1].c_Tmnl));			// ,{...}
+					bool l_LtrlAsn = (l_Idx > 0) && (tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl);
+				//	eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, null, tTmnl.i_LBrc, !l_ObjLtrl, ((!l_LtrlAsn) || a_MidPsrv));//【待定】似乎下面的正确！为什么？
+					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, null, tTmnl.i_LBrc, !l_ObjLtrl, ((!l_LtrlAsn) || (!a_MidPsrv)));
 
-														l_Tkn_Kwd = e_TknList[l_Idx++];
-														a_Tmp.Add(l_Tkn_Kwd);			// function
-														eTrimNewLine_SkipNewLine(ref l_Idx);	// 跳过换行
+					// 是什么？
+					if (l_ObjLtrl)
+					{
+						//
+					}
+					else // 块语句
+					{
+						//
+					}
+				}
+				else // 16
+				if (tTmnl.i_LPrth == e_TknList[l_Idx].c_Tmnl)
+				{
+					// Id(...)
+					// (Id)(...)
+					// Id[Id](...)
+					// 注意不会是换行，因为左圆属于无需前附换行的词法单元
+					if ((l_Idx > 0) &&
+					(a_Tmp[a_Tmp.Count - 1] == e_TknList[l_Idx - 1]) && // 若前一个已被添加至a_Tmp，即没有发生换行移除、分号替换等
+					((seIsId(e_TknList[l_Idx - 1].c_Tmnl)) ||
+					(tTmnl.i_RBrkt == e_TknList[l_Idx - 1].c_Tmnl) ||
+					(tTmnl.i_RPrth == e_TknList[l_Idx - 1].c_Tmnl)))
+					{
+						//	e_RptBfr.AppendLine("函数调用	" + + e_TknList[l_Idx - 1].c_Row + ", " + e_TknList[l_Idx - 1].c_Attr.ToString());
 
-														if (seIsId(e_TknList[l_Idx].c_Tmnl))	// 具名
-														{
-															a_Tmp.Add(e_TknList[l_Idx++]);			// Id
-															eTrimNewLine_SkipNewLine(ref l_Idx);	// 跳过换行
-														}
-
-														// 函数表达式赋值的右花后确保有分号或逗号
-														eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LPrth, false, true);			// (...)
-														eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, (!l_FexpAsn));	// {...}
-													}
-													else // 11
-														if (tTmnl.i_with == e_TknList[l_Idx].c_Tmnl)
-														{
-															l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_with, tTmnl.i_LPrth, false, true);	// with(...)
-															eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, l_Tkn_Kwd, tTmnl.i_LBrc, true, true);						// {...}
-														}
-														else // 12
-															if (tTmnl.i_default == e_TknList[l_Idx].c_Tmnl)
-															{
-																eTrimNewLine_Add_CaseDefault(a_Tmp, ref l_Idx, false);
-															}
-															else // 13
-																if (tTmnl.i_if == e_TknList[l_Idx].c_Tmnl)
-																{
-																	l_Tkn_Kwd = eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_if, tTmnl.i_LPrth, false, true);	// if(...)
-																	eTrimNewLine_Add_ExpOrBlk(a_Tmp, ref l_Idx, l_Tkn_Kwd);												// 表达式或{...}
-																}
-																else // 14
-																	if (tTmnl.i_try == e_TknList[l_Idx].c_Tmnl)
-																	{
-																		eTrimNewLine_Add_KwdPairBbp(a_Tmp, ref l_Idx, tTmnl.i_try, tTmnl.i_LBrc, true, true);	// try{...}
-																	}
-																	else // 15
-																		if (tTmnl.i_LBrc == e_TknList[l_Idx].c_Tmnl)
-																		{
-																			// 对象字面值里不需要分号（若字段的值是函数，则递归解决），所以不必保留换行，可大胆移除
-																			// 至于右花后的换行，除非调用者要求直接跳过换行，否则确保以分号逗号右花结束
-																			bool l_ObjLtrl = (l_Idx > 0) &&
-																			((tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl) ||		// ={...}
-																			(tTmnl.i_LBrkt == e_TknList[l_Idx - 1].c_Tmnl) ||		// [{...}
-																			(tTmnl.i_LPrth == e_TknList[l_Idx - 1].c_Tmnl) ||		// ({...}
-																			(tTmnl.i_Cma == e_TknList[l_Idx - 1].c_Tmnl));			// ,{...}
-																			bool l_LtrlAsn = (l_Idx > 0) && (tTmnl.i_Asn == e_TknList[l_Idx - 1].c_Tmnl);
-																			eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, null, tTmnl.i_LBrc, !l_ObjLtrl, (!l_LtrlAsn) || a_MidPsrv);
-
-																			// 是什么？
-																			if (l_ObjLtrl)
-																			{
-																				//
-																			}
-																			else // 块语句
-																			{
-																				//
-																			}
-																		}
-																		else // 16
-																			if (tTmnl.i_LPrth == e_TknList[l_Idx].c_Tmnl)
-																			{
-																				// Id(...)
-																				// (Id)(...)
-																				// Id[Id](...)
-																				// 注意不会是换行，因为左圆属于无需前附换行的词法单元
-																				if ((l_Idx > 0) &&
-																				(a_Tmp[a_Tmp.Count - 1] == e_TknList[l_Idx - 1]) && // 若前一个已被添加至a_Tmp，即没有发生换行移除、分号替换等
-																				((seIsId(e_TknList[l_Idx - 1].c_Tmnl)) ||
-																				(tTmnl.i_RBrkt == e_TknList[l_Idx - 1].c_Tmnl) ||
-																				(tTmnl.i_RPrth == e_TknList[l_Idx - 1].c_Tmnl)))
-																				{
-																					//	e_RptBfr.AppendLine("函数调用	" + + e_TknList[l_Idx - 1].c_Row + ", " + e_TknList[l_Idx - 1].c_Attr.ToString());
-
-																					// 右圆后若是换行，确保分号，虽然可以后跟其他符号，如左圆，
-																					// 但那些符号都是无需前附换行的词法单元，但却出现了换行，说明不是那些符号
-																					eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, null, tTmnl.i_LPrth, false, false);	// (...)
-																				}
-																				else // 其他，直接添加
-																				{
-																					a_Tmp.Add(e_TknList[l_Idx]);	// 添加这一个词法单元
-																					++l_Idx;						// 进入下一个词法单元
-																				}
-																			}
-																			else // 其他，直接添加
-																			{
-																				a_Tmp.Add(e_TknList[l_Idx]);	// 添加这一个词法单元
-																				++l_Idx;						// 进入下一个词法单元
-																			}
+						// 右圆后若是换行，确保分号，虽然可以后跟其他符号，如左圆，
+						// 但那些符号都是无需前附换行的词法单元，但却出现了换行，说明不是那些符号
+						eTrimNewLine_Add_PairBbp(a_Tmp, ref l_Idx, null, tTmnl.i_LPrth, false, false);	// (...)
+					}
+					else // 其他，直接添加
+					{
+						a_Tmp.Add(e_TknList[l_Idx]);	// 添加这一个词法单元
+						++l_Idx;						// 进入下一个词法单元
+					}
+				}
+				else // 其他，直接添加
+				{
+					a_Tmp.Add(e_TknList[l_Idx]);	// 添加这一个词法单元
+					++l_Idx;						// 进入下一个词法单元
+				}
 			}
 
 			// 如果最后一个是换行，移除
