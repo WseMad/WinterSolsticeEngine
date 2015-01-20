@@ -94,7 +94,8 @@ function fOnIcld(a_Errs)
 				"rotate" : 20003,
 				"translate" : 20004,
 				i_3dTsfm : 30000,
-				"scale3d" : 30001,
+				"perspective": 30001,
+				"scale3d" : 30002,
 				"rotate3d" : 30003,
 				"translate3d" : 30004
 			};
@@ -551,6 +552,26 @@ function fOnIcld(a_Errs)
 						l_End = l_Tsfm.c_End;
 					}
 
+					if (e_Wse_CssExtd["perspective"] == l_Tsfm.c_TypeIdx)
+					{
+						if (a_Ifnt)
+						{
+							if (l_Tsfm.c_fDplc)
+							{
+								l_Tsfm.c_fDplc(l_CUT.c_Pspc, a_DomElmt, l_Bgn, l_End,
+									a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							}
+						}
+						else
+						{
+							l_CUT.c_Pspc.d = stNumUtil.cLnrItp(l_Bgn.d, l_End.d, l_EsnScl);
+						}
+
+						if (l_CssStr)
+						{ l_CssStr += " "; }
+						l_CssStr += "perspective(" + l_CUT.c_Pspc.d + "px)";
+					}
+					else
 					if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
 					{
 						if (a_Ifnt)
@@ -630,22 +651,35 @@ function fOnIcld(a_Errs)
 			if (! a_DomElmt.Wse_CssUtil)
 			{ a_DomElmt.Wse_CssUtil = {}; }
 
-			if ((! a_DomElmt.Wse_CssUtil.c_2dTsfm) && (2 == a_Dim))
+			if (((2 == a_Dim) && (! a_DomElmt.Wse_CssUtil.c_2dTsfm)) ||
+				((3 == a_Dim) && (! a_DomElmt.Wse_CssUtil.c_3dTsfm)))
+			{
+				eRsetExtdAnmtTsfmData(a_DomElmt, a_Dim);
+			}
+		}
+
+		function eRsetExtdAnmtTsfmData(a_DomElmt, a_Dim)
+		{
+			if (! a_DomElmt.Wse_CssUtil)
+			{ a_DomElmt.Wse_CssUtil = {}; }
+
+			if (2 == a_Dim)
 			{
 				a_DomElmt.Wse_CssUtil.c_2dTsfm = {
-					c_Scl : { x:1, y:1, c_FrmTime:0 },
-					c_Skew : { x:0, y:0, c_FrmTime:0 },
-					c_Rot : { w:0, c_FrmTime:0 },
-					c_Tslt : { x:0, y:0, c_FrmTime:0 }
+					c_Scl : { x:1, y:1 },
+					c_Skew : { x:0, y:0 },
+					c_Rot : { w:0 },
+					c_Tslt : { x:0, y:0 }
 				};
 			}
 			else
-			if ((! a_DomElmt.Wse_CssUtil.c_3dTsfm) && (3 == a_Dim))
+			if (3 == a_Dim)
 			{
 				a_DomElmt.Wse_CssUtil.c_3dTsfm = {
-					c_Scl : { x:1, y:1, z:1, c_FrmTime:0 },
-					c_Rot : { x:0, y:0, z:0, w:1, c_FrmTime:0 },	// 四元数
-					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 }
+					c_Pspc : { d: null },
+					c_Scl : { x:1, y:1, z:1 },
+					c_Rot : { x:0, y:0, z:0, w:1 },	// 四元数
+					c_Tslt : { x:0, y:0, z:0 }
 				};
 			}
 		}
@@ -1558,6 +1592,21 @@ function fOnIcld(a_Errs)
 
 						l_Tsfm.c_fDplc = a_Tsfm.c_fDplc || null;	// 位移函数
 
+						if (e_Wse_CssExtd["perspective"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = {};
+							l_Tsfm.c_Bgn.d = a_DomElmt.Wse_CssUtil.c_3dTsfm.c_Pspc.d;
+							if (l_Item.c_BgnStr)
+							{ l_Item.c_BgnStr += " "; }
+							l_Item.c_BgnStr += "perspective(" + l_Tsfm.c_Bgn.d + "px)";
+
+							l_Tsfm.c_End = {};
+							l_Tsfm.c_End.d = eCalcExtdEndPV(a_Tsfm, "d", 0);
+							if (l_Item.c_EndStr)
+							{ l_Item.c_EndStr += " "; }
+							l_Item.c_EndStr += "perspective(" + l_Tsfm.c_End.d + "px)";
+						}
+						else
 						if (e_Wse_CssExtd["scale3d"] == l_Tsfm.c_TypeIdx)
 						{
 							l_Tsfm.c_Bgn = {};
@@ -1783,28 +1832,33 @@ function fOnIcld(a_Errs)
 		/// 	c_Scl:
 		///		{
 		///		x，y：Number
-		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Skew:
 		///		{
 		///		x，y：Number
-		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Rot:
 		///		{
 		///		w：Number，绕Z轴旋转的弧度
-		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Tslt:
 		///		{
 		///		x，y：Number
-		/// 	c_FrmTime：Number
 		///		}
 		/// }
 		stCssUtil.cAcsExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
 			eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
 			return a_DomElmt.Wse_CssUtil.c_2dTsfm;
+		};
+
+		/// 单位化扩展动画 - 二维变换
+		stCssUtil.cIdtyExtdAnmt_3dTsfm = function (a_DomElmt)
+		{
+			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
+			{ eInitBrsrPfx_Tsfm(a_DomElmt); }
+
+			eRsetExtdAnmtTsfmData(a_DomElmt, 2);	// 复位动画数据
 		};
 
 		/// 更新扩展动画 - 二维变换
@@ -1853,26 +1907,36 @@ function fOnIcld(a_Errs)
 		/// 存取扩展动画 - 三维变换
 		/// 返回：Object
 		/// {
+		///		c_Pspc:
+		///		{
+		///		d：Number，透视投影距离，null表示正交投影
+		///		}
 		/// 	c_Scl:
 		///		{
 		///		x，y, z：Number
-		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Rot:
 		///		{
 		///		x，y, z, w：Number，四元数，xyz是转轴向量的三个分量，w是弧度
-		/// 	c_FrmTime：Number
 		///		}
 		/// 	c_Tslt:
 		///		{
 		///		x，y, z：Number
-		/// 	c_FrmTime：Number
 		///		}
 		/// }
 		stCssUtil.cAcsExtdAnmt_3dTsfm = function (a_DomElmt)
 		{
 			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
 			return a_DomElmt.Wse_CssUtil.c_3dTsfm;
+		};
+
+		/// 单位化扩展动画 - 三维变换
+		stCssUtil.cIdtyExtdAnmt_3dTsfm = function (a_DomElmt)
+		{
+			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
+			{ eInitBrsrPfx_Tsfm(a_DomElmt); }
+
+			eRsetExtdAnmtTsfmData(a_DomElmt, 3);	// 复位动画数据
 		};
 
 		/// 更新扩展动画 - 三维变换
@@ -1884,6 +1948,13 @@ function fOnIcld(a_Errs)
 			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
 			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_3dTsfm;
 			var l_CssStr = "";
+
+			if (! nWse.fIsUdfnOrNull(l_Tsfm.c_Pspc.d))
+			{
+				if (l_CssStr)
+				{ l_CssStr += " "; }
+				l_CssStr += "perspective(" + l_Tsfm.c_Pspc.d + "px)";
+			}
 
 			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y) || (1 != l_Tsfm.c_Scl.z)) // S
 			{

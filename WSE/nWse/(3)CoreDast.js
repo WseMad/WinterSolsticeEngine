@@ -426,8 +426,7 @@ function fOnIcld(a_Errs)
 				/// 转成String
 				toString : function toString()
 				{
-					var l_f = nWse.stStrUtil.cOpmzNumDspl;
-					return "(" + l_f(this.c_X) + ", " + l_f(this.c_Y) + ", " + l_f(this.c_W) + ", " + l_f(this.c_H) + ")";
+					return "(" + (this.c_X) + ", " + (this.c_Y) + ", " + (this.c_W) + ", " + (this.c_H) + ")";
 				}
 				,
 				/// 创建
@@ -821,8 +820,7 @@ function fOnIcld(a_Errs)
 				/// 转成String
 				toString : function toString()
 				{
-					var l_f = nWse.stStrUtil.cOpmzNumDspl;
-					return "(" + l_f(this.r) + ", " + l_f(this.g) + ", " + l_f(this.b) + ", " + l_f(this.a) + ")";
+					return "(" + (this.r) + ", " + (this.g) + ", " + (this.b) + ", " + (this.a) + ")";
 				}
 				,
 				/// 转成Number
@@ -838,7 +836,7 @@ function fOnIcld(a_Errs)
 				/// 创建
 				cCrt : function (a_R, a_G, a_B, a_A)
 				{
-					this.r = a_R || 0;	this.g = a_G || 0;	this.b = a_B || 0;	this.a = a_A || 0;
+					this.r = a_R || 0;	this.g = a_G || 0;	this.b = a_B || 0;	this.a = a_A || 1;
 					return this;
 				}
 			}
@@ -1019,7 +1017,7 @@ function fOnIcld(a_Errs)
 				/// 返回：Number，转换结果，区间[0, 255]中的整数
 				scToCssRgbCpnt : function (a_RgbCpnt)
 				{
-					// 不要用nWse.stNumUtil.cRound45，GPU总是使用floor
+					// 不要用Math.round，GPU总是使用floor
 					return Math.floor(stNumUtil.cClmOnNum(a_RgbCpnt * 255, 0, 255));
 				}
 				,
@@ -1040,7 +1038,7 @@ function fOnIcld(a_Errs)
 					l_R = nWse.tClo.scToCssRgbCpnt(a_Tgt.r);	l_G = nWse.tClo.scToCssRgbCpnt(a_Tgt.g);	l_B = nWse.tClo.scToCssRgbCpnt(a_Tgt.b);
 					return (1 == a_Tgt.a)
 						? "rgb(" + l_R + ", " + l_G + ", " + l_B + ")"
-						: "rgba(" + l_R + ", " + l_G + ", " + l_B + ", " + a_Tgt.a + ")";
+						: "rgba(" + l_R + ", " + l_G + ", " + l_B + ", " + a_Tgt.a + ")"; //【IE8不支持】
 				}
 				,
 				/// 转自CSS颜色字符串

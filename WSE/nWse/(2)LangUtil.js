@@ -226,18 +226,18 @@ function fOnIcld(a_Errs)
 			return false;
 		};
 
-		/// 获取整数位数
-		stNumUtil.cGetIntDgtAmt = function (a_Num)
-		{
-			a_Num = Math.abs(a_Num);
-			var l_Rst = 0;
-			while (a_Num >= 1)
-			{
-				++ l_Rst;
-				a_Num /= 10;
-			}
-			return l_Rst;
-		};
+		///// 获取整数位数
+		//stNumUtil.cGetIntDgtAmt = function (a_Num)
+		//{
+		//	a_Num = Math.abs(a_Num);
+		//	var l_Rst = 0;
+		//	while (a_Num >= 1)
+		//	{
+		//		++ l_Rst;
+		//		a_Num /= 10;
+		//	}
+		//	return l_Rst;
+		//};
 
 		/// 相等
 		/// a_L：Number，左运算数
@@ -283,61 +283,61 @@ function fOnIcld(a_Errs)
 			return (a_Tgt < 0) ? -1 : ((a_Tgt > 0) ? +1 : 0);
 		};
 
-		/// 数量级
-		/// a_Tgt：Number，目标，0的数量级为0，＜0时同相反数的数量级
-		/// 返回：Number，数量级
-		stNumUtil.cOrdOfMag = function (a_Tgt)
-		{
-			return (0 == a_Tgt) ? 0 : Math.floor(Math.log(Math.abs(a_Tgt)) / stNumUtil.i_Log10);
-		};
+		///// 数量级
+		///// a_Tgt：Number，目标，0的数量级为0，＜0时同相反数的数量级
+		///// 返回：Number，数量级
+		//stNumUtil.cOrdOfMag = function (a_Tgt)
+		//{
+		//	return (0 == a_Tgt) ? 0 : Math.floor(Math.log(Math.abs(a_Tgt)) / stNumUtil.i_Log10);
+		//};
 
-		/// 进一舍入
-		/// 返回：进一舍入后的数字，若a_Tgt＜0则向-∞方向舍入，如-3.0→-3，-3.1→-4
-		stNumUtil.cRound01 = function (a_Tgt)
-		{
-			var l_Int;
-			if (a_Tgt < 0)
-			{
-				l_Int = Math.ceil(a_Tgt);
-				return (l_Int == a_Tgt) ? l_Int : (l_Int - 1);
-			}
-			else
-			{
-				l_Int = Math.floor(a_Tgt);
-				return (l_Int == a_Tgt) ? l_Int : (l_Int + 1);
-			}
-		};
+		///// 进一舍入
+		///// 返回：进一舍入后的数字，若a_Tgt＜0则向-∞方向舍入，如-3.0→-3，-3.1→-4
+		//stNumUtil.cRound01 = function (a_Tgt)
+		//{
+		//	var l_Int;
+		//	if (a_Tgt < 0)
+		//	{
+		//		l_Int = Math.ceil(a_Tgt);
+		//		return (l_Int == a_Tgt) ? l_Int : (l_Int - 1);
+		//	}
+		//	else
+		//	{
+		//		l_Int = Math.floor(a_Tgt);
+		//		return (l_Int == a_Tgt) ? l_Int : (l_Int + 1);
+		//	}
+		//};
 
-		/// 四舍五入
-		/// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如-3.1→-3，-3.5→-4
-		stNumUtil.cRound45 = function (a_Tgt)
-		{
-			return Math.round(a_Tgt);
-		//	return (a_Tgt < 0) ? Math.ceil(a_Tgt - 0.5) : Math.floor(a_Tgt + 0.5);
-		};
+		///// 四舍五入
+		///// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如-3.1→-3，-3.5→-4
+		//stNumUtil.cRound45 = function (a_Tgt)
+		//{
+		//	return Math.round(a_Tgt);
+		////	return (a_Tgt < 0) ? Math.ceil(a_Tgt - 0.5) : Math.floor(a_Tgt + 0.5);
+		//};
 
-		/// 四舍五入整数部分
-		/// a_Cnt：Number，保留多少位整数（从最高位向右计数），必须≥0
-		/// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如a_Cnt=1时-11→-10，-15→-20
-		stNumUtil.cRoundInt45 = function (a_Tgt, a_Cnt)
-		{
-			var l_Oom = stNumUtil.cOrdOfMag(a_Tgt);	// 取得数量级
-			var l_IntTot = l_Oom + 1;	// 整数部分总位数＝数量级＋1
-			if (l_IntTot <= a_Cnt)		// 整数部分总位数不多于要求保留的位数，无需舍入
-			{ return a_Tgt; }
+		///// 四舍五入整数部分
+		///// a_Cnt：Number，保留多少位整数（从最高位向右计数），必须≥0
+		///// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如a_Cnt=1时-11→-10，-15→-20
+		//stNumUtil.cRoundInt45 = function (a_Tgt, a_Cnt)
+		//{
+		//	var l_Oom = stNumUtil.cOrdOfMag(a_Tgt);	// 取得数量级
+		//	var l_IntTot = l_Oom + 1;	// 整数部分总位数＝数量级＋1
+		//	if (l_IntTot <= a_Cnt)		// 整数部分总位数不多于要求保留的位数，无需舍入
+		//	{ return a_Tgt; }
+		//
+		//	var l_Pow = Math.pow(10, l_IntTot - a_Cnt);
+		//	return stNumUtil.cRound45(a_Tgt / l_Pow) * l_Pow;
+		//};
 
-			var l_Pow = Math.pow(10, l_IntTot - a_Cnt);
-			return stNumUtil.cRound45(a_Tgt / l_Pow) * l_Pow;
-		};
-
-		/// 四舍五入小数部分
-		/// a_Cnt：Number，保留多少位小数（从十分之一位向右计数），必须≥0
-		/// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如a_Cnt=1时-3.11→-3.1，-3.56→-3.6
-		stNumUtil.cRoundDec45 = function (a_Tgt, a_Cnt)
-		{
-			var l_Pow = Math.pow(10, a_Cnt);
-			return stNumUtil.cRound45(a_Tgt * l_Pow) / l_Pow;
-		};
+		///// 四舍五入小数部分
+		///// a_Cnt：Number，保留多少位小数（从十分之一位向右计数），必须≥0
+		///// 返回：四舍五入后的数字，若a_Tgt＜0则向-∞方向舍入，如a_Cnt=1时-3.11→-3.1，-3.56→-3.6
+		//stNumUtil.cRoundDec45 = function (a_Tgt, a_Cnt)
+		//{
+		//	var l_Pow = Math.pow(10, a_Cnt);
+		//	return stNumUtil.cRound45(a_Tgt * l_Pow) / l_Pow;
+		//};
 
 		/// 是否在开区间里
 		/// 返回：Boolean，是否
@@ -587,54 +587,54 @@ function fOnIcld(a_Errs)
 			return (a_11 * a_22) - (a_12 * a_21);
 		};
 
-		/// 求解线性方程组 - 二元一次
-		/// a_Rst：Object，
-		/// {
-		/// c_11：Number，不可解时为NaN
-		/// c_21：Number，不可解时为NaN
-		/// }
-		/// A * X = B，其中A为系数矩阵，X为未知数矩阵，B为值矩阵
-		/// 返回：a_Rst
-		stNumUtil.cSlvLnrSys_2u1o = function (a_Rst, a_A11, a_A12, a_A21, a_A22, a_B11, a_B21, a_Udfn$E)
-		{
-			var l_Det = stNumUtil.cDet_2o(a_A11, a_A12, a_A21, a_A22);
-			if (stNumUtil.cIz(l_Det, a_Udfn$E))
-			{
-				a_Rst.c_11 = NaN;
-				a_Rst.c_21 = NaN;
-				return a_Rst;
-			}
+		///// 求解线性方程组 - 二元一次
+		///// a_Rst：Object，
+		///// {
+		///// c_11：Number，不可解时为NaN
+		///// c_21：Number，不可解时为NaN
+		///// }
+		///// A * X = B，其中A为系数矩阵，X为未知数矩阵，B为值矩阵
+		///// 返回：a_Rst
+		//stNumUtil.cSlvLnrSys_2u1o = function (a_Rst, a_A11, a_A12, a_A21, a_A22, a_B11, a_B21, a_Udfn$E)
+		//{
+		//	var l_Det = stNumUtil.cDet_2o(a_A11, a_A12, a_A21, a_A22);
+		//	if (stNumUtil.cIz(l_Det, a_Udfn$E))
+		//	{
+		//		a_Rst.c_11 = NaN;
+		//		a_Rst.c_21 = NaN;
+		//		return a_Rst;
+		//	}
+		//
+		//	var l_1ByDet = 1.0 / l_Det;
+		//	a_Rst.c_11 = stNumUtil.cDet_2o(a_B11, a_A12, a_B21, a_A22) * l_1ByDet;
+		//	a_Rst.c_21 = stNumUtil.cDet_2o(a_A11, a_B11, a_A21, a_B21) * l_1ByDet;
+		//	return a_Rst;
+		//};
 
-			var l_1ByDet = 1.0 / l_Det;
-			a_Rst.c_11 = stNumUtil.cDet_2o(a_B11, a_A12, a_B21, a_A22) * l_1ByDet;
-			a_Rst.c_21 = stNumUtil.cDet_2o(a_A11, a_B11, a_A21, a_B21) * l_1ByDet;
-			return a_Rst;
-		};
-
-		/// 求解多项式根 - 二阶
-		/// a_Rst：Object，
-		/// {
-		/// c_Rmin：Number，较小根，不可解时为NaN
-		/// c_Rmax：Number，较大根，不可解时为NaN
-		/// }
-		/// a_A * x^2 + a_B * x + a_C = 0
-		/// 返回：a_Rst
-		stNumUtil.cSlvPlnmRoot_2o = function (a_Rst, a_A, a_B, a_C)
-		{
-			var l_Dta = a_B * a_B - 4 * a_A * a_C;
-			if (l_Dta < 0)
-			{
-				a_Rst.c_Rmin = NaN;
-				a_Rst.c_Rmax = NaN;
-				return a_Rst;
-			}
-
-			var l_SqrtDta = Math.sqrt(l_Dta);
-			var l_2A = 2 * a_A;
-			a_Rst.c_Rmin = (-a_B - l_SqrtDta) / l_2A;
-			a_Rst.c_Rmax = (-a_B + l_SqrtDta) / l_2A;
-			return a_Rst;
-		};
+		///// 求解多项式根 - 二阶
+		///// a_Rst：Object，
+		///// {
+		///// c_Rmin：Number，较小根，不可解时为NaN
+		///// c_Rmax：Number，较大根，不可解时为NaN
+		///// }
+		///// a_A * x^2 + a_B * x + a_C = 0
+		///// 返回：a_Rst
+		//stNumUtil.cSlvPlnmRoot_2o = function (a_Rst, a_A, a_B, a_C)
+		//{
+		//	var l_Dta = a_B * a_B - 4 * a_A * a_C;
+		//	if (l_Dta < 0)
+		//	{
+		//		a_Rst.c_Rmin = NaN;
+		//		a_Rst.c_Rmax = NaN;
+		//		return a_Rst;
+		//	}
+		//
+		//	var l_SqrtDta = Math.sqrt(l_Dta);
+		//	var l_2A = 2 * a_A;
+		//	a_Rst.c_Rmin = (-a_B - l_SqrtDta) / l_2A;
+		//	a_Rst.c_Rmax = (-a_B + l_SqrtDta) / l_2A;
+		//	return a_Rst;
+		//};
 
 		/// 二维贝塞尔
 		/// a_Rst：t2dPnt
@@ -720,19 +720,19 @@ function fOnIcld(a_Errs)
 			return a_Rst;
 		};
 
-		/// 从四元数取得轴弧度，若是单位四元数则a_Rst各分量全为0
+		/// 从四元数取得轴弧度，若四元数是(0, 0, 0, 1)则a_Rst各分量全为0
 		/// 返回：a_Rst，Object { x, y, z, w }，xyz=轴向量，w=弧度
 		stNumUtil.cAxisRadFromQtn = function (a_Rst, a_Qtn)
 		{
 			var l_RadBy2 = Math.acos(stNumUtil.cClmOnNum(a_Qtn.w, -1, +1)), l_Sin = Math.sin(l_RadBy2);
-			if (Math.abs(l_Sin) < 0.00001)
+			if (Math.abs(l_Sin) < 0.000001)
 			{ a_Rst.x = a_Rst.y = a_Rst.z = a_Rst.w = 0; }
 			else
 			{ a_Rst.x = a_Qtn.x / l_Sin;	a_Rst.y = a_Qtn.y / l_Sin;	a_Rst.z = a_Qtn.z / l_Sin;	a_Rst.w = l_RadBy2 * 2; }
 			return a_Rst;
 		};
 
-		/// 四元数乘法，当使用单位q变换p时：p' = q^ * p * q，q^ = q的共轭
+		/// 四元数乘法，当使用单位q变换p时：p' = q^ * p * q，其中q^表示q的共轭
 		/// a_Tgt, a_Opd：Object { x, y, z, w }
 		/// 返回：a_Tgt
 		stNumUtil.cQtnMul = function (a_Tgt, a_Opd)
@@ -876,206 +876,206 @@ function fOnIcld(a_Errs)
 			return a_Tgt.replace("\t", i_Spc4);
 		};
 
-		/// 保留数字小数位
-		/// a_Num：Number，数字
-		/// a_Cnt：Number，小数位数，若为0则结果以“.”结尾
-		/// 返回：String，带有a_Cnt个小数位
-		stStrUtil.cPsrvNumDec = function (a_Num, a_Cnt)
-		{
-			var l_Rst = nWse.stNumUtil.cRoundDec45(a_Num, a_Cnt).toString();	// 该函数返回的数字带有的小数不一定是a_Cnt个（浮点误差）
-			var l_DotIdx = l_Rst.indexOf(".");
-			var l_Tmp = "", l_Dta, i;
-			if (l_DotIdx < 0)
-			{
-				l_Tmp = ".";
-				for (i=0; i<a_Cnt; ++i)
-				{ l_Tmp += "0"; }
+		///// 保留数字小数位
+		///// a_Num：Number，数字
+		///// a_Cnt：Number，小数位数，若为0则结果以“.”结尾
+		///// 返回：String，带有a_Cnt个小数位
+		//stStrUtil.cPsrvNumDec = function (a_Num, a_Cnt)
+		//{
+		//	var l_Rst = nWse.stNumUtil.cRoundDec45(a_Num, a_Cnt).toString();	// 该函数返回的数字带有的小数不一定是a_Cnt个（浮点误差）
+		//	var l_DotIdx = l_Rst.indexOf(".");
+		//	var l_Tmp = "", l_Dta, i;
+		//	if (l_DotIdx < 0)
+		//	{
+		//		l_Tmp = ".";
+		//		for (i=0; i<a_Cnt; ++i)
+		//		{ l_Tmp += "0"; }
+		//
+		//		l_Rst += l_Tmp;
+		//	}
+		//	else
+		//	if (l_Rst.length - l_DotIdx - 1 < a_Cnt)	// 现有小数位＜要求
+		//	{
+		//		l_Dta = a_Cnt + l_DotIdx + 1 - l_Rst.length;
+		//		for (i=0; i<l_Dta ; ++i)
+		//		{ l_Tmp += "0"; }
+		//
+		//		l_Rst += l_Tmp;
+		//	}
+		//	else
+		//	if (l_Rst.length - l_DotIdx - 1 > a_Cnt)	// 现有小数位＞要求
+		//	{
+		//		l_Rst = l_Rst.slice(0, l_DotIdx + 1 + a_Cnt);	// 直接截断，不要再次尝试四舍五入（cRoundDec45已经做过）
+		//	}
+		//	return l_Rst;
+		//};
 
-				l_Rst += l_Tmp;
-			}
-			else
-			if (l_Rst.length - l_DotIdx - 1 < a_Cnt)	// 现有小数位＜要求
-			{
-				l_Dta = a_Cnt + l_DotIdx + 1 - l_Rst.length;
-				for (i=0; i<l_Dta ; ++i)
-				{ l_Tmp += "0"; }
+		///// 优化数字显示
+		///// a_Num：Number，数字
+		///// 返回：String，优化后的数字字符串
+		//stStrUtil.cOpmzNumDspl = function (a_Num)
+		//{
+		//	var i_Rgx_0  = /[Ee]-(?:[789]|[1-9][0-9]+)/;
+		//	var i_Rgx_45 = /\.([0-9]*?)(?:0{7}|9{7})/;
+		//	var l_Str = a_Num.toString();
+		//	var l_Mch, l_Len, l_Pow;
+		//
+		//	if (i_Rgx_0.test(l_Str))
+		//	{
+		//		return "0";
+		//	}
+		//	else
+		//	if (l_Mch = i_Rgx_45.exec(l_Str))
+		//	{
+		//		if (l_Mch[1])
+		//		{
+		//			l_Len = l_Mch[1].length;
+		//			l_Pow = Math.pow(10, l_Len);
+		//			a_Num *= l_Pow;
+		//		}
+		//
+		//		a_Num = nWse.stNumUtil.cRound45(a_Num);
+		//
+		//		if (l_Len)
+		//		{ a_Num /= l_Pow; }
+		//		return a_Num.toString();
+		//	}
+		//	return l_Str;
+		//};
 
-				l_Rst += l_Tmp;
-			}
-			else
-			if (l_Rst.length - l_DotIdx - 1 > a_Cnt)	// 现有小数位＞要求
-			{
-				l_Rst = l_Rst.slice(0, l_DotIdx + 1 + a_Cnt);	// 直接截断，不要再次尝试四舍五入（cRoundDec45已经做过）
-			}
-			return l_Rst;
-		};
-		
-		/// 优化数字显示
-		/// a_Num：Number，数字
-		/// 返回：String，优化后的数字字符串
-		stStrUtil.cOpmzNumDspl = function (a_Num)
-		{
-			var i_Rgx_0  = /[Ee]-(?:[789]|[1-9][0-9]+)/;
-			var i_Rgx_45 = /\.([0-9]*?)(?:0{7}|9{7})/;
-			var l_Str = a_Num.toString();
-			var l_Mch, l_Len, l_Pow;
+		///// 补白
+		///// a_Tgt：String，目标
+		///// a_Cnt：Number，空格数，＜0左边补白，＞0右边补白
+		///// 返回：String，补白后的字符串
+		//stStrUtil.cPad = function (a_Tgt, a_Cnt)
+		//{
+		//	var l_Spc = "";
+		//	var i;
+		//	for (i=0; i<Math.abs(a_Cnt); ++i)
+		//	{ l_Spc += i_Spc1; }
+		//
+		//	// 左边补白
+		//	if (a_Cnt < 0)
+		//	{ return l_Spc + a_Tgt; }
+		//	else // 右边补白
+		//	{ return a_Tgt + l_Spc; }
+		//};
 
-			if (i_Rgx_0.test(l_Str))
-			{
-				return "0";
-			}
-			else
-			if (l_Mch = i_Rgx_45.exec(l_Str))
-			{
-				if (l_Mch[1])
-				{
-					l_Len = l_Mch[1].length;
-					l_Pow = Math.pow(10, l_Len);
-					a_Num *= l_Pow;
-				}
-
-				a_Num = nWse.stNumUtil.cRound45(a_Num);
-
-				if (l_Len)
-				{ a_Num /= l_Pow; }
-				return a_Num.toString();
-			}		
-			return l_Str;
-		};
-
-		/// 补白
-		/// a_Tgt：String，目标
-		/// a_Cnt：Number，空格数，＜0左边补白，＞0右边补白
-		/// 返回：String，补白后的字符串
-		stStrUtil.cPad = function (a_Tgt, a_Cnt)
-		{
-			var l_Spc = "";
-			var i;
-			for (i=0; i<Math.abs(a_Cnt); ++i)
-			{ l_Spc += i_Spc1; }
-
-			// 左边补白
-			if (a_Cnt < 0)
-			{ return l_Spc + a_Tgt; }
-			else // 右边补白
-			{ return a_Tgt + l_Spc; }
-		};
-
-		/// 格式化
-		stStrUtil.cFmt = function (a_Tmp, a___)
-		{
-			var i_RgxInfo = /^(\+?[1-9][0-9]*?)\:?([+-]?[1-9][0-9]*?)?\}$/;
-
-			var l_Rst = "";
-			var l_Sta = 0, l_RtBrace, l_Info, l_Mch, l_Wid, l_LtAln = true, l_Agm, l_AgmStr;
-			var i, l_Len = a_Tmp.length, l_Cha;
-			for (i=0; i<l_Len; ++i)
-			{
-				l_Cha = a_Tmp.charAt(i);
-
-				// 正常
-				if (0 == l_Sta)
-				{
-					if ("{" == l_Cha)
-					{
-						if (i == l_Len - 1)
-						{ throw new Error("字符串格式化语法错误：有一个“{”没有闭合！"); }
-
-						// “{{”算作转义
-						if ("{" == a_Tmp.charAt(i + 1))
-						{
-							// 跳过这个
-							++ i;
-						}
-						else
-						{
-							// 转换状态
-							l_Sta = 1;
-							continue;
-						}
-					}
-
-					// 录入
-					l_Rst += l_Cha;
-				}
-				else // 遇到“{”
-				if (1 == l_Sta)
-				{
-					// 首先找到“}”，然后提取信息
-					l_RtBrace = a_Tmp.indexOf("}", i);
-					if (l_RtBrace < 0)
-					{ throw new Error("字符串格式化语法错误：有一个“{”没有闭合！"); }
-
-					l_Info = a_Tmp.substring(i, l_RtBrace + 1);	// 以“}”结尾，方便正则表达式匹配
-
-					// 获取匹配
-					l_Mch = i_RgxInfo.exec(l_Info);
-					if ((! l_Mch) || (! l_Mch[1]))
-					{ throw new Error("字符串格式化语法错误：正确格式为“{实参索引:宽度}”，其中冒号以后是可选的。"); }
-
-					var l_AgmIdx = parseInt(l_Mch[1]);
-					var l_PstvSign = (43 == l_Mch[1].charCodeAt(0));
-					l_Agm = arguments[l_AgmIdx];
-					l_AgmStr = l_Agm.toString();
-
-					var l_IsNum = nWse.fIsNum(l_Agm);
-					if (l_IsNum && l_PstvSign && (l_Agm > 0))	// 需要前附“+”
-					{ l_AgmStr = "+" + l_AgmStr; }
-
-					// 如果指定了宽度
-					if (l_Mch[2])
-					{
-						l_Wid = parseInt(l_Mch[2], 10);
-
-						// 右对齐？
-						if (l_Wid < 0)
-						{
-							l_LtAln = false;
-							l_Wid = -l_Wid;
-						}
-						else // 宽度为0，不显示
-						if (0 == l_Wid)
-						{
-							l_AgmStr = null;
-						}
-
-						// 如果空间不足，适当截断
-						if (l_AgmStr && (l_AgmStr.length > l_Wid))
-						{
-							if (l_IsNum) // 数字需要特殊处理
-							{
-								// 为精确，暂时由调用者控制，已提供许多方法控制数字的显示格式
-							//	l_AgmStr = fTrunNumStr(l_Agm, l_AgmStr, l_Wid);
-							}
-							else // 其它类型一律截断到指定的字符数量
-							{ l_AgmStr = l_AgmStr.slice(0, l_Wid); }
-						}
-						else // 空间过大，适当补白
-						if (l_AgmStr && (l_AgmStr.length < l_Wid))
-						{
-							// 如果左对齐，右边补白
-							if (l_LtAln)
-							{ l_AgmStr = stStrUtil.cPad(l_AgmStr,  (l_Wid - l_AgmStr.length)); }
-							else // 右对齐，左边补白
-							{ l_AgmStr = stStrUtil.cPad(l_AgmStr, -(l_Wid - l_AgmStr.length)); }
-						}
-					}
-
-					// 录入
-					if (l_AgmStr)
-					{ l_Rst += l_AgmStr; }
-
-					// 跳到“}”
-					i = l_RtBrace;
-
-					// 转换状态
-					l_Sta = 0;
-				//	continue;
-				}
-			}
-
-			return l_Rst;
-		};
+		///// 格式化
+		//stStrUtil.cFmt = function (a_Tmp, a___)
+		//{
+		//	var i_RgxInfo = /^(\+?[1-9][0-9]*?)\:?([+-]?[1-9][0-9]*?)?\}$/;
+		//
+		//	var l_Rst = "";
+		//	var l_Sta = 0, l_RtBrace, l_Info, l_Mch, l_Wid, l_LtAln = true, l_Agm, l_AgmStr;
+		//	var i, l_Len = a_Tmp.length, l_Cha;
+		//	for (i=0; i<l_Len; ++i)
+		//	{
+		//		l_Cha = a_Tmp.charAt(i);
+		//
+		//		// 正常
+		//		if (0 == l_Sta)
+		//		{
+		//			if ("{" == l_Cha)
+		//			{
+		//				if (i == l_Len - 1)
+		//				{ throw new Error("字符串格式化语法错误：有一个“{”没有闭合！"); }
+		//
+		//				// “{{”算作转义
+		//				if ("{" == a_Tmp.charAt(i + 1))
+		//				{
+		//					// 跳过这个
+		//					++ i;
+		//				}
+		//				else
+		//				{
+		//					// 转换状态
+		//					l_Sta = 1;
+		//					continue;
+		//				}
+		//			}
+		//
+		//			// 录入
+		//			l_Rst += l_Cha;
+		//		}
+		//		else // 遇到“{”
+		//		if (1 == l_Sta)
+		//		{
+		//			// 首先找到“}”，然后提取信息
+		//			l_RtBrace = a_Tmp.indexOf("}", i);
+		//			if (l_RtBrace < 0)
+		//			{ throw new Error("字符串格式化语法错误：有一个“{”没有闭合！"); }
+		//
+		//			l_Info = a_Tmp.substring(i, l_RtBrace + 1);	// 以“}”结尾，方便正则表达式匹配
+		//
+		//			// 获取匹配
+		//			l_Mch = i_RgxInfo.exec(l_Info);
+		//			if ((! l_Mch) || (! l_Mch[1]))
+		//			{ throw new Error("字符串格式化语法错误：正确格式为“{实参索引:宽度}”，其中冒号以后是可选的。"); }
+		//
+		//			var l_AgmIdx = parseInt(l_Mch[1]);
+		//			var l_PstvSign = (43 == l_Mch[1].charCodeAt(0));
+		//			l_Agm = arguments[l_AgmIdx];
+		//			l_AgmStr = l_Agm.toString();
+		//
+		//			var l_IsNum = nWse.fIsNum(l_Agm);
+		//			if (l_IsNum && l_PstvSign && (l_Agm > 0))	// 需要前附“+”
+		//			{ l_AgmStr = "+" + l_AgmStr; }
+		//
+		//			// 如果指定了宽度
+		//			if (l_Mch[2])
+		//			{
+		//				l_Wid = parseInt(l_Mch[2], 10);
+		//
+		//				// 右对齐？
+		//				if (l_Wid < 0)
+		//				{
+		//					l_LtAln = false;
+		//					l_Wid = -l_Wid;
+		//				}
+		//				else // 宽度为0，不显示
+		//				if (0 == l_Wid)
+		//				{
+		//					l_AgmStr = null;
+		//				}
+		//
+		//				// 如果空间不足，适当截断
+		//				if (l_AgmStr && (l_AgmStr.length > l_Wid))
+		//				{
+		//					if (l_IsNum) // 数字需要特殊处理
+		//					{
+		//						// 为精确，暂时由调用者控制，已提供许多方法控制数字的显示格式
+		//					//	l_AgmStr = fTrunNumStr(l_Agm, l_AgmStr, l_Wid);
+		//					}
+		//					else // 其它类型一律截断到指定的字符数量
+		//					{ l_AgmStr = l_AgmStr.slice(0, l_Wid); }
+		//				}
+		//				else // 空间过大，适当补白
+		//				if (l_AgmStr && (l_AgmStr.length < l_Wid))
+		//				{
+		//					// 如果左对齐，右边补白
+		//					if (l_LtAln)
+		//					{ l_AgmStr = stStrUtil.cPad(l_AgmStr,  (l_Wid - l_AgmStr.length)); }
+		//					else // 右对齐，左边补白
+		//					{ l_AgmStr = stStrUtil.cPad(l_AgmStr, -(l_Wid - l_AgmStr.length)); }
+		//				}
+		//			}
+		//
+		//			// 录入
+		//			if (l_AgmStr)
+		//			{ l_Rst += l_AgmStr; }
+		//
+		//			// 跳到“}”
+		//			i = l_RtBrace;
+		//
+		//			// 转换状态
+		//			l_Sta = 0;
+		//		//	continue;
+		//		}
+		//	}
+		//
+		//	return l_Rst;
+		//};
 
 		/// 插入
 		/// a_Dst：String，目的
@@ -1149,7 +1149,7 @@ function fOnIcld(a_Errs)
 		/// a_fSet：Function，设置函数
 		stObjUtil.cDfnAcsrPpty = function (a_Tgt, a_PptyName, a_Cfgbl, a_Enmbl, a_fGet, a_fSet)
 		{
-			// IE8以前会抛出异常！
+			//【警告】IE8以前会抛出异常！但不再捕获，必须令调用者知道这一功能无法实现！
 		//	try
 		//	{
 				Object.defineProperty(a_Tgt, a_PptyName,

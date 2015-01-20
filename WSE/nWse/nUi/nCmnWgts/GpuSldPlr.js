@@ -553,9 +553,9 @@ function fOnIcld(a_Errs)
 //				var l_FontSize = parseFloat(l_CmptStl.fontSize);
 //				var l_CtntWid = stCssUtil.cGetCtntWid({}, l_DomIpt, l_CmptStl).c_CtntWid;
 //				var l_ShowCh = Math.floor(l_CtntWid / l_FontSize * 2);	// 数字宽度是一半
-//				var l_IntDgtAmt = stNumUtil.cGetIntDgtAmt(l_ShowCh);
+//				var l_IntDgtAmt = stNumUtil.cGetIntDgtAmt(l_ShowCh); //【已无这个函数】
 //				var l_Pad = Math.max(l_ShowCh - l_IntDgtAmt, 0);
-//				l_SN = stStrUtil.cPad(l_SN.toString(), -l_Pad);	// 左补白
+//				l_SN = stStrUtil.cPad(l_SN.toString(), -l_Pad);	// 左补白【已无这个函数】
 			//	console.log(l_Text);
 				l_This.d_NumIpt.cSetText(l_SN);
 				return this;

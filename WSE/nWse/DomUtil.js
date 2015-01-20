@@ -140,7 +140,6 @@ function fOnIcld(a_Errs)
 			return window.innerHeight || document.documentElement.clientHeight;
 		};
 
-
 		/// 存取<body>
 		stDomUtil.cAcsBody = function ()
 		{
@@ -166,7 +165,6 @@ function fOnIcld(a_Errs)
 		{
 			return Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight);
 		};
-
 
 		/// 转储成数组
 		/// a_NodeList：NodeList，节点列表
@@ -198,19 +196,6 @@ function fOnIcld(a_Errs)
 				? stDomUtil.cDumpToAry(document.getElementsByClassName(a_Cssc))
 				: stDomUtil.cQryAll("." + a_Cssc);
 		};
-
-//		/// 根据CSS类存取第一个子节点	【无用】
-//		stDomUtil.cAcs1stChdByCssc = function (a_Prn, a_Cssc)
-//		{
-//			var l_Nl = a_Prn.childNodes, n = 0, l_Len = l_Nl.length, l_CN;
-//			for (; n<l_Len; ++n)
-//			{
-//				l_CN = l_Nl[n].className;
-//				if (l_CN && (l_CN.indexOf(a_Cssc) >= 0))
-//				{ return l_Nl[n]; }
-//			}
-//			return null;
-//		};
 
 		/// 得到一个，首先获取，若没有则新建
 		/// a_Slc：String，选择器，默认为："#" + a_Id，若与a_Id同时为空则总是新建

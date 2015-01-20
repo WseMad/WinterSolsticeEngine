@@ -97,8 +97,7 @@ function fOnIcld(a_Errs)
 			/// 转成String
 			toString : function toString()
 			{
-				var l_f = stStrUtil.cOpmzNumDspl;
-				return "(" + l_f(this.x) + ", " + l_f(this.y) + ", " + l_f(this.z) + ", " + l_f(this.w) + ")";
+				return "(" + (this.x) + ", " + (this.y) + ", " + (this.z) + ", " + (this.w) + ")";
 			}
 			,
 			/// 创建
@@ -316,11 +315,10 @@ function fOnIcld(a_Errs)
 			/// 转成String
 			toString : function toString()
 			{
-				var l_f = stStrUtil.cOpmzNumDspl;
-				return	"┌" + l_f(this.c_11) + ", " + l_f(this.c_12) + ", " + l_f(this.c_13) + ", " + l_f(this.c_14) + "┐\n" +
-						"│" + l_f(this.c_21) + ", " + l_f(this.c_22) + ", " + l_f(this.c_23) + ", " + l_f(this.c_24) + "│\n" +
-						"│" + l_f(this.c_31) + ", " + l_f(this.c_32) + ", " + l_f(this.c_33) + ", " + l_f(this.c_34) + "│\n" +
-						"└" + l_f(this.c_41) + ", " + l_f(this.c_42) + ", " + l_f(this.c_43) + ", " + l_f(this.c_44) + "┘";
+				return	"┌" + (this.c_11) + ", " + (this.c_12) + ", " + (this.c_13) + ", " + (this.c_14) + "┐\n" +
+						"│" + (this.c_21) + ", " + (this.c_22) + ", " + (this.c_23) + ", " + (this.c_24) + "│\n" +
+						"│" + (this.c_31) + ", " + (this.c_32) + ", " + (this.c_33) + ", " + (this.c_34) + "│\n" +
+						"└" + (this.c_41) + ", " + (this.c_42) + ", " + (this.c_43) + ", " + (this.c_44) + "┘";
 			}
 			,
 			/// 单位化
