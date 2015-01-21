@@ -199,27 +199,34 @@ namespace nWebCprsr.nCprsr
 					// 所以无法保证局部变量新名不与属性访问新名冲突，故必须检查这两个名字！c_New为空不妨碍
 					//【注意2】不能只是搜索this，还必须向上找，直至函数作用域（var定义到的作用域）！
 					//【BUG】兄弟作用域会不会也用了？！
-					var l_VarScp = this.cGetScpForLocDfnByVar();
-					var l_Scp = this;
-					int l_Idx;
-					do
-					{
-						l_Idx = l_Scp.c_LocDfns.FindIndex(
-							(a_Map) => { return (a_Map.c_Old == a_NewName) || (a_Map.c_New == a_NewName); });
-						if (l_Idx >= 0)
-						{
-							return true;
-						}
+					//var l_VarScp = this.cGetScpForLocDfnByVar();
+					//var l_Scp = this;
+					//int l_Idx;
+					//do
+					//{
+					//	l_Idx = l_Scp.c_LocDfns.FindIndex(
+					//		(a_Map) => { return (a_Map.c_Old == a_NewName) || (a_Map.c_New == a_NewName); });
+					//	if (l_Idx >= 0)
+					//	{
+					//		return true;
+					//	}
 
-						if (l_Scp == l_VarScp)
-						{
-							break;
-						}
-						else
-						{
-							l_Scp = l_Scp.c_Prn;
-						}
-					} while ((null != l_Scp));
+					//	if (l_Scp == l_VarScp)
+					//	{
+					//		break;
+					//	}
+					//	else
+					//	{
+					//		l_Scp = l_Scp.c_Prn;
+					//	}
+					//} while ((null != l_Scp));
+					var l_Scp = this;
+					int l_Idx = l_Scp.c_LocDfns.FindIndex(
+							(a_Map) => { return (a_Map.c_Old == a_NewName) || (a_Map.c_New == a_NewName); });
+					if (l_Idx >= 0)
+					{
+						return true;
+					}
 
 					//【不用了，子函数名应该已被加入到this.c_LocDfns】
 					//// 检查是否与源代码定义的函数名（位于子作用域）相同
@@ -239,6 +246,7 @@ namespace nWebCprsr.nCprsr
 
 					// 沿着作用域链向上回溯，注意到顶级标识符名在调用本函数之前就已被检查过
 					// 对于祖先作用域里的局部变量名，应使用新名（他们已被替换！）进行比对
+					var l_VarScp = this.cGetScpForLocDfnByVar();	// var定义到的作用域
 					l_Scp = this.c_Prn;
 					while (null != l_Scp)
 					{
@@ -257,8 +265,10 @@ namespace nWebCprsr.nCprsr
 										return true; // 已用
 									}
 
-									return seIsScpSubtreeUseName(this, a_Map.c_Old); //【使用这个】
-									//return (this.c_LocRefs.FindIndex((a_Tkn) =>
+									//【判断后代作用域是否访问了先辈的这一变量名
+									// 注意使用的是l_VarScp，因为这是a_NewName定义到的作用域！】
+									return seIsScpSubtreeUseName(l_VarScp, a_Map.c_Old);
+									//return (l_VarScp.c_LocRefs.FindIndex((a_Tkn) =>
 									//{ return a_Tkn.c_Attr.ToString() == a_Map.c_Old; }) >= 0);
 								}
 								return false;
@@ -602,17 +612,17 @@ namespace nWebCprsr.nCprsr
 				// 如果需要压缩属性访问
 				if (e_Cprsr.c_RunCfg.c_PptyAcs)
 				{
+				//	if ("tReg0" == a_Scp.c_Name) //【DEBUG】
+				////	if ("apply" == l_Keys[i])
+				//	{
+				//		int z = 0;
+				//	}
+
 					// 为属性名局部变量生成替换名
 					string[] l_Keys = new string[a_Scp.c_PptyNameMap.Count];
 					a_Scp.c_PptyNameMap.Keys.CopyTo(l_Keys, 0);
 					for (int i = 0; i < l_Keys.Length; ++i)
 					{
-						if ("fEnum" == a_Scp.c_Name)
-					//	if ("apply" == l_Keys[i])
-						{
-							int z = 0;
-						}
-
 						// 首先尝试映射父作用域里的属性变量名
 						string l_NewName = a_Scp.cMapPrnPptyAcsVar(l_Keys[i]);
 						if (null != l_NewName)
@@ -623,7 +633,8 @@ namespace nWebCprsr.nCprsr
 						{
 							//【警告】必须保证该名称尚未使用
 
-							int l_SbstNameNum = a_Scp.c_SbstNameNum;
+							var l_VarScp = a_Scp.cGetScpForLocDfnByVar(); // 用这个作用域的编号，因为要放到那里
+							int l_SbstNameNum = Math.Max(a_Scp.c_SbstNameNum, l_VarScp.c_SbstNameNum); // 取更大的
 							do
 							{
 								l_NewName = eGnrtSbstName(ref l_SbstNameNum);
@@ -641,7 +652,7 @@ namespace nWebCprsr.nCprsr
 				// 递归
 				for (int s = 0; s < a_Scp.c_SubScps.Count; ++s)
 				{
-					//【没有必要继续计数，复位到0即可。
+					//【没有必要继续计数，复位到0即可。】
 					a_Scp.c_SubScps[s].c_SbstNameNum = 0;
 				//	a_Scp.c_SubScps[s].c_SbstNameNum = a_Scp.c_SbstNameNum;
 					eBldSbstName(a_TknList, a_Scp.c_SubScps[s]);
