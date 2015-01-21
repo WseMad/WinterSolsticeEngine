@@ -270,7 +270,9 @@ namespace nWebCprsr.nCprsr
 					if (l_Srl[s].c_IsWseDiry)
 					{
 						l_CtanWseDiry = true;
-						Console.WriteLine("\t\t已处理：(0)Seed.js");
+
+						// 信息
+					//	Console.WriteLine("\t\t已处理：(0)Seed.js"); // 已转移
 					}
 				}
 
@@ -304,8 +306,8 @@ namespace nWebCprsr.nCprsr
 						l_Fsr.c_TotRptBfr.Append(l_Srl[s].c_RptBfrList[l_Srl[s].c_SortIdx[o]].ToString());
 					}
 
-					// 信息
-					Console.WriteLine("\t\t已处理：" + Path.GetFileName(l_Srl[s].c_PathList[l_Srl[s].c_SortIdx[o]]));
+					// 信息，移至压缩时，那里还没有排过序
+				//	Console.WriteLine("\t\t已处理：" + Path.GetFileName(l_Srl[s].c_PathList[l_Srl[s].c_SortIdx[o]]));
 				}
 			}
 
@@ -351,6 +353,10 @@ namespace nWebCprsr.nCprsr
 			string l_Path = a_SrcRcd.c_PathList[a_Idx];
 			string l_Flnm = Path.GetFileName(l_Path);
 
+			// 信息
+			Console.WriteLine("\t\t正在处理文件：" + l_Flnm);
+
+			// 词法分析
 			tLex l_Lex = new tLex();
 			try
 			{

@@ -165,27 +165,42 @@ namespace nWebCprsr.nCprsr
 
 				public void cAddPptyAcs(tLex.tTkn a_Tkn)
 				{
-					// 如果长度为1，不用录入
+					// 如果长度≤2个字符，不用录入，后面会解释这是怎么算出来的
 					var l_TknStr = a_Tkn.c_Attr.ToString();
-					if (1 == l_TknStr.Length)
+					if (l_TknStr.Length <= 2)
 					{
 						return;
 					}
 
-					int l_Idx = c_PptyAcsTab.FindIndex((a_TL) => { return a_TL[0].c_Attr.ToString() == l_TknStr; });
-					if (l_Idx < 0)
+					//【注意】添加的属性名变量一定放在var所在作用域
+					var l_VarScp = this.cGetScpForLocDfnByVar();
+					if (null == l_VarScp)
 					{
-						c_PptyAcsTab.Add(new List<tLex.tTkn>());
-						l_Idx = c_PptyAcsTab.Count - 1;
+						return;
 					}
 
-					c_PptyAcsTab[l_Idx].Add(a_Tkn);
-
-					// 如果至少已录入两个，则也录入新旧名映射
-					if ((c_PptyAcsTab[l_Idx].Count > 1) &&
-						(!c_PptyNameMap.ContainsKey(a_Tkn.c_Attr.ToString())))
+					int l_Idx = l_VarScp.c_PptyAcsTab.FindIndex((a_TL) => { return a_TL[0].c_Attr.ToString() == l_TknStr; });
+					if (l_Idx < 0)
 					{
-						c_PptyNameMap.Add(a_Tkn.c_Attr.ToString(), null);
+						l_VarScp.c_PptyAcsTab.Add(new List<tLex.tTkn>());
+						l_Idx = l_VarScp.c_PptyAcsTab.Count - 1;
+					}
+
+					l_VarScp.c_PptyAcsTab[l_Idx].Add(a_Tkn);
+
+					// 如果确实能缩减总的代码量，那就录入新旧名映射
+					// 计算方式为：假设要访问的属性名为“Ppty”，
+					// 当访问一次时，Obj.Ppty -> var p="Ppty";Obj[p]，
+					// 变化：((9 + 4) + 3 * 1) - (1 + 4) = +11，压缩后反而增加了11个字符；
+					// 当访问两次时，Obj.Ppty;Obj.Ppty; -> var p="Ppty";Obj[p];Obj[p];，
+					// 变化：((9 + 4) + 3 * 2) - (1 + 4) * 2 = +9，压缩后反而增加了9个字符；
+					// ……每增加一次访问，就可以省(属性名的长度 - 2)个字符，故须保证l_TknStr.Length > 2
+					var l_NoCprsChaAmt = (1 + l_TknStr.Length) * l_VarScp.c_PptyAcsTab[l_Idx].Count;
+					var l_CprsChaAmt = (9 + l_TknStr.Length) + 3 * l_VarScp.c_PptyAcsTab[l_Idx].Count;
+					if ((l_CprsChaAmt < l_NoCprsChaAmt) &&
+						(!l_VarScp.c_PptyNameMap.ContainsKey(l_TknStr)))
+					{
+						l_VarScp.c_PptyNameMap.Add(l_TknStr, null);
 					}
 				}
 
@@ -816,6 +831,12 @@ namespace nWebCprsr.nCprsr
 
 			private void ePptyAcsBrkt(List<tLex.tTkn> a_TknList, teScp a_Scp, tLex.tTkn a_PptyNameTkn)
 			{
+				// 如果未录入映射，立即返回
+				if (! a_Scp.c_PptyNameMap.ContainsKey(a_PptyNameTkn.c_Attr.ToString()))
+				{
+					return;
+				}
+
 				// 前一个词法单元一定是“.”，改成“[”
 				int l_Idx = a_TknList.IndexOf(a_PptyNameTkn);
 				a_TknList[l_Idx - 1].c_Tmnl = tLex.tTmnl.i_LBrkt;

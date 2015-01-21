@@ -66,6 +66,9 @@ namespace nWebCprsr.nCprsr
 			this.e_OptBfr = a_SrcRcd.c_OptBfrList[a_SrcRcd.c_OptBfrList.Count - 1];
 			this.e_RptBfr = a_SrcRcd.c_RptBfrList[a_SrcRcd.c_RptBfrList.Count - 1];
 
+			this.e_RptBfr.AppendLine("【" + this.e_Path + "】"); // 报告文件名
+			this.e_RptBfr.AppendLine();
+
 			// 读取文件成字符串，若发生异常交由调用者处理
 			this.e_SrcText = File.ReadAllText(a_SrcRcd.c_PathList[a_PathIdx], Encoding.UTF8);
 			if (string.IsNullOrEmpty(this.e_SrcText)) // 若为空立即返回
