@@ -44,13 +44,15 @@ namespace nWebCprsr
 				public List<string> c_IptPathList; // 输入路径列表
 				public bool c_PseDpdc;	// 解析依赖？
 				public bool c_Cprs;		// 压缩？
+				public bool c_SprtSeed;	// 分离种子？（仅用于nWse目录）
 
-				public tSrc(string a_IptDiry, bool a_PseDpdc, bool a_Cprs)
+				public tSrc(string a_IptDiry, bool a_PseDpdc, bool a_Cprs, bool a_SprtSeed)
 				{
 					this.c_IptPathList = new List<string>();
 					this.c_IptDiry = a_IptDiry;
 					this.c_PseDpdc = a_PseDpdc;
 					this.c_Cprs = a_Cprs;
+					this.c_SprtSeed = a_SprtSeed;
 				}
 			}
 
@@ -71,7 +73,7 @@ namespace nWebCprsr
 				this.c_OptPathList.Add(a_OptPath);
 			}
 
-			public tSrc cAddIptDiry(string a_IptDiry, bool a_PseDpdc, bool a_Cprs)
+			public tSrc cAddIptDiry(string a_IptDiry, bool a_PseDpdc, bool a_Cprs, bool a_SprtSeed)
 			{
 				// 确保目录以（正反）斜杠结尾
 				if (('/' != a_IptDiry[a_IptDiry.Length - 1]) && ('\\' != a_IptDiry[a_IptDiry.Length - 1]))
@@ -79,7 +81,7 @@ namespace nWebCprsr
 					a_IptDiry += '/';
 				}
 
-				this.c_SrcList.Add(new tSrc(a_IptDiry, a_PseDpdc, a_Cprs));
+				this.c_SrcList.Add(new tSrc(a_IptDiry, a_PseDpdc, a_Cprs, a_SprtSeed));
 				return this.c_SrcList[this.c_SrcList.Count - 1];
 			}
 		}
@@ -235,8 +237,9 @@ namespace nWebCprsr
 						}
 
 						var l_Src = l_FS.cAddIptDiry(l_SrcElmt.GetAttribute("目录"),
-							("否" != l_SrcElmt.GetAttribute("解析依赖")),
-							("否" != l_SrcElmt.GetAttribute("压缩")));
+							("是" == l_SrcElmt.GetAttribute("解析依赖")),
+							("是" == l_SrcElmt.GetAttribute("压缩")),
+							("是" == l_SrcElmt.GetAttribute("分离种子")));
 
 						for (int f = 0; f < l_SrcElmt.ChildNodes.Count; ++f)
 						{

@@ -261,7 +261,8 @@ namespace nWebCprsr.nCprsr
 			}
 
 			// 写入到文件里
-			bool l_CtanWseDiry = false;
+			bool l_CtanWseDiry = false; // 是否包含nWse目录？
+			bool l_SprtSeed = false; // 是否要求分离种子文件？
 			for (int s = 0; s < l_Srl.Count; ++s)
 			{
 				// 注意，WSE目录需要特殊处理(0)Seed.js
@@ -269,7 +270,13 @@ namespace nWebCprsr.nCprsr
 				{
 					if (l_Srl[s].c_IsWseDiry)
 					{
+						if (0 != s)
+						{
+							throw new Exception("“nWse”目录必须是合集里的首个输入目录！");
+						}
+
 						l_CtanWseDiry = true;
+						l_SprtSeed = l_Srl[s].c_Src.c_SprtSeed;
 
 						// 信息
 					//	Console.WriteLine("\t\t已处理：(0)Seed.js"); // 已转移
@@ -282,8 +289,10 @@ namespace nWebCprsr.nCprsr
 				if ((2 == a_Which) && l_Srl[s].c_Src.c_PseDpdc)
 				{
 					l_Fsr.c_TotOptBfr.Append("(function(){var i_InNodeJs=(\"undefined\"==typeof self);var l_Glb=i_InNodeJs?global:self;");
-					l_Fsr.c_TotOptBfr.Append("l_Glb.nWse.stAsynIcld.cPreLoad(\"" 
-						+ (l_Srl[s].c_IsWseDiry ? "nWse" : l_Srl[s].c_DftLibDiryList[l_Srl[s].c_SortIdx[0]]) 
+					l_Fsr.c_TotOptBfr.Append("l_Glb.nWse.stAsynIcld.cPreLoad(\""
+						+ (l_Srl[s].c_IsWseDiry		// 注意特殊处理nWse目录
+							? "nWse" 
+							: l_Srl[s].c_DftLibDiryList[l_Srl[s].c_SortIdx[0]])
 						+ "\", [");
 					for (int p = 0; p < l_Srl[s].c_PathList.Count; ++p)
 					{
@@ -297,7 +306,8 @@ namespace nWebCprsr.nCprsr
 				}
 
 				// 对每个输出缓冲
-				for (int o = (l_Srl[s].c_IsWseDiry ? 1 : 0); o < l_Srl[s].c_OptBfrList.Count; ++o)
+				// 如果是nWse目录且要求分离种子，则索引从[1]开始，否则从[0]开始，种子一定是[0]
+				for (int o = ((l_Srl[s].c_IsWseDiry && l_SprtSeed) ? 1 : 0); o < l_Srl[s].c_OptBfrList.Count; ++o)
 				{
 					l_Fsr.c_TotOptBfr.Append(l_Srl[s].c_OptBfrList[l_Srl[s].c_SortIdx[o]].ToString());
 
@@ -311,12 +321,13 @@ namespace nWebCprsr.nCprsr
 				}
 			}
 
-			if (l_CtanWseDiry)
+			if (l_CtanWseDiry && l_SprtSeed) // 如果包含nWse目录，且要求分离种子
 			{
+				// 索引一定是[0]
 				File.WriteAllText(l_Fsr.c_PrmrOptDiry + "(0)Seed.js", l_Srl[0].c_OptBfrList[0].ToString(), Encoding.UTF8);
 			}
 
-			for (int o=0; o<l_Fsr.c_FileSet.c_OptPathList.Count; ++o)
+			for (int o=0; o<l_Fsr.c_FileSet.c_OptPathList.Count; ++o) // 逐个写到输出路径
 			{
 				var l_OptPath = l_Fsr.c_FileSet.c_OptPathList[o];
 				File.WriteAllText(l_OptPath, l_Fsr.c_TotOptBfr.ToString(), Encoding.UTF8);
