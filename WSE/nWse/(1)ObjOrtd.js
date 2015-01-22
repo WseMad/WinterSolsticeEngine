@@ -99,6 +99,7 @@ function fOnIcld(a_Errs)
 		/// 返回：新定义的类
 		nWse.fClassHead = function (a_nHost$tHost, a_fCtor, a_tBase)
 		{
+			// 调整实参
 			if (! a_nHost$tHost)
 			{
 				a_nHost$tHost = l_Glb.nApp;
@@ -114,6 +115,9 @@ function fOnIcld(a_Errs)
 				throw new Error("基类要么是Object，要么是经由nWse.fClassHead定义的类！");
 			}
 
+			// 基类是Object？
+			var l_BaseIsObject = (Object === a_tBase);
+
 			// 取得类名
 			var l_ClassName = fGetFctnName(a_fCtor);
 			if (! l_ClassName)
@@ -121,50 +125,77 @@ function fOnIcld(a_Errs)
 				throw new Error("构造函数名即为类名，不能为空！");
 			}
 
-			//【不检查了，为了支持IE8，写法不能统一】
-			//// 如果有非Object的基类，检查构造函数是否调用了基类的构造函数
-			//var l_ChkRgx;
-			//if ((Object !== a_tBase) && (! nWse.fMaybeNonHtml5Brsr())) // 只在Html5浏览器里检查
-			//{
-			//	l_ChkRgx = new RegExp("this\\.odBase\\(\\s*(?:.*?\\.)?" + l_ClassName + "\\s*\\)\\.odCall\\(");
-			//	if (! l_ChkRgx.test(a_fCtor.toString()))
-			//	{
-			//		nWse.stLog.cPutLine("◆【警告】类“" + a_nHost$tHost.ocBldFullName(l_ClassName) + "”的构造函数可能没有调用基类的构造函数！");
-			//	}
-			//}
+			// 如果基类非Object，检查构造函数是否调用了基类的构造函数
+			var l_ChkRgx;
+			if ((! l_BaseIsObject))
+			{
+				l_ChkRgx = /\bthis\s*\.\s*odBase\s*\(/;	// this . odBase (
+				if (! l_ChkRgx.test(a_fCtor.toString()))
+				{
+					nWse.stLog.cPutLine("◆【警告】类“" + a_nHost$tHost.ocBldFullName(l_ClassName) + "”的构造函数可能没有调用基类的构造函数！");
+				}
+			}
 
 			// 在宿主名字空间还是宿主类型里？
 			var l_IsHostSpc = nWse.fIsNmspc(a_nHost$tHost);
+
+			/// 类（构造函数）
+			function tClass()
+			{
+				if (undefined === this.odBase) // 如果尚未定义，添加odBase至this
+				{
+					fDfnDataPpty(this, "odBase", false, false, true, null);
+				}
+
+				if (undefined === a_tBase.Wse_fPrev) // 如果尚未定义，添加Wse_fPrev至a_tBase
+				{
+					fDfnDataPpty(a_tBase, "Wse_fPrev", false, false, true, null);
+				}
+
+				a_tBase.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
+				this.odBase = a_tBase;				// 压入基类版本
+				try
+				{
+					tClass.Wse_fOrigCtor.apply(this, arguments); // 调用被包装的构造函数
+				}
+				finally
+				{
+					this.odBase = this.odBase.Wse_fPrev;	// 弹出基类版本
+				}
+			}
+
+			tClass.Wse_fOrigCtor = a_fCtor;		// 记录原始构造函数
+			a_fCtor = tClass;					// 令传入的构造函数指向包装函数！
 		
 			// 继承原型
 			fIhrtPttp(a_fCtor, a_tBase);
 			var l_Pttp = a_fCtor.prototype;
 
 			// 添加odBase至原型
-			fDfnDataPpty(l_Pttp, "odBase", false, false, false,
-				function odBase(a_fCaller)
-				{
-					// 没有提供调用者时，尝试读取caller属性，若引发异常由引擎用户负责
-					if (! a_fCaller)
-					{
-						a_fCaller = l_Pttp.odBase.caller;
-					}
-
-					// 如果调用者是类（构造函数）
-					if (nWse.fIsClass(a_fCaller))
-					{
-						fDfnDataPpty(this, "odCall", true, false, true,
-							(a_fCaller.oc_tBase !== Object) ? a_fCaller.oc_tBase : nWse.fVoid);
-					}
-					else // 方法
-					{
-						fDfnDataPpty(this, "odCall", true, false, true,
-							a_fCaller.Wse_dBase);
-					}
-
-					// 返回自己，实现链式调用
-					return this;
-				});
+			//fDfnDataPpty(l_Pttp, "odBase", false, false, false,
+			//	function odBase(a_fCaller)
+			//	{
+			//		// 没有提供调用者时，尝试读取caller属性，若引发异常由引擎用户负责
+			//		if (! a_fCaller)
+			//		{
+			//			a_fCaller = l_Pttp.odBase.caller;
+			//		}
+			//
+			//		// 如果调用者是类（构造函数）
+			//		if (nWse.fIsClass(a_fCaller))
+			//		{
+			//			fDfnDataPpty(this, "odCall", true, false, true,
+			//				(a_fCaller.oc_tBase !== Object) ? a_fCaller.oc_tBase : nWse.fVoid);
+			//		}
+			//		else // 方法
+			//		{
+			//			fDfnDataPpty(this, "odCall", true, false, true,
+			//				a_fCaller.Wse_dBase);
+			//		}
+			//
+			//		// 返回自己，实现链式调用
+			//		return this;
+			//	});
 
 			// 添加odDfnFlds至原型
 			fDfnDataPpty(l_Pttp, "odDfnFlds", false, false, false,
@@ -341,7 +372,7 @@ function fOnIcld(a_Errs)
 					return fEqObjectIstn(a_L, a_R, a_S);
 				}
 
-				// 如果要求且尚不存在同名函数时添加
+				// 当要求，且尚不存在同名函数时添加
 				if (a_AddCmnStacMthd)
 				{
 					if (true === a_AddCmnStacMthd)
@@ -385,20 +416,39 @@ function fOnIcld(a_Errs)
 				}
 			}
 
-			// 添加实例方法至原型，并在虚函数上记录基类同名虚函数
+			// 添加实例方法至原型，并包装虚函数
 			if (a_IstnMthds)
 			{
 				fObjFor(a_IstnMthds,
-				function (a_Tgt, a_MthdName, a_fMthd)
-				{
-					if (fIsVtuFctn(a_MthdName))
+					function (a_Tgt, a_MthdName, a_fMthd)
 					{
-						fDfnDataPpty(a_fMthd, "Wse_dBase", false, false, false,
-							l_tBase.prototype[a_MthdName] || nWse.fVoid);
-					}
+						var l_fMthd = a_fMthd;
+						var l_BaseMthd;
+						if (fIsVtuFctn(a_MthdName)) // 对于虚函数
+						{
+							//fDfnDataPpty(a_fMthd, "Wse_dBase", false, false, false,
+							//	l_tBase.prototype[a_MthdName] || nWse.fVoid);
 
-					l_Pttp[a_MthdName] = a_fMthd;
-				});
+							// 如果基类版本不存在，补充一个空函数
+							l_BaseMthd = l_BasePttp[a_MthdName] || (function(){});
+							l_fMthd = function ()
+							{
+								l_BaseMthd.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
+								this.odBase = l_BaseMthd;			// 压入基类版本
+								try
+								{
+									l_fMthd.Wse_fOrigVtu.apply(this, arguments); // 调用被包装的虚函数
+								}
+								finally
+								{
+									this.odBase = this.odBase.Wse_fPrev || null;	// 弹出基类版本
+								}
+							};
+							l_fMthd.Wse_fOrigVtu = a_fMthd; // 记录原始虚函数
+						}
+
+						l_Pttp[a_MthdName] = l_fMthd;
+					});
 			}
 
 			// 返回类头（构造函数）
@@ -791,9 +841,9 @@ function fOnIcld(a_Errs)
 			fDfnDataPpty(a_fCtor, "oc_FullName", false, false, false, a_nHost$tHost.ocBldFullName(l_ItfcName));
 
 			// 加入绑定解绑函数
-			function fBindUbnd(a_Bind, a_Istn)
+			function fBindUbnd(a_Bind, a_tClass)
 			{
-				var l_tClass = a_Istn.constructor;
+				var l_tClass = a_tClass;
 				var l_Pttp = l_tClass.prototype;		// 原型
 				var l_ItfcAry = l_tClass.uoe_ItfcAry;
 				var l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
@@ -801,7 +851,7 @@ function fOnIcld(a_Errs)
 				if (l_Idx < 0)
 				{ return false; }
 
-				// 将纯虚函数实现添加至原型，若不存在则补充抛出异常
+				// 将纯虚函数实现添加至原型
 				var l_itItfc = l_ItfcAry[l_Idx];
 				var l_ItfcImp = l_ItfcImpAry[l_Idx];
 				var l_PN;
@@ -825,7 +875,7 @@ function fOnIcld(a_Errs)
 					if (a_Bind) // 绑定
 					{
 						l_Pttp[l_PN] = l_ItfcImp[l_PN];
-						if (! l_Pttp[l_PN])
+						if (! l_Pttp[l_PN]) // 若不存在则补充抛出异常
 						{
 							// 注意这里的l_PN可能会变！
 							(function (a_PN)
@@ -833,6 +883,7 @@ function fOnIcld(a_Errs)
 								l_Pttp[a_PN] = function () { nWse.fThrowNotImpPureVtu(a_fCtor.oc_FullName + "." + a_PN); };
 							})(l_PN);
 						}
+						//【待定】存在时，是否提供包装，使得odBase指向基类对同一接口同一虚函数的实现？
 					}
 					else
 					if (l_Pttp[l_PN]) // 解绑，若有效
@@ -847,22 +898,27 @@ function fOnIcld(a_Errs)
 				return true;
 			}
 
+			// 定义ocBindUbnd至构造函数
 			fDfnDataPpty(a_fCtor, "ocBindUbnd", false, false, false,
 				/// 绑定解绑实例
-				/// a_Istn：类实例，所属类必须实现了本接口
-				/// a_fCabk：void f(a_Istn)，回调函数
-				function (a_Istn, a_fCabk)
+				/// a_tClass：类，若为null则取a_Istn.constructor，否则该类必须实现本接口，不能与a_Istn同时为null
+				/// a_Istn：类实例，所属类必须实现本接口，若a_tClass有效则忽略，否则必须有效
+				/// a_fCabk：void f(a_tClass, a_Istn)，回调函数
+				function (a_tClass, a_Istn, a_fCabk)
 				{
-					if (! fBindUbnd(true, a_Istn))	// 没有实现本接口时立即返回
+					if (! a_tClass)
+					{ a_tClass = a_Istn.constructor; }
+
+					if (! fBindUbnd(true, a_tClass))	// 没有实现本接口时立即返回
 					{ return a_fCtor; }
 
 					try
 					{
-						a_fCabk(a_Istn);
+						a_fCabk(a_tClass, a_Istn);
 					}
 					finally
 					{
-						fBindUbnd(false, a_Istn);
+						fBindUbnd(false, a_tClass);
 					}
 					return a_fCtor;
 				});

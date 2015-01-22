@@ -106,10 +106,105 @@
 
 			///////////////////////////////////////////////// 接口
 
+			nWse.fClass(nApp,
+				/// 形状
+				function tShp(a_X, a_Y)
+				{
+					this.odBase(a_X, a_Y);
+					console.log("tShp");
+				},
+				null,
+				{
+					vcShow: function (a_X, a_Y)
+					{
+						console.log("tShp.vcShow");
+						this.vdDraw();
+					}
+					,
+					vdDraw: function (a_X, a_Y)
+					{
+						console.log("\ttShp.vdDraw");
+					}
+				});
+
+			nWse.fClass(nApp,
+				/// 多边形
+				function tPlg(a_X, a_Y, a_W, a_H)
+				{
+					this.odBase(a_X, a_Y);
+					console.log("tPlg");
+				},
+				nApp.tShp,
+				{
+//					vcShow: function (a_X, a_Y)
+//					{
+//						console.log("tPlg.vcShow");
+//						this.odBase(a_X, a_Y);
+//					}
+//					,
+					vdDraw: function (a_X, a_Y)
+					{
+						console.log("\ttPlg.vdDraw");
+						this.odBase(a_X, a_Y);
+					}
+				});
+
+			nWse.fClass(nApp,
+				/// 四边形
+				function tQuad(a_X, a_Y, a_W, a_H)
+				{
+					this.odBase(a_X, a_Y, a_W, a_H);
+					console.log("tQuad");
+				},
+				nApp.tPlg,
+				{
+					vcShow: function (a_X, a_Y)
+					{
+						console.log("tQuad.vcShow");
+						this.odBase(a_X, a_Y);
+					}
+//					,
+//					vdDraw: function (a_X, a_Y)
+//					{
+//						console.log("\ttQuad.vdDraw");
+//						this.odBase(a_X, a_Y);
+//					}
+				});
+
+			nWse.fClass(nApp,
+				/// 矩形
+				function tRect(a_X, a_Y, a_W, a_H)
+				{
+					this.odBase(a_X, a_Y, a_W, a_H);
+					console.log("tRect");
+				},
+				nApp.tQuad,
+				{
+					vcShow: function (a_X, a_Y)
+					{
+						console.log("tRect.vcShow");
+						this.odBase(a_X, a_Y);
+					}
+					,
+					vdDraw: function (a_X, a_Y)
+					{
+						console.log("\ttRect.vdDraw");
+						this.odBase(a_X, a_Y);
+					}
+				});
+
+			var l_Rect = new nApp.tRect(0, 0, 200, 100);
+			console.log(l_Rect.odBase);
+			console.log("");
+
+			l_Rect.vcShow();
+			console.log(l_Rect.odBase);
+
+			/* 测试输入
 			function fHdlIpt(a_Ipt)
 			{
 				var l_DmntTch = a_Ipt.c_Tchs[0];
-				console.log(l_DmntTch.c_Kind.toString());
+			//	console.log(l_DmntTch.c_Kind.toString());
 			}
 
 			nApp.g_PIT = new nWse.tPntIptTrkr();
@@ -118,6 +213,7 @@
 				,c_HdlMosMove: true
 			});
 			nApp.g_PIT.cSetImdtHdlr(fHdlIpt);
+			//*/
 		}
 
 		//// http://blog.csdn.net/orbit/article/details/9210413 农历计算
