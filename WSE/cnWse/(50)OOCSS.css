@@ -99,6 +99,19 @@ li > a {
 	height: 100%;
 }
 
+.mi_half_wid {
+	width: 50%;
+}
+
+.mi_half_hgt {
+	height: 50%;
+}
+
+.mi_half_dim {
+	width: 50%;
+	height: 50%;
+}
+
 /******************************** 边距 ********************************/
 
 .mi_mgn_l0 {
