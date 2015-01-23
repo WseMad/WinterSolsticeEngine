@@ -1780,19 +1780,19 @@ function fOnIcld(a_Errs)
 		/// 返回：String，函数名
 		stFctnUtil.cGetName = unKnl.fGetFctnName;
 
-		/// 获取信息
-		/// a_fTgt：Function，目标函数
-		/// a_Name：Boolean，是否获取名称
-		/// a_Prms：Boolean，是否获取形参
-		/// a_Body：Boolean，是否获取函数体
-		/// 注意：若不传a_Name，a_Prms，a_Body，则认为全部是true
-		/// 返回：Object，
-		/// {
-		/// c_Name：String，名称
-		/// c_Prms：Array，参数数组
-		/// c_Body：String，函数体
-		/// }
-		stFctnUtil.cGetInfo = unKnl.fGetFctnInfo;
+		///// 获取信息
+		///// a_fTgt：Function，目标函数
+		///// a_Name：Boolean，是否获取名称
+		///// a_Prms：Boolean，是否获取形参
+		///// a_Body：Boolean，是否获取函数体
+		///// 注意：若不传a_Name，a_Prms，a_Body，则认为全部是true
+		///// 返回：Object，
+		///// {
+		///// c_Name：String，名称
+		///// c_Prms：Array，参数数组
+		///// c_Body：String，函数体
+		///// }
+		//stFctnUtil.cGetInfo = unKnl.fGetFctnInfo;
 
 		/// 绑定this
 		/// a_This：Object，this

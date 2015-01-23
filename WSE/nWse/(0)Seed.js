@@ -67,71 +67,71 @@
 		return (l_Mch && l_Mch[1]) ? l_Mch[1] : "";
 	}
 
-	/// 获取信息
-	/// a_fTgt：Function，目标函数
-	/// a_Name：Boolean，是否获取名称
-	/// a_Prms：Boolean，是否获取形参
-	/// a_Body：Boolean，是否获取函数体
-	/// 注意：若不传a_Name，a_Prms，a_Body，则认为全部是true
-	/// 返回：Object，
-	/// {
-	/// c_Name：String，名称
-	/// c_Prms：String[]，形参名数组
-	/// c_Body：String，函数体
-	/// }
-	function fGetFctnInfo(a_fTgt, a_Name, a_Prms, a_Body)
-	{
-		// 如果三个实参皆无则默认为true
-		if (1 == arguments.length)
-		{ a_Name = a_Prms = a_Body = true; }
-
-		// 结果初始化
-		var l_Rst = { "c_Name": "", "c_Prms": null, "c_Body": "" };
-
-		// 如果只要求名称
-		if (a_Name && (! a_Prms) && (! a_Body))
-		{
-			l_Rst.c_Name = fGetFctnName(a_fTgt);
-			return l_Rst;
-		}
-
-		// 对于其他获取方式，需要完全匹配三部分
-		// 使用fInit，确保复杂的正则表达式只被创建一次，在首次使用时
-		function fInit()
-		{
-			var l_Ptn_CmtAndSpc = "(?:\\/\\/.*?\\r?\\n|\\/\\*[\\S\\s]*?\\*\\/|\\s)*";
-			var l_Ptn_Id = "[^\\/\\s\\(\\)]*";
-			var l_Ptn_Name = "(" + l_Ptn_Id + ")";
-			var l_Ptn_Prms = "\\(" + l_Ptn_CmtAndSpc + "((?:" + l_Ptn_Id + l_Ptn_CmtAndSpc + ",?" + l_Ptn_CmtAndSpc + ")*)\\)";
-			var l_Ptn_Body = "{([\\S\\s]*)}$";
-			var l_RgxStr = "^function" + l_Ptn_CmtAndSpc + l_Ptn_Name + l_Ptn_CmtAndSpc + l_Ptn_Prms + l_Ptn_CmtAndSpc + l_Ptn_Body;
-			fInit.c_RgxMch = new RegExp(l_RgxStr);
-			fInit.c_RgxRmv = new RegExp(l_Ptn_CmtAndSpc, "g");
-		}
-
-		if (! fInit.c_RgxMch)
-		{ fInit(); }
-
-		var l_Str = a_fTgt.toString();
-		var l_Mch = fInit.c_RgxMch.exec(l_Str);
-		if (! l_Mch)
-		{
-			if (a_Name)	// 未匹配时假定toString返回的就是函数名
-			{ l_Rst.c_Name = l_Str;	}
-		}
-		else
-		{
-			if (l_Mch[1] && a_Name)
-			{ l_Rst.c_Name = l_Mch[1]; }
-
-			if (l_Mch[2] && a_Prms)
-			{ l_Rst.c_Prms = l_Mch[2].replace(fInit.c_RgxRmv, "").split(","); }
-
-			if (l_Mch[3] && a_Body)
-			{ l_Rst.c_Body = l_Mch[3]; }
-		}
-		return l_Rst;
-	}
+	///// 获取信息
+	///// a_fTgt：Function，目标函数
+	///// a_Name：Boolean，是否获取名称
+	///// a_Prms：Boolean，是否获取形参
+	///// a_Body：Boolean，是否获取函数体
+	///// 注意：若不传a_Name，a_Prms，a_Body，则认为全部是true
+	///// 返回：Object，
+	///// {
+	///// c_Name：String，名称
+	///// c_Prms：String[]，形参名数组
+	///// c_Body：String，函数体
+	///// }
+	//function fGetFctnInfo(a_fTgt, a_Name, a_Prms, a_Body)
+	//{
+	//	// 如果三个实参皆无则默认为true
+	//	if (1 == arguments.length)
+	//	{ a_Name = a_Prms = a_Body = true; }
+	//
+	//	// 结果初始化
+	//	var l_Rst = { "c_Name": "", "c_Prms": null, "c_Body": "" };
+	//
+	//	// 如果只要求名称
+	//	if (a_Name && (! a_Prms) && (! a_Body))
+	//	{
+	//		l_Rst.c_Name = fGetFctnName(a_fTgt);
+	//		return l_Rst;
+	//	}
+	//
+	//	// 对于其他获取方式，需要完全匹配三部分
+	//	// 使用fInit，确保复杂的正则表达式只被创建一次，在首次使用时
+	//	function fInit()
+	//	{
+	//		var l_Ptn_CmtAndSpc = "(?:\\/\\/.*?\\r?\\n|\\/\\*[\\S\\s]*?\\*\\/|\\s)*";
+	//		var l_Ptn_Id = "[^\\/\\s\\(\\)]*";
+	//		var l_Ptn_Name = "(" + l_Ptn_Id + ")";
+	//		var l_Ptn_Prms = "\\(" + l_Ptn_CmtAndSpc + "((?:" + l_Ptn_Id + l_Ptn_CmtAndSpc + ",?" + l_Ptn_CmtAndSpc + ")*)\\)";
+	//		var l_Ptn_Body = "{([\\S\\s]*)}$";
+	//		var l_RgxStr = "^function" + l_Ptn_CmtAndSpc + l_Ptn_Name + l_Ptn_CmtAndSpc + l_Ptn_Prms + l_Ptn_CmtAndSpc + l_Ptn_Body;
+	//		fInit.c_RgxMch = new RegExp(l_RgxStr);
+	//		fInit.c_RgxRmv = new RegExp(l_Ptn_CmtAndSpc, "g");
+	//	}
+	//
+	//	if (! fInit.c_RgxMch)
+	//	{ fInit(); }
+	//
+	//	var l_Str = a_fTgt.toString();
+	//	var l_Mch = fInit.c_RgxMch.exec(l_Str);
+	//	if (! l_Mch)
+	//	{
+	//		if (a_Name)	// 未匹配时假定toString返回的就是函数名
+	//		{ l_Rst.c_Name = l_Str;	}
+	//	}
+	//	else
+	//	{
+	//		if (l_Mch[1] && a_Name)
+	//		{ l_Rst.c_Name = l_Mch[1]; }
+	//
+	//		if (l_Mch[2] && a_Prms)
+	//		{ l_Rst.c_Prms = l_Mch[2].replace(fInit.c_RgxRmv, "").split(","); }
+	//
+	//		if (l_Mch[3] && a_Body)
+	//		{ l_Rst.c_Body = l_Mch[3]; }
+	//	}
+	//	return l_Rst;
+	//}
 
 	/// 定义数据属性，如不支持Object.defineProperty，则以赋值方式定义，并放弃设置特性
 	/// a_Tgt：Object，目标
@@ -199,6 +199,15 @@
 	{
 		var i_Rgx = /\.js$/i; 
 		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".js")) : null;
+	}
+
+	/// 确保是JavaScript文件，即确保以“.css”结尾
+	/// a_Path：String，路径，若为null则返回null
+	/// 返回：String
+	function fEnsrCss(a_Path)
+	{
+		var i_Rgx = /\.css$/i;
+		return a_Path ? (i_Rgx.test(a_Path) ? a_Path : (a_Path + ".css")) : null;
 	}
 
 	// 为IE8添加Array.prototype.indexOf
@@ -330,12 +339,106 @@
 	unKnl.fAddEvtHdlr = fAddEvtHdlr;
 	unKnl.fRmvEvtHdlr = fRmvEvtHdlr;
 	unKnl.fGetFctnName = fGetFctnName;
-	unKnl.fGetFctnInfo = fGetFctnInfo;
+//	unKnl.fGetFctnInfo = fGetFctnInfo;
 	unKnl.fDfnDataPpty = fDfnDataPpty;
 	unKnl.fShlwAsn = fShlwAsn;
 	unKnl.fCcat = fCcat;
 	unKnl.fEnsrDiry = fEnsrDiry;
 	unKnl.fEnsrJs = fEnsrJs;
+	unKnl.fEnsrCss = fEnsrCss;
+
+	// 定义一组公共实用函数……
+
+	/// 空函数
+	nWse.fVoid = function () { };
+
+	/// 是否为undefined？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsUdfn = function (a_Any)
+	{
+		return (undefined === a_Any);
+	};
+
+	/// 是否为null？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsNull = function (a_Any)
+	{
+		return (null === a_Any);
+	};
+
+	/// 是否为undefined或null？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsUdfnOrNull = function (a_Any)
+	{
+		return ((undefined === a_Any) || (null === a_Any));
+	};
+
+	/// 是否为Boolean？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsBool = function (a_Any)
+	{
+		return ("[object Boolean]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为Number？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsNum = function (a_Any)
+	{
+		return ("[object Number]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为String？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsStr = function (a_Any)
+	{
+		return ("[object String]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为Object？【注意】Function也是Object，但null不是
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsObj = function (a_Any)
+	{
+		return (a_Any && (("object" == typeof a_Any) || nWse.fIsFctn(a_Any)));
+	};
+
+	/// 是否为Date？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsDate = function (a_Any)
+	{
+		return ("[object Date]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为Array？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsAry = function (a_Any)
+	{
+		return ("[object Array]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为Function？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsFctn = function (a_Any)
+	{
+		return ("[object Function]" == Object.prototype.toString.call(a_Any));
+	};
+
+	/// 是否为RegExp？
+	/// a_Any：任意
+	/// 返回：Boolean，是否
+	nWse.fIsRgx = function (a_Any)
+	{
+		return ("[object RegExp]" == Object.prototype.toString.call(a_Any));
+	};
 
 	/// 断言
 	/// a_Expr：Boolean，表达式
@@ -350,6 +453,55 @@
 	nWse.fMaybeNonHtml5Brsr = function ()
 	{
 		return (! document.getElementsByClassName);	// IE8以前都没有这个函数
+	};
+
+	/// 解析查询字符串
+	/// a_Rst：Object，结果，若为null则新建一个，参数名作为属性名，参数值作为属性值
+	/// a_QryStr：String，查询字符串，默认window.location.search
+	/// a_DcdKey，a_DcdVal：Boolean，是否解码键、值？默认false
+	/// 返回：a_Rst
+	nWse.fPseQryStr = function (a_Rst, a_QryStr, a_DcdKey, a_DcdVal)
+	{
+		var l_Rst = a_Rst || {};
+		var l_QryStr = a_QryStr || window.location.search;
+		if (! l_QryStr)
+		{ return l_Rst; }
+
+		// 去掉问号
+		if (63 == l_QryStr.charCodeAt(0))
+		{
+			l_QryStr = l_QryStr.slice(1, l_QryStr.length);
+		}
+
+		// 按“&”拆分，对每一组再按“=”分为键和值，键必须存在，值可为空串
+		var l_KVs = l_QryStr.split("&");
+		var i, l_KV, l_Key, l_Val, l_EqIdx;
+		for (i = 0; i < l_KVs.length; ++i)
+		{
+			l_KV = l_KVs[i];
+			if (! l_KV)
+			{ continue; }
+
+			l_EqIdx = l_KV.indexOf("=");
+			if (l_EqIdx >= 0)
+			{
+				l_Key = l_KV.slice(0, l_EqIdx);
+				l_Val = l_KV.slice(l_EqIdx + 1, l_KV.length);
+			}
+			else
+			{
+				l_Key = l_KV;
+				l_Val = "";
+			}
+
+			if (a_DcdKey)
+			{ l_Key = decodeURIComponent(l_Key); }
+			if (a_DcdVal && l_Val)
+			{ l_Val = decodeURIComponent(l_Val); }
+
+			l_Rst[l_Key] = l_Val;
+		}
+		return l_Rst;
 	};
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -488,7 +640,7 @@
 				l_Dom_CssJs.type = "text/css";
 				l_Dom_CssJs.onerror = fOnErr;
 				("onload" in l_Dom_CssJs) ? (l_Dom_CssJs.onload = fOnLoad) : (l_Dom_CssJs.onreadystatechange = fOnLoad);
-				l_Dom_CssJs.href = l_Dom_CssJs.Wse_Path = a_Paths[l_Idx]; // 记录路径并赋予
+				l_Dom_CssJs.href = l_Dom_CssJs.Wse_Path = fEnsrCss(a_Paths[l_Idx]); // 记录路径并赋予
 				l_Dom_Head.appendChild(l_Dom_CssJs); // 加入文档
 			}
 

@@ -106,24 +106,27 @@
 
 			///////////////////////////////////////////////// 接口
 
+		//	/* 测试类
+			var s_ShowClassInfo = false;
+
 			nWse.fClass(nApp,
 				/// 形状
 				function tShp(a_X, a_Y)
 				{
 					this.odBase(a_X, a_Y);
-					console.log("tShp");
+					if (s_ShowClassInfo) console.log("tShp");
 				},
 				null,
 				{
 					vcShow: function (a_X, a_Y)
 					{
-						console.log("tShp.vcShow");
+						if (s_ShowClassInfo) console.log("tShp.vcShow");
 						this.vdDraw();
 					}
 					,
 					vdDraw: function (a_X, a_Y)
 					{
-						console.log("\ttShp.vdDraw");
+						if (s_ShowClassInfo) console.log("\ttShp.vdDraw");
 					}
 				});
 
@@ -132,19 +135,19 @@
 				function tPlg(a_X, a_Y, a_W, a_H)
 				{
 					this.odBase(a_X, a_Y);
-					console.log("tPlg");
+					if (s_ShowClassInfo) console.log("tPlg");
 				},
 				nApp.tShp,
 				{
 //					vcShow: function (a_X, a_Y)
 //					{
-//						console.log("tPlg.vcShow");
+//						if (s_ShowClassInfo) console.log("tPlg.vcShow");
 //						this.odBase(a_X, a_Y);
 //					}
 //					,
 					vdDraw: function (a_X, a_Y)
 					{
-						console.log("\ttPlg.vdDraw");
+						if (s_ShowClassInfo) console.log("\ttPlg.vdDraw");
 						this.odBase(a_X, a_Y);
 					}
 				});
@@ -154,19 +157,19 @@
 				function tQuad(a_X, a_Y, a_W, a_H)
 				{
 					this.odBase(a_X, a_Y, a_W, a_H);
-					console.log("tQuad");
+					if (s_ShowClassInfo) console.log("tQuad");
 				},
 				nApp.tPlg,
 				{
 					vcShow: function (a_X, a_Y)
 					{
-						console.log("tQuad.vcShow");
+						if (s_ShowClassInfo) console.log("tQuad.vcShow");
 						this.odBase(a_X, a_Y);
 					}
 //					,
 //					vdDraw: function (a_X, a_Y)
 //					{
-//						console.log("\ttQuad.vdDraw");
+//						if (s_ShowClassInfo) console.log("\ttQuad.vdDraw");
 //						this.odBase(a_X, a_Y);
 //					}
 				});
@@ -176,29 +179,99 @@
 				function tRect(a_X, a_Y, a_W, a_H)
 				{
 					this.odBase(a_X, a_Y, a_W, a_H);
-					console.log("tRect");
+					if (s_ShowClassInfo) console.log("tRect");
 				},
 				nApp.tQuad,
 				{
 					vcShow: function (a_X, a_Y)
 					{
-						console.log("tRect.vcShow");
+						if (s_ShowClassInfo) console.log("tRect.vcShow");
 						this.odBase(a_X, a_Y);
 					}
 					,
 					vdDraw: function (a_X, a_Y)
 					{
-						console.log("\ttRect.vdDraw");
+						if (s_ShowClassInfo) console.log("\ttRect.vdDraw");
 						this.odBase(a_X, a_Y);
 					}
 				});
 
 			var l_Rect = new nApp.tRect(0, 0, 200, 100);
-			console.log(l_Rect.odBase);
-			console.log("");
+//			console.log(l_Rect.odBase);
+//			console.log("");
+//
+//			l_Rect.vcShow();
+//			console.log(l_Rect.odBase);
+			//*/
 
-			l_Rect.vcShow();
-			console.log(l_Rect.odBase);
+			///* 测试接口
+
+			nWse.fItfc(nApp,
+					function itLoadFromUrl() {}, null,
+					{
+						vcLoad : function ()
+						{
+							console.log("itLoadFromUrl.vcLoad");
+						}
+					});
+
+			nWse.fItfc(nApp,
+					function itLoadFromLocSto() {}, null,
+					{
+						vcLoad : function ()
+						{
+							console.log("itLoadFromLocSto.vcLoad");
+						}
+					});
+
+			nWse.fClassItfcImp(nApp.tShp,
+				[
+					nApp.itLoadFromUrl, nApp.itLoadFromLocSto
+				],
+				[
+					{
+						vcLoad : function ()
+						{
+							console.log("tShp.itLoadFromUrl.vcLoad");
+						}
+					},
+					{
+						vcLoad : function ()
+						{
+							console.log("tShp.itLoadFromLocSto.vcLoad");
+						}
+					}
+				]);
+
+			nWse.fClassItfcImp(nApp.tQuad,
+					[
+						nApp.itLoadFromLocSto
+					],
+					[
+						{
+							vcLoad : function ()
+							{
+								console.log("tQuad.itLoadFromLocSto.vcLoad");
+							}
+						}
+					]);
+
+		//	var l_Istn = new nApp.tShp();
+			var l_Istn = l_Rect;
+
+			nApp.itLoadFromUrl.ocBindUbnd(l_Istn.constructor, true,
+					function (a_tClass)
+					{
+						l_Istn.vcLoad();
+					});
+
+			nApp.itLoadFromLocSto.ocBindUbnd(l_Istn.constructor, true,
+					function (a_tClass, a_tIstn)
+					{
+						l_Istn.vcLoad();
+					});
+
+			//*/
 
 			/* 测试输入
 			function fHdlIpt(a_Ipt)

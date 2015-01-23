@@ -841,21 +841,18 @@ function fOnIcld(a_Errs)
 			fDfnDataPpty(a_fCtor, "oc_FullName", false, false, false, a_nHost$tHost.ocBldFullName(l_ItfcName));
 
 			// 加入绑定解绑函数
-			function fBindUbnd(a_Bind, a_tClass)
+			var s_itItfc = null;
+			var s_ItfcImp = null;
+			function fBindUbnd(a_Bind, a_tClass, a_Ihrt)
 			{
-				var l_tClass = a_tClass;
-				var l_Pttp = l_tClass.prototype;		// 原型
-				var l_ItfcAry = l_tClass.uoe_ItfcAry;
-				var l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
-				var l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;	// 找到本接口索引
-				if (l_Idx < 0)
+				// 搜索实现
+				if (! fSrchForImg(a_tClass, a_Ihrt))
 				{ return false; }
 
 				// 将纯虚函数实现添加至原型
-				var l_itItfc = l_ItfcAry[l_Idx];
-				var l_ItfcImp = l_ItfcImpAry[l_Idx];
+				var l_Pttp = a_tClass.prototype;		// 原型
 				var l_PN;
-				for (l_PN in l_itItfc)	// 列举接口，不要列举实现！为了检查是否有未实现的纯虚
+				for (l_PN in s_itItfc)	// 列举接口，不要列举实现！为了检查是否有未实现的纯虚
 				{
 					if (! fIsVtuFctn(l_PN))	// 跳过非虚函数
 					{
@@ -868,13 +865,13 @@ function fOnIcld(a_Errs)
 						if (l_Pttp[l_PN]) // 若有效，标记不要解绑
 						{ l_Pttp[l_PN].Wse_DontUbnd = true; }
 
-						nWse.stLog.cPutLine("◆【警告】类“" + l_tClass.oc_FullName + "”的虚函数“" + l_PN + "”遮蔽了接口实现！");
+						nWse.stLog.cPutLine("◆【警告】类“" + a_tClass.oc_FullName + "”的虚函数“" + l_PN + "”遮蔽了接口实现！");
 						continue;
 					}
 
 					if (a_Bind) // 绑定
 					{
-						l_Pttp[l_PN] = l_ItfcImp[l_PN];
+						l_Pttp[l_PN] = s_ItfcImp[l_PN];
 						if (! l_Pttp[l_PN]) // 若不存在则补充抛出异常
 						{
 							// 注意这里的l_PN可能会变！
@@ -898,27 +895,59 @@ function fOnIcld(a_Errs)
 				return true;
 			}
 
+			// 搜索实现
+			function fSrchForImg(a_tClass, a_Ihrt)
+			{
+				var l_tClass = a_tClass;
+				var l_ItfcAry = l_tClass.uoe_ItfcAry;
+				var l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
+				var l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;	// 找到本接口索引
+				if (l_Idx < 0)
+				{
+					if (! a_Ihrt) // 如果不继承，立即返回false
+					{ return false; }
+
+					// 沿着继承链向上找
+					l_tClass = l_tClass.oc_tBase;
+					while (l_tClass && (l_tClass !== Object))
+					{
+						l_ItfcAry = l_tClass.uoe_ItfcAry;
+						l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
+						l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;
+						if (l_Idx < 0)
+						{ l_tClass = l_tClass.oc_tBase; }
+						else
+						{ break; }
+					}
+
+					if (l_Idx < 0) // 还是没找到，返回false
+					{ return false; }
+				}
+
+				// 记录结果
+				s_itItfc = l_ItfcAry[l_Idx];
+				s_ItfcImp = l_ItfcImpAry[l_Idx];
+				return true;
+			}
+
 			// 定义ocBindUbnd至构造函数
 			fDfnDataPpty(a_fCtor, "ocBindUbnd", false, false, false,
-				/// 绑定解绑实例
-				/// a_tClass：类，若为null则取a_Istn.constructor，否则该类必须实现本接口，不能与a_Istn同时为null
-				/// a_Istn：类实例，所属类必须实现本接口，若a_tClass有效则忽略，否则必须有效
-				/// a_fCabk：void f(a_tClass, a_Istn)，回调函数
-				function (a_tClass, a_Istn, a_fCabk)
+				/// 绑定解绑
+				/// a_tClass：类，接口虚函数将绑定到该类的原型上
+				/// a_Ihrt：Boolean，是否继承基类对同一接口的实现？
+				/// a_fCabk：void f(a_tClass)，回调函数
+				function (a_tClass, a_Ihrt, a_fCabk)
 				{
-					if (! a_tClass)
-					{ a_tClass = a_Istn.constructor; }
-
-					if (! fBindUbnd(true, a_tClass))	// 没有实现本接口时立即返回
-					{ return a_fCtor; }
+					if (! fBindUbnd(true, a_tClass, a_Ihrt))	// 没有实现本接口时抛出异常
+					{ throw new Error("类“" + a_tClass.oc_FullName + "”没有实现接口“" + a_fCtor.oc_FullName + "”！"); }
 
 					try
 					{
-						a_fCabk(a_tClass, a_Istn);
+						a_fCabk(a_tClass);
 					}
 					finally
 					{
-						fBindUbnd(false, a_tClass);
+						fBindUbnd(false, a_tClass, a_Ihrt);
 					}
 					return a_fCtor;
 				});
@@ -1210,128 +1239,6 @@ function fOnIcld(a_Errs)
 		nWse.fIsEnum = function (a_Any)
 		{
 			return a_Any && (a_Any.constructor === nWse.fEnumHead);
-		};
-	})();
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 公有实用函数
-
-	(function ()
-	{
-		/// 空函数
-		nWse.fVoid = function () { };
-
-		/// 包含JavaScript
-		/// a_Path：String，绝对路径或相对于发出调用的文件嵌入到的html文件的路径
-		nWse.fIcldJs = function (a_Path)
-		{
-			if (i_InNodeJs) { return; }
-			
-			var l_Dom_script = l_Glb.document.createElement("script");
-			l_Dom_script.type = "text/javascript";
-			l_Dom_script.src = a_Path;
-			l_Glb.document.getElementsByTagName("head")[0].appendChild(l_Dom_script);
-		};
-
-		/// 导入CSS
-		/// a_Path：String，绝对路径或相对于发出调用的文件嵌入到的html文件的路径
-		nWse.fImptCss = function (a_Path)
-		{
-			if (i_InNodeJs) { return; }
-			
-			var l_Dom_link = l_Glb.document.createElement("link");
-			l_Dom_link.rel = "stylesheet";
-			l_Dom_link.type = "text/css";
-			l_Dom_link.href = a_Path;
-			l_Glb.document.getElementsByTagName("head")[0].appendChild(l_Dom_link);
-		};
-
-		/// 是否为undefined？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsUdfn = function (a_Any)
-		{
-			return (undefined === a_Any);
-		};
-
-		/// 是否为null？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsNull = function (a_Any)
-		{
-			return (null === a_Any);
-		};
-
-		/// 是否为undefined或null？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsUdfnOrNull = function (a_Any)
-		{
-			return ((undefined === a_Any) || (null === a_Any));
-		};
-
-		/// 是否为Boolean？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsBool = function (a_Any)
-		{
-			return ("[object Boolean]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为Number？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsNum = function (a_Any)
-		{
-			return ("[object Number]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为String？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsStr = function (a_Any)
-		{
-			return ("[object String]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为Object？【注意】Function也是Object，但null不是
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsObj = function (a_Any)
-		{
-			return (a_Any && (("object" == typeof a_Any) || nWse.fIsFctn(a_Any)));
-		};
-
-		/// 是否为Date？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsDate = function (a_Any)
-		{
-			return ("[object Date]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为Array？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsAry = function (a_Any)
-		{
-			return ("[object Array]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为Function？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsFctn = function (a_Any)
-		{
-			return ("[object Function]" == Object.prototype.toString.call(a_Any));
-		};
-
-		/// 是否为RegExp？
-		/// a_Any：任意
-		/// 返回：Boolean，是否
-		nWse.fIsRgx = function (a_Any)
-		{
-			return ("[object RegExp]" == Object.prototype.toString.call(a_Any));
 		};
 	})();
 
