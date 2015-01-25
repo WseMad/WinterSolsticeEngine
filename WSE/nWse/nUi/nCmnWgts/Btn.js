@@ -235,7 +235,7 @@ function fOnIcld(a_Errs)
 				{
 					// 扩容至包含身体
 					tSara.scEnsrTemps(1);
-					tSara.scCrt$DomBcr(tSara.sc_Temps[0], l_This.d_Body);
+					tSara.scInit$DomBcr(tSara.sc_Temps[0], l_This.d_Body);
 					tSara.scExpdToCtan$Sara(a_Bbox, tSara.sc_Temps[0]);
 					return this;
 				}

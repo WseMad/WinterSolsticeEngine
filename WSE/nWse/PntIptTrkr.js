@@ -259,7 +259,7 @@ function fOnIcld(a_Errs)
 			if (a_This.e_fImdtHdlr)
 			{
 				l_PntIpt = a_This.e_ImdtPntIpt;
-				l_PntIpt.c_Tchs[0].cCrt(i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
+				l_PntIpt.c_Tchs[0].cInit(i_TchId_Mos, a_Kind, a_Evt.clientX, a_Evt.clientY, a_Evt);
 				eActTchsReg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注册活动触点
 				l_Rst = a_This.e_fImdtHdlr(l_PntIpt);		// 处理
 				eActTchsUrg(a_This, a_This.e_ImdtActTchs, l_PntIpt);	// 注销活动触点
@@ -834,14 +834,14 @@ function fOnIcld(a_Errs)
 		/// c_StopImdtPpgt：Boolean，仅用于立即处理，停止立即传播？默认false
 		function tTch(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt)
 		{
-			this.cCrt(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt);
+			this.cInit(a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt);
 		}
 		,
 		null
 		,
 		{
-			/// 创建
-			cCrt : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt)
+			/// 初始化
+			cInit : function (a_TchId, a_Kind, a_X, a_Y, a_Evt, a_EvtTch, a_EvtTgt)
 			{
 				this.c_TchId = a_TchId;
 				this.c_Kind = a_Kind;

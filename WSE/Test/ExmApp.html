@@ -259,7 +259,7 @@ function fOnIcld(a_Errs)
 //							},
 							{
 								c_Name : "rotate3d",
-								c_End : nWse.stNumUtil.cCrtQtn$PaRad({}, 0, -l_RotRad, 0)
+								c_End : nWse.stNumUtil.cInitQtn$PaRad({}, 0, -l_RotRad, 0)
 							}
 						]
 					},
@@ -276,9 +276,9 @@ function fOnIcld(a_Errs)
 							l_This.e_PcdrLot.cAcsDftEfc().cSetUniDur(0.6);	// 恢复动画
 
 							// 翻转
-							l_DsplDom = document.getElementById("k_PutTgt_Lot");
+							var l_DsplDom = document.getElementById("k_PutTgt_Lot");
 							var l_3dTsfm = nWse.stCssUtil.cAcsExtdAnmt_3dTsfm(l_DsplDom);
-							l_3dTsfm.c_Rot = nWse.stNumUtil.cCrtQtn$PaRad({}, 0, +l_RotRad, 0);
+							l_3dTsfm.c_Rot = nWse.stNumUtil.cInitQtn$PaRad({}, 0, +l_RotRad, 0);
 							nWse.stCssUtil.cUpdExtdAnmt_3dTsfm(l_DsplDom);
 
 							nWse.stCssUtil.cAnmt(l_DsplDom,

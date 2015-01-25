@@ -100,10 +100,10 @@ function fOnIcld(a_Errs)
 				return "(" + (this.x) + ", " + (this.y) + ", " + (this.z) + ", " + (this.w) + ")";
 			}
 			,
-			/// 创建
+			/// 初始化
 			/// 若不传实参，则同(0, 0, 0)
 			/// 其他，必须传入三个Number
-			cAs3dPnt_Crt : function (a_Udfn$x, a_Udfn$y, a_Udfn$z)
+			cAs3dPnt_Init : function (a_Udfn$x, a_Udfn$y, a_Udfn$z)
 			{
 				if (0 == arguments.length)
 				{ this.x = 0;	this.y = 0;	this.z = 0;  }
@@ -128,7 +128,7 @@ function fOnIcld(a_Errs)
 			/// 若传入一个实参，则必须是t4dVct
 			/// 若传入两个实参，则必须是t4dVct，t4dVct
 			/// 其他，必须传入三个Number
-			cAs3dVct_Crt : function (a_Udfn$x$P1, a_Udfn$y$P2, a_Udfn$z)
+			cAs3dVct_Init : function (a_Udfn$x$P1, a_Udfn$y$P2, a_Udfn$z)
 			{
 				if (0 == arguments.length)
 				{ this.x = 0;	this.y = 0;	this.z = 0;  }
@@ -221,8 +221,8 @@ function fOnIcld(a_Errs)
 			}
 
 			,
-			/// 创建
-			cCrt : function (a_x, a_y, a_z, a_w)
+			/// 初始化
+			cInit : function (a_x, a_y, a_z, a_w)
 			{
 				this.x = a_x || 0;	this.y = a_y || 0;	this.z = a_z || 0;	this.w = a_w || 0;
 				return this;
@@ -331,9 +331,9 @@ function fOnIcld(a_Errs)
 				return this;
 			}
 			,
-			/// 创建绕任意轴公旋
+			/// 初始化绕任意轴公旋
 			/// a_U：t4dVct，必须是三维单位向量
-			cCrtRotAA : function (a_U, a_R)
+			cInitRotAA : function (a_U, a_R)
 			{
 				var l_Cos = Math.cos(a_R), l_Sin = Math.sin(a_R), l_1NC = 1 - l_Cos;
 				var l_UxUx = a_U.x * a_U.x, l_UxUy = a_U.x * a_U.y, l_UxUz = a_U.x * a_U.z,

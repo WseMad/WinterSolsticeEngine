@@ -913,7 +913,7 @@ function fOnIcld(a_Errs)
 				cSetArea$Xywh : function (a_X, a_Y, a_W, a_H)
 				{
 					var l_OldArea = tSara.scCopy(this.e_Area);
-				//	this.e_Area.cCrt(a_X, a_Y, a_W, a_H);	// 不要调用这个，tSara不允许null值，而控件使用null表自动计算
+				//	this.e_Area.cInit(a_X, a_Y, a_W, a_H);	// 不要调用这个，tSara不允许null值，而控件使用null表自动计算
 					this.e_Area.c_X = a_X;	this.e_Area.c_Y = a_Y;	this.e_Area.c_W = a_W;	this.e_Area.c_H = a_H;
 
 					if (! tSara.scEq(this.e_Area, l_OldArea))

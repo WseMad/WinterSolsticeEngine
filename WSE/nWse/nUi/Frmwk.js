@@ -275,7 +275,7 @@ function fOnIcld(a_Errs)
 						l_This.e_Path.cRset();						// 重置路径
 
 						// 计算包围盒
-						tSara.scCrt$DomBcr(l_This.e_Bbox, a_Put);	// 默认是放置目标的包围盒
+						tSara.scInit$DomBcr(l_This.e_Bbox, a_Put);	// 默认是放置目标的包围盒
 						a_Wgt.vcPick(l_This.e_Bbox, null);			// 回调以允许覆盖
 
 						// 若不包含任何一个待定触点，跳过
@@ -394,7 +394,7 @@ function fOnIcld(a_Errs)
 			{ eUpdPickCanvDim(); }
 
 			// 计算客户区
-			e_CltSara.cCrt$Wh(e_PickCanv.width, e_PickCanv.height);
+			e_CltSara.cInit$Wh(e_PickCanv.width, e_PickCanv.height);
 
 			// 记录待定触点
 			stAryUtil.cShlwAsn(e_Picker.e_PendTchs, a_Ipt.c_Tchs);
@@ -746,7 +746,7 @@ function fOnIcld(a_Errs)
 					stCssUtil.cGetMgn(e_Temp_CssUtilRst, a_Put);
 				}
 
-				e_Temp_TgtArea.cCrt(
+				e_Temp_TgtArea.cInit(
 					a_Put.offsetLeft - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnLt),
 					a_Put.offsetTop - (a_NoMgn ? 0 : e_Temp_CssUtilRst.c_MgnTp),
 					a_Put.offsetWidth + (a_NoMgn ? 0 : (e_Temp_CssUtilRst.c_MgnLt + e_Temp_CssUtilRst.c_MgnRt)),
@@ -768,7 +768,7 @@ function fOnIcld(a_Errs)
 //				}
 //
 //				stCssUtil.cGetCtntWid(e_Temp_CssUtilRst, a_Put.parentNode);
-//				l_Rst = e_Temp_TgtArea.cCrt$Wh(e_Temp_CssUtilRst.c_CtntWid, a_Put.offsetHeight);
+//				l_Rst = e_Temp_TgtArea.cInit$Wh(e_Temp_CssUtilRst.c_CtntWid, a_Put.offsetHeight);
 			}
 
 			var l_Mgn = a_NoMgn && stFrmwk.cAcsCssMgnOfPut(a_Put);
@@ -780,7 +780,7 @@ function fOnIcld(a_Errs)
 					e_Temp_TgtArea = new tSara();
 				}
 
-				l_Rst = e_Temp_TgtArea.cCrt(
+				l_Rst = e_Temp_TgtArea.cInit(
 					l_Rst.c_X + l_Mgn.c_MgnLt,
 					l_Rst.c_Y + l_Mgn.c_MgnTp,
 					l_Rst.c_W - (l_Mgn.c_MgnLt + l_Mgn.c_MgnRt),

@@ -1134,7 +1134,7 @@ function fOnIcld(a_Errs)
 				var l_Scl = l_This.dCalcTimeScl(a_FrmTime);
 				l_Scl = stNumUtil.cPrbItp(0, 1, l_Scl, false);	// 松弛
 				var l_X = stNumUtil.cLnrItp(l_This.d_Bgn, l_This.d_End, l_Scl);
-				l_DstSara.cCrt(l_X, 0, a_Plr.cGetCanvWid(), a_Plr.cGetCanvHgt());
+				l_DstSara.cInit(l_X, 0, a_Plr.cGetCanvWid(), a_Plr.cGetCanvHgt());
 				l_2dCtxt.cMap(l_DstSara, a_Img, null, null);
 				return this;
 			}

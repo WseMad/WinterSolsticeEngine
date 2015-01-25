@@ -686,29 +686,29 @@ function fOnIcld(a_Errs)
 			return a_Tgt;
 		};
 
-		/// 创建四元数 - 三维向量
+		/// 初始化四元数 - 三维向量
 		/// a_Vx, a_Vy, a_Vz：Number，三维向量的三个分量，不能同时为0
 		/// 返回：a_Rst，Object { x, y, z, w }
-		stNumUtil.cCrtQtn$3dVct = function (a_Rst, a_Vx, a_Vy, a_Vz)
+		stNumUtil.cInitQtn$3dVct = function (a_Rst, a_Vx, a_Vy, a_Vz)
 		{
 			a_Rst.x = a_Vx;		a_Rst.y = a_Vy;		a_Rst.z = a_Vz;		a_Rst.w = 0;
 			return a_Rst;
 		};
 
-		/// 创建四元数 - 任意轴弧度
+		/// 初始化四元数 - 任意轴弧度
 		/// a_Ax, a_Ay, a_Az, a_Rad：Number，轴的三个分量，绕该轴旋转的弧度
 		/// 返回：a_Rst，Object { x, y, z, w }
-		stNumUtil.cCrtQtn$AaRad = function (a_Rst, a_Ax, a_Ay, a_Az, a_Rad)
+		stNumUtil.cInitQtn$AaRad = function (a_Rst, a_Ax, a_Ay, a_Az, a_Rad)
 		{
 			var l_Sin = Math.sin(a_Rad / 2), l_Cos = Math.cos(a_Rad / 2);
 			a_Rst.x = l_Sin * a_Ax;		a_Rst.y = l_Sin * a_Ay;		a_Rst.z = l_Sin * a_Az;		a_Rst.w = l_Cos;
 			return a_Rst;
 		};
 
-		/// 创建四元数 - 主轴弧度
+		/// 初始化四元数 - 主轴弧度
 		/// a_Rx, a_Ry, a_Rz：Number，依次绕三主轴（X、Y、Z）旋转的弧度
 		/// 返回：a_Rst，Object { x, y, z, w }
-		stNumUtil.cCrtQtn$PaRad = function (a_Rst, a_Rx, a_Ry, a_Rz)
+		stNumUtil.cInitQtn$PaRad = function (a_Rst, a_Rx, a_Ry, a_Rz)
 		{
 			var l_Sin0 = Math.sin(a_Rx / 2), l_Cos0 = Math.cos(a_Rx / 2);
 			var l_Sin1 = Math.sin(a_Ry / 2), l_Cos1 = Math.cos(a_Ry / 2);

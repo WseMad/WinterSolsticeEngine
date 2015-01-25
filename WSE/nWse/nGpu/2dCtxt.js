@@ -542,7 +542,7 @@ function fOnIcld(a_Errs)
 					if (! s_TempSara0)
 					{ s_TempSara0 = new tSara(); }
 
-					s_TempSara0.cCrt$Wh(this.cGetCanvWid(), this.cGetCanvHgt());
+					s_TempSara0.cInit$Wh(this.cGetCanvWid(), this.cGetCanvHgt());
 					a_DstSara = s_TempSara0;
 				}
 
@@ -552,7 +552,7 @@ function fOnIcld(a_Errs)
 					if (! s_TempSara1)
 					{ s_TempSara1 = new tSara(); }
 
-					s_TempSara1.cCrt$Wh(a_SrcImg.width, a_SrcImg.height);
+					s_TempSara1.cInit$Wh(a_SrcImg.width, a_SrcImg.height);
 					a_SrcSara = s_TempSara1;
 				}
 				else

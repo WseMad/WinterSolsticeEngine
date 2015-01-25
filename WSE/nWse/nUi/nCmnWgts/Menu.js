@@ -242,7 +242,7 @@ function fOnIcld(a_Errs)
 					stAryUtil.cFor(l_Nexts,
 						function (a_Nexts, a_NextIdx, a_Next)
 						{
-							tSara.scExpdToCtan$Sara(a_Bbox, tSara.scCrt$DomBcr(tSara.sc_Temps[0], a_Next));
+							tSara.scExpdToCtan$Sara(a_Bbox, tSara.scInit$DomBcr(tSara.sc_Temps[0], a_Next));
 						});
 					return this;
 				}
@@ -1075,14 +1075,14 @@ function fOnIcld(a_Errs)
 //				{ l_NextUl.style.height = ""; }
 
 				tSara.scEnsrTemps(2);
-				var l_PtBbox = tSara.sc_Temps[0].cCrt(0, 0, stDomUtil.cGetVwptWid(), stDomUtil.cGetVwptHgt());	// 这个更好！
+				var l_PtBbox = tSara.sc_Temps[0].cInit(0, 0, stDomUtil.cGetVwptWid(), stDomUtil.cGetVwptHgt());	// 这个更好！
 				var l_UlSara = tSara.sc_Temps[1];
 				var l_LoopCnt = 0, l_LtSpc = 0, l_RtSpc = 0;
 				var l_StkDist = l_This.d_StkDist;		// 堆叠距离
 
 				if (l_This.d_RootUl === a_Root)	// 如果是根，摆到下方
 				{
-					l_UlSara.cCrt(
+					l_UlSara.cInit(
 						l_ExpdLi.offsetLeft,
 						l_ExpdLi.offsetTop + l_ExpdLi.offsetHeight,
 						l_NextUl.offsetWidth,
@@ -1099,7 +1099,7 @@ function fOnIcld(a_Errs)
 
 						if (l_This.d_ExpdDir < 0)	// 向左
 						{
-							l_UlSara.cCrt(
+							l_UlSara.cInit(
 								a_Root.offsetLeft - l_NextUl.offsetWidth + l_StkDist,
 								a_Root.offsetTop + l_ExpdLi.offsetTop + l_StkDist,
 								l_NextUl.offsetWidth,
@@ -1115,7 +1115,7 @@ function fOnIcld(a_Errs)
 						}
 						else // 向右
 						{
-							l_UlSara.cCrt(
+							l_UlSara.cInit(
 								a_Root.offsetLeft + a_Root.offsetWidth - l_StkDist,
 								a_Root.offsetTop + l_ExpdLi.offsetTop + l_StkDist,
 								l_NextUl.offsetWidth,

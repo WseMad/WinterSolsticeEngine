@@ -194,7 +194,7 @@ function fOnIcld(a_Errs)
 					l_Wgt.cAcsRndr().cAcsBodyPath().cRect(false, l_Wgt.cAcsArea().c_X, l_Wgt.cAcsArea().c_Y, l_Wgt.cAcsArea().c_W, l_Wgt.cAcsArea().c_H);
 
 					l_Wgt = new nPick.tBtn("控件H1", 0, nPick.tRefFrm.i_.i_Host, nPick.tDockWay.i_.i_LtUp);
-					l_Wgt.cSetArea((new nWse.tSara()).cCrt(10, 10, 80, 60));
+					l_Wgt.cSetArea((new nWse.tSara()).cInit(10, 10, 80, 60));
 					l_Wgt.cAcsRndr().cAcsBodyPath();
 					l_Wgt.cAcsRndr().cSetRcRds(10);
 
@@ -210,7 +210,7 @@ function fOnIcld(a_Errs)
 
 					l_Host = l_Wgt;
 					l_Wgt = new nPick.tBtn("控件H2", 0, nPick.tRefFrm.i_.i_Host, nPick.tDockWay.i_.i_LtUp);
-					l_Wgt.cSetArea((new nWse.tSara()).cCrt(10, 10, 40, 30));
+					l_Wgt.cSetArea((new nWse.tSara()).cInit(10, 10, 40, 30));
 
 					l_Wgt.cAcsRndr().cSetCastShdw(true);
 					//	l_Wgt.cAcsRndr().cSetBodyClo(tClo.scNew$Rgba(0.5, 0, 0.5, 1));
@@ -224,7 +224,7 @@ function fOnIcld(a_Errs)
 					//*/
 
 					//l_Wgt = new nPick.tBtn("控件V", 0, nPick.tRefFrm.i_.i_Vwpt, nPick.tDockWay.i_.i_LtUp);
-					//l_Wgt.cSetArea((new nWse.tSara()).cCrt(10, 30, 30, 20));
+					//l_Wgt.cSetArea((new nWse.tSara()).cInit(10, 30, 30, 20));
 					//l_Pnl.cAcsRoot().cAdd(l_Wgt);
 				}
 

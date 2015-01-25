@@ -87,7 +87,7 @@ function fOnIcld(a_Errs)
 		// 首先计算宽度，确定目标区域
 //		tSara.scEnsrTemps(1);
 //		var l_WndArea = tSara.sc_Temps[0], l_TgtArea = a_This.d_TgtArea;
-//		l_WndArea.cCrt(0, 0, stDomUtil.cGetVwptWid(), stDomUtil.cGetVwptHgt());
+//		l_WndArea.cInit(0, 0, stDomUtil.cGetVwptWid(), stDomUtil.cGetVwptHgt());
 
 		var l_IsLvesVsb = a_This.cIsLvesVsb();
 
@@ -228,7 +228,7 @@ function fOnIcld(a_Errs)
 		var l_Sin = Math.sin(a_Rad);
 		var l_X = a_This.d_LeafDist * l_Cos;
 		var l_Y = a_This.d_LeafDist * l_Sin;
-		a_Rst.cCrt(l_X, l_Y, a_This.d_LeafRds * 2, a_This.d_LeafRds * 2);
+		a_Rst.cInit(l_X, l_Y, a_This.d_LeafRds * 2, a_This.d_LeafRds * 2);
 	}
 
 	function fOnLvesAnmtBgn_Ent(a_This, a_Idx, a_Leaf)
@@ -867,7 +867,7 @@ function fOnIcld(a_Errs)
 					// 客户区坐标系，而a_Leaf.c_TgtArea相对于根
 					var l_This = this;
 					tSara.scEnsrTemps(1);
-					var l_IP = tSara.sc_Temps[0].cCrt$Wh(a_Leaf.c_TgtArea.c_W, a_Leaf.c_TgtArea.c_H);
+					var l_IP = tSara.sc_Temps[0].cInit$Wh(a_Leaf.c_TgtArea.c_W, a_Leaf.c_TgtArea.c_H);
 					var l_RDx = (l_This.dGetNavX() + stEfcMgr.cGetTgtAreaCenX(a_Leaf.c_TgtArea)) - l_This.dGetNavCenX();
 					var l_RDy = (l_This.dGetNavY() + stEfcMgr.cGetTgtAreaCenY(a_Leaf.c_TgtArea)) - l_This.dGetNavCenY();
 //					var l_RDx = (l_This.dGetNavX() + a_Leaf.c_TgtArea.c_X) - l_This.dGetNavCenX();

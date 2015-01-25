@@ -102,7 +102,7 @@ function fOnIcld(a_Errs)
 			if (! s_DomElmtBbox)
 			{ s_DomElmtBbox = new tSara(); }
 
-			a_Bbox = tSara.scCrt$DomBcr(s_DomElmtBbox, a_DomElmt);
+			a_Bbox = tSara.scInit$DomBcr(s_DomElmtBbox, a_DomElmt);
 		}
 
 		var l_BdrRds = tWgt.sd_PutTgtBdrRds;

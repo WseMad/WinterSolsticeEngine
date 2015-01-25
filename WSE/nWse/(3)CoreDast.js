@@ -417,7 +417,7 @@ function fOnIcld(a_Errs)
 			/// c_H：Number，高度
 			function tSara(a_X, a_Y, a_W, a_H)
 			{
-				this.cCrt(a_X, a_Y, a_W, a_H);
+				this.cInit(a_X, a_Y, a_W, a_H);
 			}
 			,
 			null
@@ -429,15 +429,15 @@ function fOnIcld(a_Errs)
 					return "(" + (this.c_X) + ", " + (this.c_Y) + ", " + (this.c_W) + ", " + (this.c_H) + ")";
 				}
 				,
-				/// 创建
-				cCrt : function (a_X, a_Y, a_W, a_H)
+				/// 初始化
+				cInit : function (a_X, a_Y, a_W, a_H)
 				{
 					this.c_X = a_X || 0;	this.c_Y = a_Y || 0;	this.c_W = a_W || 0;	this.c_H = a_H || 0;
 					return this;
 				}
 				,
-				/// 创建
-				cCrt$Wh : function (a_W, a_H)
+				/// 初始化
+				cInit$Wh : function (a_W, a_H)
 				{
 					this.c_X = 0;		this.c_Y = 0;		this.c_W = a_W || 0;		this.c_H = a_H || 0;
 					return this;
@@ -478,16 +478,16 @@ function fOnIcld(a_Errs)
 					return (a_L.c_X == a_R.c_X) && (a_L.c_Y == a_R.c_Y) && (a_L.c_W == a_R.c_W) && (a_L.c_H == a_R.c_H);
 				}
 				,
-				/// 从中心与半宽高创建
-				scCrt$CtAwh : function(a_Tgt, a_Cx, a_Cy, a_Aw, a_Ah)
+				/// 从中心与半宽高初始化
+				scInit$CtAwh : function(a_Tgt, a_Cx, a_Cy, a_Aw, a_Ah)
 				{
 					a_Tgt.c_X = a_Cx - a_Aw;	a_Tgt.c_Y = a_Cy - a_Ah;
 					a_Tgt.c_W = a_Aw * 2;		a_Tgt.c_H = a_Ah * 2;
 					return a_Tgt;
 				}
 				,
-				/// 从两点创建
-				scCrt$2Pnts : function(a_Tgt, a_X1, a_Y1, a_X2, a_Y2)
+				/// 从两点初始化
+				scInit$2Pnts : function(a_Tgt, a_X1, a_Y1, a_X2, a_Y2)
 				{
 					if (a_X1 <= a_X2)
 					{
@@ -514,8 +514,8 @@ function fOnIcld(a_Errs)
 					return a_Tgt;
 				}
 				,
-				/// 从DOM客户区包围盒创建
-				scCrt$DomBcr : function (a_Tgt, a_DomElmt)
+				/// 从DOM客户区包围盒初始化
+				scInit$DomBcr : function (a_Tgt, a_DomElmt)
 				{
 					var l_Bcr = a_DomElmt.getBoundingClientRect();
 					a_Tgt.c_X = l_Bcr.left;
@@ -811,7 +811,7 @@ function fOnIcld(a_Errs)
 			/// a：Number，不透明度，浮点数
 			function tClo(a_R, a_G, a_B, a_A)
 			{
-				this.cCrt(a_R, a_G, a_B, a_A);
+				this.cInit(a_R, a_G, a_B, a_A);
 			}
 			,
 			null
@@ -833,8 +833,8 @@ function fOnIcld(a_Errs)
 					return nWse.stNumUtil.cCmbn4Bytes(l_B0, l_B1, l_B2, l_B3);
 				}
 				,
-				/// 创建
-				cCrt : function (a_R, a_G, a_B, a_A)
+				/// 初始化
+				cInit : function (a_R, a_G, a_B, a_A)
 				{
 					this.r = a_R || 0;	this.g = a_G || 0;	this.b = a_B || 0;	this.a = a_A || 1;
 					return this;
@@ -849,7 +849,7 @@ function fOnIcld(a_Errs)
 				/// 返回：tClo，新建的实例
 				scNew$Rgb : function (a_R, a_G, a_B)
 				{
-					return nWse.tClo.scCrt$Rgb(new nWse.tClo(), a_R, a_G, a_B);
+					return nWse.tClo.scInit$Rgb(new nWse.tClo(), a_R, a_G, a_B);
 				}
 				,
 				/// 从RGBA新建
@@ -860,22 +860,22 @@ function fOnIcld(a_Errs)
 				/// 返回：tClo，新建的实例
 				scNew$Rgba : function (a_R, a_G, a_B, a_A)
 				{
-					return nWse.tClo.scCrt$Rgba(new nWse.tClo(), a_R, a_G, a_B, a_A);
+					return nWse.tClo.scInit$Rgba(new nWse.tClo(), a_R, a_G, a_B, a_A);
 				}
 				,
-				/// 从RGB创建，A初始化为1
+				/// 从RGB初始化，A初始化为1
 				/// a_Tgt：tClo，目标
 				/// 返回：a_Tgt
-				scCrt$Rgb : function (a_Tgt, a_R, a_G, a_B)
+				scInit$Rgb : function (a_Tgt, a_R, a_G, a_B)
 				{
 					a_Tgt.r = a_R;	a_Tgt.g = a_G;	a_Tgt.b = a_B;	a_Tgt.a = 1;
 					return a_Tgt;
 				}
 				,
-				/// 从RGBA创建
+				/// 从RGBA初始化
 				/// a_Tgt：tClo，目标
 				/// 返回：a_Tgt
-				scCrt$Rgba : function (a_Tgt, a_R, a_G, a_B, a_A)
+				scInit$Rgba : function (a_Tgt, a_R, a_G, a_B, a_A)
 				{
 					a_Tgt.r = a_R;	a_Tgt.g = a_G;	a_Tgt.b = a_B;	a_Tgt.a = a_A;
 					return a_Tgt;
