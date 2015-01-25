@@ -220,7 +220,6 @@ function fOnIcld(a_Errs)
 					this.odBase = this.odBase.Wse_fPrev;	// 弹出基类版本
 				}
 			}
-
 			tClass.Wse_fOrigCtor = a_fCtor;		// 记录原始构造函数
 			a_fCtor = tClass;					// 令传入的构造函数指向包装函数！
 		
