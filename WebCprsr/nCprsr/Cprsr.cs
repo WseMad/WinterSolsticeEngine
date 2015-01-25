@@ -1041,5 +1041,15 @@ namespace nWebCprsr.nCprsr
 
 			return false;
 		}
+
+		private static string seHexStrFromByte(byte a_B)
+		{
+			int l_H = ((a_B >> 4) & 0x0F);
+			int l_L = ((a_B) & 0x0F);
+			string l_Rst = "";
+			l_Rst += (l_H < 10) ? (char)('0' + l_H) : (char)('A' + (l_H - 10));
+			l_Rst += (l_L < 10) ? (char)('0' + l_L) : (char)('A' + (l_L - 10));
+			return l_Rst;
+		}
 	}
 }

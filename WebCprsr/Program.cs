@@ -13,11 +13,14 @@ namespace nWebCprsr
 	{
 		static void Main(string[] args)
 		{
+			// 开始
 			var l_RunCfg = new tRunCfg();
 			l_RunCfg.cLoadFromXml("./RunCfg.xml");
 
 			var l_Cprsr = new nCprsr.tCprsr();
 			l_Cprsr.cRun(l_RunCfg);
+
+			Console.WriteLine("全部完成！");
 
 			/////////////////////////////////////////////////////////////////////////////
 			Console.WriteLine("\n===================================================\n");
@@ -98,6 +101,8 @@ namespace nWebCprsr
 		public bool c_LocFctnName;	// 局部函数名？
 		public Regex c_PsrvLfn; // 保留局部函数名
 		public bool c_PptyAcs;	// 属性访问？
+		public bool c_Ecry;		// 加密？
+		public bool c_EcdStrLtrlByUtf16;	// 以UTF16编码字符串字面值
 
 		/// <summary>
 		/// 构造
@@ -115,6 +120,8 @@ namespace nWebCprsr
 			this.c_LocFctnName = false;
 			this.c_PsrvLfn = null;
 			this.c_PptyAcs = false;
+			this.c_Ecry = false;
+			this.c_EcdStrLtrlByUtf16 = false;
 		}
 
 		public void cLoadFromXml(string a_Path)
@@ -178,6 +185,20 @@ namespace nWebCprsr
 						XmlElement l_PptyAcsElmt = (XmlElement)l_PrmsAndLocsElmt.ChildNodes[l_Idx];
 						this.c_PptyAcs = ("是" == l_PptyAcsElmt.GetAttribute("启用"));
 					}
+				}
+			}
+
+			l_Idx = this.eFindChd(l_Root, "加密");
+			if (l_Idx >= 0)
+			{
+				XmlElement l_EcryElmt = (XmlElement)l_Root.ChildNodes[l_Idx];
+				this.c_Ecry = ("是" == l_EcryElmt.GetAttribute("启用"));
+
+				l_Idx = this.eFindChd(l_EcryElmt, "以UTF16编码字符串字面值");
+				if (l_Idx >= 0)
+				{
+					XmlElement l_EcdElmt = (XmlElement)l_EcryElmt.ChildNodes[l_Idx];
+					this.c_EcdStrLtrlByUtf16 = ("是" == l_EcdElmt.GetAttribute("启用"));
 				}
 			}
 		}

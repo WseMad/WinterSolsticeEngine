@@ -578,9 +578,8 @@ namespace nWebCprsr.nCprsr
 					eCprs(a_TknList, e_ScpList[s]);
 				}
 
-				// 没必要，最后生成代码时跳过即可，效率更高
-				//// 可能会有tTkn.ui_None，移除它们
-				//a_TknList.RemoveAll((a_Tkn) => { return (tLex.tTkn.ui_None == a_Tkn); });
+				// 可能会有tTkn.ui_None，移除它们
+				a_TknList.RemoveAll((a_Tkn) => { return (tLex.tTkn.ui_None == a_Tkn); });
 			}
 
 			private void eCprs(List<tLex.tTkn> a_TknList, teScp a_Scp)

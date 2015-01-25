@@ -79,7 +79,7 @@ namespace nWebCprsr.nCprsr
 			a_SrcRcd.c_LenList[a_SrcRcd.c_LenList.Count - 1] = this.e_SrcText.Length; // 记录长度
 
 			// 如果不压缩，立即输出并返回
-			if (!a_SrcRcd.c_Src.c_Cprs)
+			if ((! this.e_Cprsr.c_RunCfg.c_Cprs) || (! a_SrcRcd.c_Src.c_Cprs))
 			{
 				this.e_OptBfr.Append(this.e_SrcText);
 				this.e_OptBfr.AppendLine();	// 追加一个换行，以防文件最后一行是行注释，导致下一个文件的首行被注释掉
@@ -115,6 +115,12 @@ namespace nWebCprsr.nCprsr
 				if (a_SrcRcd.c_Src.c_PseDpdc)
 				{
 					this.ePseDpdc();
+				}
+
+				// 如果要编码字符串字面值……
+				if (this.e_Cprsr.c_RunCfg.c_Ecry && this.e_Cprsr.c_RunCfg.c_EcdStrLtrlByUtf16)
+				{
+					this.eEcdAllStrLtrlByUtf16();
 				}
 			}
 			else // CSS
@@ -337,7 +343,7 @@ namespace nWebCprsr.nCprsr
 			{
 				//	eAddTkn(e_TknList, tTmnl.i_BlkCmt, l_Bfr.ToString());
 			}
-			else // 其他情况下，如同遇到一个换行
+			else // 其他情况下，如同遇到一个换行（插入一个换行词法单元）或空白（直接跳过）
 				if (l_HasNewLine)
 				{
 					eAddTkn_NewLine(e_TknList);
@@ -1135,6 +1141,54 @@ namespace nWebCprsr.nCprsr
 					}
 				}
 			}
+		}
+
+		/// <summary>
+		/// 以UTF16编码字符串字面值
+		/// </summary>
+		private void eEcdAllStrLtrlByUtf16()
+		{
+			// 找到每个字符串字面值，编码
+			for (int i=0; i<e_TknList.Count; ++i)
+			{
+				if (tTmnl.i_StrLtrl == e_TknList[i].c_Tmnl)
+				{
+					eEcdStrLtrlByUtf16(e_TknList[i]);
+				}
+			}
+		}
+
+		private void eEcdStrLtrlByUtf16(tTkn a_Tkn)
+		{
+			// 转成字节，数量应该恰为字符数的两倍！如果不是，跳过！
+			string l_OldStrLtrl = a_Tkn.c_Attr.ToString();
+			l_OldStrLtrl = l_OldStrLtrl.Substring(1, l_OldStrLtrl.Length - 2);	// 注意属性里带有起始结尾引号！
+
+			byte[] l_Bytes = UnicodeEncoding.Unicode.GetBytes(l_OldStrLtrl);
+			if (l_OldStrLtrl.Length * 2 != l_Bytes.Length)
+			{
+				return;
+			}
+
+			string l_NewStrLtrl = "";
+			for (int b=0, c=0; b<l_Bytes.Length; b+=2, ++c)
+			{
+				// 如果本来的字符就已经是“\uXXXX”转义序列，跳过这个转义序列（长度为6个字符12个字节），不要重复转义！
+				if ((c + 6 <= l_OldStrLtrl.Length) &&
+					('\\' == l_OldStrLtrl[c]) && ('u' == l_OldStrLtrl[c + 1]))
+				{
+					l_NewStrLtrl += l_OldStrLtrl.Substring(c, 6);
+					b += (12 - 2); // 抵消迭代增量2
+					c += (6 - 1);  // 抵消迭代增量1		
+					continue;
+				}
+
+				l_NewStrLtrl += "\\u";
+				l_NewStrLtrl += seHexStrFromByte(l_Bytes[b + 1]);	// 注意顺序是小尾！
+				l_NewStrLtrl += seHexStrFromByte(l_Bytes[b]);
+			}
+
+			a_Tkn.c_Attr = '"' + l_NewStrLtrl + '"'; // 注意属性里带有起始结尾引号！
 		}
 
 		/// <summary>
