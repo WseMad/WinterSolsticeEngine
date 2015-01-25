@@ -64,6 +64,63 @@ function fOnIcld(a_Errs)
 	}
 	unKnl.fBindThis = fBindThis;
 
+	// 接口和实现
+	var s_itItfc = null;
+	var s_ItfcImpl = null;
+
+	// 搜索实现
+	function fSrchForImpl(a_fCtor, a_tClass, a_Ihrt)
+	{
+		if (a_tClass === Object)
+		{ return false; }
+
+		var l_tClass = a_tClass;
+		var l_ItfcAry = l_tClass.uoe_ItfcAry;
+		var l_ItfcImplAry = l_tClass.uoe_ItfcImplAry;
+		var l_Idx = (l_ItfcAry && l_ItfcImplAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;	// 找到本接口索引
+		if (l_Idx < 0)
+		{
+			if (! a_Ihrt) // 如果不继承，立即返回false
+			{ return false; }
+
+			// 沿着继承链向上找
+			l_tClass = l_tClass.oc_tBase;
+			while (l_tClass && (l_tClass !== Object))
+			{
+				l_ItfcAry = l_tClass.uoe_ItfcAry;
+				l_ItfcImplAry = l_tClass.uoe_ItfcImplAry;
+				l_Idx = (l_ItfcAry && l_ItfcImplAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;
+				if (l_Idx < 0)
+				{ l_tClass = l_tClass.oc_tBase; }
+				else
+				{ break; }
+			}
+
+			if (l_Idx < 0) // 还是没找到，返回false
+			{ return false; }
+		}
+
+		// 记录结果
+		s_itItfc = l_ItfcAry[l_Idx];
+		s_ItfcImpl = l_ItfcImplAry[l_Idx];
+		return true;
+	}
+
+	function fGetBaseImpl(a_itItfc, a_MthdName, a_tClass, a_Emt)
+	{
+		// 搜索基类的实现，未找到时补充一个空函数，或抛出异常
+		if (! fSrchForImpl(a_itItfc, a_tClass.oc_tBase, true))
+		{
+			return a_Emt
+				? (function(){})
+				: (function() { nWse.fThrowNotImplPureVtu(a_itItfc.oc_FullName, a_tClass.oc_FullName, a_MthdName); });
+		}
+
+		var l_fRst = s_ItfcImpl[a_MthdName];
+		nWse.fAst((!! l_fRst), "实现一个接口的类应该实现了该接口的全部虚函数，但现在却有一个未实现的虚函数：“" + a_MthdName + "”！");
+		return l_fRst;
+	}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 类，枚举，标志
 
@@ -416,7 +473,7 @@ function fOnIcld(a_Errs)
 				}
 			}
 
-			// 添加实例方法至原型，并包装虚函数
+			// 添加实例方法至原型
 			if (a_IstnMthds)
 			{
 				fObjFor(a_IstnMthds,
@@ -424,7 +481,7 @@ function fOnIcld(a_Errs)
 					{
 						var l_fMthd = a_fMthd;
 						var l_BaseMthd;
-						if (fIsVtuFctn(a_MthdName)) // 对于虚函数
+						if (fIsVtuFctn(a_MthdName)) // 对于虚函数，包装
 						{
 							//fDfnDataPpty(a_fMthd, "Wse_dBase", false, false, false,
 							//	l_tBase.prototype[a_MthdName] || nWse.fVoid);
@@ -841,12 +898,10 @@ function fOnIcld(a_Errs)
 			fDfnDataPpty(a_fCtor, "oc_FullName", false, false, false, a_nHost$tHost.ocBldFullName(l_ItfcName));
 
 			// 加入绑定解绑函数
-			var s_itItfc = null;
-			var s_ItfcImp = null;
 			function fBindUbnd(a_Bind, a_tClass, a_Ihrt)
 			{
 				// 搜索实现
-				if (! fSrchForImg(a_tClass, a_Ihrt))
+				if (! fSrchForImpl(a_fCtor, a_tClass, a_Ihrt))
 				{ return false; }
 
 				// 将纯虚函数实现添加至原型
@@ -871,7 +926,7 @@ function fOnIcld(a_Errs)
 
 					if (a_Bind) // 绑定
 					{
-						l_Pttp[l_PN] = s_ItfcImp[l_PN];
+						l_Pttp[l_PN] = s_ItfcImpl[l_PN];
 						if (! l_Pttp[l_PN]) // 若不存在则补充抛出异常
 						{
 							// 注意这里的l_PN可能会变！
@@ -892,41 +947,6 @@ function fOnIcld(a_Errs)
 					}
 					// 解绑，无效，不作处理
 				}
-				return true;
-			}
-
-			// 搜索实现
-			function fSrchForImg(a_tClass, a_Ihrt)
-			{
-				var l_tClass = a_tClass;
-				var l_ItfcAry = l_tClass.uoe_ItfcAry;
-				var l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
-				var l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;	// 找到本接口索引
-				if (l_Idx < 0)
-				{
-					if (! a_Ihrt) // 如果不继承，立即返回false
-					{ return false; }
-
-					// 沿着继承链向上找
-					l_tClass = l_tClass.oc_tBase;
-					while (l_tClass && (l_tClass !== Object))
-					{
-						l_ItfcAry = l_tClass.uoe_ItfcAry;
-						l_ItfcImpAry = l_tClass.uoe_ItfcImpAry;
-						l_Idx = (l_ItfcAry && l_ItfcImpAry) ? l_ItfcAry.indexOf(a_fCtor) : -1;
-						if (l_Idx < 0)
-						{ l_tClass = l_tClass.oc_tBase; }
-						else
-						{ break; }
-					}
-
-					if (l_Idx < 0) // 还是没找到，返回false
-					{ return false; }
-				}
-
-				// 记录结果
-				s_itItfc = l_ItfcAry[l_Idx];
-				s_ItfcImp = l_ItfcImpAry[l_Idx];
 				return true;
 			}
 
@@ -1011,10 +1031,12 @@ function fOnIcld(a_Errs)
 		};
 
 		/// 抛出未实现纯虚函数异常
-		/// a_FctnName：String，函数名
-		nWse.fThrowNotImplPureVtu = function (a_FctnName)
+		/// a_ItfcFullName：String，接口全名
+		/// a_ClassFullName：String，类全名
+		/// a_VtuFctnName：String，虚函数名
+		nWse.fThrowNotImplPureVtu = function (a_ItfcFullName, a_ClassFullName, a_VtuFctnName)
 		{
-			throw new Error("调用了没有实现的纯虚函数" + (a_FctnName ? ("“" + a_FctnName + "”！" ) : "！"));
+			throw new Error("调用了类“" + a_ClassFullName + "”没有实现的纯虚函数" + ("“" + a_ItfcFullName + "." + a_VtuFctnName + "”！" ));
 		};
 
 		/// 类接口实现
@@ -1034,10 +1056,8 @@ function fOnIcld(a_Errs)
 				if ((! nWse.fIsAry(a_Impl$ImplAry)) || (a_itItfc$ItfcAry.length != a_Impl$ImplAry.length))
 				{ throw new Error("a_itItfc$ItfcAry与a_Impl$ImplAry不匹配"); }
 
-				l_ItfcAry = a_itItfc$ItfcAry;
-				l_ImplAry = a_Impl$ImplAry;
-				//a_tClassHead.uoe_ItfcAry = a_itItfc$ItfcAry.slice(0);
-				//a_tClassHead.uoe_ItfcImplAry = a_Impl$ImplAry.slice(0);
+				l_ItfcAry = a_itItfc$ItfcAry.slice(0);	// 拷贝一个
+				l_ImplAry = a_Impl$ImplAry.slice(0);	// 拷贝一个
 			}
 			else
 			{
@@ -1046,32 +1066,61 @@ function fOnIcld(a_Errs)
 
 				l_ItfcAry = [a_itItfc$ItfcAry];
 				l_ImplAry = [a_Impl$ImplAry];
-				//a_tClassHead.uoe_ItfcAry = [a_itItfc$ItfcAry];
-				//a_tClassHead.uoe_ItfcImplAry = [a_Impl$ImplAry];
 			}
+
+			// 清零
+			a_tClassHead.uoe_ItfcAry = null;
+			a_tClassHead.uoe_ItfcImplAry = null;
 
 			// 对每一个接口和实现
-			var i, l_itItfc, l_Impl;
-			for (i = 0; i<l_ItfcAry.length; ++i)
-			{
-				l_itItfc = l_ItfcAry[i];
-				l_Impl = l_ImplAry[i];
+			fAryFor(l_ItfcAry,
+				function (a_Ary, a_Idx, a_itItfc)
+				{
+					var l_itItfc = l_ItfcAry[a_Idx];
+					var l_Impl = l_ImplAry[a_Idx];
 
-				// 对每一个虚函数
-				fObjFor(l_itItfc,
-					function (a_Tgt, a_MthdName, a_fMthd)
-					{
-						if (! fIsVtuFctn(a_MthdName))	// 跳过非虚函数
+					// 对每一个虚函数
+					fObjFor(l_itItfc,
+						function (a_Tgt, a_MthdName, a_fMthd)
 						{
-							return;
-						}
+							if (! fIsVtuFctn(a_MthdName))	// 跳过非虚函数
+							{
+								return;
+							}
 
-						a_fCtor[a_PN] = a_PV;
-					});
-			}
+							// 如有实现则包装，否则补充基类实现
+							var l_fImpl = l_Impl[a_MthdName];
+							var l_fBaseImpl = fGetBaseImpl(l_itItfc, a_MthdName, a_tClassHead, (!! l_fImpl));
+							var l_fWrapImpl;
+							if (l_fImpl)
+							{
+								l_fWrapImpl = function ()
+								{
+									l_fBaseImpl.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
+									this.odBase = l_fBaseImpl;				// 压入基类版本
+									try
+									{
+										l_fWrapImpl.Wse_fOrigImpl.apply(this, arguments); // 调用被包装的实现
+									}
+									finally
+									{
+										this.odBase = this.odBase.Wse_fPrev || null;	// 弹出基类版本
+									}
+								};
+								l_fWrapImpl.Wse_fOrigImpl = l_fImpl; // 记录原始实现
+								l_Impl[a_MthdName] = l_fWrapImpl; // 替换成包装函数
+							}
+							else
+							{
+								l_Impl[a_MthdName] = l_fBaseImpl; // 若调用可能抛出异常
+							}
+						});
+				});
+
 
 			// 记录到类头上
-
+			a_tClassHead.uoe_ItfcAry = l_ItfcAry;
+			a_tClassHead.uoe_ItfcImplAry = l_ImplAry;
 			return a_tClassHead;
 		};
 

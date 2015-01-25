@@ -15,8 +15,9 @@
     <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Lot.js" line="285" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nPick/Wgt.js" line="832" />
     <bookmark url="file://$PROJECT_DIR$/nWse/nUi/PcdrLot.js" line="1423" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="142" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="397" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="199" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="454" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="1074" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4380cf6c-33ed-435a-ba83-807757ca52e3" name="Default" comment="" />
@@ -42,24 +43,34 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Lang.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Lang.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Test/Lang.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.509434" vertical-offset="4304" max-vertical-offset="5795">
-              <caret line="267" column="38" selection-start-line="267" selection-start-column="38" selection-end-line="267" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.50764525" vertical-offset="5083" max-vertical-offset="6232">
+              <caret line="285" column="40" selection-start-line="285" selection-start-column="40" selection-end-line="285" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="(1)ObjOrtd.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="(1)ObjOrtd.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.34017596" vertical-offset="19889" max-vertical-offset="24377">
-              <caret line="1059" column="26" selection-start-line="1059" selection-start-column="26" selection-end-line="1059" selection-end-column="26" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="4139" max-vertical-offset="25308">
+              <caret line="115" column="31" selection-start-line="115" selection-start-column="31" selection-end-line="115" selection-end-column="31" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="(0)Seed.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nWse/(0)Seed.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.52" vertical-offset="20103" max-vertical-offset="22724">
+              <caret line="1066" column="29" selection-start-line="1066" selection-start-column="29" selection-end-line="1066" selection-end-column="29" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -103,7 +114,6 @@
         <option value="$PROJECT_DIR$/../../MyHome/OnlnTest/Heivr/FengHuang/css/(100)OOCSS.css" />
         <option value="$PROJECT_DIR$/nWse/DomUtil.js" />
         <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
-        <option value="$PROJECT_DIR$/nWse/(0)Seed.js" />
         <option value="$PROJECT_DIR$/nWse/(2)LangUtil.js" />
         <option value="$PROJECT_DIR$/nWse/(3)CoreDast.js" />
         <option value="$PROJECT_DIR$/nWse/nGpu/2dCtxt.js" />
@@ -121,10 +131,11 @@
         <option value="$PROJECT_DIR$/模板/模板RltmAfx.html" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" />
         <option value="$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js" />
-        <option value="$PROJECT_DIR$/Test/Lang.html" />
-        <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
         <option value="$PROJECT_DIR$/Test/CvsWgts.html" />
         <option value="$PROJECT_DIR$/nWse/VtuCsl.js" />
+        <option value="$PROJECT_DIR$/nWse/(0)Seed.js" />
+        <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
+        <option value="$PROJECT_DIR$/Test/Lang.html" />
       </list>
     </option>
   </component>
@@ -663,16 +674,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/(0)Seed.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="22325" max-vertical-offset="22724">
-          <caret line="1175" column="56" selection-start-line="1175" selection-start-column="56" selection-end-line="1175" selection-end-column="56" />
-          <folding>
-            <element signature="n#!!doc" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nGpu/2dCtxt.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="10335" max-vertical-offset="12160">
@@ -809,14 +810,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.509434" vertical-offset="4304" max-vertical-offset="5795">
-          <caret line="267" column="38" selection-start-line="267" selection-start-column="38" selection-end-line="267" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/VtuCnsl.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3326087" vertical-offset="12919" max-vertical-offset="21755">
@@ -841,13 +834,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/(0)Seed.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.52" vertical-offset="20103" max-vertical-offset="22724">
+          <caret line="1066" column="29" selection-start-line="1066" selection-start-column="29" selection-end-line="1066" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34017596" vertical-offset="19889" max-vertical-offset="24377">
-          <caret line="1059" column="26" selection-start-line="1059" selection-start-column="26" selection-end-line="1059" selection-end-column="26" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1895" max-vertical-offset="25308">
+          <caret line="115" column="31" selection-start-line="115" selection-start-column="31" selection-end-line="115" selection-end-column="31" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.50764525" vertical-offset="5083" max-vertical-offset="6232">
+          <caret line="285" column="40" selection-start-line="285" selection-start-column="40" selection-end-line="285" selection-end-column="40" />
+          <folding />
         </state>
       </provider>
     </entry>

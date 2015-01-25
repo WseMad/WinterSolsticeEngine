@@ -1068,6 +1068,8 @@
 			{
 				try
 				{ a_fCabk(a_fCabk.Wse_Errs || null); }
+				//catch (a_Exc)
+				//{ throw a_Exc; }
 				finally
 				{ a_fCabk.Wse_Called = true; }
 			}
