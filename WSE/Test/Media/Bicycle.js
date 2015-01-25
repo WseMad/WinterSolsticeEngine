@@ -24,7 +24,7 @@
 		nWse.stAsynIcld.cFromApp("nWse",
 			[
 				"Fsm.js",
-				"VtuCsl.js",
+				"VtuCnsl.js",
 				"nUi/PcdrLot.js",
 				"nUi/EfcMgr.js"
 			]
@@ -41,7 +41,7 @@ function fOnIcld(a_Errs)
 // using
 
 	var nWse = l_Glb.nWse;
-	var stVtuCsl = nWse.stVtuCsl;
+	var stVtuCnsl = nWse.stVtuCnsl;
 	var tFsm = nWse.tFsm;
 	var nUi = nWse.nUi;
 	var tPcdrLot = nUi.tPcdrLot;
@@ -105,7 +105,7 @@ function fOnIcld(a_Errs)
 				.cCssEntLea_Fade();
 
 			// 虚拟控制台
-			stVtuCsl.cHotKeyUi(true);	// F2快捷键
+			stVtuCnsl.cHotKeyUi(true);	// F2快捷键
 
 			// 响应窗口尺寸变化
 			nWse.stDomUtil.cAddEvtHdlr_WndRsz(
@@ -118,34 +118,34 @@ function fOnIcld(a_Errs)
 			//======================== 虚拟控制台
 
 			// 监视
-			stVtuCsl.cMonUrlHashChg(true, "nav");
+			stVtuCnsl.cMonUrlHashChg(true, "nav");
 
-			stVtuCsl.cReg("lot", function (a_Mode, a_Cmd, a_Agms)
+			stVtuCnsl.cReg("lot", function (a_Mode, a_Cmd, a_Agms)
 			{
-				if (stVtuCsl.tHdlMode.i_Help == a_Mode)
+				if (stVtuCnsl.tHdlMode.i_Help == a_Mode)
 				{
-					stVtuCsl.cOptLine(a_Agms[0] + " —— 功能：布局。");
+					stVtuCnsl.cOptLine(a_Agms[0] + " —— 功能：布局。");
 					return;
 				}
 
 				if (l_This.e_PcdrLot)
 				{ l_This.e_PcdrLot.cRun(); }
 
-				stVtuCsl.cOptLine("OK!");
+				stVtuCnsl.cOptLine("OK!");
 			});
 
-			stVtuCsl.cReg("nav", function (a_Mode, a_Cmd, a_Agms)
+			stVtuCnsl.cReg("nav", function (a_Mode, a_Cmd, a_Agms)
 			{
-				if (stVtuCsl.tHdlMode.i_Help == a_Mode)
+				if (stVtuCnsl.tHdlMode.i_Help == a_Mode)
 				{
-					stVtuCsl.cOptLine(a_Agms[0] + " —— 功能：导航。"
+					stVtuCnsl.cOptLine(a_Agms[0] + " —— 功能：导航。"
 						+ "\n参数："
 						+ "\nString，分页名，若不提供则回到主页。");
 					return;
 				}
 
 				// 转换，立即更新（转换是异步的）
-				stVtuCsl.cEnsrAgmIsStr(a_Agms, 1, "home");
+				stVtuCnsl.cEnsrAgmIsStr(a_Agms, 1, "home");
 				if (! l_This.e_Fsm.cAcsSta(a_Agms[1]))	// 如果无效
 				{
 					// 404
@@ -153,7 +153,7 @@ function fOnIcld(a_Errs)
 
 //					console.log(window.location.hash);	// 【这里？】
 //					a_Agms[1] = l_This.e_Fsm.cAcsSta().cGetName();	// 留在当前状态
-//					stVtuCsl.cSyncUrlHash(a_Agms);	// 同步URL#
+//					stVtuCnsl.cSyncUrlHash(a_Agms);	// 同步URL#
 
 					// 什么都不做的话，错误的URL#会留在历史和地址栏上！
 				//	window.history.replaceState(null, null, "#" + a_Agms.join("/").toLowerCase());	// 地址栏√，历史多一条（无法删除）
@@ -162,10 +162,10 @@ function fOnIcld(a_Errs)
 				else
 				{
 					l_This.e_Fsm.cTsit(a_Agms[1]).cUpd();
-					stVtuCsl.cSyncUrlHash(a_Agms);	// 同步URL#
+					stVtuCnsl.cSyncUrlHash(a_Agms);	// 同步URL#
 				}
 
-				stVtuCsl.cOptLine("OK!");
+				stVtuCnsl.cOptLine("OK!");
 
 				//【BUG】如果用户输错了URL，会导致回退按钮不能后退！H5  replace?
 			});
@@ -203,7 +203,7 @@ function fOnIcld(a_Errs)
 						function fStt()
 						{
 							// 初始路由
-							stVtuCsl.cIptUrlHash();
+							stVtuCnsl.cIptUrlHash();
 						}
 						fStt();
 					//	setTimeout(fStt, 500);	// 延迟？似乎页面加载后的动画能快一点！（心理作用？）

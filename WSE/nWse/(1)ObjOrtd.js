@@ -1012,7 +1012,7 @@ function fOnIcld(a_Errs)
 
 		/// 抛出未实现纯虚函数异常
 		/// a_FctnName：String，函数名
-		nWse.fThrowNotImpPureVtu = function (a_FctnName)
+		nWse.fThrowNotImplPureVtu = function (a_FctnName)
 		{
 			throw new Error("调用了没有实现的纯虚函数" + (a_FctnName ? ("“" + a_FctnName + "”！" ) : "！"));
 		};
@@ -1020,30 +1020,57 @@ function fOnIcld(a_Errs)
 		/// 类接口实现
 		/// a_tClassHead：类头，必须是nWse.fClassHead函数的返回值
 		/// a_itItfc$ItfcAry：接口$Array，要实现的（全部）接口
-		/// a_Imp$ImpAry：Object$Array，包含对相应接口纯虚函数的实现，必须与a_itItfc$ItfcAry匹配
+		/// a_Impl$ImplAry：Object$Array，包含对相应接口纯虚函数的实现，必须与a_itItfc$ItfcAry匹配
 		/// 返回：a_tClassHead
-		nWse.fClassItfcImp = function (a_tClassHead, a_itItfc$ItfcAry, a_Imp$ImpAry)
+		nWse.fClassItfcImpl = function (a_tClassHead, a_itItfc$ItfcAry, a_Impl$ImplAry)
 		{
 			if (! a_itItfc$ItfcAry)
 			{ return a_tClassHead; }
 
-			// 记录到类头上
+			// 统一按数组形式处理
+			var l_ItfcAry, l_ImplAry;
 			if (nWse.fIsAry(a_itItfc$ItfcAry))
 			{
-				if ((! nWse.fIsAry(a_itItfc$ItfcAry)) || (a_itItfc$ItfcAry.length != a_Imp$ImpAry.length))
-				{ throw new Error("a_itItfc$ItfcAry与a_Imp$ImpAry不匹配"); }
+				if ((! nWse.fIsAry(a_Impl$ImplAry)) || (a_itItfc$ItfcAry.length != a_Impl$ImplAry.length))
+				{ throw new Error("a_itItfc$ItfcAry与a_Impl$ImplAry不匹配"); }
 
-				a_tClassHead.uoe_ItfcAry = a_itItfc$ItfcAry.slice(0);
-				a_tClassHead.uoe_ItfcImpAry = a_Imp$ImpAry.slice(0);
+				l_ItfcAry = a_itItfc$ItfcAry;
+				l_ImplAry = a_Impl$ImplAry;
+				//a_tClassHead.uoe_ItfcAry = a_itItfc$ItfcAry.slice(0);
+				//a_tClassHead.uoe_ItfcImplAry = a_Impl$ImplAry.slice(0);
 			}
 			else
 			{
-				if ((! a_Imp$ImpAry))
-				{ throw new Error("a_itItfc$ItfcAry与a_Imp$ImpAry不匹配"); }
+				if ((! a_Impl$ImplAry))
+				{ throw new Error("a_itItfc$ItfcAry与a_Impl$ImplAry不匹配"); }
 
-				a_tClassHead.uoe_ItfcAry = [a_itItfc$ItfcAry];
-				a_tClassHead.uoe_ItfcImpAry = [a_Imp$ImpAry];
+				l_ItfcAry = [a_itItfc$ItfcAry];
+				l_ImplAry = [a_Impl$ImplAry];
+				//a_tClassHead.uoe_ItfcAry = [a_itItfc$ItfcAry];
+				//a_tClassHead.uoe_ItfcImplAry = [a_Impl$ImplAry];
 			}
+
+			// 对每一个接口和实现
+			var i, l_itItfc, l_Impl;
+			for (i = 0; i<l_ItfcAry.length; ++i)
+			{
+				l_itItfc = l_ItfcAry[i];
+				l_Impl = l_ImplAry[i];
+
+				// 对每一个虚函数
+				fObjFor(l_itItfc,
+					function (a_Tgt, a_MthdName, a_fMthd)
+					{
+						if (! fIsVtuFctn(a_MthdName))	// 跳过非虚函数
+						{
+							return;
+						}
+
+						a_fCtor[a_PN] = a_PV;
+					});
+			}
+
+			// 记录到类头上
 
 			return a_tClassHead;
 		};

@@ -10,7 +10,7 @@
 	var l_Glb = i_InNodeJs ? global : self;
 	
 	//@ 如果本文件已经包含过
-	if (l_Glb.nWse && l_Glb.nWse.stVtuCsl)
+	if (l_Glb.nWse && l_Glb.nWse.stVtuCnsl)
 	{
 		//@ 避免重复执行相同的初始化代码
 		return;
@@ -27,7 +27,7 @@
 
 function fOnIcld(a_Errs)
 {
-	console.log("VtuCsl.fOnIcld：" + a_Errs);
+	console.log("VtuCnsl.fOnIcld：" + a_Errs);
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -45,24 +45,24 @@ function fOnIcld(a_Errs)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 虚拟控制台
 
-	var stVtuCsl;
+	var stVtuCnsl;
 	(function ()
 	{
 		/// 虚拟控制台
-		stVtuCsl = function () { };
-		nWse.stVtuCsl = stVtuCsl;
-		stVtuCsl.oc_nHost = nWse;
-		stVtuCsl.oc_FullName = nWse.ocBldFullName("stVtuCsl");
+		stVtuCnsl = function () { };
+		nWse.stVtuCnsl = stVtuCnsl;
+		stVtuCnsl.oc_nHost = nWse;
+		stVtuCnsl.oc_FullName = nWse.ocBldFullName("stVtuCnsl");
 
 		/// 构建全名
-		stVtuCsl.ocBldFullName = function (a_Name)
+		stVtuCnsl.ocBldFullName = function (a_Name)
 		{
-			return stVtuCsl.oc_FullName + "." + a_Name;
+			return stVtuCnsl.oc_FullName + "." + a_Name;
 		};
 
 		//======== 类型
 
-		nWse.fEnum(stVtuCsl,
+		nWse.fEnum(stVtuCnsl,
 		/// 处理模式
 		function tHdlMode() {},
 		null,
@@ -134,7 +134,7 @@ function fOnIcld(a_Errs)
 			// 已完结？
 			if (a_Obj.c_Idx >= l_Agms.length)
 			{
-				stVtuCsl.cOptLine("字符串参数不完整。");
+				stVtuCnsl.cOptLine("字符串参数不完整。");
 				return false;
 			}
 
@@ -161,7 +161,7 @@ function fOnIcld(a_Errs)
 					// 已完结？
 					if (a_Obj.c_Idx >= l_Agms.length)
 					{
-						stVtuCsl.cOptLine("字符串参数不完整。");
+						stVtuCnsl.cOptLine("字符串参数不完整。");
 						return false;
 					}
 
@@ -214,7 +214,7 @@ function fOnIcld(a_Errs)
 					}
 					else // 其他
 					{
-						stVtuCsl.cOptLine("无效转义字符“\\" + l_Agms.charAt(a_Obj.c_Idx) + "”。");
+						stVtuCnsl.cOptLine("无效转义字符“\\" + l_Agms.charAt(a_Obj.c_Idx) + "”。");
 						return false;
 					}
 				} // 92
@@ -230,7 +230,7 @@ function fOnIcld(a_Errs)
 				// 已完结？
 				if (a_Obj.c_Idx >= l_Agms.length)
 				{
-					stVtuCsl.cOptLine("字符串参数不完整。");
+					stVtuCnsl.cOptLine("字符串参数不完整。");
 					return false;
 				}
 			} // while
@@ -312,7 +312,7 @@ function fOnIcld(a_Errs)
 				{
 					var l_Pa = a_Ary.cGetAmt();
 					var l_Pb = l_Pa + 1;
-					stVtuCsl.cOptLine("参数" + l_Pa.toString() + "与参数" + l_Pb.toString() + "之间必须以空白符分隔。");
+					stVtuCnsl.cOptLine("参数" + l_Pa.toString() + "与参数" + l_Pb.toString() + "之间必须以空白符分隔。");
 					return false;
 				}
 
@@ -330,7 +330,7 @@ function fOnIcld(a_Errs)
 		/// a_fHdl：Function，void f(tHdlMode a_Mode, String a_Cmd, String[] a_Agms)
 		/// a_Udfn$Idx：Number，插入索引，默认最后
 		/// 返回：this
-		stVtuCsl.cReg = function (a_Istr, a_fHdl, a_Udfn$Idx)
+		stVtuCnsl.cReg = function (a_Istr, a_fHdl, a_Udfn$Idx)
 		{
 			a_Istr = a_Istr.toLowerCase();
 
@@ -357,7 +357,7 @@ function fOnIcld(a_Errs)
 		/// a_Istr：String，指令
 		/// a_fHdl：为传入cReg的函数，若不提供则注销指定指令的全部处理器
 		/// 返回：this
-		stVtuCsl.cUrg = function (a_Istr, a_fHdl)
+		stVtuCnsl.cUrg = function (a_Istr, a_fHdl)
 		{
 			a_Istr = a_Istr.toLowerCase();
 
@@ -393,7 +393,7 @@ function fOnIcld(a_Errs)
 
 		/// 是否已注册
 		/// 返回：Boolean
-		stVtuCsl.cIsReg = function (a_Istr, a_fHdl)
+		stVtuCnsl.cIsReg = function (a_Istr, a_fHdl)
 		{
 			a_Istr = a_Istr.toLowerCase();
 
@@ -412,33 +412,33 @@ function fOnIcld(a_Errs)
 
 		/// 获取处理器
 		/// 返回：Function$Array
-		stVtuCsl.cGetHdlr = function (a_Istr)
+		stVtuCnsl.cGetHdlr = function (a_Istr)
 		{ return e_HdlrMap[a_Istr.toLowerCase()]; };
 
 		/// 输入
 		/// a_Cmd：String，命令
-		stVtuCsl.cIpt = function (a_Cmd)
+		stVtuCnsl.cIpt = function (a_Cmd)
 		{
 			// 输出提示符
 			if (e_DomOptBox && e_DomOptBox.value)
-			{ stVtuCsl.cOptLine(); }
-			stVtuCsl.cOptLine("<<");
-			stVtuCsl.cOptLine(a_Cmd);
-			stVtuCsl.cOptLine(">>");
+			{ stVtuCnsl.cOptLine(); }
+			stVtuCnsl.cOptLine("<<");
+			stVtuCnsl.cOptLine(a_Cmd);
+			stVtuCnsl.cOptLine(">>");
 
 			// 检查参数
 			if ((null == a_Cmd) || (0 == a_Cmd.length))
 			{
-				stVtuCsl.cOptLine("命令为空。");
-				return stVtuCsl;
+				stVtuCnsl.cOptLine("命令为空。");
+				return stVtuCnsl;
 			}
 
 			// 除去命令两端空白
 			var l_Cmd = a_Cmd.trim();
 			if (0 == l_Cmd.length)
 			{
-				stVtuCsl.cOptLine("命令为空。");
-				return stVtuCsl;
+				stVtuCnsl.cOptLine("命令为空。");
+				return stVtuCnsl;
 			}
 
 			// 查找第一个空白符，以此分割指令和参数
@@ -450,8 +450,8 @@ function fOnIcld(a_Errs)
 			var l_fHdl$Ary = e_HdlrMap[l_LwrIstr];
 			if (! l_fHdl$Ary)
 			{
-				stVtuCsl.cOptLine("未能识别指令“" + l_IptIstr + "”。");
-				return stVtuCsl;
+				stVtuCnsl.cOptLine("未能识别指令“" + l_IptIstr + "”。");
+				return stVtuCnsl;
 			}
 
 			// 取得参数，除去参数前导空白
@@ -462,7 +462,7 @@ function fOnIcld(a_Errs)
 			if (l_Agms && (l_Agms.length > 0))
 			{
 				if (! eExtrAgms(l_AgmAry, l_Agms))
-				{ return stVtuCsl; }
+				{ return stVtuCnsl; }
 			}
 
 			// 处理
@@ -472,29 +472,29 @@ function fOnIcld(a_Errs)
 				// 结果是主处理器的结果
 				for (i=0; i<l_fHdl$Ary.length; ++i)
 				{
-					l_fHdl$Ary[i](stVtuCsl.tHdlMode.i_Excu, l_Cmd, l_AgmAry);
+					l_fHdl$Ary[i](stVtuCnsl.tHdlMode.i_Excu, l_Cmd, l_AgmAry);
 				}
 			}
 			else
 			{
-				l_fHdl$Ary(stVtuCsl.tHdlMode.i_Excu, l_Cmd, l_AgmAry);
+				l_fHdl$Ary(stVtuCnsl.tHdlMode.i_Excu, l_Cmd, l_AgmAry);
 			}
-			return stVtuCsl;
+			return stVtuCnsl;
 		};
 
 
 		/// 输出换行
 		/// a_Fdbk：String，回馈
 		/// 返回：Boolean
-		stVtuCsl.cOptLine = function (a_Fdbk)
+		stVtuCnsl.cOptLine = function (a_Fdbk)
 		{
-			return stVtuCsl.cOpt((a_Fdbk || "").toString() + "\r\n");
+			return stVtuCnsl.cOpt((a_Fdbk || "").toString() + "\r\n");
 		};
 
 		/// 输出
 		/// a_Fdbk：String，回馈
 		/// 返回：Boolean
-		stVtuCsl.cOpt = function (a_Fdbk)
+		stVtuCnsl.cOpt = function (a_Fdbk)
 		{
 			if (! e_fOpt)
 			{ return false; }
@@ -538,10 +538,10 @@ function fOnIcld(a_Errs)
 
 
 		/// 确保参数是字符串
-		stVtuCsl.cEnsrAgmIsStr = function (a_Agms, a_Idx, a_Dft)
+		stVtuCnsl.cEnsrAgmIsStr = function (a_Agms, a_Idx, a_Dft)
 		{
 			a_Agms[a_Idx] = a_Agms[a_Idx] ? a_Agms[a_Idx].toString() : (a_Dft || "").toString();
-			return stVtuCsl;
+			return stVtuCnsl;
 		};
 
 		/// 解析参数成数字，【注意】本函数用于命令处理器
@@ -549,7 +549,7 @@ function fOnIcld(a_Errs)
 		/// a_Idx：Number，索引，无效时选用a_Dft
 		/// a_Dft：Number，当a_Idx无效时选用的默认值，默认0
 		/// 返回：Number
-		stVtuCsl.cPseAgmToNum = function (a_Agms, a_Idx, a_Dft)
+		stVtuCnsl.cPseAgmToNum = function (a_Agms, a_Idx, a_Dft)
 		{
 			var l_Rst = a_Dft || 0;
 			if ((0 <= a_Idx) && (a_Idx < a_Agms.length))
@@ -569,7 +569,7 @@ function fOnIcld(a_Errs)
 		/// 监视URL#变化
 		/// a_Enab：Boolean，启用？
 		/// a_DftCmd：String，缺省命令，当URL#为空时输入这条命令
-		stVtuCsl.cMonUrlHashChg = function (a_Enab, a_DftCmd)
+		stVtuCnsl.cMonUrlHashChg = function (a_Enab, a_DftCmd)
 		{
 			function fEnab()
 			{
@@ -593,7 +593,7 @@ function fOnIcld(a_Errs)
 
 			e_DftCmd = a_DftCmd || "";
 			a_Enab ? fEnab() : fDsab();
-			return stVtuCsl;
+			return stVtuCnsl;
 		};
 
 		function eOnHashChg()
@@ -613,44 +613,44 @@ function fOnIcld(a_Errs)
 			}
 
 			// 输入URL#
-			stVtuCsl.cIptUrlHash();
+			stVtuCnsl.cIptUrlHash();
 		}
 
 		/// 输入URL#
 		/// a_UrlHash：String，默认取window.location.hash
-		stVtuCsl.cIptUrlHash = function (a_UrlHash)
+		stVtuCnsl.cIptUrlHash = function (a_UrlHash)
 		{
 			var l_Hash = a_UrlHash || window.location.hash;
 			if (! l_Hash)	// 没有时取默认命令
-			{ return stVtuCsl.cIpt(e_DftCmd); }
+			{ return stVtuCnsl.cIpt(e_DftCmd); }
 
 			var l_Ctnt = (35 == l_Hash.charCodeAt(0)) ? l_Hash.slice(1) : l_Hash;
 			if (! l_Ctnt)	// 只有“#”时取默认命令
-			{ return stVtuCsl.cIpt(e_DftCmd); }
+			{ return stVtuCnsl.cIpt(e_DftCmd); }
 
 			var l_Cmd = l_Ctnt;
 			if (l_Ctnt.indexOf("/") >= 0)
 			{ l_Cmd = l_Ctnt.split("/").join(" "); }
 
 			var l_Istr = eExtrIstrFromCmd(l_Cmd);
-			if (! stVtuCsl.cGetHdlr(l_Istr)) // 指令若无效则可能是元素ID
+			if (! stVtuCnsl.cGetHdlr(l_Istr)) // 指令若无效则可能是元素ID
 			{
 				var l_Elmt = document.getElementById(l_Istr);
 				if (l_Elmt)
 				{ l_Elmt.scrollIntoView(true); }
 				else
-				{ stVtuCsl.cIpt(e_DftCmd); }
+				{ stVtuCnsl.cIpt(e_DftCmd); }
 			}
 			else
 			{
-				stVtuCsl.cIpt(l_Cmd);	// 处理这条命令
+				stVtuCnsl.cIpt(l_Cmd);	// 处理这条命令
 			}
-			return stVtuCsl;
+			return stVtuCnsl;
 		};
 
 		/// 同步URL#
 		/// a_Agms：String[]，命令处理器接收到的参数
-		stVtuCsl.cSyncUrlHash = function (a_Agms)
+		stVtuCnsl.cSyncUrlHash = function (a_Agms)
 		{
 			var l_Ctnt, l_Hash;
 			if ((! a_Agms) || (0 == a_Agms.length))
@@ -669,7 +669,7 @@ function fOnIcld(a_Errs)
 			if (window.history.replaceState)
 			{
 				window.history.replaceState(null, null, l_LwrHash);
-				return stVtuCsl;
+				return stVtuCnsl;
 			}
 
 			// 压入新的URL#，这种方案的缺点是后退按钮没有尽头！
@@ -679,7 +679,7 @@ function fOnIcld(a_Errs)
 				e_UrlHashChg.push(l_LwrHash);
 				window.location.hash = l_Hash;
 			}
-			return stVtuCsl;
+			return stVtuCnsl;
 		};
 
 
@@ -688,7 +688,7 @@ function fOnIcld(a_Errs)
 		// 字段
 		var e_DomPane = null, e_DomTib = null, e_DomCptn = null, e_DomClsBtn = null,
 			e_DomOptDiv = null, e_DomIptDiv = null, e_DomOptBox = null, e_DomIptBox = null, e_DomSbmtBtn = null;
-		var e_PaneId = "ok_VtuCsl";
+		var e_PaneId = "ok_VtuCnsl";
 		var e_PaneWid = 0, e_PaneHgt = 0, e_TibHgt = 32, e_BdrWid = 2, e_BtnPad = 2;
 		var e_IoBoxPad = 4, e_IoBoxBdr = 1, e_IoDivHgt = 0, e_IoLineHgt = 20;
 		var e_Dragging = false, e_DragX = 0, e_DragY = 0;
@@ -808,13 +808,13 @@ function fOnIcld(a_Errs)
 			e_DomIptBox.value = "";
 
 			// 提交
-			stVtuCsl.cIpt(l_Cmd);
+			stVtuCnsl.cIpt(l_Cmd);
 
 			// 一次提交结束后输出空行，
 			// 除非指令是“clr”，此时输出框为空
 			if (e_DomOptBox.childNodes.length > 0)
 			{
-				stVtuCsl.cOptLine();
+				stVtuCnsl.cOptLine();
 			}
 		}
 
@@ -917,7 +917,7 @@ function fOnIcld(a_Errs)
 			e_DomClsBtn.style.fontSize = "20px";
 			e_DomClsBtn.textContent = e_ClsBtnText;
 
-			stDomUtil.cAddEvtHdlr(e_DomClsBtn, "click", function (a_Evt) { stVtuCsl.cShowHideUi(false); });
+			stDomUtil.cAddEvtHdlr(e_DomClsBtn, "click", function (a_Evt) { stVtuCnsl.cShowHideUi(false); });
 
 			e_DomTib.appendChild(e_DomClsBtn);
 
@@ -990,7 +990,7 @@ function fOnIcld(a_Errs)
 		}
 
 		/// 用户界面快捷键
-		stVtuCsl.cHotKeyUi = function (a_Enab)
+		stVtuCnsl.cHotKeyUi = function (a_Enab)
 		{
 			stDomUtil.cRmvEvtHdlr(document, "keydown", fOnKeyDown);	// 先尝试移除
 			if (a_Enab)	// 如果需要，再添加
@@ -1003,14 +1003,14 @@ function fOnIcld(a_Errs)
 			{
 				a_Evt.preventDefault();
 				a_Evt.stopPropagation();
-				stVtuCsl.cShowHideUi(! fIsUiShow());	// 切换
+				stVtuCnsl.cShowHideUi(! fIsUiShow());	// 切换
 			}
 		}
 
 		/// 显示隐藏用户界面
 		/// a_Show：Boolean，true=展示，false=隐藏
 		/// 返回：this
-		stVtuCsl.cShowHideUi = function (a_Show)
+		stVtuCnsl.cShowHideUi = function (a_Show)
 		{
 			// 如果尚未初始化
 			if (! e_DomPane)
@@ -1056,11 +1056,11 @@ function fOnIcld(a_Errs)
 
 		(function ()
 		{
-			stVtuCsl.cReg("clr", function (a_Mode, a_Cmd, a_Agms, a_Rst)
+			stVtuCnsl.cReg("clr", function (a_Mode, a_Cmd, a_Agms, a_Rst)
 			{
-				if (stVtuCsl.tHdlMode.i_Help == a_Mode)
+				if (stVtuCnsl.tHdlMode.i_Help == a_Mode)
 				{
-					stVtuCsl.cOptLine(a_Agms[0] + " —— 功能：本界面清屏。");
+					stVtuCnsl.cOptLine(a_Agms[0] + " —— 功能：本界面清屏。");
 					return;
 				}
 
@@ -1071,11 +1071,11 @@ function fOnIcld(a_Errs)
 				e_DomOptBox.value = "";
 			});
 
-			stVtuCsl.cReg("help", function (a_Mode, a_Cmd, a_Agms)
+			stVtuCnsl.cReg("help", function (a_Mode, a_Cmd, a_Agms)
 			{
-				if (stVtuCsl.tHdlMode.i_Help == a_Mode)
+				if (stVtuCnsl.tHdlMode.i_Help == a_Mode)
 				{
-					stVtuCsl.cOptLine(a_Agms[0] + " —— 功能：显示指定的或全部已注册的指令及其用法；"
+					stVtuCnsl.cOptLine(a_Agms[0] + " —— 功能：显示指定的或全部已注册的指令及其用法；"
 						+ "\n参数："
 						+ "\nString，指令名，若不提供则列出全部。");
 					return;
@@ -1086,9 +1086,9 @@ function fOnIcld(a_Errs)
 					var l_LwrIstr = a_Agms[1] && a_Agms[1].toLowerCase();
 					var l_fHdl = l_LwrIstr ? e_HdlrMap[l_LwrIstr] : null;
 					if (l_fHdl)
-					{ l_fHdl(stVtuCsl.tHdlMode.i_Help, null, [l_LwrIstr]); }
+					{ l_fHdl(stVtuCnsl.tHdlMode.i_Help, null, [l_LwrIstr]); }
 					else
-					{ stVtuCsl.cOptLine("未能找到指令“" + a_Agms[1] + "”。"); }
+					{ stVtuCnsl.cOptLine("未能找到指令“" + a_Agms[1] + "”。"); }
 				}
 				else
 				{
@@ -1103,16 +1103,16 @@ function fOnIcld(a_Errs)
 					stAryUtil.cFor(l_IstrAry, function (a_Ary, a_Idx, a_Istr)
 					{
 						l_Agms[0] = a_Istr;
-						e_HdlrMap[a_Istr](stVtuCsl.tHdlMode.i_Help, null, l_Agms);
+						e_HdlrMap[a_Istr](stVtuCnsl.tHdlMode.i_Help, null, l_Agms);
 					});
 				}
 			});
 
-			stVtuCsl.cReg("dim", function (a_Mode, a_Cmd, a_Agms)
+			stVtuCnsl.cReg("dim", function (a_Mode, a_Cmd, a_Agms)
 			{
-				if (stVtuCsl.tHdlMode.i_Help == a_Mode)
+				if (stVtuCnsl.tHdlMode.i_Help == a_Mode)
 				{
-					stVtuCsl.cOptLine(a_Agms[0] + " —— 功能：设置本界面宽高；"
+					stVtuCnsl.cOptLine(a_Agms[0] + " —— 功能：设置本界面宽高；"
 						+ "\n参数："
 						+ "\nNumber，宽度，若不提供则使用默认值；"
 						+ "\nNumber，高度，若不提供则使用默认值。");
@@ -1123,12 +1123,12 @@ function fOnIcld(a_Errs)
 				if (! fIsUiShow())
 				{ return; }
 
-				var l_Wid = stVtuCsl.cPseAgmToNum(a_Agms, 1, e_DftWid);
-				var l_Hgt = stVtuCsl.cPseAgmToNum(a_Agms, 2, e_DftHgt);
+				var l_Wid = stVtuCnsl.cPseAgmToNum(a_Agms, 1, e_DftWid);
+				var l_Hgt = stVtuCnsl.cPseAgmToNum(a_Agms, 2, e_DftHgt);
 				fCalcDim(l_Wid, l_Hgt);
 				fSetPosDim();
 				fSetPanePos();
-				stVtuCsl.cOptLine("OK!");
+				stVtuCnsl.cOptLine("OK!");
 			});
 		})();	// 内建命令
 	})();

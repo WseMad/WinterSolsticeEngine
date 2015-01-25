@@ -42,11 +42,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="Lang.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Test/Lang.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-14.509434" vertical-offset="4304" max-vertical-offset="5795">
+              <caret line="267" column="38" selection-start-line="267" selection-start-column="38" selection-end-line="267" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="(1)ObjOrtd.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.072135784" vertical-offset="19405" max-vertical-offset="23864">
-              <caret line="1024" column="41" selection-start-line="1024" selection-start-column="41" selection-end-line="1024" selection-end-column="41" />
+            <state vertical-scroll-proportion="0.34017596" vertical-offset="19889" max-vertical-offset="24377">
+              <caret line="1059" column="26" selection-start-line="1059" selection-start-column="26" selection-end-line="1059" selection-end-column="26" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -64,8 +74,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/SignLog.js" />
-        <option value="$PROJECT_DIR$/nWse/VtuCsl.js" />
         <option value="$PROJECT_DIR$/nWse/nUi/EfcMgr.js" />
         <option value="$PROJECT_DIR$/Test/NodeLib2.js" />
         <option value="$PROJECT_DIR$/Test/NodeLib.js" />
@@ -95,8 +103,6 @@
         <option value="$PROJECT_DIR$/../../MyHome/OnlnTest/Heivr/FengHuang/css/(100)OOCSS.css" />
         <option value="$PROJECT_DIR$/nWse/DomUtil.js" />
         <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
-        <option value="$PROJECT_DIR$/Test/Lang.html" />
-        <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
         <option value="$PROJECT_DIR$/nWse/(0)Seed.js" />
         <option value="$PROJECT_DIR$/nWse/(2)LangUtil.js" />
         <option value="$PROJECT_DIR$/nWse/(3)CoreDast.js" />
@@ -115,6 +121,10 @@
         <option value="$PROJECT_DIR$/模板/模板RltmAfx.html" />
         <option value="$PROJECT_DIR$/nWse/nUi/nCmnWgts/Nav.js" />
         <option value="$PROJECT_DIR$/nWse/nGpu/(0)GpuMath.js" />
+        <option value="$PROJECT_DIR$/Test/Lang.html" />
+        <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
+        <option value="$PROJECT_DIR$/Test/CvsWgts.html" />
+        <option value="$PROJECT_DIR$/nWse/VtuCsl.js" />
       </list>
     </option>
   </component>
@@ -395,17 +405,17 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24947146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17336152" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16560958" sideWeight="0.50066936" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33467203" sideWeight="0.5003524" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -450,20 +460,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Test/jQuery/jquery-1.10.2.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="228">
-          <caret line="5" column="25278" selection-start-line="5" selection-start-column="25268" selection-end-line="5" selection-end-column="25278" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/模板/模板.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="969">
-          <caret line="11" column="18" selection-start-line="0" selection-start-column="0" selection-end-line="47" selection-end-column="149" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/nUi/Form.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5605">
@@ -517,13 +513,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24940334" vertical-offset="1653" max-vertical-offset="4579">
           <caret line="98" column="4" selection-start-line="98" selection-start-column="4" selection-end-line="98" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nWse/VtuCsl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="15163" max-vertical-offset="21755">
-          <caret line="822" column="25" selection-start-line="822" selection-start-column="25" selection-end-line="822" selection-end-column="25" />
         </state>
       </provider>
     </entry>
@@ -674,14 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4389" max-vertical-offset="5795">
-          <caret line="245" column="24" selection-start-line="245" selection-start-column="24" selection-end-line="245" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/(0)Seed.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="22325" max-vertical-offset="22724">
@@ -828,10 +809,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Test/Lang.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.509434" vertical-offset="4304" max-vertical-offset="5795">
+          <caret line="267" column="38" selection-start-line="267" selection-start-column="38" selection-end-line="267" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nWse/VtuCnsl.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3326087" vertical-offset="12919" max-vertical-offset="21755">
+          <caret line="690" column="35" selection-start-line="690" selection-start-column="35" selection-end-line="690" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/CvsWgts.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.33333334" vertical-offset="1604" max-vertical-offset="5111">
+          <caret line="92" column="9" selection-start-line="92" selection-start-column="9" selection-end-line="92" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Test/Media/Bicycle.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.25" vertical-offset="303" max-vertical-offset="17005">
+          <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.072135784" vertical-offset="19405" max-vertical-offset="23864">
-          <caret line="1024" column="41" selection-start-line="1024" selection-start-column="41" selection-end-line="1024" selection-end-column="41" />
+        <state vertical-scroll-proportion="0.34017596" vertical-offset="19889" max-vertical-offset="24377">
+          <caret line="1059" column="26" selection-start-line="1059" selection-start-column="26" selection-end-line="1059" selection-end-column="26" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>
