@@ -592,10 +592,10 @@ function fOnIcld(a_Errs)
 			if (3 == a_Dim)
 			{
 				a_DomElmt.Wse_CssUtil.c_3dTsfm = {
-					c_Pspc : { d: null, c_FrmTime:0 },
 					c_Scl : { x:1, y:1, z:1, c_FrmTime:0 },
 					c_Rot : { x:0, y:0, z:0, w:1, c_FrmTime:0 },	// 四元数
-					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 }
+					c_Tslt : { x:0, y:0, z:0, c_FrmTime:0 },
+					c_Pspc : { d: null, c_FrmTime:0 }
 				};
 			}
 		}
@@ -905,6 +905,24 @@ function fOnIcld(a_Errs)
 			a_DomElmt.style[a_Which] = ((undefined === a_A) || (1 == a_A))
 				? ("rgb(" + a_R + "," + a_G + "," + a_B)
 				: ("rgba(" + a_R + "," + a_G + "," + a_B + "," + a_A);
+			return stCssUtil;
+		};
+
+		/// 显示但不可见
+		/// a_Fnsh：Boolean，完成？奇数次调用传false，偶数次传true，总是配对！
+		/// a_Dspl：String，显示值，仅当a_Fnsh为false时有意义，默认"block"
+		/// a_VsblOnFnsh：String，仅当a_Fnsh为true时有意义，默认空串（为了由样式表控制可见性）
+		stCssUtil.cDsplButIvsb = function (a_DomElmt, a_Fnsh, a_Dspl, a_VsblOnFnsh)
+		{
+			if (a_Fnsh)
+			{
+				a_DomElmt.style.visibility = a_VsblOnFnsh ? a_VsblOnFnsh : "";
+			}
+			else
+			{
+				a_DomElmt.style.visibility = "hidden";
+				a_DomElmt.style.display = a_Dspl || "block";
+			}
 			return stCssUtil;
 		};
 
@@ -1755,17 +1773,18 @@ function fOnIcld(a_Errs)
 			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_2dTsfm;
 			var l_CssStr = "";
 
-			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y)) // S
-			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale", l_Tsfm.c_Scl, "", 2); }
-
-			if ((0 != l_Tsfm.c_Skew.x) || (0 != l_Tsfm.c_Skew.y)) // K
-			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "skew", l_Tsfm.c_Skew, "rad", 2); }
+			// 注意CSS的变换从右向左进行！故字符串拼接顺序是：T*R*K*S
+			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y)) // T
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate", l_Tsfm.c_Tslt, "px", 2); }
 
 			if ((0 != l_Tsfm.c_Rot.w)) // R
 			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate", l_Tsfm.c_Rot.w, "rad", 1); }
 
-			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y)) // T
-			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate", l_Tsfm.c_Tslt, "px", 2); }
+			if ((0 != l_Tsfm.c_Skew.x) || (0 != l_Tsfm.c_Skew.y)) // K
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "skew", l_Tsfm.c_Skew, "rad", 2); }
+
+			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y)) // S
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale", l_Tsfm.c_Scl, "", 2); }
 
 			// 写成样式
 			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
@@ -1775,11 +1794,6 @@ function fOnIcld(a_Errs)
 		/// 存取扩展动画 - 三维变换
 		/// 返回：Object
 		/// {
-		///		c_Pspc:
-		///		{
-		///		d：Number，透视投影距离，null表示正交投影
-		/// 	c_FrmTime：Number
-		///		}
 		/// 	c_Scl:
 		///		{
 		///		x，y, z：Number
@@ -1793,6 +1807,11 @@ function fOnIcld(a_Errs)
 		/// 	c_Tslt:
 		///		{
 		///		x，y, z：Number
+		/// 	c_FrmTime：Number
+		///		}
+		///		c_Pspc:
+		///		{
+		///		d：Number，透视投影距离，null表示正交投影
 		/// 	c_FrmTime：Number
 		///		}
 		/// }
@@ -1825,6 +1844,7 @@ function fOnIcld(a_Errs)
 				{ return; }
 			}
 
+			// 注意CSS的变换从右向左进行！故字符串拼接顺序是：P*T*R*S
 			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
 			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_3dTsfm;
 			var l_CssStr = "";
@@ -1832,16 +1852,16 @@ function fOnIcld(a_Errs)
 			if (! nWse.fIsUdfnOrNull(l_Tsfm.c_Pspc.d)) // P
 			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "perspective", l_Tsfm.c_Pspc.d, "px", 1); }
 
-			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y) || (1 != l_Tsfm.c_Scl.z)) // S
-			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale3d", l_Tsfm.c_Scl, "", 3); }
+			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y) || (0 != l_Tsfm.c_Tslt.z)) // T
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate3d", l_Tsfm.c_Tslt, "px", 3); }
 
 			stNumUtil.cAxisRadFromQtn(e_AxisRad, l_Tsfm.c_Rot);	// 取得轴弧度，不是四元数但无妨
 			if (eNzQtn(e_AxisRad)) // R
 			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "rotate3d", e_AxisRad, null, 4); }
 
-			if ((0 != l_Tsfm.c_Tslt.x) || (0 != l_Tsfm.c_Tslt.y) || (0 != l_Tsfm.c_Tslt.z)) // T
-			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "translate3d", l_Tsfm.c_Tslt, "px", 3); }
-
+			if ((1 != l_Tsfm.c_Scl.x) || (1 != l_Tsfm.c_Scl.y) || (1 != l_Tsfm.c_Scl.z)) // S
+			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale3d", l_Tsfm.c_Scl, "", 3); }
+			
 			// 写成样式
 			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
 			return stCssUtil;
