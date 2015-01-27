@@ -264,6 +264,7 @@ function fOnIcld(a_Errs)
 			return a_Cssc.split(i_Rgx);
 		}
 
+		// 确保动画函数
 		function eEnsrAnmtFctn(a_DomElmt)
 		{
 			if ((! a_DomElmt.Wse_CssUtil) || (! a_DomElmt.Wse_CssUtil.c_fAnmt))
@@ -288,7 +289,7 @@ function fOnIcld(a_Errs)
 				//【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
 				if (0 == l_PN.indexOf("Wse_"))
 				{
-					// 目前，扩展动画只有变换，所以不用分支检测
+					//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
 					a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
 				}
 				else
@@ -1180,38 +1181,12 @@ function fOnIcld(a_Errs)
 		/// }
 		stCssUtil.cAnmt = function (a_DomElmt, a_End, a_Cfg)
 		{
-			// 检查实参
-			if ((! a_DomElmt) || (! a_End) || (! a_Cfg))
-			{ return stCssUtil; }
-
-			// 如果正在延期，取消计时器
-			if (a_DomElmt.Wse_CssUtil && (! nWse.fIsUdfnOrNull(a_DomElmt.Wse_CssUtil.c_DlyTmrId)))
-			{
-				clearTimeout(a_DomElmt.Wse_CssUtil.c_DlyTmrId);
-				a_DomElmt.Wse_CssUtil.c_DlyTmrId = null;
-			}
-
-			// 延期？
-			if (a_Cfg.c_Dly)
-			{
-				if (! a_DomElmt.Wse_CssUtil)
-				{ a_DomElmt.Wse_CssUtil = {}; }
-
-				a_DomElmt.Wse_CssUtil.c_DlyTmrId = setTimeout(function ()
-				{
-					a_DomElmt.Wse_CssUtil.c_DlyTmrId = null;
-					fAnmt_NoDly(a_DomElmt, a_End, a_Cfg);
-				}, a_Cfg.c_Dly * 1000);
-			}
-			else
-			{
-				// 立即执行
-				fAnmt_NoDly(a_DomElmt, a_End, a_Cfg);
-			}
+			// 借助这个共享的函数
+			stDomUtil.eAnmtPpty_Shr(a_DomElmt, a_End, a_Cfg, "Wse_CssUtil", eAnmt_NoDly);
 			return stCssUtil;
 		};
 
-		function fAnmt_NoDly(a_DomElmt, a_End, a_Cfg)
+		function eAnmt_NoDly(a_DomElmt, a_End, a_Cfg)
 		{
 			// 准备
 			e_DomPrn = a_DomElmt.parentNode;
@@ -1246,7 +1221,7 @@ function fOnIcld(a_Errs)
 					continue;
 				}
 
-				// 跳过非标准属性
+				// 跳过不存在的属性
 				if (! (l_PN in a_DomElmt.style))
 				{ continue; }
 

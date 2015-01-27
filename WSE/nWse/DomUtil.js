@@ -34,6 +34,7 @@ function fOnIcld(a_Errs)
 	var nWse = l_Glb.nWse;
 	var unKnl = nWse.unKnl;
 	var stAryUtil = nWse.stAryUtil;
+	var stNumUtil = nWse.stNumUtil;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 静态变量
@@ -124,6 +125,113 @@ function fOnIcld(a_Errs)
 			{
 				e_fRAF(eOneAnmtFrm);	// 继续下一帧
 			}
+		}
+
+		// 确保动画函数
+		function eEnsrAnmtFctn(a_DomElmt)
+		{
+			if ((! a_DomElmt.Wse_DomUtil) || (! a_DomElmt.Wse_DomUtil.c_fAnmt))
+			{
+				if (! a_DomElmt.Wse_DomUtil)
+				{ a_DomElmt.Wse_DomUtil = {}; }
+
+				a_DomElmt.Wse_DomUtil.c_fAnmt = eGnrtAnmtFctn(a_DomElmt);
+			}
+		}
+
+		// 跳到动画最后
+		function eJumpToAnmtEnd(a_DomElmt, a_Rvs)
+		{
+			var l_fAnmt = a_DomElmt.Wse_DomUtil.c_fAnmt;
+			var l_PN, l_Item, l_SV;
+			for (l_PN in l_fAnmt.Wse_Items)
+			{
+				l_Item = l_fAnmt.Wse_Items[l_PN];
+				l_SV = a_Rvs ? l_Item.c_Bgn : l_Item.c_End;
+				eAsnAnmtVal(a_DomElmt, l_PN, l_SV);
+			}
+		}
+
+		function eAsnAnmtVal(a_DomElmt, a_PN, a_Val)
+		{
+			// 特殊处理window.scrollX，window.scrollY
+			if (a_DomElmt === window)
+			{
+				if ("scrollX" == a_PN)
+				{
+					window.scrollTo(a_Val, window.scrollY);
+					return;
+				}
+				else
+				if ("scrollY" == a_PN)
+				{
+					window.scrollTo(window.scrollX, a_Val);
+					return;
+				}
+			}
+
+			a_DomElmt[a_PN] = a_Val;
+		}
+
+		function eGnrtAnmtFctn(a_DomElmt)
+		{
+			return function fDomElmtAnmt(a_FrmTime, a_FrmItvl, a_FrmNum)
+			{
+				var l_fAnmt = a_DomElmt.Wse_DomUtil.c_fAnmt;
+				var l_Cfg = l_fAnmt.Wse_Cfg;
+				var l_Ifnt = l_Cfg.c_Dur && (l_Cfg.c_Dur < 0);
+				var l_Loop = l_Ifnt ? false : (l_Cfg.c_Tot && (l_Cfg.c_Tot < 0));
+				var l_Cnt = l_Ifnt ? 0 : l_fAnmt.Wse_Cnt;
+				var l_Dur = l_Ifnt ? 0 : (l_Cfg.c_Dur || 1);
+				var l_Tot = (l_Ifnt || l_Loop) ? 0 : (l_Cfg.c_Tot || 1);
+				var l_NmlScl = l_Ifnt ? 0 : (a_FrmTime / l_Dur);
+				var l_EsnScl = l_Ifnt ? 0 : (l_Cfg.c_fEsn ? l_Cfg.c_fEsn(l_NmlScl) : l_NmlScl);
+				var l_Ctnu = l_Ifnt || (a_FrmTime < l_Dur);
+
+				var l_EvenCnt = (0 == l_Cnt % 2);
+				var l_Rvs = (l_Loop || (l_Tot > 1)) && l_EvenCnt && (l_Cfg.c_EvenCntRvs || false);
+				var l_Bgn, l_End;
+
+				var l_PN, l_Item, l_V, l_M;
+				if (l_Ctnu) // 继续，考虑无限，不算循环
+				{
+					// 对每个项
+					for (l_PN in l_fAnmt.Wse_Items)
+					{
+						l_Item = l_fAnmt.Wse_Items[l_PN];
+						if (l_Rvs)	// 需要反转始终值
+						{
+							l_Bgn = l_Item.c_End;
+							l_End = l_Item.c_Bgn;
+						}
+						else
+						{
+							l_Bgn = l_Item.c_Bgn;
+							l_End = l_Item.c_End;
+						}
+
+						l_V = l_M = stNumUtil.cLnrItp(l_Bgn, l_End, l_EsnScl);
+						eAsnAnmtVal(a_DomElmt, l_PN, l_V);
+					}
+
+					// 更新回调
+					if (l_Cfg.c_fOnUpd)
+					{
+						l_Cfg.c_fOnUpd(a_DomElmt, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+					}
+				}
+				else // 循环，或未达播放总数
+				if (l_Loop || ((1 < l_Tot) && (l_Cnt < l_Tot)))
+				{
+					eJumpToAnmtEnd(a_DomElmt, l_Rvs);			// 跳到最后
+					stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);	// 重置动画时间
+					++ l_fAnmt.Wse_Cnt;							// 递增一次计数
+				}
+				else // 结束
+				{
+					stDomUtil.cFnshAnmtPpty(a_DomElmt, true, true, l_Rvs);	// 结束动画
+				}
+			};
 		}
 
 		//======== 公有函数
@@ -753,6 +861,156 @@ function fOnIcld(a_Errs)
 			return l_Anmt.c_Pau;
 		};
 
+		/// 动画属性，与stCssUtil.cAnmt的区别是，这里动画的是DOM对象之属性，而非DOM对象的style对象之属性
+		/// 支持在window对象上动画scrollX和scrollY属性！
+		/// 参数含义同stCssUtil.cAnmt
+		stDomUtil.cAnmtPpty = function (a_DomElmt, a_End, a_Cfg)
+		{
+			stDomUtil.eAnmtPpty_Shr(a_DomElmt, a_End, a_Cfg, "Wse_DomUtil", eAnmtPpty_NoDly);
+			return stDomUtil;
+		};
+
+		// 这个函数与stCssUtil共享
+		stDomUtil.eAnmtPpty_Shr = function (a_DomElmt, a_End, a_Cfg, a_Which, a_fNoDly)
+		{
+			// 检查实参
+			if ((! a_DomElmt) || (! a_End) || (! a_Cfg))
+			{ return; }
+
+			// 如果正在延期，取消计时器
+			if (a_DomElmt[a_Which] && (! nWse.fIsUdfnOrNull(a_DomElmt[a_Which].c_DlyTmrId)))
+			{
+				clearTimeout(a_DomElmt[a_Which].c_DlyTmrId);
+				a_DomElmt[a_Which].c_DlyTmrId = null;
+			}
+
+			// 延期？
+			if (a_Cfg.c_Dly)
+			{
+				if (! a_DomElmt[a_Which])
+				{ a_DomElmt[a_Which] = {}; }
+
+				a_DomElmt[a_Which].c_DlyTmrId = setTimeout(function ()
+				{
+					a_DomElmt[a_Which].c_DlyTmrId = null;
+					a_fNoDly(a_DomElmt, a_End, a_Cfg);
+				}, a_Cfg.c_Dly * 1000);
+			}
+			else
+			{
+				// 立即执行
+				a_fNoDly(a_DomElmt, a_End, a_Cfg);
+			}
+		};
+
+		function eAnmtPpty_NoDly(a_DomElmt, a_End, a_Cfg)
+		{
+			// 准备
+			eEnsrAnmtFctn(a_DomElmt);		// 确保动画函数
+
+			// 初始化
+			var l_fAnmt = a_DomElmt.Wse_DomUtil.c_fAnmt;
+			l_fAnmt.Wse_Items = {};		// 要动画的各项之记录
+			l_fAnmt.Wse_Cfg = a_Cfg;
+			l_fAnmt.Wse_Cnt = 1;		// 从1开始计数
+
+			// 设定起始值和结束值
+			var l_IsEmt = true;
+			var l_PN, l_PV;
+			var l_Item = null;
+			for (l_PN in a_End)
+			{
+				// 跳过不存在的属性
+				if (! (l_PN in a_DomElmt))
+				{ continue; }
+
+				// 根据值的类型决定，跳过undefined和null
+				l_PV = a_End[l_PN];
+				if (nWse.fIsUdfnOrNull(l_PV))
+				{ continue; }
+
+				l_Item = {};
+
+				if (nWse.fIsNum(l_PV)) // [1]Number
+				{
+					l_Item.c_TypeIdx = 1;
+					l_Item.c_End = l_PV;
+				}
+				else // 无效类型，跳过
+				{
+					continue;
+				}
+
+				l_Item.c_Bgn = a_DomElmt[l_PN];
+
+				if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
+				{
+					// 如果起始值和结束值相同，跳过
+					if ((! a_Cfg.c_PsrvIdtcBesPpty) && (l_Item.c_Bgn == l_Item.c_End))
+					{
+						continue;
+						//	console.log("BS == ES，但未跳过！");
+					}
+
+					l_fAnmt.Wse_Items[l_PN] = l_Item;
+					l_IsEmt = false;	// 至少有一个项需要动画，不空
+				}
+			}
+
+			// 为空或时长为0时立即结束，否则注册或重置
+			(l_IsEmt || (0 === a_Cfg.c_Dur) || (0 === a_Cfg.c_Tot))
+				? stDomUtil.cFnshAnmtPpty(a_DomElmt, (! l_IsEmt), true, false)
+				: stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);
+			return stDomUtil;
+		}
+
+		/// 结束动画属性
+		/// 参数含义同stCssUtil.cFnshAnmt
+		stDomUtil.cFnshAnmtPpty = function (a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs)
+		{
+			// 率先注销
+			var l_fAnmt = a_DomElmt.Wse_DomUtil && a_DomElmt.Wse_DomUtil.c_fAnmt;
+			if ((! l_fAnmt) || (! l_fAnmt.Wse_Items))
+			{ return stDomUtil; }
+
+			var l_Idx = stDomUtil.cFindAnmt(l_fAnmt);
+			if (l_Idx < 0)
+			{ return stDomUtil; }
+
+			stDomUtil.cUrgAnmtByIdx(l_Idx);
+
+			// 跳到最后
+			if (a_SkipToEnd)
+			{ eJumpToAnmtEnd(a_DomElmt, a_Rvs); }
+
+			// 结束回调
+			if (a_Cabk && l_fAnmt.Wse_Cfg.c_fOnEnd)
+			{ l_fAnmt.Wse_Cfg.c_fOnEnd(a_DomElmt); }
+
+			return stDomUtil;
+		};
+
+		/// 在动画属性期间？
+		stDomUtil.cIsDurAnmtPpty = function (a_DomElmt)
+		{
+			var l_fAnmt = a_DomElmt.Wse_DomUtil && a_DomElmt.Wse_DomUtil.c_fAnmt;
+			return l_fAnmt ? (stDomUtil.cFindAnmt(l_fAnmt) >= 0) : false;
+		};
+
+		/// 暂停继续动画属性
+		stDomUtil.cPauRsmAnmtPpty = function (a_DomElmt, a_Pau)
+		{
+			var l_fAnmt = a_DomElmt.Wse_DomUtil && a_DomElmt.Wse_DomUtil.c_fAnmt;
+			stDomUtil.cPauRsmAnmt(l_fAnmt, a_Pau);
+			return stDomUtil;
+		};
+
+		/// 动画属性暂停？
+		stDomUtil.cIsAnmtPptyPau = function (a_DomElmt)
+		{
+			var l_fAnmt = a_DomElmt.Wse_DomUtil && a_DomElmt.Wse_DomUtil.c_fAnmt;
+			return stDomUtil.cIsAnmtPau(l_fAnmt);
+		};
 	})();
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,10 @@
 			height: 100%;
 			background-color: rgb(239, 228, 176);
 		}
+		
+		#k_PrstTgt {
+			height: 2000px;
+		}
 
 	</style>
 </head>
@@ -294,6 +298,8 @@
 						l_Istn.vcPplt();
 					});
 
+		//	window.scrollTo()
+		//	document.documentElement.scrollLeft
 			//*/
 
 			/* 测试输入
@@ -310,10 +316,24 @@
 			});
 			nApp.g_PIT.cSetImdtHdlr(fHdlIpt);
 			//*/
+
+			/* 【测试nWse.stDomUtil.cAnmtPpty】
+			window.scrollTo(0, 0);
+			nWse.stDomUtil.cAnmtPpty(window,
+					{
+						"scrollY": 1000
+					},
+					{
+						c_Dur: 2
+						,c_Tot: 6
+						,c_EvenCntRvs: true
+					});
+			//*/
 		}
 
 		//// http://blog.csdn.net/orbit/article/details/9210413 农历计算
 		//// http://blog.csdn.net/cuixiping/article/details/7826138 html5 midi
+
 
 
 	</script>
