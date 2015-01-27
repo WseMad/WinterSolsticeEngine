@@ -62,29 +62,38 @@ http://tympanus.net/codrops/2012/11/20/learning-principles-for-improving-your-cs
 //	a_Put.style["webkitTransform"] = "rotate(30deg)";	// 顺时针正
 //	transform: skew(45deg,0deg) scale(.5) translate(400px,500px) rotate(90deg);
 
---------------------------------- Sublime2注册码
-Andrew Weber
 
-Single User License
+/** 
+    * 判断浏览器是否支持某一个CSS3属性 
+    * @param {String} 属性名称 
+    * @return {Boolean} true/false 
+    * @version 1.0 
+    * @author ydr.me 
+    * 2014年4月4日14:47:19 
+*/
 
-EA7E-855605
+//function supportCss3(style) {
+//	var prefix = ['webkit', 'moz', 'ms', 'o'],
+//    i,
+//    humpString = [],
+//    htmlStyle = document.documentElement.style,
+//    _toHumb = function (string) {
+//    	return string.replace(/-(\w)/g, function ($0, $1) {
+//    		return $1.toUpperCase();
+//    	});
+//    };
 
-813A03DD 5E4AD9E6 6C0EEB94 BC99798F
+//	for (i in prefix)
+//		humpString.push(_toHumb(prefix[i] + '-' + style));
 
-942194A6 02396E98 E62C9979 4BB979FE
+//	humpString.push(_toHumb(style));
 
-91424C9D A45400BF F6747D88 2FB88078
+//	for (i in humpString)
+//		if (humpString[i] in htmlStyle) return true;
 
-90F5CC94 1CDC92DC 8457107A F151657B
-
-1D22E383 A997F016 42397640 33F41CFC
-
-E1D0AE85 A0BBD039 0E9C8D55 E1B89D5D
-
-5CDB7036 E56DE1C0 EFCC0840 650CD3A6
-
-B98FC99C 8FAC73EE D2B95564 DF450523
--------------------------------------
+//	return false;
+//}
+//alert(supportCss3('animation-play-state'));  
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
