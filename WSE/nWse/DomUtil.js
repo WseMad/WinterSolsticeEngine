@@ -934,7 +934,11 @@ function fOnIcld(a_Errs)
 			{
 				// 跳过不存在的属性
 				if (! (l_PN in a_DomElmt))
-				{ continue; }
+				{
+					// 支持动画window.scrollX，window.scrollY
+					if ((a_DomElmt === window) && ("scrollX" != l_PN) && ("scrollY" != l_PN))
+					{ continue; }
+				}
 
 				// 根据值的类型决定，跳过undefined和null
 				l_PV = a_End[l_PN];
@@ -953,7 +957,7 @@ function fOnIcld(a_Errs)
 					continue;
 				}
 
-				l_Item.c_Bgn = a_DomElmt[l_PN];
+				l_Item.c_Bgn = a_DomElmt[l_PN] || 0;	// 起始值如果不存在，取0
 
 				if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
 				{

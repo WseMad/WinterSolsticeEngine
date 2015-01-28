@@ -575,6 +575,38 @@ function fOnIcld(a_Errs)
 			return	(l_a * a_Scl * a_Scl + l_b * a_Scl + a_Bgn);
 		};
 
+		/// 松弛 - 慢→快
+		/// a_Scl：Number∈[0, 1]
+		/// 返回：Number∈[0, 1]
+		stNumUtil.cEsn_SlowToFast = function (a_Scl)
+		{
+			return stNumUtil.cPrbItp(0, 1, a_Scl, true);
+		};
+
+		/// 松弛 - 快→慢
+		/// a_Scl：Number∈[0, 1]
+		/// 返回：Number∈[0, 1]
+		stNumUtil.cEsn_FastToSlow = function (a_Scl)
+		{
+			return stNumUtil.cPrbItp(0, 1, a_Scl, false);
+		};
+
+		/// 松弛 - 慢→快→慢
+		/// a_Scl：Number∈[0, 1]
+		/// 返回：Number∈[0, 1]
+		stNumUtil.cEsn_SlowToFastToSlow = function (a_Scl)
+		{
+			return (a_Scl < 0.5) ? (2 * a_Scl * a_Scl) : (-2 * a_Scl * a_Scl + 4 * a_Scl - 1);
+		};
+
+		/// 松弛 - 快→慢→快
+		/// a_Scl：Number∈[0, 1]
+		/// 返回：Number∈[0, 1]
+		stNumUtil.cEsn_FastToSlowToFast = function (a_Scl)
+		{
+			return (a_Scl < 0.5) ? (-2 * a_Scl * a_Scl + 2 * a_Scl) : (2 * a_Scl * a_Scl - 2 * a_Scl + 1);
+		};
+
 		/// 点乘 - 二维
 		stNumUtil.cDot_2d = function (a_Lx, a_Ly, a_Rx, a_Ry)
 		{
