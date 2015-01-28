@@ -56,9 +56,13 @@
 		</div>
 	</div>-->
 
+	<div id="k_RL" style="position: fixed; color: black;">
+		《Revolving Light》
+	</div>
 
 
 	<div id="k_PrstTgt">
+
 		<!--呈现目标-->
 		<div style="height: 200px;"></div>
 	</div>
@@ -317,11 +321,22 @@
 			nApp.g_PIT.cSetImdtHdlr(fHdlIpt);
 			//*/
 
-			/* 【测试nWse.stDomUtil.cAnmtPpty】
+		//	/* 【测试nWse.stDomUtil.cAnmtPpty】
 			window.scrollTo(0, 0);
 			nWse.stDomUtil.cAnmtPpty(window,
 					{
 						"scrollY": 1000
+					},
+					{
+						c_Dur: 2
+						,c_Tot: 6
+						,c_EvenCntRvs: true
+					});
+
+			var l_RL = document.getElementById("k_RL");
+			nWse.stCssUtil.cAnmt(l_RL,
+					{
+						"color": "rgb(0, 255, 255)"
 					},
 					{
 						c_Dur: 2

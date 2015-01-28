@@ -798,7 +798,7 @@
 		//======== 私有字段
 
 		// 库目录映射
-		var e_LibDiryMap = { "nWse": "../nWse/", "cnWse": "../cnWse/" };
+		var e_LibDiryMap = { "nWse": "../nWse/", "cnWse": "../cnWse/", "nApp": "./js/", "cnApp": "./css/" };
 		eInitLibDiryMap();
 
 		var e_CpltRgtr = {};							// 注册表
@@ -809,8 +809,8 @@
 		// 初始化库目录映射
 		function eInitLibDiryMap()
 		{
-			//if (i_InNodeJs) // 如常处理
-			//{ return; }
+			if (i_InNodeJs)
+			{ return; }
 
 			var l_Doms = l_Glb.document.getElementsByTagName("script");
 			var l_Src = (l_Doms.length > 0) && l_Doms[l_Doms.length - 1].getAttribute("src");	// 取最后一个，即为当前脚本

@@ -129,7 +129,7 @@ function fOnIcld(a_Errs)
 
 		function eIsWse_Css_TypeIdx(a_Idx)
 		{
-			return (1000 <= a_Idx);
+			return (10000 <= a_Idx);
 		}
 
 		function eToCssUnit(a_Val)
@@ -264,39 +264,42 @@ function fOnIcld(a_Errs)
 			return a_Cssc.split(i_Rgx);
 		}
 
-		// 确保动画函数
-		function eEnsrAnmtFctn(a_DomElmt)
-		{
-			if ((! a_DomElmt.Wse_CssUtil) || (! a_DomElmt.Wse_CssUtil.c_fAnmt))
-			{
-				if (! a_DomElmt.Wse_CssUtil)
-				{ a_DomElmt.Wse_CssUtil = {}; }
-
-				a_DomElmt.Wse_CssUtil.c_fAnmt = eGnrtAnmtFctn(a_DomElmt);
-			}
-		}
-
 		// 跳到动画最后
 		function eJumpToAnmtEnd(a_DomElmt, a_Rvs)
 		{
-			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-			var l_PN, l_Item, l_SV;
-			for (l_PN in l_fAnmt.Wse_Items)
-			{
-				l_Item = l_fAnmt.Wse_Items[l_PN];
-				l_SV = a_Rvs ? l_Item.c_BgnStr : l_Item.c_EndStr;
+			//var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
+			//var l_PN, l_Item, l_SV;
+			//for (l_PN in l_fAnmt.Wse_Items)
+			//{
+			//	l_Item = l_fAnmt.Wse_Items[l_PN];
+			//	l_SV = a_Rvs ? l_Item.c_BgnStr : l_Item.c_EndStr;
+			//
+			//	//【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
+			//	if (0 == l_PN.indexOf("Wse_"))
+			//	{
+			//		//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
+			//		a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
+			//	}
+			//	else
+			//	{
+			//		a_DomElmt.style[l_PN] = l_SV;
+			//	}
+			//}
 
-				//【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
-				if (0 == l_PN.indexOf("Wse_"))
+			stDomUtil.eJumpToAnmtEnd_Shr(true, a_DomElmt, a_Rvs,
+				function (a_DomElmt, a_PN, a_Item)
 				{
-					//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
-					a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
-				}
-				else
-				{
-					a_DomElmt.style[l_PN] = l_SV;
-				}
-			}
+					var l_SV = a_Rvs ? a_Item.c_BgnStr : a_Item.c_EndStr;
+					if (0 == a_PN.indexOf("Wse_")) //【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
+					{
+						//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
+						a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
+					}
+					else
+					{
+						a_DomElmt.style[a_PN] = l_SV;
+					}
+				});
 		}
 
 		function eGnrtAnmtFctn(a_DomElmt)
@@ -410,8 +413,6 @@ function fOnIcld(a_Errs)
 			if (e_Wse_CssExtd.i_3dTsfm == a_Item.c_TypeIdx)
 			{ eAnmtWse_CssExtd_3dTsfm.apply(null, arguments); }
 		}
-
-	//	function eAnmtWse_CssExtd_
 
 		function eLnrItp_Dim(a_Rst, a_Bgn, a_End, a_Scl, a_Dim)
 		{
@@ -1182,7 +1183,7 @@ function fOnIcld(a_Errs)
 		stCssUtil.cAnmt = function (a_DomElmt, a_End, a_Cfg)
 		{
 			// 借助这个共享的函数
-			stDomUtil.eAnmtPpty_Shr(a_DomElmt, a_End, a_Cfg, "Wse_CssUtil", eAnmt_NoDly);
+			stDomUtil.eAnmtPpty_Shr(true, a_DomElmt, a_End, a_Cfg, eAnmt_NoDly, eGnrtAnmtFctn);
 			return stCssUtil;
 		};
 
@@ -1191,7 +1192,6 @@ function fOnIcld(a_Errs)
 			// 准备
 			e_DomPrn = a_DomElmt.parentNode;
 			e_BgnStl = e_PrnStl = null;
-			eEnsrAnmtFctn(a_DomElmt);		// 确保动画函数
 
 			// 初始化
 			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
