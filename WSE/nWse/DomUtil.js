@@ -159,13 +159,13 @@ function fOnIcld(a_Errs)
 			{
 				if ("scrollX" == a_PN)
 				{
-					window.scrollTo(a_Val, window.scrollY);
+					window.scrollTo(a_Val, stDomUtil.cGetScrlY());
 					return;
 				}
 				else
 				if ("scrollY" == a_PN)
 				{
-					window.scrollTo(window.scrollX, a_Val);
+					window.scrollTo(stDomUtil.cGetScrlX(), a_Val);
 					return;
 				}
 			}
@@ -246,6 +246,18 @@ function fOnIcld(a_Errs)
 		stDomUtil.cGetVwptHgt = function ()
 		{
 			return window.innerHeight || document.documentElement.clientHeight;
+		};
+
+		/// 获取滚动X坐标
+		stDomUtil.cGetScrlX = function ()
+		{
+			return (document.documentElement.scrollLeft || 0) + (document.body.scrollLeft || 0);
+		};
+
+		/// 获取滚动Y坐标
+		stDomUtil.cGetScrlY = function ()
+		{
+			return (document.documentElement.scrollTop || 0) + (document.body.scrollTop || 0);
 		};
 
 		/// 存取<body>
