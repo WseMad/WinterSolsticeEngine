@@ -255,6 +255,9 @@
 		<p>
 			<span class="cnApp_Date">选择日期</span>
 		</p>
+		<div id="k_PkrDiv">
+
+		</div>
 	</div>
 
 	<!--<div style="position:relative; width:400px;height: 400px; clip:rect(0px, 400px, 400px, 0px); background-color: rgb(0, 0, 255);">-->
@@ -332,6 +335,14 @@
 						}
 
 						return this;
+					}
+					,
+					/// 创建年月日表格
+					cCrtDayTab: function (a_StupDate) {
+						var l_This = this;
+						var l_Rst = l_This.eMakeTab(3);
+						l_This.eFillDate_3(l_Rst, a_StupDate || (new Date()));
+						return l_Rst;
 					}
 					,
 					eIsShowDate: function () {
@@ -1127,6 +1138,19 @@
 				});
 
 			nApp.g_DatePkrs = [];
+
+			(function () {
+				var l_DP = new nApp.tDatePkr();
+				nApp.g_DatePkrs.push(l_DP);
+				l_DP.cInit({
+				});
+
+				var l_Div = document.getElementById("k_PkrDiv");
+				var l_Tab = l_DP.cCrtDayTab(null);
+				nWse.stDomUtil.cRmvAllChds(l_Div);
+				l_Div.appendChild(l_Tab);
+			})();
+
 			var l_All = nWse.stDomUtil.cQryAll(".cnApp_Date");
 			nWse.stAryUtil.cFor(l_All,
 				function (a_Ary, a_Idx, a_TextBox) {
