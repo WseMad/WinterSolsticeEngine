@@ -233,7 +233,8 @@ function fOnIcld(a_Errs)
 		/// 基本状态
 		function tBaseSta(a_Name, a_App)
 		{
-			this.odBase(tBaseSta).odCall(a_Name);
+		//	this.odBase(a_Name);
+			tBaseSta.oc_tBase.call(this, a_Name);
 
 			this.d_App = a_App;
 		}
@@ -395,7 +396,8 @@ function fOnIcld(a_Errs)
 		/// 状态 - Home
 		function tSta_Home(a_App)
 		{
-			this.odBase(tSta_Home).odCall("Home", a_App);
+		//	this.odBase("Home", a_App);
+			tExmApp.tSta_Home.oc_tBase.call(this, "Home", a_App);
 		}
 		,
 		tExmApp.tBaseSta
@@ -403,7 +405,7 @@ function fOnIcld(a_Errs)
 		{
 			vcEnt : function f(a_Prev)
 			{
-				this.odBase(f).odCall(a_Prev);
+				this.odBase(a_Prev);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -430,7 +432,7 @@ function fOnIcld(a_Errs)
 			,
 			vcLea : function f(a_Next)
 			{
-				this.odBase(f).odCall(a_Next);
+				this.odBase(a_Next);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -438,7 +440,7 @@ function fOnIcld(a_Errs)
 			,
 			vcBPC : function f(a_BrkPntIdx)
 			{
-				this.odBase(f).odCall(a_BrkPntIdx);
+				this.odBase(a_BrkPntIdx);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -669,7 +671,8 @@ function fOnIcld(a_Errs)
 		/// 状态 - News
 		function tSta_News(a_App)
 		{
-			this.odBase(tSta_News).odCall("News", a_App);
+		//	this.odBase("News", a_App);
+			tExmApp.tSta_News.oc_tBase.call(this, "News", a_App);
 		}
 		,
 			tExmApp.tBaseSta
@@ -677,7 +680,7 @@ function fOnIcld(a_Errs)
 		{
 			vcEnt: function f(a_Prev)
 			{
-				this.odBase(f).odCall(a_Prev);
+				this.odBase(a_Prev);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -687,14 +690,14 @@ function fOnIcld(a_Errs)
 			},
 			vcLea: function f(a_Next)
 			{
-				this.odBase(f).odCall(a_Next);
+				this.odBase(a_Next);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
 			},
 			vcBPC: function f(a_BrkPntIdx)
 			{
-				this.odBase(f).odCall(a_BrkPntIdx);
+				this.odBase(a_BrkPntIdx);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -711,7 +714,8 @@ function fOnIcld(a_Errs)
 		/// 状态 - Archives
 		function tSta_Archives(a_App)
 		{
-			this.odBase(tSta_Archives).odCall("Archives", a_App);
+		//	this.odBase("Archives", a_App);
+			tExmApp.tSta_Archives.oc_tBase.call(this, "Archives", a_App);
 		}
 		,
 		tExmApp.tBaseSta
@@ -719,7 +723,7 @@ function fOnIcld(a_Errs)
 		{
 			vcEnt: function f(a_Prev)
 			{
-				this.odBase(f).odCall(a_Prev);
+				this.odBase(a_Prev);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -729,14 +733,14 @@ function fOnIcld(a_Errs)
 			},
 			vcLea: function f(a_Next)
 			{
-				this.odBase(f).odCall(a_Next);
+				this.odBase(a_Next);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
 			},
 			vcBPC: function f(a_BrkPntIdx)
 			{
-				this.odBase(f).odCall(a_BrkPntIdx);
+				this.odBase(a_BrkPntIdx);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -753,7 +757,8 @@ function fOnIcld(a_Errs)
 		/// 状态 - About
 		function tSta_About(a_App)
 		{
-			this.odBase(tSta_About).odCall("About", a_App);
+		//	this.odBase("About", a_App);
+			tExmApp.tSta_About.oc_tBase.call(this, "About", a_App);
 		}
 		,
 		tExmApp.tBaseSta
@@ -761,7 +766,7 @@ function fOnIcld(a_Errs)
 		{
 			vcEnt: function f(a_Prev)
 			{
-				this.odBase(f).odCall(a_Prev);
+				this.odBase(a_Prev);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -771,14 +776,14 @@ function fOnIcld(a_Errs)
 			},
 			vcLea: function f(a_Next)
 			{
-				this.odBase(f).odCall(a_Next);
+				this.odBase(a_Next);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
 			},
 			vcBPC: function f(a_BrkPntIdx)
 			{
-				this.odBase(f).odCall(a_BrkPntIdx);
+				this.odBase(a_BrkPntIdx);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -795,7 +800,8 @@ function fOnIcld(a_Errs)
 		/// 状态 - Contact
 		function tSta_Contact(a_App)
 		{
-			this.odBase(tSta_Contact).odCall("Contact", a_App);
+		//	this.odBase("Contact", a_App);
+			tExmApp.tSta_Contact.oc_tBase.call(this, "Contact", a_App);
 		}
 		,
 		tExmApp.tBaseSta
@@ -803,7 +809,7 @@ function fOnIcld(a_Errs)
 		{
 			vcEnt: function f(a_Prev)
 			{
-				this.odBase(f).odCall(a_Prev);
+				this.odBase(a_Prev);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -813,14 +819,14 @@ function fOnIcld(a_Errs)
 			},
 			vcLea: function f(a_Next)
 			{
-				this.odBase(f).odCall(a_Next);
+				this.odBase(a_Next);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
 			},
 			vcBPC: function f(a_BrkPntIdx)
 			{
-				this.odBase(f).odCall(a_BrkPntIdx);
+				this.odBase(a_BrkPntIdx);
 
 				var l_This = this;
 				var l_Lot = l_This.d_App.e_PcdrLot;
@@ -837,7 +843,8 @@ function fOnIcld(a_Errs)
 			/// 状态 - 404
 			function tSta_404(a_App)
 			{
-				this.odBase(tSta_404).odCall("404", a_App);
+			//	this.odBase("404", a_App);
+				tExmApp.tSta_404.oc_tBase.call(this, "404", a_App);
 			}
 			,
 			tExmApp.tBaseSta
@@ -845,21 +852,21 @@ function fOnIcld(a_Errs)
 			{
 				vcEnt: function f(a_Prev)
 				{
-					this.odBase(f).odCall(a_Prev);
+					this.odBase(a_Prev);
 
 					var l_This = this;
 					var l_Lot = l_This.d_App.e_PcdrLot;
 				},
 				vcLea: function f(a_Next)
 				{
-					this.odBase(f).odCall(a_Next);
+					this.odBase(a_Next);
 
 					var l_This = this;
 					var l_Lot = l_This.d_App.e_PcdrLot;
 				},
 				vcBPC: function f(a_BrkPntIdx)
 				{
-					this.odBase(f).odCall(a_BrkPntIdx);
+					this.odBase(a_BrkPntIdx);
 
 					var l_This = this;
 					var l_Lot = l_This.d_App.e_PcdrLot;

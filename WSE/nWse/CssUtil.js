@@ -304,103 +304,159 @@ function fOnIcld(a_Errs)
 
 		function eGnrtAnmtFctn(a_DomElmt)
 		{
-			return function fDomElmtAnmt(a_FrmTime, a_FrmItvl, a_FrmNum)
-			{
-				var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-				var l_Cfg = l_fAnmt.Wse_Cfg;
-				var l_Ifnt = l_Cfg.c_Dur && (l_Cfg.c_Dur < 0);
-				var l_Loop = l_Ifnt ? false : (l_Cfg.c_Tot && (l_Cfg.c_Tot < 0));
-				var l_Cnt = l_Ifnt ? 0 : l_fAnmt.Wse_Cnt;
-				var l_Dur = l_Ifnt ? 0 : (l_Cfg.c_Dur || 1);
-				var l_Tot = (l_Ifnt || l_Loop) ? 0 : (l_Cfg.c_Tot || 1);
-				var l_NmlScl = l_Ifnt ? 0 : (a_FrmTime / l_Dur);
-				var l_EsnScl = l_Ifnt ? 0 : (l_Cfg.c_fEsn ? l_Cfg.c_fEsn(l_NmlScl) : l_NmlScl);
-				var l_Ctnu = l_Ifnt || (a_FrmTime < l_Dur);
+			//return function fDomElmtAnmt(a_FrmTime, a_FrmItvl, a_FrmNum)
+			//{
+			//	var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
+			//	var l_Cfg = l_fAnmt.Wse_Cfg;
+			//	var l_Ifnt = l_Cfg.c_Dur && (l_Cfg.c_Dur < 0);
+			//	var l_Loop = l_Ifnt ? false : (l_Cfg.c_Tot && (l_Cfg.c_Tot < 0));
+			//	var l_Cnt = l_Ifnt ? 0 : l_fAnmt.Wse_Cnt;
+			//	var l_Dur = l_Ifnt ? 0 : (l_Cfg.c_Dur || 1);
+			//	var l_Tot = (l_Ifnt || l_Loop) ? 0 : (l_Cfg.c_Tot || 1);
+			//	var l_NmlScl = l_Ifnt ? 0 : (a_FrmTime / l_Dur);
+			//	var l_EsnScl = l_Ifnt ? 0 : (l_Cfg.c_fEsn ? l_Cfg.c_fEsn(l_NmlScl) : l_NmlScl);
+			//	var l_Ctnu = l_Ifnt || (a_FrmTime < l_Dur);
+			//
+			//	var l_X = l_fAnmt.Wse_Sp.x, l_Y = l_fAnmt.Wse_Sp.y;
+			//	var l_EvenCnt = (0 == l_Cnt % 2);
+			//	var l_Rvs = (l_Loop || (l_Tot > 1)) && l_EvenCnt && (l_Cfg.c_EvenCntRvs || false);
+			//	var l_Bgn, l_End;
+			//
+			//	var l_PN, l_Item, l_V, l_M;
+			//	if (l_Ctnu) // 继续，考虑无限，不算循环
+			//	{
+			//		// 对每个项
+			//		for (l_PN in l_fAnmt.Wse_Items)
+			//		{
+			//			l_Item = l_fAnmt.Wse_Items[l_PN];
+			//			if (l_Rvs)	// 需要反转始终值
+			//			{
+			//				l_Bgn = l_Item.c_End;
+			//				l_End = l_Item.c_Bgn;
+			//			}
+			//			else
+			//			{
+			//				l_Bgn = l_Item.c_Bgn;
+			//				l_End = l_Item.c_End;
+			//			}
+			//
+			//			if (eIsWse_Css_TypeIdx(l_Item.c_TypeIdx))	// 冬至引擎扩展CSS
+			//			{
+			//				eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+			//			}
+			//			else
+			//			if (6 == l_Item.c_TypeIdx)	// 颜色
+			//			{
+			//				l_V = tClo.scLnrItp(s_TempClo0, l_Bgn, l_End, l_EsnScl);
+			//				a_DomElmt.style[l_PN] = tClo.scToCssCloStr(l_V);
+			//			}
+			//			else // 其他
+			//			{
+			//				l_V = l_M = stNumUtil.cLnrItp(l_Bgn, l_End, l_EsnScl);
+			//				if ((2 == l_Item.c_TypeIdx) || (3 == l_Item.c_TypeIdx)) // 像素和百分比的中间过程皆用像素
+			//				{ l_V = l_V.toString() + "px"; }
+			//				a_DomElmt.style[l_PN] = l_V.toString();
+			//
+			//				// 如果有left和/或top，更新当前值
+			//				if (l_fAnmt.Wse_HasLeft && ("left" == l_PN))
+			//				{ l_X = l_M; }
+			//				else
+			//				if (l_fAnmt.Wse_HasTop && ("top" == l_PN))
+			//				{ l_Y = l_M; }
+			//			}
+			//		}
+			//
+			//		// 专门处理left和top
+			//		if (l_fAnmt.Wse_HasDplc)
+			//		{
+			//			l_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
+			//			l_fAnmt.Wse_Pos.y = l_Y;
+			//			if (l_Cfg.c_fDplc)			// 可以被c_fDplc改写
+			//			{
+			//				l_Cfg.c_fDplc(l_fAnmt.Wse_Pos, a_DomElmt,
+			//					(l_Rvs ? l_fAnmt.Wse_Tp : l_fAnmt.Wse_Sp),
+			//					(l_Rvs ? l_fAnmt.Wse_Sp : l_fAnmt.Wse_Tp),
+			//					l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+			//			}
+			//
+			//			a_DomElmt.style["left"] = l_fAnmt.Wse_Pos.x.toString() + "px";
+			//			a_DomElmt.style["top"]  = l_fAnmt.Wse_Pos.y.toString() + "px";
+			//		}
+			//
+			//		// 更新回调
+			//		if (l_Cfg.c_fOnUpd)
+			//		{
+			//			l_Cfg.c_fOnUpd(a_DomElmt, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+			//		}
+			//	}
+			//	else // 循环，或未达播放总数
+			//	if (l_Loop || ((1 < l_Tot) && (l_Cnt < l_Tot)))
+			//	{
+			//		eJumpToAnmtEnd(a_DomElmt, l_Rvs);			// 跳到最后
+			//		stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);	// 重置动画时间
+			//		++ l_fAnmt.Wse_Cnt;							// 递增一次计数
+			//	}
+			//	else // 结束
+			//	{
+			//		stCssUtil.cFnshAnmt(a_DomElmt, true, true, l_Rvs);	// 结束动画
+			//	}
+			//};
 
-				var l_X = l_fAnmt.Wse_Sp.x, l_Y = l_fAnmt.Wse_Sp.y;
-				var l_EvenCnt = (0 == l_Cnt % 2);
-				var l_Rvs = (l_Loop || (l_Tot > 1)) && l_EvenCnt && (l_Cfg.c_EvenCntRvs || false);
-				var l_Bgn, l_End;
-
-				var l_PN, l_Item, l_V, l_M;
-				if (l_Ctnu) // 继续，考虑无限，不算循环
+			var l_X, l_Y, l_V, l_M; // 闭包里的变量，唯一于生成的函数
+			return stDomUtil.eGnrtAnmtFctn_Shr(true, a_DomElmt,
+				function (a_DomElmt, a_fAnmt)
 				{
-					// 对每个项
-					for (l_PN in l_fAnmt.Wse_Items)
+					l_X = a_fAnmt.Wse_Sp.x;
+					l_Y = a_fAnmt.Wse_Sp.y;
+				},
+				function (a_DomElmt, a_fAnmt, a_PN, a_Bgn, a_End,
+						  a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+				{
+					if (eIsWse_Css_TypeIdx(a_Item.c_TypeIdx))	// 冬至引擎扩展CSS
 					{
-						l_Item = l_fAnmt.Wse_Items[l_PN];
-						if (l_Rvs)	// 需要反转始终值
-						{
-							l_Bgn = l_Item.c_End;
-							l_End = l_Item.c_Bgn;
-						}
-						else
-						{
-							l_Bgn = l_Item.c_Bgn;
-							l_End = l_Item.c_End;
-						}
-
-						if (eIsWse_Css_TypeIdx(l_Item.c_TypeIdx))	// 冬至引擎扩展CSS
-						{
-							eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-						}
-						else
-						if (6 == l_Item.c_TypeIdx)	// 颜色
-						{
-							l_V = tClo.scLnrItp(s_TempClo0, l_Bgn, l_End, l_EsnScl);
-							a_DomElmt.style[l_PN] = tClo.scToCssCloStr(l_V);
-						}
-						else // 其他
-						{
-							l_V = l_M = stNumUtil.cLnrItp(l_Bgn, l_End, l_EsnScl);
-							if ((2 == l_Item.c_TypeIdx) || (3 == l_Item.c_TypeIdx)) // 像素和百分比的中间过程皆用像素
-							{ l_V = l_V.toString() + "px"; }
-							a_DomElmt.style[l_PN] = l_V.toString();
-
-							// 如果有left和/或top，更新当前值
-							if (l_fAnmt.Wse_HasLeft && ("left" == l_PN))
-							{ l_X = l_M; }
-							else
-							if (l_fAnmt.Wse_HasTop && ("top" == l_PN))
-							{ l_Y = l_M; }
-						}
+						eAnmtWse_CssExtd(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
 					}
+					else
+					if (6 == a_Item.c_TypeIdx)	// 颜色
+					{
+						l_V = tClo.scLnrItp(s_TempClo0, a_Bgn, a_End, a_EsnScl);
+						a_DomElmt.style[a_PN] = tClo.scToCssCloStr(l_V);
+					}
+					else // 其他
+					{
+						l_V = l_M = stNumUtil.cLnrItp(a_Bgn, a_End, a_EsnScl);
+						if ((2 == a_Item.c_TypeIdx) || (3 == a_Item.c_TypeIdx)) // 像素和百分比的中间过程皆用像素
+						{ l_V = l_V.toString() + "px"; }
+						a_DomElmt.style[a_PN] = l_V.toString();
 
+						// 如果有left和/或top，更新当前值
+						if (a_fAnmt.Wse_HasLeft && ("left" == a_PN))
+						{ l_X = l_M; }
+						else
+						if (a_fAnmt.Wse_HasTop && ("top" == a_PN))
+						{ l_Y = l_M; }
+					}
+				},
+				function (a_DomElmt, a_fAnmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur, a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum)
+				{
 					// 专门处理left和top
-					if (l_fAnmt.Wse_HasDplc)
+					if (a_fAnmt.Wse_HasDplc)
 					{
-						l_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
-						l_fAnmt.Wse_Pos.y = l_Y;
-						if (l_Cfg.c_fDplc)			// 可以被c_fDplc改写
+						a_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
+						a_fAnmt.Wse_Pos.y = l_Y;
+						if (a_Cfg.c_fDplc)			// 可以被c_fDplc改写
 						{
-							l_Cfg.c_fDplc(l_fAnmt.Wse_Pos, a_DomElmt,
-								(l_Rvs ? l_fAnmt.Wse_Tp : l_fAnmt.Wse_Sp),
-								(l_Rvs ? l_fAnmt.Wse_Sp : l_fAnmt.Wse_Tp),
-								l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
+							a_Cfg.c_fDplc(a_fAnmt.Wse_Pos, a_DomElmt,
+								(a_Rvs ? a_fAnmt.Wse_Tp : a_fAnmt.Wse_Sp),
+								(a_Rvs ? a_fAnmt.Wse_Sp : a_fAnmt.Wse_Tp),
+								a_NmlScl, a_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
 						}
 
-						a_DomElmt.style["left"] = l_fAnmt.Wse_Pos.x.toString() + "px";
-						a_DomElmt.style["top"]  = l_fAnmt.Wse_Pos.y.toString() + "px";
+						a_DomElmt.style["left"] = a_fAnmt.Wse_Pos.x.toString() + "px";
+						a_DomElmt.style["top"]  = a_fAnmt.Wse_Pos.y.toString() + "px";
 					}
-
-					// 更新回调
-					if (l_Cfg.c_fOnUpd)
-					{
-						l_Cfg.c_fOnUpd(a_DomElmt, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-					}
-				}
-				else // 循环，或未达播放总数
-				if (l_Loop || ((1 < l_Tot) && (l_Cnt < l_Tot)))
-				{
-					eJumpToAnmtEnd(a_DomElmt, l_Rvs);			// 跳到最后
-					stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);	// 重置动画时间
-					++ l_fAnmt.Wse_Cnt;							// 递增一次计数
-				}
-				else // 结束
-				{
-					stCssUtil.cFnshAnmt(a_DomElmt, true, true, l_Rvs);	// 结束动画
-				}
-			};
+				},
+				eJumpToAnmtEnd, stCssUtil.cFnshAnmt);
 		}
 
 		function eAnmtWse_CssExtd(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur,
@@ -1183,7 +1239,7 @@ function fOnIcld(a_Errs)
 		stCssUtil.cAnmt = function (a_DomElmt, a_End, a_Cfg)
 		{
 			// 借助这个共享的函数
-			stDomUtil.eAnmtPpty_Shr(true, a_DomElmt, a_End, a_Cfg, eAnmt_NoDly, eGnrtAnmtFctn);
+			stDomUtil.eAnmtPpty_Shr(true, a_DomElmt, a_End, a_Cfg, eAnmt_NoDly);
 			return stCssUtil;
 		};
 
@@ -1192,6 +1248,7 @@ function fOnIcld(a_Errs)
 			// 准备
 			e_DomPrn = a_DomElmt.parentNode;
 			e_BgnStl = e_PrnStl = null;
+			stDomUtil.eEnsrAnmtFctn_Shr(true, a_DomElmt, eGnrtAnmtFctn);	// 确保动画函数
 
 			// 初始化
 			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
@@ -1647,25 +1704,26 @@ function fOnIcld(a_Errs)
 		/// a_Rvs：Boolean，反转始末值？默认false
 		stCssUtil.cFnshAnmt = function (a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs)
 		{
-			// 率先注销
-			var l_fAnmt = a_DomElmt.Wse_CssUtil && a_DomElmt.Wse_CssUtil.c_fAnmt;
-			if ((! l_fAnmt) || (! l_fAnmt.Wse_Items))
-			{ return stCssUtil; }
+			//// 率先注销
+			//var l_fAnmt = a_DomElmt.Wse_CssUtil && a_DomElmt.Wse_CssUtil.c_fAnmt;
+			//if ((! l_fAnmt) || (! l_fAnmt.Wse_Items))
+			//{ return stCssUtil; }
+			//
+			//var l_Idx = stDomUtil.cFindAnmt(l_fAnmt);
+			//if (l_Idx < 0)
+			//{ return stCssUtil; }
+			//
+			//stDomUtil.cUrgAnmtByIdx(l_Idx);
+			//
+			//// 跳到最后
+			//if (a_SkipToEnd)
+			//{ eJumpToAnmtEnd(a_DomElmt, a_Rvs); }
+			//
+			//// 结束回调
+			//if (a_Cabk && l_fAnmt.Wse_Cfg.c_fOnEnd)
+			//{ l_fAnmt.Wse_Cfg.c_fOnEnd(a_DomElmt); }
 
-			var l_Idx = stDomUtil.cFindAnmt(l_fAnmt);
-			if (l_Idx < 0)
-			{ return stCssUtil; }
-
-			stDomUtil.cUrgAnmtByIdx(l_Idx);
-
-			// 跳到最后
-			if (a_SkipToEnd)
-			{ eJumpToAnmtEnd(a_DomElmt, a_Rvs); }
-
-			// 结束回调
-			if (a_Cabk && l_fAnmt.Wse_Cfg.c_fOnEnd)
-			{ l_fAnmt.Wse_Cfg.c_fOnEnd(a_DomElmt); }
-
+			stDomUtil.eFnshAnmtPpty_Shr(true, a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs, eJumpToAnmtEnd);
 			return stCssUtil;
 		};
 

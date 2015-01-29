@@ -186,7 +186,8 @@ function fOnIcld(a_Errs)
 			var l_ChkRgx;
 			if ((! l_BaseIsObject))
 			{
-				l_ChkRgx = /\bthis\s*\.\s*odBase\s*\(/;	// this . odBase (
+			//	l_ChkRgx = /\bthis\s*\.\s*odBase\s*\(/;					// this . odBase (
+				l_ChkRgx = /\.\s*oc_tBase\s*\.\s*call\s*\(\s*this/;		// . oc_tBase . call ( this
 				if (! l_ChkRgx.test(a_fCtor.toString()))
 				{
 					nWse.stLog.cPutLine("◆【警告】类“" + a_nHost$tHost.ocBldFullName(l_ClassName) + "”的构造函数可能没有调用基类的构造函数！");
@@ -196,32 +197,33 @@ function fOnIcld(a_Errs)
 			// 在宿主名字空间还是宿主类型里？
 			var l_IsHostSpc = nWse.fIsNmspc(a_nHost$tHost);
 
+			//【注意】不再包装了，因为可能会在构造函数里访问构造函数上的成员，如“new tClass.tSta_404(this)”
 			/// 类（构造函数）
-			function tClass()
-			{
-				if (undefined === this.odBase) // 如果尚未定义，添加odBase至this
-				{
-					fDfnDataPpty(this, "odBase", false, false, true, null);
-				}
-
-				if (undefined === a_tBase.Wse_fPrev) // 如果尚未定义，添加Wse_fPrev至a_tBase
-				{
-					fDfnDataPpty(a_tBase, "Wse_fPrev", false, false, true, null);
-				}
-
-				a_tBase.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
-				this.odBase = a_tBase;				// 压入基类版本
-				try
-				{
-					tClass.Wse_fOrigCtor.apply(this, arguments); // 调用被包装的构造函数
-				}
-				finally
-				{
-					this.odBase = this.odBase.Wse_fPrev;	// 弹出基类版本
-				}
-			}
-			tClass.Wse_fOrigCtor = a_fCtor;		// 记录原始构造函数
-			a_fCtor = tClass;					// 令传入的构造函数指向包装函数！
+			//function tClass()
+			//{
+			//	if (undefined === this.odBase) // 如果尚未定义，添加odBase至this
+			//	{
+			//		fDfnDataPpty(this, "odBase", false, false, true, null);
+			//	}
+			//
+			//	if (undefined === a_tBase.Wse_fPrev) // 如果尚未定义，添加Wse_fPrev至a_tBase
+			//	{
+			//		fDfnDataPpty(a_tBase, "Wse_fPrev", false, false, true, null);
+			//	}
+			//
+			//	a_tBase.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
+			//	this.odBase = a_tBase;				// 压入基类版本
+			//	try
+			//	{
+			//		tClass.Wse_fOrigCtor.apply(this, arguments); // 调用被包装的构造函数
+			//	}
+			//	finally
+			//	{
+			//		this.odBase = this.odBase.Wse_fPrev;	// 弹出基类版本
+			//	}
+			//}
+			//tClass.Wse_fOrigCtor = a_fCtor;		// 记录原始构造函数
+			//a_fCtor = tClass;					// 令传入的构造函数指向包装函数！
 		
 			// 继承原型
 			fIhrtPttp(a_fCtor, a_tBase);
@@ -489,6 +491,11 @@ function fOnIcld(a_Errs)
 							l_BaseMthd = l_BasePttp[a_MthdName] || (function(){});
 							l_fMthd = function ()
 							{
+								if (undefined === this.odBase) // 如果尚未定义，添加odBase至this
+								{
+									fDfnDataPpty(this, "odBase", false, false, true, null);
+								}
+
 								l_BaseMthd.Wse_fPrev = this.odBase;	// 簿记前一个函数，形成单链表
 								this.odBase = l_BaseMthd;			// 压入基类版本
 								try

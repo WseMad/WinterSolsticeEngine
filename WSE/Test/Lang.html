@@ -121,7 +121,6 @@
 				/// 形状
 				function tShp(a_X, a_Y)
 				{
-					this.odBase(a_X, a_Y);
 					if (s_ShowClassInfo) console.log("tShp");
 				},
 				null,
@@ -142,7 +141,9 @@
 				/// 多边形
 				function tPlg(a_X, a_Y, a_W, a_H)
 				{
-					this.odBase(a_X, a_Y);
+				//	this.odBase(a_X, a_Y);
+					nApp.tPlg.oc_tBase.call(this, a_X, a_Y);
+
 					if (s_ShowClassInfo) console.log("tPlg");
 				},
 				nApp.tShp,
@@ -164,7 +165,9 @@
 				/// 四边形
 				function tQuad(a_X, a_Y, a_W, a_H)
 				{
-					this.odBase(a_X, a_Y, a_W, a_H);
+				//	this.odBase(a_X, a_Y, a_W, a_H);
+					nApp.tQuad.oc_tBase.call(this, a_X, a_Y, a_W, a_H);
+
 					if (s_ShowClassInfo) console.log("tQuad");
 				},
 				nApp.tPlg,
@@ -186,7 +189,8 @@
 				/// 矩形
 				function tRect(a_X, a_Y, a_W, a_H)
 				{
-					this.odBase(a_X, a_Y, a_W, a_H);
+				//	this.odBase(a_X, a_Y, a_W, a_H);
+					nApp.tRect.oc_tBase.call( this, a_X, a_Y, a_W, a_H);
 					if (s_ShowClassInfo) console.log("tRect");
 				},
 				nApp.tQuad,
