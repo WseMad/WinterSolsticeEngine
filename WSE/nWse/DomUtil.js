@@ -212,22 +212,13 @@ function fOnIcld(a_Errs)
 				var l_EsnScl = l_Ifnt ? 0 : (l_Cfg.c_fEsn ? l_Cfg.c_fEsn(l_NmlScl) : l_NmlScl);
 				var l_Ctnu = l_Ifnt || (a_FrmTime < l_Dur);
 
-				//var l_X, l_Y;
-				//if (a_CssUtil)
-				//{
-				//	l_X = l_fAnmt.Wse_Sp.x;
-				//	l_Y = l_fAnmt.Wse_Sp.y;
-				//}
 				if (a_CssUtil)
-				{
-					a_fSpclBef(a_DomElmt, l_fAnmt);
-				}
+				{ a_fSpclBef(a_DomElmt, l_fAnmt); }
 
 				var l_EvenCnt = (0 == l_Cnt % 2);
 				var l_Rvs = (l_Loop || (l_Tot > 1)) && l_EvenCnt && (l_Cfg.c_EvenCntRvs || false);
 				var l_Bgn, l_End;
-
-				var l_PN, l_Item;//, l_V, l_M;
+				var l_PN, l_Item;
 				if (l_Ctnu) // 继续，考虑无限，不算循环
 				{
 					// 对每个项
@@ -245,30 +236,6 @@ function fOnIcld(a_Errs)
 							l_End = l_Item.c_End;
 						}
 
-						//if (eIsWse_Css_TypeIdx(l_Item.c_TypeIdx))	// 冬至引擎扩展CSS
-						//{
-						//	eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-						//}
-						//else
-						//if (6 == l_Item.c_TypeIdx)	// 颜色
-						//{
-						//	l_V = tClo.scLnrItp(s_TempClo0, l_Bgn, l_End, l_EsnScl);
-						//	a_DomElmt.style[l_PN] = tClo.scToCssCloStr(l_V);
-						//}
-						//else // 其他
-						//{
-						//	l_V = l_M = stNumUtil.cLnrItp(l_Bgn, l_End, l_EsnScl);
-						//	if ((2 == l_Item.c_TypeIdx) || (3 == l_Item.c_TypeIdx)) // 像素和百分比的中间过程皆用像素
-						//	{ l_V = l_V.toString() + "px"; }
-						//	a_DomElmt.style[l_PN] = l_V.toString();
-						//
-						//	// 如果有left和/或top，更新当前值
-						//	if (l_fAnmt.Wse_HasLeft && ("left" == l_PN))
-						//	{ l_X = l_M; }
-						//	else
-						//	if (l_fAnmt.Wse_HasTop && ("top" == l_PN))
-						//	{ l_Y = l_M; }
-						//}
 						a_fItp(a_DomElmt, l_fAnmt, l_PN, l_Bgn, l_End,
 							l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
 					}
@@ -277,22 +244,6 @@ function fOnIcld(a_Errs)
 					{
 						a_fSpclAft(a_DomElmt, l_fAnmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
 					}
-					//// 专门处理left和top
-					//if (l_fAnmt.Wse_HasDplc)
-					//{
-					//	l_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
-					//	l_fAnmt.Wse_Pos.y = l_Y;
-					//	if (l_Cfg.c_fDplc)			// 可以被c_fDplc改写
-					//	{
-					//		l_Cfg.c_fDplc(l_fAnmt.Wse_Pos, a_DomElmt,
-					//			(l_Rvs ? l_fAnmt.Wse_Tp : l_fAnmt.Wse_Sp),
-					//			(l_Rvs ? l_fAnmt.Wse_Sp : l_fAnmt.Wse_Tp),
-					//			l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-					//	}
-					//
-					//	a_DomElmt.style["left"] = l_fAnmt.Wse_Pos.x.toString() + "px";
-					//	a_DomElmt.style["top"]  = l_fAnmt.Wse_Pos.y.toString() + "px";
-					//}
 
 					// 更新回调
 					if (l_Cfg.c_fOnUpd)
@@ -303,14 +254,12 @@ function fOnIcld(a_Errs)
 				else // 循环，或未达播放总数
 				if (l_Loop || ((1 < l_Tot) && (l_Cnt < l_Tot)))
 				{
-				//	eJumpToAnmtEnd(a_DomElmt, l_Rvs);			// 跳到最后
 					a_fJump(a_DomElmt, l_Rvs);					// 跳到最后
 					stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);	// 重置动画时间
 					++ l_fAnmt.Wse_Cnt;							// 递增一次计数
 				}
 				else // 结束
 				{
-				//	stCssUtil.cFnshAnmt(a_DomElmt, true, true, l_Rvs);	// 结束动画
 					a_fFnsh(a_DomElmt, true, true, l_Rvs);	// 结束动画
 				}
 			};
@@ -356,17 +305,17 @@ function fOnIcld(a_Errs)
 			return document.getElementById("ok_3dBody");
 		};
 
-		/// 获取文档宽度
-		stDomUtil.cGetDocWid = function ()
-		{
-			return Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth);
-		};
-
-		/// 获取文档高度
-		stDomUtil.cGetDocHgt = function ()
-		{
-			return Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight);
-		};
+		///// 获取文档宽度
+		//stDomUtil.cGetDocWid = function ()
+		//{
+		//	return Math.max(document.documentElement.scrollWidth, document.documentElement.clientWidth);
+		//};
+		//
+		///// 获取文档高度
+		//stDomUtil.cGetDocHgt = function ()
+		//{
+		//	return Math.max(document.documentElement.scrollHeight, document.documentElement.clientHeight);
+		//};
 
 		/// 转储成数组
 		/// a_NodeList：NodeList，节点列表
@@ -807,6 +756,26 @@ function fOnIcld(a_Errs)
 			return stDomUtil;
 		};
 
+		/// 存取事件
+		stDomUtil.cAcsEvt = function(a_Evt){ return a_Evt || window.event; };
+
+		/// 存取事件目标
+		stDomUtil.cAcsEvtTgt = function(a_Evt){ return a_Evt.target || a_Evt.srcElement; };
+
+		/// 阻止默认事件动作发生
+		stDomUtil.cPvtDftEvtActn = function (a_Evt)
+		{
+			if (a_Evt.preventDefault) { a_Evt.preventDefault(); }
+			else { a_Evt.returnValue = false; }
+		};
+
+		/// 阻止传播事件
+		stDomUtil.cStopPpgtEvt = function(a_Evt)
+		{
+			if (a_Evt.stopPropagation) { a_Evt.stopPropagation(); }
+			else { a_Evt.cancelBubble = true; }
+		};
+
 
 		/// 获取动画数量
 		stDomUtil.cGetAnmtAmt = function ()
@@ -1001,67 +970,6 @@ function fOnIcld(a_Errs)
 
 		function eAnmtPpty_NoDly(a_DomElmt, a_End, a_Cfg)
 		{
-			//// 准备
-			//stDomUtil.eEnsrAnmtFctn_Shr(false, a_DomElmt, eGnrtAnmtFctn);	// 确保动画函数
-			//
-			//// 初始化
-			//var l_fAnmt = a_DomElmt.Wse_DomUtil.c_fAnmt;
-			//l_fAnmt.Wse_Items = {};		// 要动画的各项之记录
-			//l_fAnmt.Wse_Cfg = a_Cfg;
-			//l_fAnmt.Wse_Cnt = 1;		// 从1开始计数
-			//
-			//// 设定起始值和结束值
-			//var l_IsEmt = true;
-			//var l_PN, l_PV;
-			//var l_Item = null;
-			//for (l_PN in a_End)
-			//{
-			//	// 跳过不存在的属性
-			//	if (! (l_PN in a_DomElmt))
-			//	{
-			//		// 支持动画window.scrollX，window.scrollY
-			//		if ((a_DomElmt === window) && ("scrollX" != l_PN) && ("scrollY" != l_PN))
-			//		{ continue; }
-			//	}
-			//
-			//	// 根据值的类型决定，跳过undefined和null
-			//	l_PV = a_End[l_PN];
-			//	if (nWse.fIsUdfnOrNull(l_PV))
-			//	{ continue; }
-			//
-			//	l_Item = {};
-			//
-			//	if (nWse.fIsNum(l_PV)) // [1]Number
-			//	{
-			//		l_Item.c_TypeIdx = 1;
-			//		l_Item.c_End = l_PV;
-			//	}
-			//	else // 无效类型，跳过
-			//	{
-			//		continue;
-			//	}
-			//
-			//	l_Item.c_Bgn = a_DomElmt[l_PN] || 0;	// 起始值如果不存在，取0
-			//
-			//	if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
-			//	{
-			//		// 如果起始值和结束值相同，跳过
-			//		if ((! a_Cfg.c_PsrvIdtcBesPpty) && (l_Item.c_Bgn == l_Item.c_End))
-			//		{
-			//			continue;
-			//			//	console.log("BS == ES，但未跳过！");
-			//		}
-			//
-			//		l_fAnmt.Wse_Items[l_PN] = l_Item;
-			//		l_IsEmt = false;	// 至少有一个项需要动画，不空
-			//	}
-			//}
-			//
-			//// 为空或时长为0时立即结束，否则注册或重置
-			//(l_IsEmt || (0 === a_Cfg.c_Dur) || (0 === a_Cfg.c_Tot))
-			//	? stDomUtil.cFnshAnmtPpty(a_DomElmt, (! l_IsEmt), true, false)
-			//	: stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);
-
 			stDomUtil.eAnmtPpty_NoDly_Shr(false, a_DomElmt, a_End, a_Cfg,
 				function (a_DomElmt) // 准备
 				{
@@ -1073,14 +981,6 @@ function fOnIcld(a_Errs)
 				{
 					// 支持动画window.scrollX，window.scrollY
 					return (! (a_PN in a_DomElmt)) && ((a_DomElmt === window) && ("scrollX" != a_PN) && ("scrollY" != a_PN));
-
-					//if (! (a_PN in a_DomElmt))
-					//{
-					//	// 支持动画window.scrollX，window.scrollY
-					//	if ((a_DomElmt === window) && ("scrollX" != a_PN) && ("scrollY" != a_PN))
-					//	{ return true; }
-					//}
-					//return false;
 				},
 				function (a_DomElmt, a_fAnmt, a_PN, a_PV, a_Item) // 计算始末值
 				{
@@ -1101,12 +1001,6 @@ function fOnIcld(a_Errs)
 				{
 					// 如果起始值和结束值相同，跳过
 					return ((! a_fAnmt.Wse_Cfg.c_PsrvIdtcBesPpty) && (a_Item.c_Bgn == a_Item.c_End));
-					//if ((! a_fAnmt.Wse_Cfg.c_PsrvIdtcBesPpty) && (a_Item.c_Bgn == a_Item.c_End))
-					//{
-					//	return true;
-					//	//	console.log("BS == ES，但未跳过！");
-					//}
-					//return false;
 				},
 				null, null, stDomUtil.cFnshAnmtPpty);
 			return stDomUtil;
@@ -1116,9 +1010,6 @@ function fOnIcld(a_Errs)
 												  a_fRdy, a_fInit, a_fExtd, a_fSkip, a_fCalcBgnEnd, a_fDontRcd, a_fAftRcd, a_fAftEnum, a_fFnsh)
 		{
 			// 准备
-			//e_DomPrn = a_DomElmt.parentNode;
-			//e_BgnStl = e_PrnStl = null;
-			//stDomUtil.eEnsrAnmtFctn_Shr(true, a_DomElmt, eGnrtAnmtFctn);	// 确保动画函数
 			a_fRdy(a_DomElmt);
 
 			// 初始化
@@ -1127,15 +1018,7 @@ function fOnIcld(a_Errs)
 			l_fAnmt.Wse_Items = {};		// 要动画的各项之记录
 			l_fAnmt.Wse_Cfg = a_Cfg;
 			l_fAnmt.Wse_Cnt = 1;		// 从1开始计数
-			//l_fAnmt.Wse_HasDplc = !! (a_Cfg.c_fDplc);
-			//l_fAnmt.Wse_HasLeft = false;
-			//l_fAnmt.Wse_HasTop = false;
-			//if (! l_fAnmt.Wse_Pos)
-			//{
-			//	l_fAnmt.Wse_Pos = { x:0, y:0 };
-			//	l_fAnmt.Wse_Sp = { x:0, y:0 };
-			//	l_fAnmt.Wse_Tp = { x:0, y:0 };
-			//}
+
 			if (a_CssUtil)
 			{ a_fInit(a_DomElmt, l_fAnmt); }
 
@@ -1155,9 +1038,7 @@ function fOnIcld(a_Errs)
 					}
 				}
 
-				//// 跳过不存在的属性
-				//if (! (l_PN in a_DomElmt.style))
-				//{ continue; }
+				// 跳过不存在的属性
 				if (a_fSkip(a_DomElmt, l_PN))
 				{ continue; }
 
@@ -1167,135 +1048,24 @@ function fOnIcld(a_Errs)
 				{ continue; }
 
 				l_Item = {};
-
-//				if (nWse.fIsNum(l_PV)) // [1]Number
-//				{
-//					l_Item.c_TypeIdx = 1;
-//					l_Item.c_End = l_PV;
-//				}
-//				else if (nWse.fIsStr(l_PV))	// 字符串
-//				{
-//					l_LtIdx = l_PV.indexOf("<");	// 带有起始字符串？
-//					if (l_LtIdx >= 0)
-//					{
-//						l_BgnStr = (l_LtIdx == l_PV.length - 1) ? "" : l_PV.substring(l_LtIdx + 1, l_PV.length);
-//						l_PV = l_PV.substring(0, l_LtIdx);
-//					}
-//
-//					l_EqIdx = l_PV.indexOf("=");	// 带有结束字符串？
-//					if (l_EqIdx >= 0)
-//					{
-//						l_EndStr = (l_EqIdx == l_PV.length - 1) ? "" : l_PV.substring(l_EqIdx + 1, l_PV.length);
-//						l_PV = l_PV.substring(0, l_EqIdx);
-//					}
-//
-//					if ((l_PV.length - 2 >= 0) && (l_PV.indexOf("px") == l_PV.length - 2)) // [2]像素
-//					{
-//						l_Item.c_TypeIdx = 2;
-//						l_Item.c_End = parseFloat(l_PV);
-//					}
-//					else if ((l_PV.length - 1 >= 0) && (l_PV.indexOf("%") == l_PV.length - 1)) // [3]百分比
-//					{
-//						if (! e_PrnStl)
-//						{
-//							e_PrnStl = stCssUtil.cGetCmptStl(e_DomPrn);
-//						}
-//
-//						l_Item.c_TypeIdx = 3;
-//						l_Item.c_End = parseFloat(e_PrnStl[l_PN]);
-//						if (isNaN(l_Item.c_End))
-//						{ l_Item.c_End = e_DomPrn.offsetWidth; }
-//
-//						l_Item.c_End *= (parseFloat(l_PV) / 100);
-//					}
-////					else
-////					if ((l_PV.length - 2 >= 0) && (l_PV.indexOf("em") == l_PV.length - 2)) // [4]em
-////					{
-////						l_Item.c_TypeIdx = 4;
-////					}
-////					else
-////					if ((l_PV.length - 3 >= 0) && (l_PV.indexOf("rem") == l_PV.length - 3)) // [5]rem
-////					{
-////						l_Item.c_TypeIdx = 5;
-////					}
-//					else if ((l_PV.indexOf("rgb") == 0) || (l_PV.indexOf("#") == 0))	// [6]颜色
-//					{
-//						l_Item.c_TypeIdx = 6;
-//						l_Item.c_End = tClo.scFromCssCloStr(l_PV);
-//					}
-//					else // 按Number处理
-//					{
-//						l_Item.c_TypeIdx = 1;
-//						l_Item.c_End = parseFloat(l_PV);
-//						if (isNaN(l_Item.c_End))	// 若解析失败则跳过
-//						{ continue; }
-//					}
-//				}
-//				else // 无效类型，跳过
-//				{
-//					continue;
-//				}
-//
-//				eCalcBgnPV(l_Item.c_TypeIdx, a_DomElmt, l_PN);
-//				l_Item.c_Bgn = e_Rst_CalcBgnPV.c_Bgn;
-//				l_Item.c_BgnStr = (l_LtIdx >= 0) ? l_BgnStr : e_Rst_CalcBgnPV.c_BgnStr;
-//				l_Item.c_EndStr = (l_EqIdx >= 0) ? l_EndStr : l_PV.toString();
 				if (! a_fCalcBgnEnd(a_DomElmt, l_fAnmt, l_PN, l_PV, l_Item)) // 计算始末值，若无效则跳过
 				{ continue; }
 
 				if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
 				{
-					//// 如果起始串和结束串相同，除非是“left、top”且提供了c_fDplc，否则跳过
-					//if ((! a_Cfg.c_PsrvIdtcBesPpty) && (l_Item.c_BgnStr == l_Item.c_EndStr))
-					//{
-					//	if (! (l_fAnmt.Wse_HasDplc && (("left" == l_PN) || ("top" == l_PN))))
-					//	{ continue; }
-					//
-					//	//	console.log("BS == ES，但未跳过！");
-					//}
 					if (a_fDontRcd(a_DomElmt, l_fAnmt, l_PN, l_PV, l_Item))
 					{ continue; }
 
 					l_fAnmt.Wse_Items[l_PN] = l_Item;
 					l_IsEmt = false;	// 至少有一个项需要动画，不空
 
-					//// 如果需要动画位置，检查left和/或top是否存在，是的话记录起始和结束值
-					//if (l_fAnmt.Wse_HasDplc)
-					//{
-					//	if ((! l_fAnmt.Wse_HasLeft) && ("left" == l_PN))
-					//	{
-					//		l_fAnmt.Wse_HasLeft = true;
-					//		l_fAnmt.Wse_Sp.x = l_Item.c_Bgn;
-					//		l_fAnmt.Wse_Tp.x = l_Item.c_End;
-					//	}
-					//	else
-					//	if ((! l_fAnmt.Wse_HasTop) && ("top" == l_PN))
-					//	{
-					//		l_fAnmt.Wse_HasTop = true;
-					//		l_fAnmt.Wse_Sp.y = l_Item.c_Bgn;
-					//		l_fAnmt.Wse_Tp.y = l_Item.c_End;
-					//	}
-					//}
 					if (a_CssUtil)
-					{
-						a_fAftRcd(a_DomElmt, l_fAnmt, l_PN, l_PV, l_Item);
-					}
+					{ a_fAftRcd(a_DomElmt, l_fAnmt, l_PN, l_PV, l_Item); }
 				}
 			}
 
-			//// 如果需要动画位置，计算left和/或top缺省的起始和结束值（此时相同，皆为当前值）
-			//if (l_fAnmt.Wse_HasDplc)
-			//{
-			//	if (! l_fAnmt.Wse_HasLeft)
-			//	{ l_fAnmt.Wse_Sp.x = l_fAnmt.Wse_Tp.x = eCalcBgnPV(2, a_DomElmt, "left").c_Bgn; }
-			//
-			//	if (! l_fAnmt.Wse_HasTop)
-			//	{ l_fAnmt.Wse_Sp.y = l_fAnmt.Wse_Tp.y = eCalcBgnPV(2, a_DomElmt, "top").c_Bgn; }
-			//}
 			if (a_CssUtil)
-			{
-				a_fAftEnum(a_DomElmt, l_fAnmt);
-			}
+			{ a_fAftEnum(a_DomElmt, l_fAnmt); }
 
 			// 为空或时长为0时立即结束，否则注册或重置
 			(l_IsEmt || (0 === a_Cfg.c_Dur) || (0 === a_Cfg.c_Tot))
@@ -1307,25 +1077,6 @@ function fOnIcld(a_Errs)
 		/// 参数含义同stCssUtil.cFnshAnmt
 		stDomUtil.cFnshAnmtPpty = function (a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs)
 		{
-			//// 率先注销
-			//var l_fAnmt = a_DomElmt.Wse_DomUtil && a_DomElmt.Wse_DomUtil.c_fAnmt;
-			//if ((! l_fAnmt) || (! l_fAnmt.Wse_Items))
-			//{ return stDomUtil; }
-			//
-			//var l_Idx = stDomUtil.cFindAnmt(l_fAnmt);
-			//if (l_Idx < 0)
-			//{ return stDomUtil; }
-			//
-			//stDomUtil.cUrgAnmtByIdx(l_Idx);
-			//
-			//// 跳到最后
-			//if (a_SkipToEnd)
-			//{ eJumpToAnmtEnd(a_DomElmt, a_Rvs); }
-			//
-			//// 结束回调
-			//if (a_Cabk && l_fAnmt.Wse_Cfg.c_fOnEnd)
-			//{ l_fAnmt.Wse_Cfg.c_fOnEnd(a_DomElmt); }
-
 			stDomUtil.eFnshAnmtPpty_Shr(false, a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs, eJumpToAnmtEnd);
 			return stDomUtil;
 		};

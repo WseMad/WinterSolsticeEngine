@@ -69,7 +69,8 @@ function fOnIcld(a_Errs)
 		var e_BgnStl = null, e_PrnStl = null;	// 样式
 		var e_Rst_CalcBgnPV = null;		// eCalcBgnPV的返回值
 		var e_Wse_CssExtd = null;		// 扩展CSS
-		var e_BrsPfx_Tsfm = null;		// 浏览器前缀 - transform
+		var e_BrsrPfx_Tsfm = null;		// 浏览器前缀 - transform
+		var e_MaySupt3dTsfm = null;		// 可能支持3D变换？
 		var e_AxisRad = null;			// 轴弧度
 
 		//======== 私有函数
@@ -101,30 +102,30 @@ function fOnIcld(a_Errs)
 			};
 		}
 
-		function eInitBrsrPfx_Tsfm(a_DomElmt)
+		function eInitBrsrPfx_Tsfm()
 		{
-			if (null !== e_BrsPfx_Tsfm) // 已初始化？注意即使是空串，也与null不等
+			if (null !== e_BrsrPfx_Tsfm) // 已初始化？注意即使是空串，也与null不等
 			{ return; }
 
 			e_AxisRad = { x:0, y:0, z:0, w:0 };	// 新建
 
-			var l_Stl = a_DomElmt.style;
+			var l_Stl = document.documentElement.style;
 			if ("transform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "transform"; }
+			{ e_BrsrPfx_Tsfm = "transform"; }
 			else
 			if ("webkitTransform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "webkitTransform"; }
+			{ e_BrsrPfx_Tsfm = "webkitTransform"; }
 			else
 			if ("mozTransform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "mozTransform"; }
-			else
-			if ("OTransform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "OTransform"; }
+			{ e_BrsrPfx_Tsfm = "mozTransform"; }
 			else
 			if ("msTransform" in l_Stl)
-			{ e_BrsPfx_Tsfm = "msTransform"; }
+			{ e_BrsrPfx_Tsfm = "msTransform"; }
 			else
-			{ e_BrsPfx_Tsfm = ""; } // 空串表示不支持
+			if ("OTransform" in l_Stl)
+			{ e_BrsrPfx_Tsfm = "OTransform"; }
+			else
+			{ e_BrsrPfx_Tsfm = ""; } // 空串表示不支持
 		}
 
 		function eIsWse_Css_TypeIdx(a_Idx)
@@ -267,25 +268,6 @@ function fOnIcld(a_Errs)
 		// 跳到动画最后
 		function eJumpToAnmtEnd(a_DomElmt, a_Rvs)
 		{
-			//var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-			//var l_PN, l_Item, l_SV;
-			//for (l_PN in l_fAnmt.Wse_Items)
-			//{
-			//	l_Item = l_fAnmt.Wse_Items[l_PN];
-			//	l_SV = a_Rvs ? l_Item.c_BgnStr : l_Item.c_EndStr;
-			//
-			//	//【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
-			//	if (0 == l_PN.indexOf("Wse_"))
-			//	{
-			//		//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
-			//		a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
-			//	}
-			//	else
-			//	{
-			//		a_DomElmt.style[l_PN] = l_SV;
-			//	}
-			//}
-
 			stDomUtil.eJumpToAnmtEnd_Shr(true, a_DomElmt, a_Rvs,
 				function (a_DomElmt, a_PN, a_Item)
 				{
@@ -293,7 +275,7 @@ function fOnIcld(a_Errs)
 					if (0 == a_PN.indexOf("Wse_")) //【注意】l_PN可能是扩展动画名，比如“Wse_2dTsfm”
 					{
 						//【将来扩展】目前，扩展动画只有变换，所以不用分支检测
-						a_DomElmt.style[e_BrsPfx_Tsfm] = l_SV;
+						a_DomElmt.style[e_BrsrPfx_Tsfm] = l_SV;
 					}
 					else
 					{
@@ -304,104 +286,6 @@ function fOnIcld(a_Errs)
 
 		function eGnrtAnmtFctn(a_DomElmt)
 		{
-			//return function fDomElmtAnmt(a_FrmTime, a_FrmItvl, a_FrmNum)
-			//{
-			//	var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-			//	var l_Cfg = l_fAnmt.Wse_Cfg;
-			//	var l_Ifnt = l_Cfg.c_Dur && (l_Cfg.c_Dur < 0);
-			//	var l_Loop = l_Ifnt ? false : (l_Cfg.c_Tot && (l_Cfg.c_Tot < 0));
-			//	var l_Cnt = l_Ifnt ? 0 : l_fAnmt.Wse_Cnt;
-			//	var l_Dur = l_Ifnt ? 0 : (l_Cfg.c_Dur || 1);
-			//	var l_Tot = (l_Ifnt || l_Loop) ? 0 : (l_Cfg.c_Tot || 1);
-			//	var l_NmlScl = l_Ifnt ? 0 : (a_FrmTime / l_Dur);
-			//	var l_EsnScl = l_Ifnt ? 0 : (l_Cfg.c_fEsn ? l_Cfg.c_fEsn(l_NmlScl) : l_NmlScl);
-			//	var l_Ctnu = l_Ifnt || (a_FrmTime < l_Dur);
-			//
-			//	var l_X = l_fAnmt.Wse_Sp.x, l_Y = l_fAnmt.Wse_Sp.y;
-			//	var l_EvenCnt = (0 == l_Cnt % 2);
-			//	var l_Rvs = (l_Loop || (l_Tot > 1)) && l_EvenCnt && (l_Cfg.c_EvenCntRvs || false);
-			//	var l_Bgn, l_End;
-			//
-			//	var l_PN, l_Item, l_V, l_M;
-			//	if (l_Ctnu) // 继续，考虑无限，不算循环
-			//	{
-			//		// 对每个项
-			//		for (l_PN in l_fAnmt.Wse_Items)
-			//		{
-			//			l_Item = l_fAnmt.Wse_Items[l_PN];
-			//			if (l_Rvs)	// 需要反转始终值
-			//			{
-			//				l_Bgn = l_Item.c_End;
-			//				l_End = l_Item.c_Bgn;
-			//			}
-			//			else
-			//			{
-			//				l_Bgn = l_Item.c_Bgn;
-			//				l_End = l_Item.c_End;
-			//			}
-			//
-			//			if (eIsWse_Css_TypeIdx(l_Item.c_TypeIdx))	// 冬至引擎扩展CSS
-			//			{
-			//				eAnmtWse_CssExtd(a_DomElmt, l_Cfg, l_Item, l_Ifnt, l_Rvs, l_Cnt, l_Dur, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-			//			}
-			//			else
-			//			if (6 == l_Item.c_TypeIdx)	// 颜色
-			//			{
-			//				l_V = tClo.scLnrItp(s_TempClo0, l_Bgn, l_End, l_EsnScl);
-			//				a_DomElmt.style[l_PN] = tClo.scToCssCloStr(l_V);
-			//			}
-			//			else // 其他
-			//			{
-			//				l_V = l_M = stNumUtil.cLnrItp(l_Bgn, l_End, l_EsnScl);
-			//				if ((2 == l_Item.c_TypeIdx) || (3 == l_Item.c_TypeIdx)) // 像素和百分比的中间过程皆用像素
-			//				{ l_V = l_V.toString() + "px"; }
-			//				a_DomElmt.style[l_PN] = l_V.toString();
-			//
-			//				// 如果有left和/或top，更新当前值
-			//				if (l_fAnmt.Wse_HasLeft && ("left" == l_PN))
-			//				{ l_X = l_M; }
-			//				else
-			//				if (l_fAnmt.Wse_HasTop && ("top" == l_PN))
-			//				{ l_Y = l_M; }
-			//			}
-			//		}
-			//
-			//		// 专门处理left和top
-			//		if (l_fAnmt.Wse_HasDplc)
-			//		{
-			//			l_fAnmt.Wse_Pos.x = l_X;	// 从当前位置开始
-			//			l_fAnmt.Wse_Pos.y = l_Y;
-			//			if (l_Cfg.c_fDplc)			// 可以被c_fDplc改写
-			//			{
-			//				l_Cfg.c_fDplc(l_fAnmt.Wse_Pos, a_DomElmt,
-			//					(l_Rvs ? l_fAnmt.Wse_Tp : l_fAnmt.Wse_Sp),
-			//					(l_Rvs ? l_fAnmt.Wse_Sp : l_fAnmt.Wse_Tp),
-			//					l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-			//			}
-			//
-			//			a_DomElmt.style["left"] = l_fAnmt.Wse_Pos.x.toString() + "px";
-			//			a_DomElmt.style["top"]  = l_fAnmt.Wse_Pos.y.toString() + "px";
-			//		}
-			//
-			//		// 更新回调
-			//		if (l_Cfg.c_fOnUpd)
-			//		{
-			//			l_Cfg.c_fOnUpd(a_DomElmt, l_NmlScl, l_EsnScl, a_FrmTime, a_FrmItvl, a_FrmNum);
-			//		}
-			//	}
-			//	else // 循环，或未达播放总数
-			//	if (l_Loop || ((1 < l_Tot) && (l_Cnt < l_Tot)))
-			//	{
-			//		eJumpToAnmtEnd(a_DomElmt, l_Rvs);			// 跳到最后
-			//		stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);	// 重置动画时间
-			//		++ l_fAnmt.Wse_Cnt;							// 递增一次计数
-			//	}
-			//	else // 结束
-			//	{
-			//		stCssUtil.cFnshAnmt(a_DomElmt, true, true, l_Rvs);	// 结束动画
-			//	}
-			//};
-
 			var l_X, l_Y, l_V, l_M; // 闭包里的变量，唯一于生成的函数
 			return stDomUtil.eGnrtAnmtFctn_Shr(true, a_DomElmt,
 				function (a_DomElmt, a_fAnmt)
@@ -546,7 +430,7 @@ function fOnIcld(a_Errs)
 			});
 
 			// 写成样式
-			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+			a_DomElmt.style[e_BrsrPfx_Tsfm] = l_CssStr;
 		}
 
 		function eAnmtWse_CssExtd_3dTsfm(a_DomElmt, a_Cfg, a_Item, a_Ifnt, a_Rvs, a_Cnt, a_Dur,
@@ -617,7 +501,7 @@ function fOnIcld(a_Errs)
 				});
 
 			// 写成样式
-			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+			a_DomElmt.style[e_BrsrPfx_Tsfm] = l_CssStr;
 		}
 
 		function eEnsrExtdAnmtTsfm(a_DomElmt, a_Dim)
@@ -1217,6 +1101,36 @@ function fOnIcld(a_Errs)
 			return stCssUtil;
 		};
 
+		/// 可能支持变换？
+		stCssUtil.cMaySuptTsfm = function ()
+		{
+			if (nWse.fMaybeNonHtml5Brsr())  // 非H5浏览器肯定不支持
+			{ return false; }
+
+			if (null === e_BrsrPfx_Tsfm)	// 如果需要，初始化
+			{ eInitBrsrPfx_Tsfm(); }
+			
+			return ("" != e_BrsrPfx_Tsfm);
+		};
+
+		/// 可能支持3D变换？
+		stCssUtil.cMaySupt3dTsfm = function ()
+		{
+			if (! stCssUtil.cMaySuptTsfm()) // 不支持2D变换也不可能支持3D变换
+			{ return false; }
+
+			if (null !== e_MaySupt3dTsfm) // 如果已初始化
+			{ return e_MaySupt3dTsfm; }
+
+			// 探测3D变换的可用性
+			var l_DomHtmlStl = document.documentElement.style;
+			var l_OldVal = l_DomHtmlStl[e_BrsrPfx_Tsfm];
+			l_DomHtmlStl[e_BrsrPfx_Tsfm] = "scale3d(1, 1, 1)";
+			e_MaySupt3dTsfm = (l_DomHtmlStl[e_BrsrPfx_Tsfm].indexOf("scale3d") >= 0);
+			l_DomHtmlStl[e_BrsrPfx_Tsfm] = l_OldVal;
+			return e_MaySupt3dTsfm;
+		};
+
 		/// 动画
 		/// a_End：Object，要动画的各个CSS属性的默认起始值和结束值，支持冬至引擎扩展动画；
 		/// 起始值的优先顺序：①a_DomElmt.style，②a_DomElmt的计算样式，③填充0值；
@@ -1245,172 +1159,6 @@ function fOnIcld(a_Errs)
 
 		function eAnmt_NoDly(a_DomElmt, a_End, a_Cfg)
 		{
-//			// 准备
-//			e_DomPrn = a_DomElmt.parentNode;
-//			e_BgnStl = e_PrnStl = null;
-//			stDomUtil.eEnsrAnmtFctn_Shr(true, a_DomElmt, eGnrtAnmtFctn);	// 确保动画函数
-//
-//			// 初始化
-//			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
-//			l_fAnmt.Wse_Items = {};		// 要动画的各项之记录
-//			l_fAnmt.Wse_Cfg = a_Cfg;
-//			l_fAnmt.Wse_Cnt = 1;		// 从1开始计数
-//			l_fAnmt.Wse_HasDplc = !! (a_Cfg.c_fDplc);
-//			l_fAnmt.Wse_HasLeft = false;
-//			l_fAnmt.Wse_HasTop = false;
-//			if (! l_fAnmt.Wse_Pos)
-//			{
-//				l_fAnmt.Wse_Pos = { x:0, y:0 };
-//				l_fAnmt.Wse_Sp = { x:0, y:0 };
-//				l_fAnmt.Wse_Tp = { x:0, y:0 };
-//			}
-//
-//			// 设定起始值和结束值
-//			var l_IsEmt = ! l_fAnmt.Wse_HasDplc;	// 只要动画位置就不空
-//			var l_PN, l_PV;
-//			var l_Item = null, l_EndStr = null, l_BgnStr = null, l_EqIdx = -1, l_LtIdx = -1;
-//			for (l_PN in a_End)
-//			{
-//				// 如果是扩展动画
-//				if (0 == l_PN.indexOf("Wse_"))
-//				{
-//					l_IsEmt = eExtdAnmt(a_DomElmt, l_PN, a_End[l_PN]) && l_IsEmt;	// 一旦是false，就不能改回true
-//					continue;
-//				}
-//
-//				// 跳过不存在的属性
-//				if (! (l_PN in a_DomElmt.style))
-//				{ continue; }
-//
-//				// 根据值的类型决定，跳过undefined和null
-//				l_PV = a_End[l_PN];
-//				if (nWse.fIsUdfnOrNull(l_PV))
-//				{ continue; }
-//
-//				l_Item = {};
-//
-//				if (nWse.fIsNum(l_PV)) // [1]Number
-//				{
-//					l_Item.c_TypeIdx = 1;
-//					l_Item.c_End = l_PV;
-//				}
-//				else if (nWse.fIsStr(l_PV))	// 字符串
-//				{
-//					l_LtIdx = l_PV.indexOf("<");	// 带有起始字符串？
-//					if (l_LtIdx >= 0)
-//					{
-//						l_BgnStr = (l_LtIdx == l_PV.length - 1) ? "" : l_PV.substring(l_LtIdx + 1, l_PV.length);
-//						l_PV = l_PV.substring(0, l_LtIdx);
-//					}
-//
-//					l_EqIdx = l_PV.indexOf("=");	// 带有结束字符串？
-//					if (l_EqIdx >= 0)
-//					{
-//						l_EndStr = (l_EqIdx == l_PV.length - 1) ? "" : l_PV.substring(l_EqIdx + 1, l_PV.length);
-//						l_PV = l_PV.substring(0, l_EqIdx);
-//					}
-//
-//					if ((l_PV.length - 2 >= 0) && (l_PV.indexOf("px") == l_PV.length - 2)) // [2]像素
-//					{
-//						l_Item.c_TypeIdx = 2;
-//						l_Item.c_End = parseFloat(l_PV);
-//					}
-//					else if ((l_PV.length - 1 >= 0) && (l_PV.indexOf("%") == l_PV.length - 1)) // [3]百分比
-//					{
-//						if (! e_PrnStl)
-//						{
-//							e_PrnStl = stCssUtil.cGetCmptStl(e_DomPrn);
-//						}
-//
-//						l_Item.c_TypeIdx = 3;
-//						l_Item.c_End = parseFloat(e_PrnStl[l_PN]);
-//						if (isNaN(l_Item.c_End))
-//						{ l_Item.c_End = e_DomPrn.offsetWidth; }
-//
-//						l_Item.c_End *= (parseFloat(l_PV) / 100);
-//					}
-////					else
-////					if ((l_PV.length - 2 >= 0) && (l_PV.indexOf("em") == l_PV.length - 2)) // [4]em
-////					{
-////						l_Item.c_TypeIdx = 4;
-////					}
-////					else
-////					if ((l_PV.length - 3 >= 0) && (l_PV.indexOf("rem") == l_PV.length - 3)) // [5]rem
-////					{
-////						l_Item.c_TypeIdx = 5;
-////					}
-//					else if ((l_PV.indexOf("rgb") == 0) || (l_PV.indexOf("#") == 0))	// [6]颜色
-//					{
-//						l_Item.c_TypeIdx = 6;
-//						l_Item.c_End = tClo.scFromCssCloStr(l_PV);
-//					}
-//					else // 按Number处理
-//					{
-//						l_Item.c_TypeIdx = 1;
-//						l_Item.c_End = parseFloat(l_PV);
-//						if (isNaN(l_Item.c_End))	// 若解析失败则跳过
-//						{ continue; }
-//					}
-//				}
-//				else // 无效类型，跳过
-//				{
-//					continue;
-//				}
-//
-//				eCalcBgnPV(l_Item.c_TypeIdx, a_DomElmt, l_PN);
-//				l_Item.c_Bgn = e_Rst_CalcBgnPV.c_Bgn;
-//				l_Item.c_BgnStr = (l_LtIdx >= 0) ? l_BgnStr : e_Rst_CalcBgnPV.c_BgnStr;
-//				l_Item.c_EndStr = (l_EqIdx >= 0) ? l_EndStr : l_PV.toString();
-//
-//				if (l_Item.c_TypeIdx)	// 当类型索引有效时录入，【注意】0也认为无效！
-//				{
-//					// 如果起始串和结束串相同，除非是“left、top”且提供了c_fDplc，否则跳过
-//					if ((! a_Cfg.c_PsrvIdtcBesPpty) && (l_Item.c_BgnStr == l_Item.c_EndStr))
-//					{
-//						if (! (l_fAnmt.Wse_HasDplc && (("left" == l_PN) || ("top" == l_PN))))
-//						{ continue; }
-//
-//						//	console.log("BS == ES，但未跳过！");
-//					}
-//
-//					l_fAnmt.Wse_Items[l_PN] = l_Item;
-//					l_IsEmt = false;	// 至少有一个项需要动画，不空
-//
-//					// 如果需要动画位置，检查left和/或top是否存在，是的话记录起始和结束值
-//					if (l_fAnmt.Wse_HasDplc)
-//					{
-//						if ((! l_fAnmt.Wse_HasLeft) && ("left" == l_PN))
-//						{
-//							l_fAnmt.Wse_HasLeft = true;
-//							l_fAnmt.Wse_Sp.x = l_Item.c_Bgn;
-//							l_fAnmt.Wse_Tp.x = l_Item.c_End;
-//						}
-//						else
-//						if ((! l_fAnmt.Wse_HasTop) && ("top" == l_PN))
-//						{
-//							l_fAnmt.Wse_HasTop = true;
-//							l_fAnmt.Wse_Sp.y = l_Item.c_Bgn;
-//							l_fAnmt.Wse_Tp.y = l_Item.c_End;
-//						}
-//					}
-//				}
-//			}
-//
-//			// 如果需要动画位置，计算left和/或top缺省的起始和结束值（此时相同，皆为当前值）
-//			if (l_fAnmt.Wse_HasDplc)
-//			{
-//				if (! l_fAnmt.Wse_HasLeft)
-//				{ l_fAnmt.Wse_Sp.x = l_fAnmt.Wse_Tp.x = eCalcBgnPV(2, a_DomElmt, "left").c_Bgn; }
-//
-//				if (! l_fAnmt.Wse_HasTop)
-//				{ l_fAnmt.Wse_Sp.y = l_fAnmt.Wse_Tp.y = eCalcBgnPV(2, a_DomElmt, "top").c_Bgn; }
-//			}
-//
-//			// 为空或时长为0时立即结束，否则注册或重置
-//			(l_IsEmt || (0 === a_Cfg.c_Dur) || (0 === a_Cfg.c_Tot))
-//				? stCssUtil.cFnshAnmt(a_DomElmt, (! l_IsEmt), true, false)
-//				: stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);
-
 			stDomUtil.eAnmtPpty_NoDly_Shr(true, a_DomElmt, a_End, a_Cfg,
 				function (a_DomElmt) // 准备
 				{
@@ -1586,25 +1334,22 @@ function fOnIcld(a_Errs)
 
 		function eExtdAnmt(a_DomElmt, a_PN, a_PV)
 		{
+			var l_IsEmt = true; // 返回值，true表示空
+
 			if (! e_Wse_CssExtd)	// 如果需要，初始化
 			{ eInitWse_CssExtd(); }
-
-			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
-			{
-				eInitBrsrPfx_Tsfm(a_DomElmt);
-				if (! e_BrsPfx_Tsfm) // 不支持立即返回
-				{ return; }
-			}
 
 			var l_fAnmt = a_DomElmt.Wse_CssUtil.c_fAnmt;
 			var l_Items = l_fAnmt.Wse_Items;
 			var l_Cfg = l_fAnmt.Wse_Cfg;
-			var l_IsEmt = true;
 			var l_Item, l_Tsfm, l_DomTsfm;
 			if ("Wse_2dTsfm" == a_PN)
 			{
-				if (! a_PV)
-				{ return; }
+				if (! stCssUtil.cMaySuptTsfm()) // 不支持立即返回
+				{ return l_IsEmt; }
+
+				if (! a_PV)						// 值无效立即返回
+				{ return l_IsEmt; }
 
 				eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
 
@@ -1617,53 +1362,53 @@ function fOnIcld(a_Errs)
 				l_DomTsfm = a_DomElmt.Wse_CssUtil.c_2dTsfm;
 
 				stAryUtil.cFor(a_PV,					// 是个数组
-				function (a_Ary, a_Idx, a_Tsfm)
-				{
-					l_Tsfm = {};
-					l_Tsfm.c_TypeIdx = e_Wse_CssExtd[a_Tsfm.c_Name] || -1;	// 把变换名称映射成索引
-					if (l_Tsfm.c_TypeIdx < 0)
-					{ return; }
-
-					l_Tsfm.c_fDplc = a_Tsfm.c_fDplc || null;	// 位移函数
-
-					if (e_Wse_CssExtd["scale"] == l_Tsfm.c_TypeIdx)
+					function (a_Ary, a_Idx, a_Tsfm)
 					{
-						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Scl.x, y: l_DomTsfm.c_Scl.y };
-						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "scale", l_Tsfm.c_Bgn, "", 2);
+						l_Tsfm = {};
+						l_Tsfm.c_TypeIdx = e_Wse_CssExtd[a_Tsfm.c_Name] || -1;	// 把变换名称映射成索引
+						if (l_Tsfm.c_TypeIdx < 0)
+						{ return; }
 
-						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 1), y: eCalcExtdEndPV(a_Tsfm, "y", 1) };
-						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "scale", l_Tsfm.c_End, "", 2);
-					}
-					else
-					if (e_Wse_CssExtd["skew"] == l_Tsfm.c_TypeIdx)
-					{
-						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Skew.x, y: l_DomTsfm.c_Skew.y };
-						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "skew", l_Tsfm.c_Bgn, "rad", 2);
+						l_Tsfm.c_fDplc = a_Tsfm.c_fDplc || null;	// 位移函数
 
-						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
-						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "skew", l_Tsfm.c_End, "rad", 2);
-					}
-					else
-					if (e_Wse_CssExtd["rotate"] == l_Tsfm.c_TypeIdx)
-					{
-						l_Tsfm.c_Bgn = { w: l_DomTsfm.c_Rot.w };
-						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "rotate", l_Tsfm.c_Bgn.w, "rad", 1);
+						if (e_Wse_CssExtd["scale"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Scl.x, y: l_DomTsfm.c_Scl.y };
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "scale", l_Tsfm.c_Bgn, "", 2);
 
-						l_Tsfm.c_End = { w: eCalcExtdEndPV(a_Tsfm, "w", 0) };
-						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "rotate", l_Tsfm.c_End.w, "rad", 1);
-					}
-					else
-				//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
-					{
-						l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Tslt.x, y: l_DomTsfm.c_Tslt.y };
-						l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "translate", l_Tsfm.c_Bgn, "px", 2);
+							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 1), y: eCalcExtdEndPV(a_Tsfm, "y", 1) };
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "scale", l_Tsfm.c_End, "", 2);
+						}
+						else
+						if (e_Wse_CssExtd["skew"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Skew.x, y: l_DomTsfm.c_Skew.y };
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "skew", l_Tsfm.c_Bgn, "rad", 2);
 
-						l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
-						l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "translate", l_Tsfm.c_End, "px", 2);
-					}
+							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "skew", l_Tsfm.c_End, "rad", 2);
+						}
+						else
+						if (e_Wse_CssExtd["rotate"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = { w: l_DomTsfm.c_Rot.w };
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "rotate", l_Tsfm.c_Bgn.w, "rad", 1);
 
-					l_Item.c_Sqnc.push(l_Tsfm);
-				});
+							l_Tsfm.c_End = { w: eCalcExtdEndPV(a_Tsfm, "w", 0) };
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "rotate", l_Tsfm.c_End.w, "rad", 1);
+						}
+						else
+					//	if (e_Wse_CssExtd["translate"] == l_Tsfm.c_TypeIdx)
+						{
+							l_Tsfm.c_Bgn = { x: l_DomTsfm.c_Tslt.x, y: l_DomTsfm.c_Tslt.y };
+							l_Item.c_BgnStr = eBldTsfmCssStr(l_Item.c_BgnStr, "translate", l_Tsfm.c_Bgn, "px", 2);
+
+							l_Tsfm.c_End = { x: eCalcExtdEndPV(a_Tsfm, "x", 0), y: eCalcExtdEndPV(a_Tsfm, "y", 0) };
+							l_Item.c_EndStr = eBldTsfmCssStr(l_Item.c_EndStr, "translate", l_Tsfm.c_End, "px", 2);
+						}
+
+						l_Item.c_Sqnc.push(l_Tsfm);
+					});
 
 				if (l_Item.c_Sqnc.length > 0)
 				{
@@ -1674,8 +1419,11 @@ function fOnIcld(a_Errs)
 			else
 			if ("Wse_3dTsfm" == a_PN)
 			{
-				if (! a_PV)
-				{ return; }
+				if (! stCssUtil.cMaySupt3dTsfm()) // 不支持立即返回
+				{ return l_IsEmt; }
+
+				if (! a_PV)						// 值无效立即返回
+				{ return l_IsEmt; }
 
 				eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
 
@@ -1845,25 +1593,6 @@ function fOnIcld(a_Errs)
 		/// a_Rvs：Boolean，反转始末值？默认false
 		stCssUtil.cFnshAnmt = function (a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs)
 		{
-			//// 率先注销
-			//var l_fAnmt = a_DomElmt.Wse_CssUtil && a_DomElmt.Wse_CssUtil.c_fAnmt;
-			//if ((! l_fAnmt) || (! l_fAnmt.Wse_Items))
-			//{ return stCssUtil; }
-			//
-			//var l_Idx = stDomUtil.cFindAnmt(l_fAnmt);
-			//if (l_Idx < 0)
-			//{ return stCssUtil; }
-			//
-			//stDomUtil.cUrgAnmtByIdx(l_Idx);
-			//
-			//// 跳到最后
-			//if (a_SkipToEnd)
-			//{ eJumpToAnmtEnd(a_DomElmt, a_Rvs); }
-			//
-			//// 结束回调
-			//if (a_Cabk && l_fAnmt.Wse_Cfg.c_fOnEnd)
-			//{ l_fAnmt.Wse_Cfg.c_fOnEnd(a_DomElmt); }
-
 			stDomUtil.eFnshAnmtPpty_Shr(true, a_DomElmt, a_SkipToEnd, a_Cabk, a_Rvs, eJumpToAnmtEnd);
 			return stCssUtil;
 		};
@@ -1923,25 +1652,18 @@ function fOnIcld(a_Errs)
 		/// 单位化扩展动画 - 二维变换
 		stCssUtil.cIdtyExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
-			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
-			{
-				eInitBrsrPfx_Tsfm(a_DomElmt);
-				if (! e_BrsPfx_Tsfm) // 不支持立即返回
-				{ return; }
-			}
+			if (! stCssUtil.cMaySuptTsfm()) // 不支持立即返回
+			{ return stCssUtil; }
 
 			eRsetExtdAnmtTsfmData(a_DomElmt, 2);	// 复位动画数据
+			return stCssUtil;
 		};
 
 		/// 更新扩展动画 - 二维变换
 		stCssUtil.cUpdExtdAnmt_2dTsfm = function (a_DomElmt)
 		{
-			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
-			{
-				eInitBrsrPfx_Tsfm(a_DomElmt);
-				if (! e_BrsPfx_Tsfm) // 不支持立即返回
-				{ return; }
-			}
+			if (! stCssUtil.cMaySuptTsfm()) // 不支持立即返回
+			{ return stCssUtil; }
 
 			eEnsrExtdAnmtTsfm(a_DomElmt, 2);	// 确保动画变换
 			var l_Tsfm = a_DomElmt.Wse_CssUtil.c_2dTsfm;
@@ -1961,7 +1683,7 @@ function fOnIcld(a_Errs)
 			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale", l_Tsfm.c_Scl, "", 2); }
 
 			// 写成样式
-			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+			a_DomElmt.style[e_BrsrPfx_Tsfm] = l_CssStr;
 			return stCssUtil;
 		};
 
@@ -1998,25 +1720,18 @@ function fOnIcld(a_Errs)
 		/// 单位化扩展动画 - 三维变换
 		stCssUtil.cIdtyExtdAnmt_3dTsfm = function (a_DomElmt)
 		{
-			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
-			{
-				eInitBrsrPfx_Tsfm(a_DomElmt);
-				if (! e_BrsPfx_Tsfm) // 不支持立即返回
-				{ return; }
-			}
+			if (! stCssUtil.cMaySupt3dTsfm()) // 不支持立即返回
+			{ return stCssUtil; }
 
 			eRsetExtdAnmtTsfmData(a_DomElmt, 3);	// 复位动画数据
+			return stCssUtil;
 		};
 
 		/// 更新扩展动画 - 三维变换
 		stCssUtil.cUpdExtdAnmt_3dTsfm = function (a_DomElmt)
 		{
-			if (! e_BrsPfx_Tsfm)	// 如果需要，初始化
-			{
-				eInitBrsrPfx_Tsfm(a_DomElmt);
-				if (! e_BrsPfx_Tsfm) // 不支持立即返回
-				{ return; }
-			}
+			if (! stCssUtil.cMaySupt3dTsfm()) // 不支持立即返回
+			{ return stCssUtil; }
 
 			// 注意CSS的变换从右向左进行！故字符串拼接顺序是：P*T*R*S
 			eEnsrExtdAnmtTsfm(a_DomElmt, 3);	// 确保动画变换
@@ -2037,7 +1752,7 @@ function fOnIcld(a_Errs)
 			{ l_CssStr = eBldTsfmCssStr(l_CssStr, "scale3d", l_Tsfm.c_Scl, "", 3); }
 			
 			// 写成样式
-			a_DomElmt.style[e_BrsPfx_Tsfm] = l_CssStr;
+			a_DomElmt.style[e_BrsrPfx_Tsfm] = l_CssStr;
 			return stCssUtil;
 		};
 	})();
