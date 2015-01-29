@@ -1063,17 +1063,24 @@ function fOnIcld(a_Errs)
 			//	: stDomUtil.cRegAnmtOrRsetAnmtTime(l_fAnmt);
 
 			stDomUtil.eAnmtPpty_NoDly_Shr(false, a_DomElmt, a_End, a_Cfg,
-				function () { stDomUtil.eEnsrAnmtFctn_Shr(false, a_DomElmt, eGnrtAnmtFctn); }, // 准备
+				function (a_DomElmt) // 准备
+				{
+					stDomUtil.eEnsrAnmtFctn_Shr(false, a_DomElmt, eGnrtAnmtFctn);
+				},
 				null, // 初始化
+				null, // 扩展
 				function (a_DomElmt, a_PN) // 跳过
 				{
-					if (! (a_PN in a_DomElmt))
-					{
-						// 支持动画window.scrollX，window.scrollY
-						if ((a_DomElmt === window) && ("scrollX" != a_PN) && ("scrollY" != a_PN))
-						{ return true; }
-					}
-					return false;
+					// 支持动画window.scrollX，window.scrollY
+					return (! (a_PN in a_DomElmt)) && ((a_DomElmt === window) && ("scrollX" != a_PN) && ("scrollY" != a_PN));
+
+					//if (! (a_PN in a_DomElmt))
+					//{
+					//	// 支持动画window.scrollX，window.scrollY
+					//	if ((a_DomElmt === window) && ("scrollX" != a_PN) && ("scrollY" != a_PN))
+					//	{ return true; }
+					//}
+					//return false;
 				},
 				function (a_DomElmt, a_fAnmt, a_PN, a_PV, a_Item) // 计算始末值
 				{
@@ -1101,12 +1108,12 @@ function fOnIcld(a_Errs)
 					//}
 					//return false;
 				},
-				null, stDomUtil.cFnshAnmtPpty);
+				null, null, stDomUtil.cFnshAnmtPpty);
 			return stDomUtil;
 		}
 
 		stDomUtil.eAnmtPpty_NoDly_Shr = function (a_CssUtil, a_DomElmt, a_End, a_Cfg,
-												  a_fRdy, a_fInit, a_fSkip, a_fCalcBgnEnd, a_fDontRcd, a_fAftRcd, a_fFnsh)
+												  a_fRdy, a_fInit, a_fExtd, a_fSkip, a_fCalcBgnEnd, a_fDontRcd, a_fAftRcd, a_fAftEnum, a_fFnsh)
 		{
 			// 准备
 			//e_DomPrn = a_DomElmt.parentNode;
@@ -1138,11 +1145,14 @@ function fOnIcld(a_Errs)
 			var l_Item = null, l_EndStr = null, l_BgnStr = null, l_EqIdx = -1, l_LtIdx = -1;
 			for (l_PN in a_End)
 			{
-				// 如果是扩展动画
-				if (0 == l_PN.indexOf("Wse_"))
+				if (a_CssUtil)
 				{
-					l_IsEmt = eExtdAnmt(a_DomElmt, l_PN, a_End[l_PN]) && l_IsEmt;	// 一旦是false，就不能改回true
-					continue;
+					// 如果是扩展动画
+					if (0 == l_PN.indexOf("Wse_"))
+					{
+						l_IsEmt = a_fExtd(a_DomElmt, l_PN, a_End[l_PN]) && l_IsEmt;	// 一旦是false，就不能改回true
+						continue;
+					}
 				}
 
 				//// 跳过不存在的属性

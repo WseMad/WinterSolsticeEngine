@@ -20,9 +20,9 @@
     <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="1240" />
     <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" />
     <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1231" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/DomUtil.js" line="1375" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/DomUtil.js" line="1385" />
     <bookmark url="file://$PROJECT_DIR$/nWse/DomUtil.js" line="399" />
-    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1704" />
+    <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="1845" />
     <bookmark url="file://$PROJECT_DIR$/nWse/(1)ObjOrtd.js" line="200" />
     <bookmark url="file://$PROJECT_DIR$/nWse/CssUtil.js" line="267" />
   </component>
@@ -83,8 +83,8 @@
       <file leaf-file-name="DomUtil.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31034482" vertical-offset="20031" max-vertical-offset="26201">
-              <caret line="1070" column="21" selection-start-line="1070" selection-start-column="21" selection-end-line="1070" selection-end-column="21" />
+            <state vertical-scroll-proportion="0.18192628" vertical-offset="5110" max-vertical-offset="26391">
+              <caret line="279" column="37" selection-start-line="279" selection-start-column="37" selection-end-line="279" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -93,9 +93,11 @@
       <file leaf-file-name="CssUtil.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-138.52" vertical-offset="23327" max-vertical-offset="36347">
-              <caret line="1412" column="29" selection-start-line="1247" selection-start-column="12" selection-end-line="1412" selection-end-column="29" />
-              <folding />
+            <state vertical-scroll-proportion="-126.56" vertical-offset="24044" max-vertical-offset="39064">
+              <caret line="1432" column="25" selection-start-line="1432" selection-start-column="16" selection-end-line="1432" selection-end-column="25" />
+              <folding>
+                <element signature="n#!!doc" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -181,8 +183,8 @@
         <option value="$PROJECT_DIR$/Test/Lang.html" />
         <option value="$PROJECT_DIR$/nWse/(1)ObjOrtd.js" />
         <option value="$PROJECT_DIR$/Test/Media/Bicycle.js" />
-        <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
         <option value="$PROJECT_DIR$/nWse/DomUtil.js" />
+        <option value="$PROJECT_DIR$/nWse/CssUtil.js" />
       </list>
     </option>
   </component>
@@ -453,7 +455,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1696" height="1026" extended-state="7" />
+    <frame x="-8" y="-8" width="1696" height="1026" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -461,7 +463,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32931727" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="false" weight="0.24894515" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" x="616" y="76" width="413" height="893" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17299578" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17299578" sideWeight="0.49933067" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16560958" sideWeight="0.50066936" order="1" side_tool="true" content_ui="tabs" />
@@ -886,16 +888,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/CssUtil.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-138.52" vertical-offset="23327" max-vertical-offset="36347">
-          <caret line="1412" column="29" selection-start-line="1247" selection-start-column="12" selection-end-line="1412" selection-end-column="29" />
-          <folding />
+        <state vertical-scroll-proportion="-126.56" vertical-offset="24044" max-vertical-offset="39064">
+          <caret line="1432" column="25" selection-start-line="1432" selection-start-column="16" selection-end-line="1432" selection-end-column="25" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nWse/DomUtil.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31034482" vertical-offset="20031" max-vertical-offset="26201">
-          <caret line="1070" column="21" selection-start-line="1070" selection-start-column="21" selection-end-line="1070" selection-end-column="21" />
+        <state vertical-scroll-proportion="0.18192628" vertical-offset="5110" max-vertical-offset="26391">
+          <caret line="279" column="37" selection-start-line="279" selection-start-column="37" selection-end-line="279" selection-end-column="37" />
           <folding />
         </state>
       </provider>
