@@ -5,5 +5,6 @@ bin/
 obj/
 RunOpt/
 RunIpt/
+RunCfg.xml
 
 #########################################
